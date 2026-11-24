@@ -5,6 +5,7 @@ import { beginneSchlange } from '../schlangen';
 import { erstelleTisch, teileReihumAus } from '../state';
 import type { TischOptionen } from '../state';
 import type { FarbkarteInfo, Farbe, Sonderkartenname, SonderkarteInfo, Spielkarte, Spielzustand } from '../types';
+import { comebackBedingungErfuellt } from '../erweiterung/comeback';
 import { zaehleSchonGespielt } from '../zuggrenzen';
 
 /*
@@ -36,6 +37,8 @@ export interface Baukasten {
   amZug(spieler: number, teilzug?: 1 | 2): Baukasten;
   /** Wie nach so vielen schon gespielten Karten in diesem Teilzug (A5, D12); Zähler und Rahmen des Zuges (X3) stimmen überein. */
   gespielt(farbkarten: number, sonderkarten: number): Baukasten;
+  /** Stellt die Comeback-Bedingung für den Spieler am Zug fest, wie die Engine zu Beginn seines Zuges (A8.1, D48). */
+  zugbeginn(): Baukasten;
   /** Eine angesagte Sonderkarte von `spieler`, über die `ausstehend` noch entscheiden (A6). */
   schwebend(spieler: number, karte: Kartenwahl, aktion: (karteId: string, spielerId: string) => KartenAktion, ausstehend: number[]): Baukasten;
   /** A10: Der Nachziehstapel ist dann leer; was dort noch lag, kommt reihum auf die Ablagestapel. */
@@ -161,6 +164,10 @@ export function baukasten(optionen: TischOptionen): Baukasten {
     },
     gespielt(farbkarten, sonderkarten) {
       zaehleSchonGespielt(zustand.zug, farbkarten, sonderkarten);
+      return bau;
+    },
+    zugbeginn() {
+      zustand.zug.comebackBedingung = zustand.zug.teilzug === 1 && comebackBedingungErfuellt(zustand, zustand.zug.spielerIndex);
       return bau;
     },
     schwebend(index, wahl, aktion, ausstehend) {

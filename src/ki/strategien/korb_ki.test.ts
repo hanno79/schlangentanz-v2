@@ -25,7 +25,7 @@ function partie(saat: number, spielerzahl: number, ki: (platz: number) => Ki): {
     const aktion = kiWahl(zustand, kis[ermittleEntscheider(zustand) ?? 0])
     if (aktion === null) throw new Error(`Partie ${saat}: niemand entscheidet, die Partie läuft aber noch.`)
     if (aktion.typ === 'SchlangenkorbSpielen') gezaehlt.korb += 1
-    if (aktion.typ === 'AbwerfenUndZiehen') gezaehlt.abwerfen += 1
+    if (aktion.typ === 'ZweiAbwerfenDreiZiehen') gezaehlt.abwerfen += 1
     zustand = anwendeAktion(zustand, aktion).zustand
   }
   return gezaehlt

@@ -1,0 +1,12 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a811891994bcc6ed4
+
+ ✓ src/engine/__tests__/regeln/tmp_x2a_it2.test.ts > I1 Überhand: Farbenpracht wird erst nach dem Abwerfen eingelöst, dort vor ZugBegonnen des Nächsten 81ms
+ ✓ src/engine/__tests__/regeln/tmp_x2a_it2.test.ts > I2 vom Gegner erfüllt, im eigenen Zug mit eigener Fusion zerstört: nicht eingelöst 9ms
+ ✓ src/engine/__tests__/regeln/tmp_x2a_it2.test.ts > I3 Verdoppler: erst im zweiten Zug erfüllt, am Ende des zweiten Zuges eingelöst 10ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  07:46:12
+   Duration  7.09s (transform 1.48s, setup 489ms, import 1.57s, tests 105ms, environment 4.29s)
+

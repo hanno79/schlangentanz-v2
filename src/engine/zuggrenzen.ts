@@ -269,7 +269,7 @@ export function zugInSicht(zustand: Spielzustand, spielerIndex: number): Zug {
  */
 export function zugOhneIds(zug: Zug, hand: readonly Spielkarte[]): string {
   const art = (karte: Spielkarte) => (karte.typ === 'Farbkarte' ? karte.farbe : karte.name);
-  const { spielerIndex, teilzug, gespielteFarbkarten, gespielteSonderkarten, verdopplerGespielt, farbenfusionGespielt, abschnitt, runde } = zug;
+  const { spielerIndex, teilzug, gespielteFarbkarten, gespielteSonderkarten, verdopplerGespielt, farbenfusionGespielt, abschnitt, comebackBedingung, runde } = zug;
   const beschreibung = {
     spielerIndex,
     teilzug,
@@ -278,6 +278,7 @@ export function zugOhneIds(zug: Zug, hand: readonly Spielkarte[]): string {
     verdopplerGespielt,
     farbenfusionGespielt,
     abschnitt,
+    comebackBedingung,
     runde,
     verwendet: zug.verwendet
       .map((eintrag) => JSON.stringify([eintrag.art, eintrag.kartenart, zug.zusatzaktionen.map((zusatz) => giltFuerKarte(zusatz, eintrag.karteId))]))

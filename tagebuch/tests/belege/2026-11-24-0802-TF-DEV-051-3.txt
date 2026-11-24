@@ -1,0 +1,8 @@
+NACH GRUEN Ereignisse des letzten Schritts (1)
+KarteGespielt: Spieler 1 (spieler-1), gruen-02 (FarbkarteLegen) → schlange-2 von Spieler 1 (spieler-1), Stelle 5
+NACH ZUGENDE Ereignisse des letzten Schritts (4)
+KartenGezogen: Spieler 1 (spieler-1) zieht 1
+AufgabeErfuellt: Spieler 1 (spieler-1) nimmt Farbenpracht (aufgabe-01)
+AufgabeAufgedeckt: Gelber Schatz (aufgabe-14) an Stelle von Farbenpracht (aufgabe-01)
+ZugBegonnen: KI-Gegner 1 (spieler-2), Teilzug 1
+KONSOLENFEHLER []

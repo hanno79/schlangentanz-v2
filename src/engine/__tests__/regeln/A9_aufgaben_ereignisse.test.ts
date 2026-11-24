@@ -1,7 +1,8 @@
 import { isDeepStrictEqual } from 'node:util'
 import { describe, expect, it } from 'vitest'
+import { giltNachJederAktion } from '../../aufgaben/definition'
 import { AUFGABENREGISTER, definitionFuerAufgabe } from '../../aufgabenKarten'
-import type { Ereignis, Spielzustand } from '../../index'
+import type { AufgabenkarteInfo, Ereignis, Spielzustand } from '../../index'
 import { dauerlauf, dauerlaufPartien } from '../../testing/dauerlauf'
 import type { SchrittPruefer } from '../../testing/dauerlauf'
 import { stapelBis } from '../../testing/aufgaben'
@@ -104,10 +105,13 @@ function aufgabenPruefer(zaehler: Aufgabenzaehler): SchrittPruefer {
     const verraten = [...verrateneGeheimeAufgaben(zustand, ereignisse), ...verrateneHandkarten(zustand, ereignisse)]
     if (verraten.length > 0) return `B2: Ereignisse nennen ${verraten.join(', ')}.`
     const amZug = zustand.zug.spielerIndex
+    // Am Zugende löst noch der Spieler ein, dessen Zug endet; am Zug ist, wer zuletzt einen Zug begonnen hat.
+    let amZugBeimEreignis = vorher.zug.spielerIndex
     for (const [stelle, ereignis] of ereignisse.entries()) {
+      if (ereignis.typ === 'ZugBegonnen') amZugBeimEreignis = ereignis.spielerIndex
       if (ereignis.typ === 'AufgabeErfuellt') {
         zaehler.erfuellt += 1
-        if (ereignis.spielerIndex !== amZug || zustand.schwebend !== null) return `A9: Spieler ${ereignis.spielerIndex} löst ein, am Zug ist ${amZug}.`
+        if (ereignis.spielerIndex !== amZugBeimEreignis || zustand.schwebend !== null) return `A9: Spieler ${ereignis.spielerIndex} löst ein, am Zug ist ${amZugBeimEreignis}.`
       }
       if (ereignis.typ === 'AufgabeAufgedeckt') {
         zaehler.aufgedeckt += 1
@@ -121,14 +125,31 @@ function aufgabenPruefer(zaehler: Aufgabenzaehler): SchrittPruefer {
       if (bisher && !spieler.geheimeAufgabeErfuellt) return `D35: Die erfüllte geheime Aufgabe von Spieler ${index} zählt nicht mehr.`
       if (!bisher && spieler.geheimeAufgabeErfuellt) {
         zaehler.geheim += 1
-        if (index !== amZug) return `D35: Die geheime Aufgabe von Spieler ${index} zählt, am Zug ist ${amZug}.`
+        const amZugende = index === vorher.zug.spielerIndex && !giltNachJederAktion(definitionFuerAufgabe(spieler.geheimeAufgabe!))
+        if (index !== amZug && !amZugende) return `D35: Die geheime Aufgabe von Spieler ${index} zählt, am Zug ist ${amZug}.`
       }
     }
+    // Endet in diesem Schritt ein Zug, liegt für dessen Spieler auch keine erfüllte Aufgabe mit Prüfzeitpunkt am Zugende mehr offen.
+    // Was erst nach dem Zugwechsel aufgedeckt wurde, lag am Zugende noch nicht offen.
+    const wechsel = ereignisse.findIndex((ereignis) => ereignis.typ === 'ZugBegonnen' || ereignis.typ === 'PartieBeendet')
+    if (wechsel >= 0 && zustand.schwebend === null) {
+      const geendet = vorher.zug.spielerIndex
+      const spaeter = new Set(ereignisse.slice(wechsel).flatMap((ereignis) => (ereignis.typ === 'AufgabeAufgedeckt' ? [ereignis.aufgabeId] : [])))
+      const liegtErfuelltOffen = zustand.offeneAufgaben.find((aufgabe) => !spaeter.has(aufgabe.id) && definitionFuerAufgabe(aufgabe).istErfuellt(zustand, geendet))
+      if (liegtErfuelltOffen !== undefined) return `A9: ${liegtErfuelltOffen.name} ist am Ende des Zuges von Spieler ${geendet} erfüllt, liegt aber noch offen.`
+      const { geheimeAufgabe: seine, geheimeAufgabeErfuellt: vermerkt } = zustand.spieler[geendet]
+      if (seine !== null && !vermerkt && definitionFuerAufgabe(seine).istErfuellt(zustand, geendet)) return `D35: Die geheime Aufgabe von Spieler ${geendet} ist am Zugende erfüllt, aber nicht vermerkt.`
+    }
     if (zustand.schwebend !== null || zustand.partiephase === 'Beendet') return null
-    const offen = zustand.offeneAufgaben.find((aufgabe) => definitionFuerAufgabe(aufgabe).istErfuellt(zustand, amZug))
+    // Aufgaben, die erst am Zugende gelten, dürfen mitten im Zug erfüllt offen liegen.
+    const faellig = (aufgabe: AufgabenkarteInfo) => {
+      const definition = definitionFuerAufgabe(aufgabe)
+      return giltNachJederAktion(definition) && definition.istErfuellt(zustand, amZug)
+    }
+    const offen = zustand.offeneAufgaben.find(faellig)
     if (offen !== undefined) return `A9/D5: ${offen.name} ist für den Spieler am Zug erfüllt, liegt aber noch offen.`
     const { geheimeAufgabe, geheimeAufgabeErfuellt } = zustand.spieler[amZug]
-    if (geheimeAufgabe !== null && !geheimeAufgabeErfuellt && definitionFuerAufgabe(geheimeAufgabe).istErfuellt(zustand, amZug)) {
+    if (geheimeAufgabe !== null && !geheimeAufgabeErfuellt && faellig(geheimeAufgabe)) {
       return `D35: Die geheime Aufgabe von Spieler ${amZug} ist erfüllt, aber nicht vermerkt.`
     }
     return null

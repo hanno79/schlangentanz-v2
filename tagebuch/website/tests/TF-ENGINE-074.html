@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-ENGINE-074 Farbenpracht wird nur am Ende des eigenen Zuges eingelöst, offen wie geheim, nach einem Verdoppler am Ende jedes der beiden Züge und im letzten Zug vor dem Spielende. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-ENGINE-074 Farbenpracht wird nur am Ende des eigenen Zuges eingelöst, offen wie geheim, nach einem Verdoppler am Ende jedes der beiden Züge und im letzten Zug vor dem Spielende.</h1><p class="etiketten"><span class="etikett">Bereich Spiel-Engine: Regeln, Zugablauf, Wertung, Speicherformat</span><span class="etikett">Regression ja</span><span class="etikett">Priorität hoch</span><span class="etikett">Art automatisch</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Der Autor hat am 23.11.2026 entschieden, dass Farbenpracht („am Ende des Spiels oder Zugs“) nicht nach jeder Aktion geprüft wird, sondern nur am Ende des eigenen Zuges. Wer die Bedingung mitten im Zug schafft und im selben Zug wieder verliert, bekommt die Aufgabe nicht. Alle anderen Aufgaben bleiben bei der Prüfung nach jeder Aktion.</p><h2>Bestanden, wenn</h2><p><code>A9_farbenpracht_zugende.test.ts</code> ist grün (11 Tests). Nach dem zweiten Grün kommt kein Aufgabenereignis, nach „Zug beenden“ steht AufgabeErfuellt Farbenpracht vor ZugBegonnen des Nächsten. Mit eigener Fusion im selben Zug wieder zerstört: keine Aufgabe. Nach einem Verdoppler wird am Ende des ersten Zuges eingelöst, danach beginnt Teilzug 2. In der Schlussrunde steht AufgabeErfuellt vor PartieBeendet. Wer aussetzt, bekommt nichts. Ketten (D5) mischen beide Prüfzeitpunkte richtig.</p><h2>Fehlgeschlagen, wenn</h2><p>Farbenpracht wird mitten im Zug oder zu Zugbeginn eingelöst, eine im Zug zerstörte Farbenpracht wird am Zugende trotzdem vergeben, oder sie fehlt nach dem letzten Zug der Partie.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>24.11.2026</dd><dt>Änderung</dt><dd>task/X2a-aufgaben-farbmengen (PR #107)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Repo mit <code>npm ci</code>, Stand ab Commit 4dcd05d</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Schlange mit je zwei Karten Blau bis Braun und einem Grün, Hand mit Grün, je nach Test Farbenfusion, Verdoppler oder einer Schlangengrube vor dem Gegner.</p></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p><code>npx vitest run src/engine/__tests__/regeln/A9_farbenpracht_zugende.test.ts</code> endet mit 0. Zwei Gegenproben machen Tests rot: ohne <code>pruefzeitpunkt: &#x27;zugende&#x27;</code> in <code>farbenpracht.ts</code> 8 Tests dieser Datei und der Szenariotest, ohne den Aufruf <code>pruefeAufgabenAmZugende</code> in <code>schliesseZugAb</code> 7 Tests dieser Datei, der Szenariotest und der Dauerlauf der Aufgaben in <code>A9_aufgaben_ereignisse.test.ts</code>.</p></section>
+<section><h2>Grenzfälle</h2><table><thead><tr><th>ID</th><th>Titel</th><th>Letzter Lauf</th></tr></thead><tbody><tr><td><a href="TF-ENGINE-075.html">TF-ENGINE-075</a></td><td>Farbenpracht wird auch nach dem Abwerfen überzähliger Karten und am Ende des zweiten Verdoppler-Zuges eingelöst, aber nicht, wenn der Spieler die vom Gegner geschaffene Bedingung im eigenen Zug selbst zerstört.</td><td><span class="status status-bestanden">bestanden</span> 24.11.2026</td></tr></tbody></table></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Zugende nach dem Abwerfen überzähliger Karten, eine vom Gegner geschaffene und im eigenen Zug selbst zerstörte Farbenpracht und eine erst im zweiten Zug nach dem Verdoppler erfüllte Farbenpracht prüft TF-ENGINE-075. Zusatzaktionen aus Comeback-Karte und Schlangenkorb gibt es noch nicht (X4, X6); ihr Zugende läuft über dieselbe Stelle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-24">24.11.2026 08:02</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer X2a) &middot; agent &middot; pruefung-X2a-2 @ <span class="commit" title="4dcd05d279fae588dd93ba860241ca4a7428a391">4dcd05d</span></p><p>A9_farbenpracht_zugende.test.ts in npm test grün (2912 Tests, Exit 0). Testcommits rot: e7471814 9 Tests, a11aff81 2 Tests. Gegenprobe ohne pruefzeitpunkt zugende: 12 Tests rot; Gegenprobe ohne Aufruf pruefeAufgabenAmZugende in schliesseZugAb: 11 Tests rot, darunter der Aufgaben-Dauerlauf.</p><ul class="belege"><li><a href="belege/2026-11-24-0802-TF-ENGINE-074-1.txt">2026-11-24-0802-TF-ENGINE-074-1.txt</a></li><li><a href="belege/2026-11-24-0802-TF-ENGINE-074-2.txt">2026-11-24-0802-TF-ENGINE-074-2.txt</a></li><li><a href="belege/2026-11-24-0802-TF-ENGINE-074-3.txt">2026-11-24-0802-TF-ENGINE-074-3.txt</a></li><li><a href="belege/2026-11-24-0802-TF-ENGINE-074-4.txt">2026-11-24-0802-TF-ENGINE-074-4.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

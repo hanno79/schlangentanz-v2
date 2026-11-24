@@ -136,3 +136,33 @@ Ja: Wer eine Farbenfusion ausgespielt hat, hat die Fusion dieses Zuges verbrauch
 
 **Zieht ein Spieler mitten in seinem Zug die letzte Karte vom Nachziehstapel (etwa über Schlangenkorb oder Comeback-Karte): Darf er die eben gezogenen Karten noch im selben Zug ausspielen?** (D57)  
 Ja: Wer mitten in seinem Zug die letzte Karte vom Nachziehstapel zieht, etwa über Schlangenkorb oder Comeback-Karte, spielt seinen Zug zu Ende (A10) und darf dabei auch die eben gezogenen Karten einsetzen; danach beginnt die Schlussrunde. „Seine zuletzt gezogenen Karten kann er nur noch ausserhalb seines Zuges einsetzen“ (A10) meint also die Karten, die er beim Auffüllen am Ende seines Zuges zieht (A5, „Zug beenden“); danach folgt kein Zug mehr. Beim Schlangenkorb verlangt A7.10 selbst, sofort auszuspielen („Ziehe 3 zusätzliche Karten und spiele sofort bis zu 2 davon aus“). Zieht er die letzte Karte beim Auffüllen zwischen den beiden Zügen eines Verdopplers, spielt er den zweiten Zug noch, der wie ein normaler Zug abläuft (A7.8: „Du füllst deine Handkarten auf und spielst sofort einen zweiten Zug“).
+
+**„Farbvielfalt“ („Bilde eine Kette aus je einer Karte aller 6 Farben.“): Darf eine Farbe in der Kette doppelt liegen, etwa Blau, Rot, Rot, Gelb, Braun, Violett, Grün?** (D58)  
+Nein: Die Kette für „Farbvielfalt“ besteht aus sechs Karten direkt hintereinander in einer Schlange, jede Farbe genau einmal. Blau, Rot, Rot, Gelb, Braun, Violett, Grün erfüllt die Aufgabe nicht, ebenso wenig Blau, Rot, Gelb, Rot, Braun, Violett, Grün. Ein Joker zählt in der Kette als die Farbe, die noch fehlt (A9, Beispiel).
+
+**„Farbenpracht“ („Habe am Ende des Spiels oder Zugs von jeder Farbe mindestens zwei Karten in deinen beiden Schlangen.“): Wird die Bedingung nach jeder Aktion geprüft oder nur am Ende des eigenen Zuges?** (D59)  
+Nur am Ende des eigenen Zuges, nicht nach jeder Aktion: Wer die Bedingung von „Farbenpracht“ mitten im Zug erfüllt und im selben Zug wieder zerstört, bekommt die Aufgabe nicht. Das gilt nur für „Farbenpracht“, deren Kartentext das Zugende nennt; die übrigen Aufgaben prüft das Spiel weiter nach A9 („sobald ein Spieler die Bedingungen erfüllt und am Zug ist“). Als geheime Aufgabe zählt „Farbenpracht“ damit, sobald sie an einem eigenen Zugende erfüllt war (D35).
+
+**„Farbenpracht“ nennt auch das Ende des Spiels: Wird bei Spielende zusätzlich für jeden Spieler geprüft, auch für den, der nicht am Zug ist?** (D60)  
+Nein: Bei Spielende gibt es für „Farbenpracht“ keine zusätzliche Prüfung für die anderen Spieler; es genügt das Ende des letzten eigenen Zuges. Die Worte „am Ende des Spiels“ im Kartentext heissen also: am Ende des letzten eigenen Zuges. Legt ein Gegner danach noch die fehlende Karte in die eigene Schlange, bringt das „Farbenpracht“ nicht mehr.
+
+**Zählen Joker bei „Gelber Schatz“, „Lila Riese“, „Farbkombination“ und „Farbenpracht“ auch dann, wenn eine Reihe nur aus Jokern besteht (Regenbogenschlangen und Farbenfusionen, ohne Farbkarte der Farbe)?** (D61)  
+Ja: Bei „Gelber Schatz“, „Lila Riese“, „Farbkombination“ und „Farbenpracht“ zählen Joker immer als die Farbe der Aufgabe, auch wenn eine Reihe nur aus Jokern besteht und keine Farbkarte dieser Farbe enthält; bei „Farbenpracht“ dürfen also auch beide Karten einer Farbe Joker sein. Eine Farbenfusion zählt dabei als eine Karte. Die Einschränkung aus D32 gilt nur für den Vielfaltbonus.
+
+**„Schlangentanz“ („Bilde durch Schlangenhäutung 2 neue Dreiergruppen.“): Wann ist eine Dreiergruppe nach der Häutung „neu“?** (D62)  
+Neu ist jede Dreiergruppe nach der Häutung, in der keine Gruppe von vor der Häutung weiterlebt. Löst eine Häutung eine Dreiergruppe auf und bildet zwei neue, ist „Schlangentanz“ erfüllt; es zählt nicht die Zahl der Gruppen nachher abzüglich der Zahl vorher. Eine Gruppe, die nur verlängert wurde, ist nicht neu.
+
+**„Schlangentanz“: Muss die Häutung mit zwei neuen Dreiergruppen in dem Zug liegen, in dem der Spieler die Aufgabe einlöst, oder genügt eine frühere Häutung?** (D63)  
+Eine frühere Häutung genügt: Hat der Spieler einmal mit einer Schlangenhäutung zwei neue Dreiergruppen gebildet, gilt das für „Schlangentanz“ die ganze Partie; die Häutung muss nicht im Zug des Einlösens liegen. Die beiden Gruppen müssen beim Einlösen nicht mehr liegen; hat ein Gegner eine davon zerstört, zählt die Häutung trotzdem. Wird „Schlangentanz“ erst danach aufgedeckt, löst er die Aufgabe ein, sobald er am Zug ist.
+
+**„Schlangenmeister“ („Habe min. 2 versch. Sonderkarten in deinen Schlangen und spiele min. 4 aus.“): Heisst „2 versch. Sonderkarten“ zwei verschiedene Arten, und zählt eine Schlangenblockade mit, die ein Gegner in die eigene Schlange gelegt hat?** (D64)  
+Ja: „2 versch. Sonderkarten“ heisst zwei verschiedene Arten von Sonderkarten in den eigenen Schlangen; zwei Regenbogenschlangen genügen nicht, eine Regenbogenschlange und eine Farbenfusion schon. Eine Schlangenblockade, die ein Gegner in die eigene Schlange gelegt hat, zählt mit.
+
+**Pro Zug ist nur eine Farbenfusion erlaubt: Verbraucht auch eine Farbenfusion, die wirkungslos abgelegt wird, weil sie kein mögliches Ziel hat (D25), die Fusion des Zuges?** (D65)  
+Ja: Auch eine Farbenfusion, die wirkungslos auf den eigenen Ablagestapel kommt, weil sie kein mögliches Ziel hat (D13, D25), verbraucht die Fusion dieses Zuges, wie eine abgewehrte; eine zweite Farbenfusion ist in diesem Zug nicht möglich.
+
+**„Farbenpracht“ nach einem Verdoppler: Wird am Ende des ersten Zuges geprüft oder erst nach dem zweiten?** (D66)  
+Am Ende jedes der zwei Züge: Nach einem Verdoppler wird „Farbenpracht“ am Ende des ersten und am Ende des zweiten Zuges geprüft, denn A7.8 sagt „Damit ist dein erster Zug beendet“. Ist die Bedingung am Ende des ersten Zuges erfüllt, bekommt der Spieler die Aufgabe dort.
+
+**„Farbharmonie“ („Habe in deinen Schlangen mindestens eine Dreiergruppe jeder Farbe.“): Zählt eine Vierer- oder Fünfergruppe als „Dreiergruppe“ ihrer Farbe?** (D67)  
+Ja: Für „Farbharmonie“ zählt jede Farbgruppe ab drei Karten als Dreiergruppe ihrer Farbe, auch eine Vierer- oder Fünfergruppe; eine Farbgruppe besteht aus mindestens drei nebeneinanderliegenden Karten derselben Farbe. Dass eine Vierergruppe in der Wertung nicht zusätzlich als Dreiergruppe zählt, betrifft nur die Punkte.

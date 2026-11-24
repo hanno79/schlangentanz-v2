@@ -52,7 +52,7 @@ export const KORB_SZENARIEN: readonly Szenario[] = [
     beschreibung:
       'X6, A7.10, D46, D49: Spieler 1 hält sieben Karten, wie nach einer früheren Belohnung: Schlangenkorb, Blau, Rot, Gelb, zwei Farbenfusionen und einen Verdoppler. Seine Schlange ist Grün, Grün, Braun, Braun.',
     erwartet:
-      'Mit „aktionen“ zeigt die Lage zwei Zusatzaktionen „Schlangenkorb“ für Farbkarte, Sonderkarte und „Zwei Karten abwerfen, drei ziehen“. Der Verdoppler hat nur „SonderkarteWirkungslosAblegen“ (D46, D47). Blau, Rot und Gelb lassen sich nacheinander anlegen (drei Farbkarten). Nach einer Farbenfusion auf Grün-Grün hat die zweite nur „SonderkarteWirkungslosAblegen“ (D56). Ein Knopf „AbwerfenUndZiehen“ legt die zwei genannten Karten auf den Ablagestapel und zieht drei (KartenAbgeworfen, KartenGezogen).',
+      'Mit „aktionen“ zeigt die Lage zwei Zusatzaktionen „Schlangenkorb“ für Farbkarte, Sonderkarte und „Zwei Karten abwerfen, drei ziehen“. Der Verdoppler hat nur „SonderkarteWirkungslosAblegen“ (D46, D47). Blau, Rot und Gelb lassen sich nacheinander anlegen (drei Farbkarten). Nach einer Farbenfusion auf Grün-Grün hat die zweite nur „SonderkarteWirkungslosAblegen“ (D56). Ein Knopf „ZweiAbwerfenDreiZiehen“ legt die zwei genannten Karten auf den Ablagestapel und zieht drei (KartenAbgeworfen, KartenGezogen).',
     erzeuge: () =>
       tisch(604)
         .hand(0, ['Schlangenkorb des Glücks', 'Blau', 'Rot', 'Gelb', 'Farbenfusion', 'Farbenfusion', 'Verdoppler'])

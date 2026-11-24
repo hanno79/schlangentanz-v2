@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { pruefeAktion } from '../../index'
-import type { AbwerfenUndZiehenAktion, Spielzustand } from '../../index'
+import type { ZweiAbwerfenDreiZiehenAktion, Spielzustand } from '../../index'
 import type { Kartenwahl } from '../../testing/szenario'
 import { meldeZugerweiterung } from '../../zuggrenzen'
+import { comebackAktion, einsetzen, mitBedingung, schlangeAus } from '../comeback_hilfen'
 import { ablage, aktionen, ereignisseVom, fuehreAus, grund, hand, zugBeenden } from '../zugablauf_hilfen'
 import { abwerfenUndZiehen, angeboteneBoni, handIds, KORB, korbId, korbtisch, mitWirkung, spiele, spieleKarte, spieleKorb } from '../korb_hilfen'
 
@@ -97,7 +98,7 @@ describe('A8.1/D46/D49: Zwei Karten abwerfen, drei ziehen', () => {
   it('D49: mit weniger als zwei Handkarten ist sie nicht wählbar', () => {
     const zustand = nachKorb(['Blau'])
     expect(abwerfenUndZiehen(zustand)).toEqual([])
-    const aktion = { typ: 'AbwerfenUndZiehen', spielerId: 'spieler-1', karteIds: [zustand.spieler[0].hand[0].id, 'rot-15'] } as AbwerfenUndZiehenAktion
+    const aktion = { typ: 'ZweiAbwerfenDreiZiehen', spielerId: 'spieler-1', karteIds: [zustand.spieler[0].hand[0].id, 'rot-15'] } as ZweiAbwerfenDreiZiehenAktion
     expect(pruefeAktion(zustand, aktion).erlaubt).toBe(false)
   })
 
@@ -116,7 +117,7 @@ describe('A8.1/D46/D49: Zwei Karten abwerfen, drei ziehen', () => {
     const zustand = spieleKorb(korbtisch([KORB, 'Blau', 'Rot', 'Gelb']).schlussrunde(1).zustand(), 'aktionen').zustand
     expect(abwerfenUndZiehen(zustand)).toEqual([])
     const [erste, zweite] = hand(zustand, 0)
-    expect(pruefeAktion(zustand, { typ: 'AbwerfenUndZiehen', spielerId: 'spieler-1', karteIds: [erste, zweite] })).toEqual({ erlaubt: false, grund: expect.stringMatching(/Schlussrunde.*D49/) })
+    expect(pruefeAktion(zustand, { typ: 'ZweiAbwerfenDreiZiehen', spielerId: 'spieler-1', karteIds: [erste, zweite] })).toEqual({ erlaubt: false, grund: expect.stringMatching(/Schlussrunde.*D49/) })
   })
 
   it('A8.1: ohne freie Zusatzaktion gibt es sie nicht, etwa nach dem Bonus „Tausche“', () => {
@@ -124,14 +125,14 @@ describe('A8.1/D46/D49: Zwei Karten abwerfen, drei ziehen', () => {
     const zustand = spieleKorb(start, 'tauschen').zustand
     expect(abwerfenUndZiehen(zustand)).toEqual([])
     const [erste, zweite] = hand(zustand, 0)
-    expect(pruefeAktion(zustand, { typ: 'AbwerfenUndZiehen', spielerId: 'spieler-1', karteIds: [erste, zweite] })).toEqual({ erlaubt: false, grund: expect.stringMatching(/D46/) })
+    expect(pruefeAktion(zustand, { typ: 'ZweiAbwerfenDreiZiehen', spielerId: 'spieler-1', karteIds: [erste, zweite] })).toEqual({ erlaubt: false, grund: expect.stringMatching(/D46/) })
   })
 
   it('A8.1: die abgeworfenen Karten müssen zwei verschiedene eigene Handkarten sein', () => {
     const zustand = nachKorb(['Blau', 'Rot'])
     const [blau] = handIds(zustand, 0, 'Blau')
-    expect(pruefeAktion(zustand, { typ: 'AbwerfenUndZiehen', spielerId: 'spieler-1', karteIds: [blau, blau] }).erlaubt).toBe(false)
-    expect(pruefeAktion(zustand, { typ: 'AbwerfenUndZiehen', spielerId: 'spieler-1', karteIds: [blau, zustand.spieler[1].hand[0].id] }).erlaubt).toBe(false)
+    expect(pruefeAktion(zustand, { typ: 'ZweiAbwerfenDreiZiehen', spielerId: 'spieler-1', karteIds: [blau, blau] }).erlaubt).toBe(false)
+    expect(pruefeAktion(zustand, { typ: 'ZweiAbwerfenDreiZiehen', spielerId: 'spieler-1', karteIds: [blau, zustand.spieler[1].hand[0].id] }).erlaubt).toBe(false)
   })
 })
 
@@ -162,5 +163,33 @@ describe('D47: Verdoppler, Comeback und die zugerweiternden Boni schliessen sich
     const zustand = spieleKorb(start, 'tauschen').zustand
     expect(zustand.zug.runde).toEqual([])
     expect(mitWirkung(zustand, handIds(zustand, 0, 'Verdoppler')[0])).toBe(false)
+  })
+})
+
+describe('D47: mit der echten Comeback-Karte (X4)', () => {
+  /** Spieler 1 hält Korb und Blau, seine Schlange hat 1 Karte mit einer Blockade, die des Gegners 7: Die Comeback-Bedingung gilt (D48). */
+  function rueckstand(): Spielzustand {
+    return mitBedingung(korbtisch([KORB, 'Blau']).schlange(0, ['Rot', 'Schlangenblockade']).schlange(1, schlangeAus(8)))
+  }
+
+  it('D47: nach dem Einsatz der Comeback-Karte gibt es nur noch Tausch und Entfernen; die Zusatzaktionen der Comeback-Karte bleiben', () => {
+    const start = rueckstand()
+    expect(comebackAktion(start), 'Testaufbau: die Comeback-Karte ist einsetzbar').toBeDefined()
+    const zustand = einsetzen(start).zustand
+    expect(angeboteneBoni(zustand)).toEqual(['tauschen', 'entfernen'])
+    expect(grund(zustand, { typ: 'SchlangenkorbSpielen', spielerId: 'spieler-1', karteId: korbId(zustand), bonus: { art: 'ziehen' } })).toMatch(/Comeback-Karte.*D47/)
+    expect(zustand.zug.zusatzaktionen.map((zusatz) => zusatz.quelle)).toEqual(['Comeback', 'Comeback'])
+  })
+
+  it('D47: nach „Ziehe 3“ oder „zwei zusätzliche Aktionen“ ist die Comeback-Karte in diesem Zug nicht mehr einsetzbar', () => {
+    for (const art of ['ziehen', 'aktionen'] as const) {
+      const zustand = spieleKorb(rueckstand(), art).zustand
+      expect(comebackAktion(zustand), art).toBeUndefined()
+      expect(grund(zustand, { typ: 'ComebackEinsetzen', spielerId: 'spieler-1', comebackId: zustand.spieler[0].comeback!.karte.id }), art).toMatch(/Schlangenkorbs.*D47/)
+    }
+  })
+
+  it('D47/A8.1: nach Tausch oder Entfernen bleibt die Comeback-Karte einsetzbar; beides erweitert den Zug nicht', () => {
+    for (const art of ['tauschen', 'entfernen'] as const) expect(comebackAktion(spieleKorb(rueckstand(), art).zustand), art).toBeDefined()
   })
 })

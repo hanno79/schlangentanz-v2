@@ -1,9 +1,9 @@
-import { werfeAbUndZiehe } from '../abwerfenUndZiehen';
 import { pruefeAufgabenAmZug } from '../aufgaben/rahmen';
+import { setzeComebackEin, werfeZweiAbZieheDrei } from '../erweiterung/comeback';
 import { entscheide, meldeOffeneEntscheidung, reagiere, spieleKarte } from '../reaktion';
 import { beginneSchlussrundeBeiLeeremStapel } from '../stapel';
 import type { Spielzustand } from '../types';
-import { beendeZug, legeGrubenOhneZugAb, legeWirkungslosAb, werfeUeberhandAb } from '../zugablauf';
+import { beendeZug, legeGrubenOhneZugAb, legeWirkungslosAb, spielerIndexVon, werfeUeberhandAb } from '../zugablauf';
 import { pruefeAktion } from './pruefen';
 import type { AktionsErgebnis, Ereignis, SpielAktion } from './typen';
 
@@ -44,8 +44,11 @@ export function anwendeAktion(zustand: Spielzustand, aktion: SpielAktion): Aktio
     case 'Entscheiden':
       ergebnis = entscheide(neu, aktion, ereignisse);
       break;
-    case 'AbwerfenUndZiehen':
-      werfeAbUndZiehe(neu, aktion, ereignisse);
+    case 'ComebackEinsetzen':
+      setzeComebackEin(neu, spielerIndexVon(neu, aktion.spielerId), ereignisse);
+      break;
+    case 'ZweiAbwerfenDreiZiehen':
+      werfeZweiAbZieheDrei(neu, spielerIndexVon(neu, aktion.spielerId), aktion.karteIds, ereignisse);
       break;
     default:
       ergebnis = spieleKarte(neu, aktion, ereignisse);

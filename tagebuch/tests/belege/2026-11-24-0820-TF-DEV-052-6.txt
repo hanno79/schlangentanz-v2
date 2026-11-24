@@ -1,0 +1,38 @@
+Szenario-Durchlauf am Entwicklertisch (eingebauter Browser, 1280x900, echte Klicks) - siehe Protokoll; Fotos mit Playwright:
+import { chromium } from 'playwright'
+import { GERAETEKLASSEN, chromiumPfad, kontextOptionen } from './scripts/pruefung/geraeteklassen.mjs'
+
+const ziel = 'C:/Users/hanno/AppData/Local/Temp/claude/29dfebc845fc3914/302a7f32-1072-4fc8-a34d-c8f4b23507c9/scratchpad/X4-pruefer'
+const desktop = GERAETEKLASSEN.find((klasse) => klasse.name === 'desktop')
+const browser = await chromium.launch({ executablePath: chromiumPfad() })
+const kontext = await browser.newContext({ ...kontextOptionen(desktop), reducedMotion: 'reduce' })
+const seite = await kontext.newPage()
+const fehler = []
+seite.on('console', (m) => { if (m.type() === 'error') fehler.push(m.text()) })
+
+async function bereich(ueberschrift) {
+  return seite.locator('h2', { hasText: ueberschrift }).first().locator('xpath=..')
+}
+async function foto(name) {
+  // Oberer Teil (Knöpfe und Ereignisse) und die Lage mit dem Spieler am Zug, je als Ausschnitt.
+  const aktionen = await bereich('Aktionen der Engine')
+  await aktionen.screenshot({ path: `${ziel}/X4-${name}-aktionen-desktop.png` })
+  const lage = await bereich('Lage')
+  await lage.screenshot({ path: `${ziel}/X4-${name}-lage-desktop.png` })
+}
+
+await seite.goto('http://localhost:4187/dev?szenario=comeback-bedingung')
+await seite.locator('button[title*="ComebackEinsetzen"]').click()
+await foto('comeback-eingesetzt')
+
+await seite.goto('http://localhost:4187/dev?szenario=comeback-letzte-karte')
+await seite.locator('button[title*="ZweiAbwerfenDreiZiehen"]').first().click()
+await foto('letzte-karte-abgeworfen')
+
+await seite.goto('http://localhost:4187/dev?szenario=comeback-verdoppler')
+await seite.locator('button[title*="VerdopplerSpielen"]').click()
+await seite.locator('button[title*="ZugBeenden"]').click()
+await foto('verdoppler-zweiter-zug')
+
+console.log('Konsolenfehler', fehler.length, fehler.join(' / '))
+await browser.close()

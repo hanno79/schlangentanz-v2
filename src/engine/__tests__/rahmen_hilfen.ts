@@ -1,4 +1,5 @@
-import { vi } from 'vitest'
+import { isDeepStrictEqual } from 'node:util'
+import { expect, vi } from 'vitest'
 import type { Ereignis, KartenAktion, Spielzustand } from '../index'
 import { trageEntscheidungenEin } from '../entscheidungsregister'
 import type { EntscheidungsDefinition } from '../entscheidungsregister'
@@ -59,23 +60,15 @@ export function entscheidung(zustand: Spielzustand, wahl: string): Schritt {
   return pruefeSchritt(zustand, fuehreAus(zustand, angebot))
 }
 
-/** JSON mit sortierten Schlüsseln: Eine neue Schlange steht in der nachgerechneten Lage am Ende, im Zustand bei ihrem Besitzer. */
-function kanonisch(wert: unknown): string {
-  return JSON.stringify(wert, (_, eintrag: unknown) =>
-    typeof eintrag === 'object' && eintrag !== null && !Array.isArray(eintrag) ? Object.fromEntries(Object.entries(eintrag).sort(([a], [b]) => (a < b ? -1 : 1))) : eintrag,
-  )
-}
-
 /**
  * Was für jeden Schritt des Rahmens gilt: Die Oberfläche rechnet ihn aus den
  * Ereignissen nach (Plan E2, Kriterium 11), kein Ereignis nennt eine Handkarte
  * (B2), und jede Invariante hält, auch die Kartenerhaltung.
  */
 export function pruefeSchritt(vorher: Spielzustand, schritt: Schritt): Schritt {
-  const nachgerechnet = spieleNach(lageVon(vorher), schritt.ereignisse)
-  if (kanonisch(nachgerechnet) !== kanonisch(lageVon(schritt.zustand))) {
-    throw new Error(`E4b/X3: nicht nachrechenbar: ${JSON.stringify(schritt.ereignisse)}`)
-  }
+  // Verglichen wird der Inhalt, nicht die Reihenfolge der Schlüssel: Eine neue Schlange steht in der nachgerechneten Lage hinten.
+  const [nachgerechnet, erwartet] = [spieleNach(lageVon(vorher), schritt.ereignisse), lageVon(schritt.zustand)]
+  if (!isDeepStrictEqual(nachgerechnet, erwartet)) expect(nachgerechnet, `E4b/X3: nicht nachrechenbar: ${JSON.stringify(schritt.ereignisse)}`).toEqual(erwartet)
   const verraten = verrateneHandkarten(schritt.zustand, schritt.ereignisse)
   if (verraten.length > 0) throw new Error(`B2: ein Ereignis nennt die Handkarten ${verraten.join(', ')}`)
   const verletzt = verletzteInvarianten(schritt.zustand)

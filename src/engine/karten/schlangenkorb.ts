@@ -1,4 +1,4 @@
-import { ABWERFEN_UND_ZIEHEN } from '../abwerfenUndZiehen';
+import { ZWEI_ABWERFEN_DREI_ZIEHEN } from '../erweiterung/comeback';
 import type { Korbbonus, Korbtausch, Korbziel, SchlangenkorbSpielenAktion } from '../aktionen/typen';
 import { findeSchlange, gepruefteSchlange, nimmAusSchlange, schlangenVon } from '../schlangen';
 import { zieheVomStapel } from '../stapel';
@@ -173,7 +173,7 @@ export const schlangenkorb: KartenDefinition<SchlangenkorbSpielenAktion> = {
         break;
       }
       case 'aktionen':
-        erweitere(zustand, { quelle: 'Schlangenkorb', erlaubt: ['Farbkarte', 'Sonderkarte', ABWERFEN_UND_ZIEHEN], nurKarten: null });
+        erweitere(zustand, { quelle: 'Schlangenkorb', erlaubt: ['Farbkarte', 'Sonderkarte', ZWEI_ABWERFEN_DREI_ZIEHEN], nurKarten: null });
         break;
       case 'tauschen':
         tausche(zustand, spielerIndex, bonus.tausch);

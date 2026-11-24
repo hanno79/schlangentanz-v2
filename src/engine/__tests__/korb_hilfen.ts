@@ -1,5 +1,5 @@
 import { expect } from 'vitest'
-import type { AbwerfenUndZiehenAktion, Korbbonus, SchlangenkorbSpielenAktion, SpielAktion, Spielzustand } from '../index'
+import type { ZweiAbwerfenDreiZiehenAktion, Korbbonus, SchlangenkorbSpielenAktion, SpielAktion, Spielzustand } from '../index'
 import { baukasten } from '../testing/szenario'
 import type { Baukasten, Kartenwahl } from '../testing/szenario'
 import { pruefeSchritt } from './rahmen_hilfen'
@@ -78,8 +78,8 @@ export function mitWirkung(zustand: Spielzustand, karteId: string): boolean {
 }
 
 /** Die aufgezählten Zusatzaktionen „Zwei Karten abwerfen, drei ziehen“ (A8.1, D46). */
-export function abwerfenUndZiehen(zustand: Spielzustand): AbwerfenUndZiehenAktion[] {
-  return aktionen(zustand, 'AbwerfenUndZiehen').filter((aktion): aktion is AbwerfenUndZiehenAktion => aktion.typ === 'AbwerfenUndZiehen')
+export function abwerfenUndZiehen(zustand: Spielzustand): ZweiAbwerfenDreiZiehenAktion[] {
+  return aktionen(zustand, 'ZweiAbwerfenDreiZiehen').filter((aktion): aktion is ZweiAbwerfenDreiZiehenAktion => aktion.typ === 'ZweiAbwerfenDreiZiehen')
 }
 
 /** Die Ids der Karten in der `nummer`-ten Schlange des Spielers; leer, wenn es sie nicht gibt. */

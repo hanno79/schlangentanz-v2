@@ -32,7 +32,7 @@ function typen(zustand: Spielzustand): SpielAktion['typ'][] {
 describe('X6: Szenarien des Schlangenkorbs am Entwicklertisch', () => {
   it('X6: die Szenarien sind da und jeder Knopf hat eine Beschriftung', () => {
     expect(SZENARIEN.map((szenario) => szenario.name)).toEqual(expect.arrayContaining(NAMEN))
-    // Dazu die Lage nach „zwei zusätzliche Aktionen“, in der 15 Knöpfe „AbwerfenUndZiehen“ stehen.
+    // Dazu die Lage nach „zwei zusätzliche Aktionen“, in der 15 Knöpfe „ZweiAbwerfenDreiZiehen“ stehen.
     const nachBonus = klicke(erzeuge('korb-aktionen'), bonus('aktionen')).zustand
     for (const [name, zustand] of [...NAMEN.map((eintrag) => [eintrag, erzeuge(eintrag)] as const), ['korb-aktionen nach dem Bonus', nachBonus] as const]) {
       const texte = ermittleAktionen(zustand).map((aktion) => beschrifte(zustand, aktion))
@@ -81,13 +81,13 @@ describe('X6: Szenarien des Schlangenkorbs am Entwicklertisch', () => {
   it('D46/D49: korb-aktionen: drei Farbkarten, eine Fusion nur einmal, Verdoppler nur wirkungslos, abwerfen und ziehen', () => {
     const start = erzeuge('korb-aktionen')
     const frei = klicke(start, bonus('aktionen')).zustand
-    expect(typen(frei)).toContain('AbwerfenUndZiehen')
+    expect(typen(frei)).toContain('ZweiAbwerfenDreiZiehen')
     expect(ermittleAktionen(frei).some((aktion) => aktion.typ === 'VerdopplerSpielen')).toBe(false)
     const drei = klicke(frei, karteDerArt('Blau'), karteDerArt('Rot'), karteDerArt('Gelb')).zustand
     expect(drei.zug.gespielteFarbkarten).toBe(3)
     const fusion = klicke(frei, (aktion) => aktion.typ === 'FusionLegen').zustand
     expect(ermittleAktionen(fusion).some((aktion) => aktion.typ === 'FusionLegen')).toBe(false)
-    const gezogen = klicke(frei, (aktion) => aktion.typ === 'AbwerfenUndZiehen')
+    const gezogen = klicke(frei, (aktion) => aktion.typ === 'ZweiAbwerfenDreiZiehen')
     expect(gezogen.ereignisse.map((ereignis) => ereignis.typ)).toEqual(['KartenAbgeworfen', 'KartenGezogen'])
   })
 

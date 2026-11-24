@@ -157,10 +157,12 @@ class Schreiber {
         return aktion.farbenschutzId === null ? `${wer} lässt durch.` : `${wer} wehrt mit ${this.karte(aktion.farbenschutzId)} ab.`;
       case 'Entscheiden':
         return `${wer} wählt „${aktion.wahl}“.`;
+      case 'ComebackEinsetzen':
+        return `${wer} setzt die Comeback-Karte ${aktion.comebackId} ein.`;
+      case 'ZweiAbwerfenDreiZiehen':
+        return `${wer} wirft zwei Karten ab und zieht drei: ${aktion.karteIds.map((id) => this.karte(id)).join(', ')}.`;
       case 'SchlangenkorbSpielen':
         return `${wer} spielt ${this.karte(aktion.karteId)}: ${this.korbbonus(aktion.bonus)}.`;
-      case 'AbwerfenUndZiehen':
-        return `${wer} wirft ${aktion.karteIds.map((id) => this.karte(id)).join(' und ')} ab und zieht bis zu drei Karten.`;
     }
   }
 
@@ -213,6 +215,8 @@ class Schreiber {
         return `${this.spieler(ereignis.spielerIndex)} entscheidet über „${ereignis.art}“ zu ${this.karte(ereignis.karteId)}: ${ereignis.optionen.join(', ')}.`;
       case 'Entschieden':
         return `${this.spieler(ereignis.spielerIndex)} hat bei „${ereignis.art}“ „${ereignis.wahl}“ gewählt.`;
+      case 'ComebackEingesetzt':
+        return `${this.spieler(ereignis.spielerIndex)} dreht die Comeback-Karte ${ereignis.karteId} um und hat zwei zusätzliche Aktionen.`;
       case 'SchlussrundeBegonnen':
         return `Der Nachziehstapel ist leer: Die Schlussrunde beginnt, ausgelöst von ${this.spieler(ereignis.ausloeser)}.`;
       case 'PartieBeendet':

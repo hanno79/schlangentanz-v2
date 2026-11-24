@@ -1,0 +1,79 @@
+Probedatei (Prüfsummen ohne Erweiterung), temporär als src/engine/__tests__/x4_pruefer_probe.test.ts:
+// @vitest-environment node
+import { createHash } from 'node:crypto'
+import { writeFileSync } from 'node:fs'
+import { describe, expect, it } from 'vitest'
+import { anwendeAktion, ermittleAktionen, erstellePartie, erzeugeZufall } from '../index'
+import type { Spielzustand } from '../index'
+import { spielePartie } from '../../ki/turnier'
+import { erstelleSolideKi } from '../../ki/strategien/solideKi'
+import { erstelleZufallsKi } from '../../ki/strategien/zufallsKi'
+
+// Prüfer X4, temporär: Prüfsummen von Partien ohne Erweiterung, vor und nach X4 vergleichbar.
+const ohneNeuesFeld = (zustand: Spielzustand): string =>
+  JSON.stringify(zustand, (schluessel, wert) => (schluessel === 'comebackBedingung' ? undefined : wert))
+
+function zufallsaktionen(saat: number, spielerzahl: number): string {
+  const zufall = erzeugeZufall(saat * 31 + 7)
+  let zustand = erstellePartie({ spielerzahl, erweiterung: false, zufall: erzeugeZufall(saat) })
+  const hash = createHash('sha256')
+  for (let schritt = 0; schritt < 5000; schritt += 1) {
+    const aktionen = ermittleAktionen(zustand)
+    if (aktionen.length === 0) break
+    const aktion = aktionen[Math.floor(zufall() * aktionen.length)]
+    hash.update(JSON.stringify(aktion))
+    zustand = anwendeAktion(zustand, aktion).zustand
+    hash.update(ohneNeuesFeld(zustand))
+  }
+  expect(zustand.partiephase).toBe('Beendet')
+  return hash.digest('hex').slice(0, 16)
+}
+
+function kiPartie(fabrik: typeof erstelleSolideKi, saat: number, spielerzahl: number): string {
+  const start = erstellePartie({ spielerzahl, erweiterung: false, zufall: erzeugeZufall(saat) })
+  const ki = fabrik(erzeugeZufall(saat * 13 + 5))
+  const { ausgang, verlauf, punkteSitze } = spielePartie(start, start.spieler.map(() => ki), 5000, `Probe ${saat}`)
+  expect(ausgang).toBe('beendet')
+  return createHash('sha256').update(JSON.stringify({ verlauf, punkteSitze })).digest('hex').slice(0, 16)
+}
+
+describe('Prüfer X4: Prüfsummen ohne Erweiterung', () => {
+  it('schreibt Prüfsummen', () => {
+    const zeilen: string[] = []
+    for (const saat of [7301, 7302, 7303, 7304, 7305, 7306]) zeilen.push(`zufallsaktionen ${saat} ${2 + (saat % 3)}: ${zufallsaktionen(saat, 2 + (saat % 3))}`)
+    for (const saat of [7401, 7402, 7403, 7404]) zeilen.push(`zufallsKi ${saat} ${2 + (saat % 3)}: ${kiPartie(erstelleZufallsKi, saat, 2 + (saat % 3))}`)
+    for (const saat of [7501, 7502, 7503]) zeilen.push(`solideKi ${saat} ${2 + (saat % 3)}: ${kiPartie(erstelleSolideKi, saat, 2 + (saat % 3))}`)
+    writeFileSync(process.env.X4_PROBE_ZIEL ?? 'x4-probe.txt', zeilen.join('\n') + '\n')
+  }, 600_000)
+})
+
+Ergebnis:
+GLEICH
+neuaufbau 6c4638c9:
+zufallsaktionen 7301 4: 188217bc42f5e9b3
+zufallsaktionen 7302 2: 8262123aac2b2b8e
+zufallsaktionen 7303 3: d005e9f065b20f8b
+zufallsaktionen 7304 4: 769cf4f51cf821d7
+zufallsaktionen 7305 2: 24a6cb490d6fdb52
+zufallsaktionen 7306 3: 2b1cf2967460f96d
+zufallsKi 7401 2: 5794880a3c48166b
+zufallsKi 7402 3: 9d504dbabddf63cd
+zufallsKi 7403 4: cb02d1ce9de3638d
+zufallsKi 7404 2: ebeb05feaf66a497
+solideKi 7501 3: 6f8a98f93c9f70f1
+solideKi 7502 4: 8528babadd26e16a
+solideKi 7503 2: d857af6a978a8cf0
+X4 9e253382:
+zufallsaktionen 7301 4: 188217bc42f5e9b3
+zufallsaktionen 7302 2: 8262123aac2b2b8e
+zufallsaktionen 7303 3: d005e9f065b20f8b
+zufallsaktionen 7304 4: 769cf4f51cf821d7
+zufallsaktionen 7305 2: 24a6cb490d6fdb52
+zufallsaktionen 7306 3: 2b1cf2967460f96d
+zufallsKi 7401 2: 5794880a3c48166b
+zufallsKi 7402 3: 9d504dbabddf63cd
+zufallsKi 7403 4: cb02d1ce9de3638d
+zufallsKi 7404 2: ebeb05feaf66a497
+solideKi 7501 3: 6f8a98f93c9f70f1
+solideKi 7502 4: 8528babadd26e16a
+solideKi 7503 2: d857af6a978a8cf0

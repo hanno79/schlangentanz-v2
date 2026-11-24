@@ -53,6 +53,10 @@ export const SCHRITT = {
   zieht: (person: Person, anzahl: number) => `${satzanfang(person, 'Du ziehst', 'zieht')} ${anzahlKarten(anzahl)}.`,
   legtAb: (person: Person, anzahl: number) =>
     `${satzanfang(person, 'Du legst', 'legt')} ${anzahl === 1 ? '1 überzählige Karte' : `${anzahl} überzählige Karten`} ab.`,
+  // X4, A8.1, D49: die Comeback-Karte und ihre Zusatzaktion „Zwei Karten abwerfen, drei ziehen“.
+  comeback: (person: Person) =>
+    person.ich ? 'Du setzt die Comeback-Karte ein und hast zwei zusätzliche Aktionen.' : `${person.name} setzt die Comeback-Karte ein und hat zwei zusätzliche Aktionen.`,
+  wirftAb: (person: Person, anzahl: number) => `${satzanfang(person, 'Du wirfst', 'wirft')} ${anzahlKarten(anzahl)} ab.`,
   schlussrunde: 'Der Nachziehstapel ist leer: Die Schlussrunde beginnt.',
   beendet: 'Die Partie ist beendet.',
 }

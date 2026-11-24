@@ -1,0 +1,257 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-ad1fcdfcbe0132e91
+
+ ❯ src/ki/strategien/comeback_ki.test.ts (0 test)
+ ❯ src/engine/__tests__/regeln/A8.1_comeback_zusatzaktionen.test.ts (0 test)
+ ❯ src/engine/__tests__/regeln/A8.1_comeback.test.ts (0 test)
+ ❯ src/entwicklung/szenarienComeback.test.ts (6 tests | 6 failed) 36ms
+     × X4: die Szenarien sind da und haben Beschreibung und Erwartung 28ms
+     × A8.1/D46/D47: comeback-bedingung: einsetzen, drei Farbkarten und eine Sonderkarte; der Verdoppler nur wirkungslos 2ms
+     × A8.1: comeback-rueckstand-4: kein Knopf ComebackEinsetzen 1ms
+     × D49: comeback-abwerfen-ziehen: zehn Knöpfe zum Abwerfen, zweimal tauschen, dann nicht mehr 1ms
+     × D49/D57/A10: comeback-letzte-karte: das Abwerfen zieht die letzten zwei Karten, Spieler 1 löst die Schlussrunde aus und spielt weiter 1ms
+     × D47/D48: comeback-verdoppler: nach dem Verdoppler und im zweiten Zug kein Knopf ComebackEinsetzen 1ms
+ ❯ src/engine/__tests__/regeln/A8.1_comeback_dauerlauf.test.ts (1 test | 1 failed) 25887ms
+     × A8.1/D49: in 80 Zufallspartien mit Erweiterung kommen Comeback und Abwerfen vor; jede Partie endet ohne Befund 25884ms
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/ki/strategien/comeback_ki.test.ts [ src/ki/strategien/comeback_ki.test.ts ]
+Error: Cannot find module '../../engine/erweiterung/comeback' imported from E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-ad1fcdfcbe0132e91/src/ki/strategien/comeback_ki.test.ts
+ ❯ src/ki/strategien/comeback_ki.test.ts:5:1
+      3| import { anwendeAktion, ermittleAktionen, erstellePartie, erzeugeZufal…
+      4| import type { Aktionstyp, Spielzustand } from '../../engine'
+      5| import { comebackBedingungErfuellt } from '../../engine/erweiterung/co…
+       | ^
+      6| import { baukasten } from '../../engine/testing/szenario'
+      7| import { kiWahl } from '../schritt'
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  src/engine/__tests__/regeln/A8.1_comeback.test.ts [ src/engine/__tests__/regeln/A8.1_comeback.test.ts ]
+Error: Failed to resolve import "../erweiterung/comeback" from "src/engine/__tests__/comeback_hilfen.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-ad1fcdfcbe0132e91/src/engine/__tests__/comeback_hilfen.ts:2:42
+  1  |  import { comebackBedingungErfuellt } from "../erweiterung/comeback";
+     |                                             ^
+  2  |  import { baukasten } from "../testing/szenario";
+  3  |  import { pruefeSchritt } from "./rahmen_hilfen";
+ ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:30488:39
+ ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:30485:14
+ ❯ normalizeUrl node_modules/vite/dist/node/chunks/node.js:27728:18
+ ❯ node_modules/vite/dist/node/chunks/node.js:27791:30
+ ❯ TransformPluginContext.transform node_modules/vite/dist/node/chunks/node.js:27759:4
+ ❯ EnvironmentPluginContainer.transform node_modules/vite/dist/node/chunks/node.js:30273:14
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/node.js:24532:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  src/engine/__tests__/regeln/A8.1_comeback_zusatzaktionen.test.ts [ src/engine/__tests__/regeln/A8.1_comeback_zusatzaktionen.test.ts ]
+Error: Failed to resolve import "../../erweiterung/comeback" from "src/engine/__tests__/regeln/A8.1_comeback_zusatzaktionen.test.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-ad1fcdfcbe0132e91/src/engine/__tests__/regeln/A8.1_comeback_zusatzaktionen.test.ts:5:42
+  2  |  import { zugInSicht } from "../../index";
+  3  |  import { baukasten } from "../../testing/szenario";
+  4  |  import { ZWEI_ABWERFEN_DREI_ZIEHEN } from "../../erweiterung/comeback";
+     |                                             ^
+  5  |  import { beende, einsetzen, FUENF, karteVon, mitBedingung, mitWirkung, spiele, tauschAktionen, tausche, zwei } from "...
+  6  |  import { verrateneHandkarten } from "../nachrechnen";
+ ❯ TransformPluginContext._formatLog node_modules/vite/dist/node/chunks/node.js:30488:39
+ ❯ TransformPluginContext.error node_modules/vite/dist/node/chunks/node.js:30485:14
+ ❯ normalizeUrl node_modules/vite/dist/node/chunks/node.js:27728:18
+ ❯ node_modules/vite/dist/node/chunks/node.js:27791:30
+ ❯ TransformPluginContext.transform node_modules/vite/dist/node/chunks/node.js:27759:4
+ ❯ EnvironmentPluginContainer.transform node_modules/vite/dist/node/chunks/node.js:30273:14
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/node.js:24532:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/entwicklung/szenarienComeback.test.ts > X4: Szenarien der Comeback-Karte am Entwicklertisch > X4: die Szenarien sind da und haben Beschreibung und Erwartung
+AssertionError: expected [ 'start-2', 'start-4', …(75) ] to deeply equal ArrayContaining{…}
+
+- Expected
++ Received
+
+- ArrayContaining [
+-   "comeback-bedingung",
+-   "comeback-rueckstand-4",
+-   "comeback-abwerfen-ziehen",
+-   "comeback-letzte-karte",
+-   "comeback-verdoppler",
++ [
++   "start-2",
++   "start-4",
++   "start-erweiterung",
++   "alle-orte",
++   "wertung-beispiele",
++   "wertung-beispiele-kette",
++   "wertung-joker",
++   "wertung-vielfalt-regenbogen",
++   "kaputt-doppelte-karte",
++   "stapel-fast-leer",
++   "schlussrunde-2",
++   "schlussrunde-4",
++   "aussetzen",
++   "nur-farbenschutz",
++   "nur-sonderkarten",
++   "verdoppler",
++   "verdoppler-schlussrunde",
++   "schlangengrube",
++   "abwehr-schlangengrube",
++   "doppelangriff",
++   "farbkarte-beim-gegner",
++   "regenbogen",
++   "blockade-abwehr",
++   "frass-eigen",
++   "frass-zwei-spieler",
++   "frass-fusion",
++   "farbendieb",
++   "farbendieb-abwehr",
++   "fusion-eigen",
++   "fusion-beim-gegner",
++   "angriff-auf-dich",
++   "schlussrunde-ohne-dich",
++   "zu-viele-handkarten",
++   "angriff-ohne-schutz",
++   "grube-vor-dir",
++   "ki-angriff-mit-schutz",
++   "ki-angriff-ohne-schutz",
++   "haeutung-punkte",
++   "haeutung",
++   "haeutung-nicht-moeglich",
++   "ki-dreiergruppe",
++   "ki-dreiergruppe-joker",
++   "ki-dreiergruppe-ausnahme",
++   "ki-farbe-und-sonderkarte",
++   "ki-regenbogen-eigene",
++   "ki-fusion-senkt",
++   "ki-grube-ohne-zug",
++   "ki-grube-schlussrunde",
++   "ki-wirkungslos",
++   "ki-verdoppler",
++   "zusatzaktionen-test",
++   "entscheidung-gegner",
++   "entscheidung-letzte-karte",
++   "ki-frass-blockade",
++   "ki-frass-fuehrender",
++   "ki-blockade-fuehrender",
++   "ki-farbendieb-fuehrender",
++   "ki-farbe-eigene",
++   "ki-farbe-stoeren",
++   "ki-abwehr-dreiergruppe",
++   "ki-abwehr-harmlos",
++   "ki-abwehr-schlussrunde",
++   "ki-angriff-fuehrender",
++   "aufgaben-einloesen",
++   "aufgaben-stapel-leer",
++   "aufgaben-abwehr",
++   "aufgaben-gegnerzug",
++   "aufgabe-farbvielfalt",
++   "aufgabe-vielfaltskoenig",
++   "aufgabe-farbwechsler",
++   "aufgabe-schlangenbaendiger",
++   "aufgabe-symmetriemeister",
++   "aufgabe-fusionsexperte",
++   "aufgabe-schlangenbeschwoerer",
++   "aufgabe-schlangenmeister",
++   "aufgabe-schlangenrepertoire",
++   "aufgabe-schlangentanz",
+  ]
+
+ ❯ src/entwicklung/szenarienComeback.test.ts:31:56
+     29|   it('X4: die Szenarien sind da und haben Beschreibung und Erwartung',…
+     30|     const namen = ['comeback-bedingung', 'comeback-rueckstand-4', 'com…
+     31|     expect(SZENARIEN.map((szenario) => szenario.name)).toEqual(expect.…
+       |                                                        ^
+     32|     for (const name of namen) {
+     33|       const szenario = SZENARIEN.find((eintrag) => eintrag.name === na…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  src/entwicklung/szenarienComeback.test.ts > X4: Szenarien der Comeback-Karte am Entwicklertisch > A8.1/D46/D47: comeback-bedingung: einsetzen, drei Farbkarten und eine Sonderkarte; der Verdoppler nur wirkungslos
+Error: Unbekanntes Szenario „comeback-bedingung“; die Szenarien stehen unter /dev/szenarien.
+ ❯ erzeugeSzenario src/entwicklung/szenarien.ts:269:37
+    267| export function erzeugeSzenario(name: string): Spielzustand {
+    268|   const szenario = findeSzenario(name)
+    269|   if (szenario === undefined) throw new Error(`Unbekanntes Szenario „$…
+       |                                     ^
+    270|   return szenario.erzeuge()
+    271| }
+ ❯ src/entwicklung/szenarienComeback.test.ts:40:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  src/entwicklung/szenarienComeback.test.ts > X4: Szenarien der Comeback-Karte am Entwicklertisch > A8.1: comeback-rueckstand-4: kein Knopf ComebackEinsetzen
+Error: Unbekanntes Szenario „comeback-rueckstand-4“; die Szenarien stehen unter /dev/szenarien.
+ ❯ erzeugeSzenario src/entwicklung/szenarien.ts:269:37
+    267| export function erzeugeSzenario(name: string): Spielzustand {
+    268|   const szenario = findeSzenario(name)
+    269|   if (szenario === undefined) throw new Error(`Unbekanntes Szenario „$…
+       |                                     ^
+    270|   return szenario.erzeuge()
+    271| }
+ ❯ src/entwicklung/szenarienComeback.test.ts:56:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+ FAIL  src/entwicklung/szenarienComeback.test.ts > X4: Szenarien der Comeback-Karte am Entwicklertisch > D49: comeback-abwerfen-ziehen: zehn Knöpfe zum Abwerfen, zweimal tauschen, dann nicht mehr
+Error: Unbekanntes Szenario „comeback-abwerfen-ziehen“; die Szenarien stehen unter /dev/szenarien.
+ ❯ erzeugeSzenario src/entwicklung/szenarien.ts:269:37
+    267| export function erzeugeSzenario(name: string): Spielzustand {
+    268|   const szenario = findeSzenario(name)
+    269|   if (szenario === undefined) throw new Error(`Unbekanntes Szenario „$…
+       |                                     ^
+    270|   return szenario.erzeuge()
+    271| }
+ ❯ src/entwicklung/szenarienComeback.test.ts:62:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/10]⎯
+
+ FAIL  src/entwicklung/szenarienComeback.test.ts > X4: Szenarien der Comeback-Karte am Entwicklertisch > D49/D57/A10: comeback-letzte-karte: das Abwerfen zieht die letzten zwei Karten, Spieler 1 löst die Schlussrunde aus und spielt weiter
+Error: Unbekanntes Szenario „comeback-letzte-karte“; die Szenarien stehen unter /dev/szenarien.
+ ❯ erzeugeSzenario src/entwicklung/szenarien.ts:269:37
+    267| export function erzeugeSzenario(name: string): Spielzustand {
+    268|   const szenario = findeSzenario(name)
+    269|   if (szenario === undefined) throw new Error(`Unbekanntes Szenario „$…
+       |                                     ^
+    270|   return szenario.erzeuge()
+    271| }
+ ❯ src/entwicklung/szenarienComeback.test.ts:76:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/10]⎯
+
+ FAIL  src/entwicklung/szenarienComeback.test.ts > X4: Szenarien der Comeback-Karte am Entwicklertisch > D47/D48: comeback-verdoppler: nach dem Verdoppler und im zweiten Zug kein Knopf ComebackEinsetzen
+Error: Unbekanntes Szenario „comeback-verdoppler“; die Szenarien stehen unter /dev/szenarien.
+ ❯ erzeugeSzenario src/entwicklung/szenarien.ts:269:37
+    267| export function erzeugeSzenario(name: string): Spielzustand {
+    268|   const szenario = findeSzenario(name)
+    269|   if (szenario === undefined) throw new Error(`Unbekanntes Szenario „$…
+       |                                     ^
+    270|   return szenario.erzeuge()
+    271| }
+ ❯ src/entwicklung/szenarienComeback.test.ts:87:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/10]⎯
+
+ FAIL  src/engine/__tests__/regeln/A8.1_comeback_dauerlauf.test.ts > X4/A8.1: Dauerlauf mit Erweiterung und Comeback-Karte > A8.1/D49: in 80 Zufallspartien mit Erweiterung kommen Comeback und Abwerfen vor; jede Partie endet ohne Befund
+AssertionError: A8.1: eingesetzte Comeback-Karten: expected 0 to be greater than 0
+ ❯ src/engine/__tests__/regeln/A8.1_comeback_dauerlauf.test.ts:25:89
+     23|     const ergebnisse = dauerlauf(dauerlaufPartien(80, true, 4001), { n…
+     24|     expect(ergebnisse.filter((ergebnis) => ergebnis.ausgang !== 'beend…
+     25|     expect(gezaehlt.get('ComebackEinsetzen') ?? 0, 'A8.1: eingesetzte …
+       |                                                                                         ^
+     26|     expect(gezaehlt.get('ZweiAbwerfenDreiZiehen') ?? 0, 'D49: „Zwei Ka…
+     27|   }, 300_000)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/10]⎯
+
+
+ Test Files  5 failed | 1 passed (6)
+      Tests  7 failed | 21 passed (28)
+   Start at  07:49:09
+   Duration  28.53s (transform 4.58s, setup 3.77s, import 2.76s, tests 25.96s, environment 14.73s)
+
+exit 1

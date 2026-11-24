@@ -8,11 +8,11 @@ export * from './types';
 export * from './constants';
 export { AKTIONSTYPEN } from './aktionen/typen';
 export type {
-  AbwerfenUndZiehenAktion,
   Ablehnung,
   Aktionstyp,
   AktionsErgebnis,
   BlockadeLegenAktion,
+  ComebackEinsetzenAktion,
   EntscheidenAktion,
   Ereignis,
   FarbendiebSpielenAktion,
@@ -38,6 +38,7 @@ export type {
   VerdopplerSpielenAktion,
   Versetzung,
   ZugBeendenAktion,
+  ZweiAbwerfenDreiZiehenAktion,
 } from './aktionen/typen';
 
 // Partie beginnen, Aktionen aufzählen, prüfen und anwenden

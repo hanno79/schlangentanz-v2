@@ -121,6 +121,8 @@ describe('A7.8/A5: Auffüllen und der zweite Zug', () => {
       verdopplerGespielt: false,
       farbenfusionGespielt: false,
       abschnitt: 'Ausspielen',
+      // A8.1, D48: Ohne Erweiterung gibt es keine Comeback-Bedingung.
+      comebackBedingung: false,
       zusatzaktionen: [],
       verwendet: [],
       // D47, D50: Die Runde läuft im zweiten Zug weiter; der Verdoppler bleibt ihre Zugerweiterung.

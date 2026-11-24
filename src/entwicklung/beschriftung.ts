@@ -48,7 +48,9 @@ function zielText(tisch: Tisch, feld: string, wert: unknown): string {
 /** Aktionstyp, gespielte Karte und das Ziel, etwa „BlockadeLegen: Schlangenblockade (…) → schlange-2 · Stelle 1“. */
 export function beschrifte(zustand: Spielzustand, aktion: SpielAktion): string {
   const tisch: Tisch = { zustand, karten: kartenAmTisch(zustand) }
-  if (aktion.typ === 'UeberhandAbwerfen' || aktion.typ === 'AbwerfenUndZiehen') return `${aktion.typ}: ${zielText(tisch, 'karteIds', aktion.karteIds)}`
+  if ('karteIds' in aktion) return `${aktion.typ}: ${zielText(tisch, 'karteIds', aktion.karteIds)}`
+  // X4: Die Comeback-Karte liegt offen vor dem Spieler, nicht auf der Hand.
+  if (aktion.typ === 'ComebackEinsetzen') return `${aktion.typ}: Comeback-Karte (${aktion.comebackId})`
   if (aktion.typ === 'Reagieren') {
     return aktion.farbenschutzId === null ? 'Reagieren: durchlassen' : `Reagieren: abwehren mit ${zielText(tisch, 'farbenschutzId', aktion.farbenschutzId)}`
   }

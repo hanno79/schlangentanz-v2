@@ -23,12 +23,11 @@ const AUSGENOMMEN: Readonly<Record<string, string>> = {
   A3: 'Spielziel ohne eigene Regel; die Wertung steht unter A11',
   A7: 'Überschrift der Sonderkarten; die Regeln stehen in A7.1 bis A7.10',
   A8: 'Comeback und Risiko-Belohnung, Erweiterung (X4, X5)',
-  'A8.1': 'Comeback-Karte, Erweiterung (X4)',
   'A8.2': 'Risiko-Belohnungs-Karte, Erweiterung (X5)',
 }
 
-/** Alle Abschnitte mit Regeltestdatei in der Reihenfolge von Teil A: die aus E11, Kriterium 2, A9 seit X1 und A7.10 seit X6 (X7 verlangt auch A8). */
-const MIT_DATEI = ['A4', 'A5', 'A6', 'A7.1', 'A7.2', 'A7.3', 'A7.4', 'A7.5', 'A7.6', 'A7.7', 'A7.8', 'A7.9', 'A7.10', 'A9', 'A10', 'A11']
+/** Alle Abschnitte mit Regeltestdatei in der Reihenfolge von Teil A: die aus E11, Kriterium 2, A9 seit X1, A8.1 seit X4 und A7.10 seit X6 (X7 verlangt auch A8). */
+const MIT_DATEI = ['A4', 'A5', 'A6', 'A7.1', 'A7.2', 'A7.3', 'A7.4', 'A7.5', 'A7.6', 'A7.7', 'A7.8', 'A7.9', 'A7.10', 'A8.1', 'A9', 'A10', 'A11']
 
 /** Die Nummern aller Abschnitte in Teil A, in ihrer Reihenfolge. */
 function abschnitteInTeilA(): string[] {

@@ -39,10 +39,12 @@ export type Wahl =
   | { art: 'durchlassen' }
   /** X3: eine Option einer offenen Entscheidung; wie sie am Tisch erscheint, legt O10 fest. */
   | { art: 'entscheiden'; wahl: string }
-  /** X6: der Bonus des Schlangenkorbs, ein Tausch und „Zwei Karten abwerfen, drei ziehen“ (A7.10, A8.1); wie sie am Tisch erscheinen, legt O10 fest. */
+  /** X4: die eigene Comeback-Karte einsetzen und „Zwei Karten abwerfen, drei ziehen“; wie es am Tisch erscheint, legt O10 fest. */
+  | { art: 'comeback' }
+  | { art: 'zweiAbwerfenDreiZiehen' }
+  /** X6: der Bonus des Schlangenkorbs und ein Tausch (A7.10, D44); wie sie am Tisch erscheinen, legt O10 fest. */
   | { art: 'korbbonus'; bonus: Korbbonus['art'] }
   | ({ art: 'tausch' } & Korbtausch)
-  | { art: 'abwerfenUndZiehen' }
 
 /** Die Wahl einer bestimmten Art. */
 export type WahlDerArt<A extends Wahl['art']> = Extract<Wahl, { art: A }>
@@ -116,6 +118,10 @@ export function wegZu(aktion: SpielAktion): Weg {
       return { folge: [aktion.farbenschutzId === null ? { art: 'durchlassen' } : { art: 'abwehren', farbenschutzId: aktion.farbenschutzId }], menge: [] }
     case 'Entscheiden':
       return { folge: [{ art: 'entscheiden', wahl: aktion.wahl }], menge: [] }
+    case 'ComebackEinsetzen':
+      return { folge: [{ art: 'comeback' }], menge: [] }
+    case 'ZweiAbwerfenDreiZiehen':
+      return { folge: [{ art: 'zweiAbwerfenDreiZiehen' }], menge: aktion.karteIds.map((karteId): Wahl => ({ art: 'abwerfen', karteId })) }
     case 'SchlangenkorbSpielen': {
       const { bonus } = aktion
       const folge: Wahl[] = [karte(aktion.karteId), { art: 'korbbonus', bonus: bonus.art }]
@@ -124,8 +130,6 @@ export function wegZu(aktion: SpielAktion): Weg {
       }
       return { folge, menge: bonus.art === 'entfernen' ? [schlangenkarte(bonus.ziel)] : [] }
     }
-    case 'AbwerfenUndZiehen':
-      return { folge: [{ art: 'abwerfenUndZiehen' }], menge: aktion.karteIds.map((karteId): Wahl => ({ art: 'abwerfen', karteId })) }
   }
 }
 

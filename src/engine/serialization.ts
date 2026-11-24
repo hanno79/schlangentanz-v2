@@ -190,6 +190,7 @@ function zug(wert: unknown, pfad: string): void {
     'verdopplerGespielt',
     'farbenfusionGespielt',
     'abschnitt',
+    'comebackBedingung',
     'zusatzaktionen',
     'verwendet',
     'runde',
@@ -201,6 +202,7 @@ function zug(wert: unknown, pfad: string): void {
   wahrheitswert(roh.verdopplerGespielt, `${pfad}.verdopplerGespielt`);
   wahrheitswert(roh.farbenfusionGespielt, `${pfad}.farbenfusionGespielt`);
   einer(roh.abschnitt, `${pfad}.abschnitt`, ['Ausspielen', 'Abwerfen']);
+  wahrheitswert(roh.comebackBedingung, `${pfad}.comebackBedingung`);
   // X3: der Rahmen für Zusatzaktionen (`zuggrenzen.ts`); ob die Zähler zu `verwendet` passen, prüfen die Invarianten.
   liste(roh.zusatzaktionen, `${pfad}.zusatzaktionen`, (eintrag, eintragPfad) => {
     const zusatz = objekt(eintrag, eintragPfad, ['quelle', 'erlaubt', 'nurKarten']);

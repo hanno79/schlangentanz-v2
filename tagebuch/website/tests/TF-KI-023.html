@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-KI-023 Die mit X4 erweiterte Ausnahme in K3.2 greift nur in Partien mit Erweiterung, und nur dort, wo die Stellung selbst keine Comeback-Aktion enthält. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-KI-023 Die mit X4 erweiterte Ausnahme in K3.2 greift nur in Partien mit Erweiterung, und nur dort, wo die Stellung selbst keine Comeback-Aktion enthält.</h1><p class="etiketten"><span class="etikett">Bereich KI-Gegner</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>X4 hat im Test K3.2 die Ausnahme „nachweislich besser bewertet“ für Partien mit Erweiterung gelockert: Es genügt dort auch die Bewertung nach der besten zweiten Karte. Die Probe zählt, welche Fälle die alte Ausnahme nicht mehr trägt und ob Partien ohne Erweiterung unverändert sind.</p><h2>Bestanden, wenn</h2><p>Ohne Erweiterung sind die Ausnahmen auf <code>origin/neuaufbau</code> und auf 9e253382 dieselben (Saat 42000 und 42008, je mit der alten Ausnahme erfüllt). Mit Erweiterung trägt die alte Ausnahme genau einen Fall nicht (Saat 42013, Farbendieb, Bewertung −6.55 gegen −5.85, nach der besten zweiten Karte −5.35 gegen −5.45), in dieser Stellung gibt es weder eine Zusatzaktion noch eine Comeback-Aktion, und die Ausnahmen bleiben unter der Grenze von 20 Prozent (6 von 39, Grenze 7).</p><h2>Fehlgeschlagen, wenn</h2><p>Ein Fall ohne Erweiterung braucht die neue Ausnahme, mehr als ein Fall mit Erweiterung braucht sie, oder die Stellung des Falls enthält eine Comeback-Aktion.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>24.11.2026</dd><dt>Änderung</dt><dd>task/X4-comeback (PR #111)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Repo, einmal auf 9e253382 und einmal auf <code>origin/neuaufbau</code> (4eedf334)</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Die 18 Partien aus <code>partienK3gegenK2(18, 42000)</code>, wie im Test K3.2.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Repo</td><td>Probedatei aus dem Beleg als `src/ki/strategien/x4_pruefer_k3.test.ts` ablegen</td><td></td><td>Datei liegt neben `solideKi_angriff_partien.test.ts`</td></tr><tr><td>2</td><td>Konsole</td><td>auf 9e253382 ausführen</td><td>`X4_K3_ZIEL=&lt;ordner&gt;/x4.txt npx vitest run src/ki/strategien/x4_pruefer_k3.test.ts`</td><td>Zeile „saat 42013 … alt ROT“, Schlusszeile „geprueft 39, ausnahmen 6, davon alt ok 5, nur vertieft ok 1“</td></tr><tr><td>3</td><td>Konsole</td><td>auf `origin/neuaufbau` dasselbe</td><td>`git switch --detach origin/neuaufbau`</td><td>„geprueft 40, ausnahmen 4, davon alt ok 4, nur vertieft ok 0“; 42000 und 42008 gleich wie in Schritt 2</td></tr><tr><td>4</td><td>Repo</td><td>Datei löschen, zurück auf den Prüfbranch</td><td></td><td>`git status` leer</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Ob die solide KI die Comeback-Karte klug nutzt, ist K4 (Kriterium 2) und hier nicht geprüft.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-24">24.11.2026 08:20</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer X4) &middot; agent &middot; pruefung-X4 @ <span class="commit" title="9e2533823b4c864a88b3e4e1f2be7696d1fbd96f">9e25338</span></p><p>X4: geprueft 39, Ausnahmen 6, alte Ausnahme trägt 5, nur vertieft 1 (Saat 42013 FarbendiebSpielen, -6.55 gegen -5.85, vertieft -5.35 gegen -5.45, zusatz [] und keine Comeback-Aktion in der Stellung, 1 Comeback-Zug früher in der Partie). Ohne Erweiterung 42000 und 42008 auf beiden Ständen gleich und mit alter Ausnahme erfüllt. neuaufbau 4eedf334: geprueft 40, Ausnahmen 4, alle alte Ausnahme.</p><ul class="belege"><li><a href="belege/2026-11-24-0820-TF-KI-023-1.txt">2026-11-24-0820-TF-KI-023-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>
