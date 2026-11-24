@@ -730,7 +730,7 @@ beschreibt. Nichts hier ändert eine Regel aus Teil A.
 
 Der Autor hat entschieden (12.11.2026): Alle Teile der Erweiterung gehören in die
 digitale Fassung. Vor jeder Partie wählt der Spieler, ob er mit oder ohne
-Erweiterung spielt. Die Tabelle zeigt, was davon am 12.11.2026 umgesetzt ist.
+Erweiterung spielt. Die Tabelle zeigt den Stand vom 23.11.2026.
 
 | Bestandteil | Website | Digital heute |
 |---|---|---|
@@ -803,9 +803,10 @@ Erweiterung, in der Reihenfolge G1–G8 und G10–G23. Für diese hat der Autor 
 21.11.2026 mit einer Sammelantwort die Vorschläge des Orchestrators bestätigt.
 D56–D57 sind Rückfragen aus der Umsetzung (Task X3), die der Autor am
 22.11.2026 beantwortet hat; sie haben keine Nummer in `docs/REGELFRAGEN.md`.
-D58–D65 sind Rückfragen aus den Prüfungen von X2 und X3, die der Autor am
-23.11.2026 beantwortet hat; auch sie haben keine Nummer in
-`docs/REGELFRAGEN.md`. Eine Antwort vom selben Tag ergänzt D48.
+D58–D67 sind Rückfragen aus den Prüfungen von X2 und X3 (D66 aus der Prüfung
+dieses Nachtrags, P0.5g), die der Autor am 23.11.2026 beantwortet hat; auch
+sie haben keine Nummer in `docs/REGELFRAGEN.md`. Eine Antwort vom selben Tag
+ergänzt D48.
 Die Nummer der Regelfrage steht vor der Frage. Die Spalte „Folge“ nennt dort
 den Task, der die Antwort umsetzt.
 
@@ -873,9 +874,11 @@ den Task, der die Antwort umsetzt.
 | D60 | „Farbenpracht“ nennt auch das Ende des Spiels: Wird bei Spielende zusätzlich für jeden Spieler geprüft, auch für den, der nicht am Zug ist? | Nein: Bei Spielende gibt es für „Farbenpracht“ keine zusätzliche Prüfung für die anderen Spieler; es genügt das Ende des letzten eigenen Zuges (D59). Die Worte „am Ende des Spiels“ im Kartentext heissen also: am Ende des letzten eigenen Zuges. Legt ein Gegner danach noch die fehlende Karte in die eigene Schlange (D9), bringt das „Farbenpracht“ nicht mehr. Antwort des Autors auf eine Rückfrage aus X2, gewählte Möglichkeit: „Nur eigenes Zugende“. Website folgt. | X2 | 23.11.2026 |
 | D61 | Zählen Joker bei „Gelber Schatz“, „Lila Riese“, „Farbkombination“ und „Farbenpracht“ auch dann, wenn eine Reihe nur aus Jokern besteht (Regenbogenschlangen und Farbenfusionen, ohne Farbkarte der Farbe)? | Ja: Bei „Gelber Schatz“, „Lila Riese“, „Farbkombination“ und „Farbenpracht“ zählen Joker immer als die Farbe der Aufgabe, auch wenn eine Reihe nur aus Jokern besteht und keine Farbkarte dieser Farbe enthält; bei „Farbenpracht“ dürfen also auch beide Karten einer Farbe Joker sein. Eine Farbenfusion zählt dabei als eine Karte (D41). Das führt D41 weiter und passt zu D31; die Einschränkung aus D32 gilt nur für den Vielfaltbonus. Antwort des Autors auf eine Rückfrage aus X2, gewählte Möglichkeit: „Ja, Joker zählen immer“. Website folgt. | X2 | 23.11.2026 |
 | D62 | „Schlangentanz“ („Bilde durch Schlangenhäutung 2 neue Dreiergruppen.“): Wann ist eine Dreiergruppe nach der Häutung „neu“? | Neu ist jede Dreiergruppe nach der Häutung, in der keine Gruppe von vor der Häutung weiterlebt. Löst eine Häutung eine Dreiergruppe auf und bildet zwei neue, ist „Schlangentanz“ erfüllt; es zählt nicht die Zahl der Gruppen nachher abzüglich der Zahl vorher. Eine Gruppe, die nur verlängert wurde, ist nicht neu. Wessen Häutung zählt und dass beide Gruppen aus derselben Häutung stammen, regelt D37. Antwort des Autors auf eine Rückfrage aus X2, gewählte Möglichkeit: „Jede neu entstandene“. Website folgt. | X2 | 23.11.2026 |
-| D63 | „Schlangentanz“: Muss die Häutung mit zwei neuen Dreiergruppen in dem Zug liegen, in dem der Spieler die Aufgabe einlöst, oder genügt eine frühere Häutung? | Eine frühere Häutung genügt: Hat der Spieler einmal mit einer Schlangenhäutung zwei neue Dreiergruppen gebildet (D37, D62), gilt das für „Schlangentanz“ die ganze Partie; die Häutung muss nicht im Zug des Einlösens liegen. Wird „Schlangentanz“ erst danach aufgedeckt, löst er die Aufgabe ein, sobald er am Zug ist (A9). Antwort des Autors auf eine Rückfrage aus X2, gewählte Möglichkeit: „Gilt die ganze Partie“. Website folgt. | X2 | 23.11.2026 |
+| D63 | „Schlangentanz“: Muss die Häutung mit zwei neuen Dreiergruppen in dem Zug liegen, in dem der Spieler die Aufgabe einlöst, oder genügt eine frühere Häutung? | Eine frühere Häutung genügt: Hat der Spieler einmal mit einer Schlangenhäutung zwei neue Dreiergruppen gebildet (D37, D62), gilt das für „Schlangentanz“ die ganze Partie; die Häutung muss nicht im Zug des Einlösens liegen. Die beiden Gruppen müssen beim Einlösen nicht mehr liegen; hat ein Gegner eine davon zerstört, zählt die Häutung trotzdem. Wird „Schlangentanz“ erst danach aufgedeckt, löst er die Aufgabe ein, sobald er am Zug ist (A9). Antwort des Autors auf eine Rückfrage aus X2, gewählte Möglichkeit: „Gilt die ganze Partie“. Website folgt. | X2 | 23.11.2026 |
 | D64 | „Schlangenmeister“ („Habe min. 2 versch. Sonderkarten in deinen Schlangen und spiele min. 4 aus.“): Heisst „2 versch. Sonderkarten“ zwei verschiedene Arten, und zählt eine Schlangenblockade mit, die ein Gegner in die eigene Schlange gelegt hat? | Ja: „2 versch. Sonderkarten“ heisst zwei verschiedene Arten von Sonderkarten in den eigenen Schlangen; zwei Regenbogenschlangen genügen nicht, eine Regenbogenschlange und eine Farbenfusion schon. Eine Schlangenblockade, die ein Gegner in die eigene Schlange gelegt hat, zählt mit. Was als ausgespielt zählt, regelt D36. Antwort des Autors auf eine Rückfrage aus X2, gewählte Möglichkeit: „Zwei Arten“. Website folgt. | X2 | 23.11.2026 |
 | D65 | Pro Zug ist nur eine Farbenfusion erlaubt: Verbraucht auch eine Farbenfusion, die wirkungslos abgelegt wird, weil sie kein mögliches Ziel hat (D25), die Fusion des Zuges? | Ja: Auch eine Farbenfusion, die wirkungslos auf den eigenen Ablagestapel kommt, weil sie kein mögliches Ziel hat (D13, D25), verbraucht die Fusion dieses Zuges, wie eine abgewehrte (D56); eine zweite Farbenfusion ist in diesem Zug nicht möglich. Das passt zu D36, nach dem eine wirkungslos abgelegte Sonderkarte als ausgespielt zählt. Antwort des Autors auf eine Rückfrage aus X3, gewählte Möglichkeit: „Ja, verbraucht“. Website folgt. | X3 | 23.11.2026 |
+| D66 | „Farbenpracht“ nach einem Verdoppler: Wird am Ende des ersten Zuges geprüft oder erst nach dem zweiten? | Am Ende jedes der zwei Züge: Nach einem Verdoppler wird „Farbenpracht“ am Ende des ersten und am Ende des zweiten Zuges geprüft, denn A7.8 sagt „Damit ist dein erster Zug beendet“. Ist die Bedingung am Ende des ersten Zuges erfüllt, bekommt der Spieler die Aufgabe dort. Das ergänzt D59. Antwort des Autors auf eine Rückfrage aus X2, gewählte Möglichkeit: „Nach jedem der zwei“. Website folgt. | X2 | 23.11.2026 |
+| D67 | „Farbharmonie“ („Habe in deinen Schlangen mindestens eine Dreiergruppe jeder Farbe.“): Zählt eine Vierer- oder Fünfergruppe als „Dreiergruppe“ ihrer Farbe? | Ja: Für „Farbharmonie“ zählt jede Farbgruppe ab drei Karten als Dreiergruppe ihrer Farbe, auch eine Vierer- oder Fünfergruppe; eine Farbgruppe besteht nach A11 aus mindestens drei nebeneinanderliegenden Karten derselben Farbe. Dass eine Vierergruppe in der Wertung nicht zusätzlich als Dreiergruppe zählt (A11), betrifft nur die Punkte. Für Gruppen nur aus Jokern gilt D31. Antwort des Autors auf eine Rückfrage aus X2, gewählte Möglichkeit: „Ja, ab drei Karten“. Website folgt. | X2 | 23.11.2026 |
 
 ## Teil E — Frühere R-Nummern, Stand und Verlauf
 
@@ -923,7 +926,13 @@ Code-Kommentare und ältere Dokumente verweisen auf R-Nummern der Fassung bis
   X2b und X2c behoben und bleibt wie C14 stehen, bis X2a gemergt ist; beide
   Zeilen nennen jetzt die Platzhalter als Fundstelle. B1 nennt den Stand nach
   X2b und X2c. Teil A unverändert. Der Task nennt `docs/GAME_SPEC.md`
-  ausdrücklich (U13).
+  ausdrücklich (U13). In Iteration 2 (24.11.2026) sagt D63 auch, was die
+  Wahl ausschliesst: Die beiden Gruppen müssen beim Einlösen nicht mehr
+  liegen. Zwei weitere Antworten vom 23.11.2026 stehen als D66 und D67 da:
+  Nach einem Verdoppler wird „Farbenpracht“ am Ende jedes der zwei Züge
+  geprüft, und für „Farbharmonie“ zählt jede Gruppe ab drei Karten als
+  Dreiergruppe. Im Website-Nachtrag enden die Fragezeilen D58–D65 jetzt wie
+  alle anderen mit zwei Leerzeichen, und B1 nennt den Stand vom 23.11.2026.
 - **23.11.2026, Task P0.5f:** Zwei Rückfragen aus X3, die der Autor am
   22.11.2026 beantwortet hat, als D56 und D57 aufgenommen (Folge X3, Website
   folgt). D56: Eine Farbenfusion, die ein Gegner mit Farbenschutz abwehrt,

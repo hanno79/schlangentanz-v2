@@ -11,7 +11,7 @@ Umsetzung (Task X3) hat der Autor am 22.11.2026 beantwortet; sie stehen nicht
 in diesem Katalog, sondern nur in Teil D: D56 (abgewehrte Farbenfusion) und
 D57 (letzte Karte mitten im Zug). Ebenso stehen die Rückfragen aus den
 Prüfungen von X2 und X3, die der Autor am 23.11.2026 beantwortet hat, nur in
-Teil D: D58–D65 (Aufgabenkarten und wirkungslose Farbenfusion). Eine Antwort
+Teil D: D58–D67 (Aufgabenkarten und wirkungslose Farbenfusion). Eine Antwort
 vom selben Tag ergänzt D48 (Comeback-Karte im zweiten Zug nach einem
 Verdoppler).
 
