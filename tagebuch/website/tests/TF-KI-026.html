@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-KI-026 Die solide KI nach K2b spielt nicht schwächer als vor K2b, gemessen in Spiegelpartien gegen die alte KI. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-KI-026 Die solide KI nach K2b spielt nicht schwächer als vor K2b, gemessen in Spiegelpartien gegen die alte KI.</h1><p class="etiketten"><span class="etikett">Bereich KI-Gegner</span><span class="etikett">Regression nein</span><span class="etikett">Priorität hoch</span><span class="etikett">Art manuell</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Ein Turnier „neu gegen alt“ allein sagt wenig, weil die Sitzordnung die Plätze ungleich verteilt: Zu viert sitzt die alte KI immer direkt hinter der neuen. Deshalb läuft jede Partie zweimal mit denselben Saaten, einmal mit neu und alt, einmal mit alt und alt. Weicht der Verlauf ab, zählt der Unterschied im Vorsprung von Teilnehmer 0.</p><h2>Bestanden, wenn</h2><p>Der mittlere Unterschied im Vorsprung ist ohne und mit Erweiterung nicht negativ, und gegen die Zufalls-KI gewinnen neu und alt gleich oft.</p><h2>Fehlgeschlagen, wenn</h2><p>Der mittlere Unterschied im Vorsprung ist negativ, oder die neue KI gewinnt gegen die Zufalls-KI seltener als die alte.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>24.11.2026</dd><dt>Änderung</dt><dd>task/K2b-gleichstand (PR #118)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Repo auf dem Stand des Task-Branches, Probe wie in TF-KI-024 abgelegt</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Turniere mit <code>kiSaat</code> 424242: 2 Spieler ohne Erweiterung 80 Partien ab Saat 56000; 4 Spieler ohne Erweiterung (neu, alt, Zufall, Zufall gegen alt, alt, Zufall, Zufall) 24 Partien ab 58000; 2 Spieler mit Erweiterung 40 Partien ab 57000; gegen die Zufalls-KI je 60 Partien ab 55000.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Repo</td><td>Probe ablegen wie in TF-KI-024, Schritte 1 und 2</td><td></td><td>drei neue Dateien</td></tr><tr><td>2</td><td>Konsole</td><td>Stärke gegen die Zufalls-KI</td><td>`K2B_AUS=&lt;ordner&gt; npx vitest run src/ki/strategien/zz_pruefer_k2b.test.ts -t &quot;Spielst&quot;`</td><td>in `staerke.json` neu und alt je 60 von 60, mittlere Punkte gleich</td></tr><tr><td>3</td><td>Konsole</td><td>Spiegelpartien</td><td>`K2B_AUS=&lt;ordner&gt; npx vitest run src/ki/strategien/zz_pruefer_k2b.test.ts -t &quot;Kontrolle&quot;`</td><td>in `kontrolle.json` je Zeile `gleicheVerlaeufe`, `abweichendeVorspruenge` und die mittlere Differenz</td></tr><tr><td>4</td><td>Repo</td><td>die Dateien löschen</td><td></td><td>`git status` leer</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Die Stichprobe ist klein (144 Spiegelpartien). Ein Unterschied von weniger als etwa einem Punkt im Mittel liesse sich damit nicht nachweisen; dafür ist K5 da.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-24">24.11.2026 20:50</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer K2b) &middot; agent &middot; pruefung-K2b @ <span class="commit" title="97677e0c857daa345d9f053e9feb5f4684d5b87e">97677e0</span></p><p>Gegen Zufalls-KI (60 Partien ab 55000): neu und alt je 60/60, mittlere Punkte beide 61.32. Spiegel 2er Basis (80 ab 56000): 79 Verläufe gleich, 1 anders mit +17 Vorsprung für neu, Siege 36/44 gegen 35/45. 4er Basis (24 ab 58000): 24 von 24 gleich, Siege 7/17 in beiden Läufen (Sitzordnung, nicht KI). 2er Erweiterung (40 ab 57000): 35 gleich, Vorsprung für neu +49, +48, +7, +14, Mittel +2.95.</p><ul class="belege"><li><a href="belege/2026-11-24-2050-TF-KI-026-1.json">2026-11-24-2050-TF-KI-026-1.json</a></li><li><a href="belege/2026-11-24-2050-TF-KI-026-2.json">2026-11-24-2050-TF-KI-026-2.json</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

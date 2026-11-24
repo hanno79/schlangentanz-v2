@@ -1,0 +1,55 @@
+{
+ "2er basis: neu+alt gegen alt+alt": {
+  "partien": 80,
+  "gleicheVerlaeufe": 79,
+  "siegeA": [
+   36,
+   44
+  ],
+  "siegeB": [
+   35,
+   45
+  ],
+  "mittlereDifferenzVorsprungTeilnehmer0": 0.2125,
+  "abweichendeVorspruenge": [
+   17
+  ]
+ },
+ "4er basis: neu+alt+z+z gegen alt+alt+z+z": {
+  "partien": 24,
+  "gleicheVerlaeufe": 24,
+  "siegeA": [
+   7,
+   17,
+   0,
+   0
+  ],
+  "siegeB": [
+   7,
+   17,
+   0,
+   0
+  ],
+  "mittlereDifferenzVorsprungTeilnehmer0": 0,
+  "abweichendeVorspruenge": []
+ },
+ "2er erweiterung: neu+alt gegen alt+alt": {
+  "partien": 40,
+  "gleicheVerlaeufe": 35,
+  "siegeA": [
+   21,
+   19
+  ],
+  "siegeB": [
+   20,
+   20
+  ],
+  "mittlereDifferenzVorsprungTeilnehmer0": 2.95,
+  "abweichendeVorspruenge": [
+   49,
+   48,
+   7,
+   14
+  ]
+ }
+}
