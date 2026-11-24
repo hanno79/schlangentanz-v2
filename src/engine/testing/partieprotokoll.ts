@@ -1,5 +1,5 @@
 import { ermittleAktionen } from '../aktionen/enumerieren';
-import type { Ereignis, Kartenort, SpielAktion } from '../aktionen/typen';
+import type { Ereignis, Kartenort, Korbbonus, SpielAktion } from '../aktionen/typen';
 import { AUFGABENNAMEN } from '../aufgabenKarten';
 import { risikoaktionText } from '../erweiterung/risiko';
 import { alleSpielkarten } from '../invarianten';
@@ -166,6 +166,21 @@ class Schreiber {
         return `${wer} setzt die Comeback-Karte ${aktion.comebackId} ein.`;
       case 'ZweiAbwerfenDreiZiehen':
         return `${wer} wirft zwei Karten ab und zieht drei: ${aktion.karteIds.map((id) => this.karte(id)).join(', ')}.`;
+      case 'SchlangenkorbSpielen':
+        return `${wer} spielt ${this.karte(aktion.karteId)}: ${this.korbbonus(aktion.bonus)}.`;
+    }
+  }
+
+  korbbonus(bonus: Korbbonus): string {
+    switch (bonus.art) {
+      case 'ziehen':
+        return 'zieht 3 Karten und spielt bis zu 2 davon';
+      case 'tauschen':
+        return `tauscht ${bonus.tausch.map((paar) => `${this.karte(paar.karteId)} aus ${this.besitzerVon(paar.schlangenId)} gegen ${this.karte(paar.handkarteId)}`).join(' und ')}`;
+      case 'entfernen':
+        return `entfernt ${this.karte(bonus.ziel.karteId)} aus ${this.besitzerVon(bonus.ziel.schlangenId)}`;
+      case 'aktionen':
+        return 'zwei zusätzliche Aktionen';
     }
   }
 

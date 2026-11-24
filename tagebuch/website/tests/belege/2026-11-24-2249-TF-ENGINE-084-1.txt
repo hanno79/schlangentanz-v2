@@ -1,0 +1,25 @@
+Prüfer X6, Nachprüfung nach dem Merge mit X5, Stand 8c63cbc6 (origin/task/X6-schlangenkorb).
+
+1. B2-Störproben (temporäre Datei src/engine/__tests__/regeln/zz_pruefer_x6b.test.ts, danach gelöscht):
+   - Ziehe 3 mit Stapel A (Rot, Gelb, Grün, Braun, Violett, Blau) und B (Rot, Violett, Blockade, Braun, Violett, Blau):
+     ganze KI-Sicht des Gegners (sichtFuer(…, 1), JSON) gleich; keine gezogene Id; verrateneHandkarten leer.
+     Danach Risiko-Aktion 1 (aufgedeckt braun-02 in beiden, Erfolg): Ereignisse KartenVersetzt, RisikoKarteGespielt, KartenVersetzt
+     gleich in A und B, Sicht gleich, keine Korb-Karte darin; nach dem Ausspielen des gezogenen Rot Sicht weiter gleich.
+     (Erster Versuch mit Braun an Stelle 2 in B unterschied sich nur in der Id der öffentlich aufgedeckten Braun-Karte,
+      braun-02 gegen braun-03: Aufbaufehler der Probe, keine Lücke.)
+   - Zurücktauschen: Rot gelegt, mit dem Korb gegen Gelb zurückgetauscht.
+     PROBE verwendet Gegnersicht: [{"art":"Farbkarte","karteId":"verdeckte Karte","kartenart":"Farbkarte"},{"art":"Sonderkarte","karteId":"schlangenkorb-des-gluecks-01",...}]
+     Id von Rot nicht in der Sicht, auch nach anschliessender Risiko-Aktion 1; verrateneHandkarten leer.
+   2 Tests bestanden.
+
+2. Gegenprobe zu den neuen Regeltests: aktionen/pruefen.ts Tauschlänge „>= 1 && <= 2“ -> „>= 0 && <= 3“:
+   npx vitest run src/engine/__tests__/regeln/A7.10_ -> 1 rot: A7.10_korb_antworten „A7.10/D44: mit null und mit drei Täuschen …“ (77 grün). Zurückgesetzt.
+
+3. K2.1 mit Messzeile (danach zurückgesetzt): geprüft 167 Züge, vollendet 112, 17 Partien (Test verlangt 6 mit Erweiterung).
+   Vor X6 (origin/neuaufbau 6f7ee643): 90 / 74 in 11 Partien. Die 11 alten Partien sind in den 17 enthalten.
+
+4. Prüfsumme ohne Erweiterung (Saaten 88101–88109): 8c63cbc6 und origin/neuaufbau aaf69e3e beide
+   523e4410812305d9c84bd561fa055776883804304d190ccf86bbb3bb40413c2f, 1620 Zeilen (gleich wie vor X5 und vor X6).
+
+5. Entwicklertisch korb-ziehen (Testhook-Build, Port 4191): ziehen, Blau, Rot, Gelb ans Ende; danach „gespielt: 3 Farbkarte(n), 1 Sonderkarte(n)“,
+   Aktionen: 6 × RisikoKarteSpielen (Aktion 1, viermal Aktion 3, Aktion 4) und ZugBeenden, keine Handkarte; Invarianten erfüllt; Konsole leer.

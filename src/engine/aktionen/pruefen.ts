@@ -31,6 +31,17 @@ const neueSchlange = genau({ art: einerVon(['neueSchlange']) });
 const anSchlangenende = genau({ art: einerVon(['schlange']), schlangenId: text, seite: einerVon(['anfang', 'ende']) });
 const inSchlange = genau({ art: einerVon(['schlange']), schlangenId: text, position });
 
+/** A7.10, D42: je Bonus seine Felder; getauscht werden ein oder zwei Paare (D44). */
+const tauschEintrag = genau({ schlangenId: text, karteId: text, handkarteId: text });
+const KORBBONI: ReadonlyMap<string, Feld> = new Map([
+  ['ziehen', genau({ art: text })],
+  ['aktionen', genau({ art: text })],
+  ['tauschen', genau({ art: text, tausch: (liste) => Array.isArray(liste) && liste.length >= 1 && liste.length <= 2 && liste.every(tauschEintrag) })],
+  ['entfernen', genau({ art: text, ziel: kartenVerweis })],
+]);
+/** Genau einer der vier Boni des Schlangenkorbs, die vollständige Liste (D42). */
+const korbbonus: Feld = (wert) => istObjekt(wert) && typeof wert.art === 'string' && (KORBBONI.get(wert.art)?.(wert) ?? false);
+
 const MIT_KARTE = { spielerId: text, karteId: text };
 const IN_SCHLANGE = { ...MIT_KARTE, schlangenId: text, position };
 
@@ -64,6 +75,7 @@ const FELDER: Record<Aktionstyp, Record<string, Feld>> = {
   RisikoKarteSpielen: { spielerId: text, risikoKarteId: text, risikoAktion: istRisikoaktion, benannt: textOderNull },
   ComebackEinsetzen: { spielerId: text, comebackId: text },
   ZweiAbwerfenDreiZiehen: { spielerId: text, karteIds: textliste(2, 2) },
+  SchlangenkorbSpielen: { ...MIT_KARTE, bonus: korbbonus },
 };
 
 export function istKartenaktion(aktion: SpielAktion): aktion is KartenAktion {

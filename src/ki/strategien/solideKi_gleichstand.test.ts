@@ -31,6 +31,13 @@ weder ein Gleichstand noch ein Fehler der Bewertung: Die KI plant beide Male ein
 Blockade beim Gegner und damit strikt mehr als jede Vollendung; der Gegner wehrt die
 Blockade in der Partie mit Farbenschutz ab, und das sieht sie bei der Wahl nicht
 (K2.7). Der Partietest misst deshalb ihren Zug, wie sie ihn wählt (`geplantesEnde`).
+
+Seit X6 wirkt der Schlangenkorb, den die KI in beiden Stellungen mit Erweiterung auf
+der Hand hält; dort war er noch ohne Wirkung. Wie sie ihn klug nutzt, gehört zu K4
+(Kriterium 2). Für den Korb gilt deshalb die Voraussetzung „keine Karte besser als
+Halten“ nicht, und in `x5-merge-k21-erweiterung.json` spielt sie jetzt den Korb statt
+der Blockade; die Erklärung des Rückstands von 0.1 trägt dort nur noch die Stellung
+ohne Erweiterung. Was K2.1 verlangt, gilt in beiden weiter.
 */
 
 function stellung(datei: string): Spielzustand {
@@ -46,8 +53,9 @@ describe('K2b: bei Gleichstand gewinnt der Zug, der eine Gruppe vollendet oder s
   it('K2b, K2.1 (X5, Saat 7154, Schlussrunde mit Erweiterung): keine Karte ist besser bewertet als Halten, viele Schlangenfrass gleich, und jeder davon löst eine erfüllte offene Aufgabe ein; sie beendet den Zug nicht', () => {
     const start = stellung('saat-7154-x5-schlussrunde.json')
     const [halten, punkte] = [wert(start, 0), endwertung(start, 0)]
+    // Ohne den Schlangenkorb: Ihn klug zu nutzen gehört zu K4, Kriterium 2 (X6).
     const unterschiede = ermittleAktionen(start)
-      .filter((aktion) => aktion.typ !== 'ZugBeenden')
+      .filter((aktion) => aktion.typ !== 'ZugBeenden' && aktion.typ !== 'SchlangenkorbSpielen')
       .map((aktion) => {
         const danach = nachDurchlassen(start, aktion, 0)
         return { aktion, danach, unterschied: wert(danach, 0) - halten }
@@ -107,7 +115,6 @@ describe('K2b: bei Gleichstand gewinnt der Zug, der eine Gruppe vollendet oder s
 
   it.each([
     ['saat-7154-basis-zug-23.json', 'Saat 7154 ohne Erweiterung, Befund aus X6', 40, 39.6, 39.5],
-    ['x5-merge-k21-erweiterung.json', 'Partietest K2.1 auf X5 nach dem Merge von 02038f4a, mit Erweiterung', 27.8, 27.4, 27.3],
   ])('K2b, K2.1 (%s, %s): sie plant %s, strikt besser als jede Vollendung samt zweiter Karte (%s); der Rückstand von 0.1 im Partietest kam aus der Abwehr des Gegners (%s)', (datei, _quelle, geplant, vollendung, abgewehrt) => {
     const start = stellung(datei)
     const { aktionen, ende } = ersterTeilzug(start, 0, 1)
@@ -123,5 +130,17 @@ describe('K2b: bei Gleichstand gewinnt der Zug, der eine Gruppe vollendet oder s
     expect(geplanterWert, 'K2b: der geplante Zug, der Gegner lässt durch').toBeCloseTo(geplant, 9)
     expect(beste, 'K2b: die beste Vollendung samt zweiter Karte').toBeCloseTo(vollendung, 9)
     expect(geplanterWert, 'K2.1: ihr Zug ist strikt besser bewertet').toBeGreaterThan(beste + 1e-9)
+  })
+
+  it('K2.1 (x5-merge-k21-erweiterung.json, mit Erweiterung): mit dem Schlangenkorb, der seit X6 wirkt, ist ihr Zug strikt besser bewertet als jede Vollendung samt zweiter Karte', () => {
+    const start = stellung('x5-merge-k21-erweiterung.json')
+    const { aktionen, ende } = ersterTeilzug(start, 0, 1)
+    expect(aktionen.map((aktion) => aktion.typ), 'Testaufbau: sie spielt jetzt den Korb, nicht mehr die Blockade').toContain('SchlangenkorbSpielen')
+    const vollendungen = ermittleAktionen(start)
+      .filter((aktion) => aktion.typ !== 'ZugBeenden' && aktion.typ !== 'UeberhandAbwerfen')
+      .map((aktion) => nachDurchlassen(start, aktion, 0))
+      .filter((danach) => gruppenzahl(danach, 0) > gruppenzahl(start, 0))
+    const beste = Math.max(...vollendungen.flatMap((danach) => mitZweiterKarte(danach, 0)).map((danach) => wert(danach, 0)))
+    expect(wert(ende, 0), `K2.1: ihr Zug ${JSON.stringify(aktionen.map((aktion) => aktion.typ))} gegen die beste Vollendung ${beste.toFixed(2)}`).toBeGreaterThan(beste + 1e-9)
   })
 })

@@ -20,6 +20,7 @@ import { AUFGABEN_SZENARIEN_A } from './szenarienAufgabenA'
 import { AUFGABEN_B_SZENARIEN } from './szenarienAufgabenB'
 import { AUFGABEN_C_SZENARIEN } from './szenarienAufgabenC'
 import { COMEBACK_SZENARIEN } from './szenarienComeback'
+import { KORB_SZENARIEN } from './szenarienKorb'
 
 export interface Szenario {
   /** Steht in der Adresse: `/dev?szenario=<name>`. */
@@ -263,6 +264,7 @@ export const SZENARIEN: readonly Szenario[] = [
   ...AUFGABEN_B_SZENARIEN,
   ...AUFGABEN_C_SZENARIEN,
   ...COMEBACK_SZENARIEN,
+  ...KORB_SZENARIEN,
 ]
 
 export function findeSzenario(name: string): Szenario | undefined {

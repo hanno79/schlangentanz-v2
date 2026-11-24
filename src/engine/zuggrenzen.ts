@@ -269,8 +269,8 @@ export function zaehlerPassen(zug: Zug): string | null {
  * bestimmte Karten, etwa die mit dem Korb verdeckt gezogenen (D43), nennt sie
  * keine, die auf einer fremden Hand liegt; welche es sind, sieht nur ihr Besitzer.
  * Ebenso nennt `verwendet` keine gespielte Karte, die wieder auf einer fremden
- * Hand liegt, etwa nach einem Tausch mit Risiko-Aktion 3 (A8.2, D51); ihr Platz
- * bleibt belegt.
+ * Hand liegt, etwa nach einem Tausch mit Risiko-Aktion 3 (A8.2, D51) oder mit dem
+ * Schlangenkorb (D44); ihr Platz bleibt belegt.
  */
 /** Steht in der Sicht für eine gespielte Karte, die wieder verdeckt auf einer fremden Hand liegt (B2). */
 const VERDECKT = 'verdeckte Karte';

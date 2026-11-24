@@ -1,0 +1,29 @@
+// @vitest-environment node
+import { createHash } from 'node:crypto'
+import { it } from 'vitest'
+import { anwendeAktion, ermittleEntscheider, erstellePartie, erzeugeZufall, serialisiere } from '../../engine'
+import { kiWahl } from '../schritt'
+import { erstelleSolideKi } from './solideKi'
+import { erstelleZufallsKi } from './zufallsKi'
+
+// Prüfer X6: Prüfsumme von Partien ohne Erweiterung mit eigenen Saaten; wird nicht committet.
+function partie(saat: number, spielerzahl: number, solide: boolean): string[] {
+  let zustand = erstellePartie({ spielerzahl, erweiterung: false, zufall: erzeugeZufall(saat) })
+  const kis = Array.from({ length: spielerzahl }, (_, p) => (solide && p === 0 ? erstelleSolideKi(erzeugeZufall(saat * 3 + p)) : erstelleZufallsKi(erzeugeZufall(saat * 5 + p))))
+  const log: string[] = []
+  for (let schritt = 0; zustand.partiephase !== 'Beendet'; schritt += 1) {
+    if (schritt > 8000) throw new Error('endet nicht')
+    const aktion = kiWahl(zustand, kis[ermittleEntscheider(zustand) ?? 0])
+    if (aktion === null) break
+    log.push(JSON.stringify(aktion))
+    zustand = anwendeAktion(zustand, aktion).zustand
+  }
+  log.push(serialisiere(zustand))
+  return log
+}
+
+it('Prüfsumme ohne Erweiterung', () => {
+  const zeilen: string[] = []
+  for (const saat of [88101, 88102, 88103, 88104, 88105, 88106, 88107, 88108, 88109]) zeilen.push(...partie(saat, 2 + (saat % 3), saat % 2 === 0))
+  console.log('PRUEFSUMME', createHash('sha256').update(zeilen.join('\n')).digest('hex'), zeilen.length)
+}, 600_000)

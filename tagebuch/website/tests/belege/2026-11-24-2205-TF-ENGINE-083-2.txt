@@ -1,0 +1,161 @@
+import { describe, expect, it } from 'vitest'
+import { ermittleAktionen as alleAktionen, erzeugeZufall as zufall, pruefeAktion } from '../../index'
+import { kiWahl } from '../../../ki/schritt'
+import { erstelleSolideKi } from '../../../ki/strategien/solideKi'
+import type { SchlangenkorbSpielenAktion, SpielAktion, Spielzustand } from '../../index'
+import { sichtFuer } from '../../../ki/sicht'
+import { einsetzen, mitBedingung, schlangeAus } from '../comeback_hilfen'
+import { verrateneHandkarten } from '../nachrechnen'
+import { ablage, aktionen, fuehreAus, hand, zugBeenden } from '../zugablauf_hilfen'
+import { handIds, KORB, korb, korbId, korbtisch, spiele, spieleKarte, spieleKorb } from '../korb_hilfen'
+
+// Prüfer X6: eigene Proben, nicht Teil des Tasks.
+
+function tauschMit(zustand: Spielzustand, paare: Array<[string, string]>): SchlangenkorbSpielenAktion {
+  const schlange = zustand.spieler[0].schlangen[0]
+  return { typ: 'SchlangenkorbSpielen', spielerId: 'spieler-1', karteId: korbId(zustand), bonus: { art: 'tauschen', tausch: paare.map(([karteId, handkarteId]) => ({ schlangenId: schlange.id, karteId, handkarteId })) } }
+}
+
+describe('Prüfer X6', () => {
+  it('Antwort 24.11. „Mindestens ein Tausch“: leerer Tausch und drei Tausche abgelehnt', () => {
+    const start = korbtisch([KORB, 'Gelb', 'Grün', 'Violett']).schlange(0, ['Blau', 'Rot', 'Blau']).zustand()
+    const [b1, r, b2] = start.spieler[0].schlangen[0].karten.map((k) => k.id)
+    const [g, gr, v] = [handIds(start, 0, 'Gelb')[0], handIds(start, 0, 'Grün')[0], handIds(start, 0, 'Violett')[0]]
+    const leer = pruefeAktion(start, tauschMit(start, []))
+    const drei = pruefeAktion(start, tauschMit(start, [[b1, g], [r, gr], [b2, v]]))
+    console.log('PROBE tausch leer:', JSON.stringify(leer), 'drei:', JSON.stringify(drei))
+    expect(leer.erlaubt).toBe(false)
+    expect(drei.erlaubt).toBe(false)
+  })
+
+  it('Antwort 24.11. „Ja, drei möglich“: drei gezogene Farbkarten, auch die reguläre Farbkarte', () => {
+    const start = korbtisch([KORB, 'Schlangenblockade']).stapelOben(['Rot', 'Gelb', 'Grün']).zustand()
+    let zustand = spieleKorb(start, 'ziehen').zustand
+    for (const farbe of ['Rot', 'Gelb', 'Grün']) zustand = spieleKarte(zustand, handIds(zustand, 0, farbe)[0]).zustand
+    console.log('PROBE drei gezogen:', zustand.zug.gespielteFarbkarten, zustand.zug.gespielteSonderkarten)
+    expect(zustand.zug.gespielteFarbkarten).toBe(3)
+  })
+
+  it('Antwort 24.11. „Auf den Ablagestapel“: Korb als Überzahl am Zugende', () => {
+    const start = korbtisch([KORB, 'Blau', 'Rot', 'Gelb', 'Grün', 'Braun', 'Violett']).zustand()
+    const id = korbId(start)
+    let zustand = spiele(start, aktionen(start, 'FarbkarteLegen')[0]).zustand
+    zustand = fuehreAus(zustand, zugBeenden(zustand)).zustand
+    const abwerfen = aktionen(zustand, 'UeberhandAbwerfen').find((a) => a.typ === 'UeberhandAbwerfen' && a.karteIds.includes(id))
+    expect(abwerfen, 'Korb ist als Überzahl abwerfbar').toBeDefined()
+    const nach = spiele(zustand, abwerfen!).zustand
+    console.log('PROBE Überzahl: Ablage', ablage(nach, 0), 'ausDemSpiel', nach.ausDemSpiel.map((k) => k.id))
+    expect(ablage(nach, 0)).toContain(id)
+    expect(nach.ausDemSpiel.map((k) => k.id)).not.toContain(id)
+  })
+
+  it('Antwort 24.11. „Auf den Ablagestapel“: Korb über „Zwei abwerfen, drei ziehen“ (Comeback)', () => {
+    const start = mitBedingung(korbtisch([KORB, 'Blau', 'Rot']).schlange(0, ['Rot']).schlange(1, schlangeAus(8)))
+    const id = korbId(start)
+    const zustand = einsetzen(start).zustand
+    const aktion = aktionen(zustand, 'ZweiAbwerfenDreiZiehen').find((a) => a.typ === 'ZweiAbwerfenDreiZiehen' && a.karteIds.includes(id))
+    expect(aktion, 'Korb ist abwerfbar').toBeDefined()
+    const nach = spiele(zustand, aktion!).zustand
+    console.log('PROBE Comeback-Abwurf: Ablage', ablage(nach, 0), 'ausDemSpiel', nach.ausDemSpiel.map((k) => k.id))
+    expect(ablage(nach, 0)).toContain(id)
+    expect(nach.spieler[0].ausgespielteSonderkarten, 'D36: abgeworfen ist nicht ausgespielt').toEqual([])
+  })
+
+  it('Antwort 24.11. „Ja, erlaubt“: mit Korb-Zusatzaktion eine Sonderkarte wirkungslos ablegen (Farbenschutz)', () => {
+    const start = korbtisch([KORB, 'Farbenschutz', 'Farbenschutz', 'Blau']).zustand()
+    let zustand = spieleKorb(start, 'aktionen').zustand
+    const ablegen = aktionen(zustand, 'SonderkarteWirkungslosAblegen')
+    expect(ablegen.length).toBeGreaterThan(0)
+    zustand = spiele(zustand, ablegen[0]).zustand
+    zustand = spiele(zustand, aktionen(zustand, 'SonderkarteWirkungslosAblegen')[0]).zustand
+    console.log('PROBE wirkungslos mit Zusatz:', zustand.zug.gespielteSonderkarten)
+    expect(zustand.zug.gespielteSonderkarten).toBe(3)
+  })
+
+  it('B2 Störprobe: KI-Sicht des Gegners nach „Ziehe 3“ unabhängig von den gezogenen Karten, auch nach einer gespielten gezogenen Karte', () => {
+    const a = korbtisch([KORB, 'Blau']).stapelOben(['Rot', 'Gelb', 'Grün']).zustand()
+    const b = korbtisch([KORB, 'Blau']).stapelOben(['Rot', 'Braun', 'Schlangenblockade']).zustand()
+    const na = spieleKorb(a, 'ziehen')
+    const nb = spieleKorb(b, 'ziehen')
+    const ohneStapel = (s: ReturnType<typeof sichtFuer>) => ({ ...s, schlangenZaehler: null })
+    expect(ohneStapel(sichtFuer(na.zustand, 1))).toEqual(ohneStapel(sichtFuer(nb.zustand, 1)))
+    const gezogen = a.nachziehstapel.slice(0, 3).map((k) => k.id)
+    for (const id of gezogen) expect(JSON.stringify(sichtFuer(na.zustand, 1))).not.toContain(id)
+    expect(verrateneHandkarten(na.zustand, na.ereignisse)).toEqual([])
+    // Rot ist in beiden oben; Rot ausspielen, danach dürfen sich die Sichten nur im öffentlich gelegten Rot unterscheiden (gleich).
+    const ra = spieleKarte(na.zustand, handIds(na.zustand, 0, 'Rot')[0])
+    const rb = spieleKarte(nb.zustand, handIds(nb.zustand, 0, 'Rot')[0])
+    expect(ohneStapel(sichtFuer(ra.zustand, 1))).toEqual(ohneStapel(sichtFuer(rb.zustand, 1)))
+    expect(ra.ereignisse).toEqual(rb.ereignisse)
+  })
+
+  it('B2 Störprobe: Zurücktauschen — Sicht des Gegners gleich, ob Rot oder Violett gelegt und zurückgetauscht wurde, ausser der öffentlichen Farbe', () => {
+    const bau = (farbe: 'Rot' | 'Violett') => korbtisch([KORB, farbe, 'Gelb']).schlange(0, ['Blau']).zustand()
+    const lauf = (start: Spielzustand) => {
+      const [legen] = handIds(start, 0, start.spieler[0].hand[1].typ === 'Farbkarte' ? start.spieler[0].hand[1].farbe : '')
+      let z = spiele(start, { typ: 'FarbkarteLegen', spielerId: 'spieler-1', karteId: legen, ziel: { art: 'schlange', schlangenId: start.spieler[0].schlangen[0].id, seite: 'ende' } } as SpielAktion).zustand
+      const r = spiele(z, tauschMit(z, [[legen, handIds(z, 0, 'Gelb')[0]]]))
+      z = r.zustand
+      return { z, legen, ereignisse: r.ereignisse }
+    }
+    const x = lauf(bau('Rot'))
+    expect(hand(x.z, 0)).toContain(x.legen)
+    const sicht = JSON.stringify(sichtFuer(x.z, 1))
+    console.log('PROBE zurückgetauscht: Id in Gegnersicht?', sicht.includes(x.legen))
+    expect(sicht).not.toContain(x.legen)
+    expect(verrateneHandkarten(x.z, x.ereignisse)).toEqual([])
+  })
+
+  it('Grenzfall: Korb-Entfernen einer Blockade, die ein Gegner in die EIGENE Schlange legte (eigene Schlange, keine Frage)', () => {
+    const start = korbtisch([KORB, 'Blau']).schlange(0, ['Rot', 'Schlangenblockade', 'Rot']).schlange(1, ['Grün', 'Schlangenblockade']).zustand()
+    const ziele = korbAktionsziele(start)
+    console.log('PROBE Entfernen-Ziele', ziele)
+    expect(ziele).toHaveLength(2)
+  })
+
+  it('Grenzfall: Korb mit nur einer Handkarte (nur der Korb) — welche Aktionen gibt es?', () => {
+    const start = korbtisch([KORB]).zustand()
+    const typen = aktionen(start).map((a) => (a.typ === 'SchlangenkorbSpielen' ? `Korb:${a.bonus.art}` : a.typ))
+    console.log('PROBE nur Korb:', typen)
+    expect(typen).toContain('Korb:ziehen')
+    const z = spieleKorb(start, 'aktionen').zustand
+    expect(aktionen(z, 'ZugBeenden')).toHaveLength(1)
+  })
+
+  it('Grenzfall: Tausch, der eine Dreiergruppe vervollständigt, wirkt sofort auf die Wertung; Tausch innerhalb von zwei eigenen Schlangen', () => {
+    const start = korbtisch([KORB, 'Rot', 'Blau']).schlange(0, ['Rot', 'Rot', 'Gelb']).schlange(0, ['Blau', 'Blau', 'Grün']).zustand()
+    const [s1, s2] = start.spieler[0].schlangen
+    const aktion: SchlangenkorbSpielenAktion = {
+      typ: 'SchlangenkorbSpielen', spielerId: 'spieler-1', karteId: korbId(start),
+      bonus: { art: 'tauschen', tausch: [{ schlangenId: s1.id, karteId: s1.karten[2].id, handkarteId: handIds(start, 0, 'Rot')[0] }, { schlangenId: s2.id, karteId: s2.karten[2].id, handkarteId: handIds(start, 0, 'Blau')[0] }] },
+    }
+    expect(pruefeAktion(start, aktion).erlaubt).toBe(true)
+    const nach = spiele(start, aktion).zustand
+    expect(nach.spieler[0].schlangen.map((s) => s.karten.map((k) => (k.typ === 'Farbkarte' ? k.farbe : k.name)))).toEqual([['Rot', 'Rot', 'Rot'], ['Blau', 'Blau', 'Blau']])
+    expect(hand(nach, 0)).toHaveLength(2)
+    void korb
+  })
+})
+
+describe('Prüfer X6: Umfang der Tausch-Paare', () => {
+  const farben = ['Blau', 'Rot', 'Gelb', 'Braun', 'Violett'] as const
+  const lauf = (n: number, versatz = 0) => Array.from({ length: n }, (_, i) => farben[(i + versatz) % 5])
+  it.each([
+    [20, 20, ['Blau', 'Rot', 'Gelb', 'Grün']],
+    [26, 26, ['Blau', 'Rot', 'Gelb', 'Grün', 'Grün']],
+  ] as const)('Schlangen %i + %i, Hand %j', (a, b, farbenHand) => {
+    const start = korbtisch([KORB, ...farbenHand]).schlange(0, lauf(a)).schlange(0, lauf(b, 3)).zustand()
+    let t = performance.now()
+    const liste = alleAktionen(start)
+    const enumMs = performance.now() - t
+    const tausch = liste.filter((x) => x.typ === 'SchlangenkorbSpielen' && x.bonus.art === 'tauschen').length
+    t = performance.now()
+    const wahl = true ? kiWahl(start, erstelleSolideKi(zufall(3))) : null
+    const kiMs = performance.now() - t
+    console.log(`PROBE Umfang ${a}+${b}, Hand ${farbenHand.length}: Aktionen ${liste.length}, Tausch ${tausch}, Aufzählung ${enumMs.toFixed(0)} ms, KI ${kiMs.toFixed(0)} ms, Wahl ${wahl?.typ}`)
+  }, 600_000)
+})
+
+function korbAktionsziele(zustand: Spielzustand): string[] {
+  return aktionen(zustand, 'SchlangenkorbSpielen').flatMap((a) => (a.typ === 'SchlangenkorbSpielen' && a.bonus.art === 'entfernen' ? [a.bonus.ziel.karteId] : []))
+}

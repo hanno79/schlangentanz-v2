@@ -34,6 +34,11 @@ export function grundVerdeckt(schlange: Schlange, karteId: string, unterFusion: 
   return verdeckt === undefined ? `Die Karte ${karteId} liegt nicht in der Schlange ${schlange.id}.` : unterFusion(verdeckt.karteId);
 }
 
+/** A7.4, A7.10: Ist die Karte eine Schlangenblockade? Schlangenfrass und Schlangenkorb behandeln sie eigens. */
+export function istBlockade(karte: Spielkarte): boolean {
+  return karte.typ === 'Sonderkarte' && karte.name === 'Schlangenblockade';
+}
+
 /** Die Aktionen, die eine Sonderkarte an eine Lücke einer Schlange legen. */
 export type EinfuegeAktion = RegenbogenschlangeLegenAktion | BlockadeLegenAktion;
 

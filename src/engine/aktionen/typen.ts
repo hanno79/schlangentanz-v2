@@ -25,6 +25,7 @@ export const AKTIONSTYPEN = [
   'Entscheiden',
   'ComebackEinsetzen',
   'ZweiAbwerfenDreiZiehen',
+  'SchlangenkorbSpielen',
   'RisikoKarteSpielen',
 ] as const;
 
@@ -100,6 +101,37 @@ export interface SchlangenhaeutungSpielenAktion extends MitKarte {
   neueReihenfolge: string[];
 }
 
+/**
+ * A7.10, D42: einer der vier Boni des Schlangenkorbs, die vollständige Liste.
+ * `tauschen` nennt je Tausch die Farbkarte einer eigenen Schlange und die
+ * Farbkarte der Hand, die an ihren Platz kommt (D44); `entfernen` die Karte,
+ * die aus einer Schlange kommt (D45).
+ */
+export type Korbbonus =
+  | { art: 'ziehen' }
+  | { art: 'tauschen'; tausch: Korbtausch[] }
+  | { art: 'entfernen'; ziel: Korbziel }
+  | { art: 'aktionen' };
+
+/** D44: eine Farbkarte einer eigenen Schlange und die Farbkarte der Hand, die an ihren Platz kommt. */
+export interface Korbtausch {
+  schlangenId: string;
+  karteId: string;
+  handkarteId: string;
+}
+
+/** D45: die Karte, die der Korb aus einer Schlange entfernt. */
+export interface Korbziel {
+  schlangenId: string;
+  karteId: string;
+}
+
+/** A7.10: Der Schlangenkorb mit dem gewählten Bonus; danach ist er aus dem Spiel. */
+export interface SchlangenkorbSpielenAktion extends MitKarte {
+  typ: 'SchlangenkorbSpielen';
+  bonus: Korbbonus;
+}
+
 /** Die Karten, die eine Wirkung haben und deshalb im Kartenregister stehen. */
 export type KartenAktion =
   | FarbkarteLegenAktion
@@ -110,7 +142,8 @@ export type KartenAktion =
   | SchlangenfrassSpielenAktion
   | SchlangengrubeSpielenAktion
   | VerdopplerSpielenAktion
-  | SchlangenhaeutungSpielenAktion;
+  | SchlangenhaeutungSpielenAktion
+  | SchlangenkorbSpielenAktion;
 
 /** D13: eine Sonderkarte ohne mögliches Ziel und jeder Farbenschutz (A5) auf den eigenen Ablagestapel. */
 export interface SonderkarteWirkungslosAblegenAktion extends MitKarte {

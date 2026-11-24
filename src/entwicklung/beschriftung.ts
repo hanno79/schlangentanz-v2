@@ -9,8 +9,9 @@ Handkarte mehrere Ziele (jede Stelle jeder Schlange, zwei Karten zum Fressen);
 damit man das richtige anklickt, nennt der Knopf das Ziel. Erkannt wird am Wert,
 nicht am Feldnamen: Eine Karten-Id wird zur Karte mit Namen und Id, eine
 Spieler-Id zum Spieler; Schlangen-Ids, Seiten und Optionen stehen, wie sie sind.
-Nur `position` („Stelle n“) und `art` (neue oder bestehende Schlange) brauchen
-eigene Worte. Die ganze Aktion steht im Tooltip und in `data-aktion`.
+Nur `position` („Stelle n“) und `art` (neue oder bestehende Schlange; der
+Bonus des Schlangenkorbs steht, wie er heisst) brauchen eigene Worte. Die ganze
+Aktion steht im Tooltip und in `data-aktion`.
 
 Eine Risiko-Aktion nennt ihre Nummer und ihren Namen aus A8.2 und die benannte
 Karte. Eine Wahl aus mehreren Wörtern („blau-01 schlange-2 ende“) wird Wort für
@@ -43,8 +44,8 @@ function zielText(tisch: Tisch, feld: string, wert: unknown): string {
       .join(' ')
   }
   if (feld === 'position') return `Stelle ${String(wert)}`
-  // Die bestehende Schlange nennt schon ihre Id; nur die neue braucht ein Wort.
-  if (feld === 'art') return wert === 'neueSchlange' ? 'neue Schlange' : ''
+  // Die bestehende Schlange nennt schon ihre Id; nur die neue braucht ein Wort. Der Bonus des Schlangenkorbs steht, wie er heisst (X6).
+  if (feld === 'art') return wert === 'neueSchlange' ? 'neue Schlange' : wert === 'schlange' ? '' : String(wert)
   const karte = tisch.karten.get(String(wert))
   if (karte !== undefined) return `${karteAnzeigename(karte)} (${karte.id})`
   const spieler = tisch.zustand.spieler.findIndex((eintrag) => eintrag.id === wert)

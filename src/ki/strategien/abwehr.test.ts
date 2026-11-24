@@ -24,10 +24,20 @@ dieser Stellungen entscheidet die solide KI für den Gefragten, gleich wer an se
 Stelle sitzt; sie sieht ja nur dessen Sicht.
 */
 
-/** Jede Stellung der Partien, in der ein Gefragter Farbenschutz hält. */
-const GEFRAGT: Spielzustand[] = partienK3gegenK2(36, 41_000).flatMap((partie) =>
-  partieZustaende(partie, kisK3gegenK2(partie)).filter((zustand) => zustand.schwebend !== null && ermittleAktionen(zustand).some(abwehren)),
-)
+/** Jede Stellung dieser Partien, in der ein Gefragter Farbenschutz hält. */
+function gefragtIn(partien: ReturnType<typeof partienK3gegenK2>): Spielzustand[] {
+  return partien.flatMap((partie) => partieZustaende(partie, kisK3gegenK2(partie)).filter((zustand) => zustand.schwebend !== null && ermittleAktionen(zustand).some(abwehren)))
+}
+
+const GEFRAGT: Spielzustand[] = gefragtIn(partienK3gegenK2(36, 41_000))
+
+/*
+Die Mindestzahl der Abwehrstellungen, auch in der Schlussrunde, sichert das
+Basis-Spiel und zählt deshalb in denselben 36 Partien, alle ohne Erweiterung
+(Entscheid des Orchestrators zu X6, 24.11.2026). Dieselbe Aussage mit
+Erweiterung gehört zu K4 (Plan K4, wird nachgetragen).
+*/
+const GEFRAGT_BASIS: Spielzustand[] = gefragtIn(partienK3gegenK2(36, 41_000).map((partie) => ({ ...partie, erweiterung: false })))
 
 /** Punkte aus Farbgruppen und Vielfaltbonus (A11), ohne Kettenbonus und Aufgaben. */
 function gruppenpunkte(zustand: Spielzustand, sitz: number): number {
@@ -44,10 +54,11 @@ function ausgaenge(zustand: Spielzustand) {
 }
 
 describe('K3 Kriterium 4: Abwehr in Partien', () => {
-  it('K3.4: genug Stellungen, in denen jemand mit Farbenschutz gefragt ist, auch in der Schlussrunde', () => {
-    expect(GEFRAGT.length, 'K3.4: Stellungen mit Farbenschutz').toBeGreaterThan(80)
+  it('K3.4: genug Stellungen, in denen jemand mit Farbenschutz gefragt ist, auch in der Schlussrunde (Basis-Spiel)', () => {
+    expect(GEFRAGT_BASIS.every((zustand) => !zustand.erweiterung), 'K3.4: nur Partien ohne Erweiterung').toBe(true)
+    expect(GEFRAGT_BASIS.length, 'K3.4: Stellungen mit Farbenschutz').toBeGreaterThan(80)
     // Angriffe in der Schlussrunde sind selten; den Fall zeigt dazu das Szenario `ki-abwehr-schlussrunde`.
-    expect(GEFRAGT.filter((zustand) => zustand.partiephase === 'Schlussrunde').length, 'K3.4: davon in der Schlussrunde').toBeGreaterThanOrEqual(3)
+    expect(GEFRAGT_BASIS.filter((zustand) => zustand.partiephase === 'Schlussrunde').length, 'K3.4: davon in der Schlussrunde').toBeGreaterThanOrEqual(3)
   })
 
   it('K3.4: zerstört ein Angriff eine eigene Gruppe oder kostet er die Gruppen mindestens 3 Punkte, wehrt sie mit Farbenschutz ab', () => {

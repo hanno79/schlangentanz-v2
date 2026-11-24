@@ -74,10 +74,20 @@ export function legeAufEigenenAblagestapel(zustand: Spielzustand, spielerId: str
   zustand.spieler.find((spieler) => spieler.id === spielerId)!.ablagestapel.push(karte);
 }
 
+/**
+ * A6, D13: Eine Sonderkarte ohne Wirkung kommt auf den Ablagestapel dessen, der
+ * sie gespielt hat. Der Schlangenkorb kommt nach der Nutzung aus dem Spiel und
+ * liegt nie auf einem Ablagestapel, auch wirkungslos oder abgewehrt (A7.10, D54).
+ */
+export function legeOhneWirkungAb(zustand: Spielzustand, spielerIndex: number, karte: Spielkarte): void {
+  if (karte.typ === 'Sonderkarte' && karte.name === 'Schlangenkorb des Glücks') zustand.ausDemSpiel.push(karte);
+  else zustand.spieler[spielerIndex].ablagestapel.push(karte);
+}
+
 /** D13, D25: Die Sonderkarte kommt ohne Wirkung auf den eigenen Ablagestapel und zählt als Sonderkarte des Zuges. */
 export function legeWirkungslosAb(zustand: Spielzustand, aktion: SonderkarteWirkungslosAblegenAktion, ereignisse: Ereignis[]): void {
   zaehleGespielteKarte(zustand, aktion);
-  legeAufEigenenAblagestapel(zustand, aktion.spielerId, aktion.karteId);
+  legeOhneWirkungAb(zustand, spielerIndexVon(zustand, aktion.spielerId), entnehmeHandkarte(zustand, aktion.spielerId, aktion.karteId));
   meldeGespielteKarte(zustand, aktion, ereignisse);
 }
 

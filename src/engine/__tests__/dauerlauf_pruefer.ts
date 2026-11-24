@@ -135,9 +135,14 @@ export const stapelPruefer: SchrittPruefer = (_vorher, _aktion, { zustand }) => 
  * Dauerläufe höchstens auf. Gemessen am 21.11.2026 in den rund 366'000
  * Zuständen der 2'000 Partien: höchstens 4'007 (2 Spieler mit Erweiterung,
  * meist Schlangenhäutungen); mit anderer Zuordnung der Spielerzahlen zu den
- * Saaten waren es 2'785. Den ungünstigsten Tisch misst `legal_actions_umfang.test.ts`.
+ * Saaten waren es 2'785. Den ungünstigsten Tisch ohne Korb misst `legal_actions_umfang.test.ts`, wo auch die Rechnung mit dem Korb steht.
+ * Seit X6 (23.11.2026) zählt der Schlangenkorb jeden Tausch und jedes Paar von
+ * Täuschen auf (D44), bei langen eigenen Schlangen Tausende; gemessen in denselben
+ * 2'000 Partien höchstens 9'560 (2 Spieler mit Erweiterung, Farbkarten und Korb),
+ * im Lauf mit 300 Partien 6'118. Nach dem Merge mit X4 (24.11.2026) verlaufen die
+ * Partien mit Erweiterung anders: höchstens 8'179 in den 2'000, 13'190 in den 300.
  */
-export const HOECHSTE_AKTIONSZAHL_IM_DAUERLAUF = 6_000
+export const HOECHSTE_AKTIONSZAHL_IM_DAUERLAUF = 20_000
 
 /** Die grösste Zahl aufgezählter Aktionen in einem Zustand des Laufs (E11, Kriterium 4). */
 export interface Umfang {

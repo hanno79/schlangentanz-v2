@@ -87,7 +87,8 @@ function verschenkteKarten(): { zugenden: number; verschenkt: Verschenkt[] } {
       zugenden += 1
       const jetzt = endpunkte(vorher)
       const wertJetzt = bewerte(sichtFuer(vorher, sitz))
-      const nuetzlich = andere.flatMap((karte) => {
+      // Den Schlangenkorb muss sie erst mit K4 klug nutzen (Plan K4, Kriterium 2; Auftrag X6); für ihn gilt die Aussage hier noch nicht, für jede andere Karte schon.
+      const nuetzlich = andere.filter((karte) => karte.typ !== 'SchlangenkorbSpielen').flatMap((karte) => {
         const danach = nachDurchlassen(vorher, karte, sitz)
         const punkte = endpunkte(danach)
         const nuetztGegner = punkte.some((wert, platz) => platz !== sitz && wert > jetzt[platz])

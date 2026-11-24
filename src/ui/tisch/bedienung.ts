@@ -11,15 +11,15 @@ angeboten ist und wann eine Aktion fertig ist, sagt `auswahl` aus den Aktionen
 der Engine (U3). Mit einem neuen Spielstand beginnt die Auswahl von vorn.
 
 Bedienbar sind alle aufgezählten Aktionen ausser der Abwehr, den
-Entscheidungen der Erweiterung (X3) und den Aktionen der Comeback-Karte (X4),
-die O10 baut. Die Abwehr hat keine Karte
+Entscheidungen der Erweiterung (X3), den Aktionen der Comeback-Karte (X4)
+und dem Schlangenkorb (X6), die O10 baut. Die Abwehr hat keine Karte
 und kein Ziel am Tisch, die Abwehrfrage in der Zugleiste nimmt sie direkt aus
 den aufgezählten Aktionen (O6, `ReaktionsDialog`). Die Schlangenhäutung kam
 mit O7 dazu (`haeutung.ts`). Die Oberfläche lässt beides nur weg, sie baut
 keine Aktion selbst.
 */
 
-const NOCH_NICHT_BEDIENBAR: ReadonlySet<SpielAktion['typ']> = new Set(['Reagieren', 'Entscheiden', 'ComebackEinsetzen', 'ZweiAbwerfenDreiZiehen'])
+const NOCH_NICHT_BEDIENBAR: ReadonlySet<SpielAktion['typ']> = new Set(['Reagieren', 'Entscheiden', 'ComebackEinsetzen', 'ZweiAbwerfenDreiZiehen', 'SchlangenkorbSpielen'])
 
 /** Die Aktionen der Engine, die der Tisch bedienbar macht. */
 function bedienbareAktionen(aktionen: readonly SpielAktion[]): SpielAktion[] {

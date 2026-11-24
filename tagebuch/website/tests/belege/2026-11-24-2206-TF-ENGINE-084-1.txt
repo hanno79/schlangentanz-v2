@@ -1,0 +1,34 @@
+Prüfer X6, eigene Proben auf 14eaa6cb (origin/task/X6-schlangenkorb), temporäre Datei src/engine/__tests__/regeln/zz_pruefer_x6.test.ts, danach entfernt.
+
+npx vitest run src/engine/__tests__/regeln/zz_pruefer_x6.test.ts --reporter=verbose
+PROBE tausch leer: {"erlaubt":false,"grund":"Ungültige Aktion SchlangenkorbSpielen: Feld bonus ist ungültig."} drei: {"erlaubt":false,"grund":"Ungültige Aktion SchlangenkorbSpielen: Feld bonus ist ungültig."}
+PROBE drei gezogen: 3 1            (gespielteFarbkarten, gespielteSonderkarten; Hand vorher nur Korb und Blockade, gezogen Rot, Gelb, Grün)
+PROBE Überzahl: Ablage [ 'schlangenkorb-des-gluecks-01' ] ausDemSpiel []
+PROBE Comeback-Abwurf: Ablage [ 'schlangenkorb-des-gluecks-01', 'blau-01' ] ausDemSpiel []   (ausgespielteSonderkarten = [])
+PROBE wirkungslos mit Zusatz: 3    (Korb „aktionen“, danach zwei Farbenschutz wirkungslos abgelegt)
+PROBE zurückgetauscht: Id in Gegnersicht? false   (sichtFuer(zustand, 1) als JSON)
+PROBE Entfernen-Ziele [ 'schlangenblockade-01', 'schlangenblockade-02' ]   (eigene Blockade und Blockade des Gegners)
+PROBE nur Korb: [ 'Korb:ziehen', 'Korb:aktionen' ]   (kein SonderkarteWirkungslosAblegen, D25)
+B2-Störprobe „Ziehe 3“: sichtFuer(…, 1) gleich für Stapel Rot/Gelb/Grün und Rot/Braun/Blockade, auch nach dem Ausspielen des gezogenen Rot; keine gezogene Id in der Sicht; verrateneHandkarten = []
+Tausch in zwei eigenen Schlangen gleichzeitig: erlaubt, Rot×3 und Blau×3, Hand 2
+10 Tests bestanden.
+
+Umfang der Tausch-Paare (D44), Aufzählung und solide KI:
+PROBE Umfang 20+20, Hand 4: Aktionen 9538, Tausch 9520, Aufzählung 4 ms, KI 369 ms, Wahl FarbkarteLegen
+PROBE Umfang 26+26, Hand 5: Aktionen 26802, Tausch 26780, Aufzählung 9 ms, KI 871 ms, Wahl FarbkarteLegen
+
+Gegenproben (je danach mit git checkout zurückgesetzt):
+1. zugablauf.ts legeOhneWirkungAb: Name des Korbs verfälscht -> 2 rot:
+   A7.10_korb_entfernen „D45/D10/A7.2: wehrt der Gegner … ab … (D54)“
+   A7.10_schlangenkorb „D13/D54: hat der Korb kein mögliches Ziel …“
+2. schlangenkorb.ts ZIEHEN = 2 -> 4 rot in A7.10_korb_ziehen (darunter die B2-Störprobe)
+3. aktionen/pruefen.ts tausch-Länge „>= 1 && <= 2“ -> „>= 0 && <= 3“ -> npx vitest run src/engine src/entwicklung/szenarienKorb.test.ts: 71 Dateien, 1198 Tests grün. Kein Test hält die Grenzen 1 bis 2 bei der Prüfung einer gebauten Aktion fest.
+
+Erster Commit d4b1a46b (nur Tests): npx vitest run A7.10_* regeln_abdeckung szenarienKorb korb_ki -> 7 von 8 Dateien rot, 72 von 99 Tests rot.
+
+Temporärer Merge mit origin/neuaufbau aaf69e3e (X5), danach verworfen:
+Konflikte: regeln_abdeckung.test.ts, aktionen/typen.ts, zuggrenzen.ts (zugInSicht: X6 null, X5 'verdeckte Karte'), entwicklung/beschriftung.ts, ui/spiel/auswahl.test.ts, ui/spiel/auswahl.ts.
+Nach behelfsmässiger Auflösung rot: aktionen.test.ts (Liste der Aktionstypen), A7.10_korb_ziehen „D43: … zusammen drei Farbkarten“ und szenarienKorb „korb-ziehen“ (beide erwarten nur ZugBeenden, jetzt auch RisikoKarteSpielen).
+Probe: Korb als Überzahl echt abgeworfen, nächster Zug Risiko-Aktion 4 mit Erfolg:
+PROBE Ablage Spieler 1 [ 'schlangenkorb-des-gluecks-01' ] oben rot-03
+PROBE Wahlen nach Aktion 4 [ 'stapel' ]   -> der Korb wird nicht angeboten.

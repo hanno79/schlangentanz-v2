@@ -1,0 +1,24 @@
+Prüfer X6: KI-Ausnahmen vorher/nachher. Messzeilen per console.log vorübergehend in die Testdateien eingefügt, danach mit git checkout zurückgesetzt.
+
+A) origin/neuaufbau 6f7ee643, Tests in ihrer Fassung dort:
+MESSUNG K2.1 geprueft 90 vollendet 74          (11 Partien, davon ein Teil mit Erweiterung, dazu Saat 7154 mit Erweiterung)
+MESSUNG K2-Zugende zugenden 341 verschenkt 0
+MESSUNG K3.4 gefragt 132 schlussrunde 4 mit Erweiterung 66 basis-schlussrunde 2
+34 Tests bestanden (inkl. Prüfsumme).
+
+B) X6-Code 14eaa6cb mit den Testdateien aus origin/neuaufbau (ohne Ausnahmen):
+MESSUNG K2.1 geprueft 94 vollendet 73          -> K2.1 mit Erweiterung GRÜN
+MESSUNG K2-Zugende zugenden 326 verschenkt 1   -> rot: „Saat 7154: +7 mit SchlangenkorbSpielen tauschen gelb-02<-braun-05, gruen-03<-blau-02“
+MESSUNG K3.4 gefragt 134 schlussrunde 2 mit Erweiterung 68 basis-schlussrunde 2  -> rot: 2 < 3
+solideKi_gleichstand: rot „K2b, K2.1 (X5, Saat 7154 …)“: Korb besser bewertet als Halten (Unterschied 1);
+                      rot „x5-merge-k21-erweiterung.json“: sie spielt jetzt 5 Aktionen statt Farbkarte, Blockade, Zug beenden.
+
+C) X6 14eaa6cb mit seinen Tests (Ausnahmen):
+MESSUNG K2.1 geprueft 105 vollendet 65          (dieselben 12 Saaten, alle ohne Erweiterung)
+MESSUNG K2-Zugende zugenden 326 verschenkt 0    (Korb aus „nützlich“ herausgenommen)
+MESSUNG K3.4 basis 135 schlussrunde 5 | GEFRAGT 134 schlussrunde 2
+33 Tests bestanden.
+
+Prüfsumme ohne Erweiterung (eigene Saaten 88101–88109, 2–4 Spieler, solide KI und Zufalls-KI, Aktionen und Endzustand):
+origin/neuaufbau 6f7ee643: 523e4410812305d9c84bd561fa055776883804304d190ccf86bbb3bb40413c2f 1620
+X6 14eaa6cb:              523e4410812305d9c84bd561fa055776883804304d190ccf86bbb3bb40413c2f 1620

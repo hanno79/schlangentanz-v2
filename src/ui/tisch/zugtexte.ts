@@ -170,6 +170,14 @@ export function ansage(aktion: SpielAktion, namen: Tischnamen): string {
       const stellen = aktion.neueReihenfolge.map((id) => nummerIn(schlange, id))
       return `Schlangenhäutung, Karte ${Math.min(...stellen)}–${Math.max(...stellen)} ${schlangeImSatz(schlange, 'dativ')}: ${aktion.neueReihenfolge.map(kurz).join(', ')}.`
     }
+    case 'SchlangenkorbSpielen': {
+      // A7.10: Was der Bonus bewegt, zeigt der Tisch; die Ansage nennt nur offene Karten (B2).
+      const { bonus } = aktion
+      if (bonus.art === 'ziehen') return `${kurz(aktion.karteId)}: 3 Karten ziehen und bis zu 2 davon ausspielen.`
+      if (bonus.art === 'aktionen') return `${kurz(aktion.karteId)}: zwei zusätzliche Aktionen in diesem Zug.`
+      if (bonus.art === 'tauschen') return `${kurz(aktion.karteId)}: ${bonus.tausch.length === 1 ? 'eine Karte' : 'zwei Karten'} der eigenen Schlange gegen Handkarten tauschen.`
+      return `${kurz(aktion.karteId)}: ${kurz(bonus.ziel.karteId)} aus ${schlangeImSatz(namen.schlange(bonus.ziel.schlangenId), 'dativ')} entfernen.`
+    }
     default:
       throw new Error(`Für ${aktion.typ} gibt es am Tisch keine Ansage.`)
   }
