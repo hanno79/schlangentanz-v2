@@ -1,0 +1,16 @@
+Prüfer P0.5g, Stand e8280ba0: Fragezeilen im Website-Nachtrag, Zeilenende
+2sp = endet mit zwei Leerzeichen (harter Zeilenumbruch), --- = ohne
+
+Zeile 131 D55 2sp
+Zeile 134 D56 2sp
+Zeile 137 D57 2sp
+Zeile 140 D58 ---
+Zeile 143 D59 ---
+Zeile 146 D60 ---
+Zeile 149 D61 ---
+Zeile 152 D62 ---
+Zeile 155 D63 ---
+Zeile 158 D64 ---
+Zeile 161 D65 ---
+
+Summe: 43 Einträge mit hartem Umbruch, 8 ohne.
