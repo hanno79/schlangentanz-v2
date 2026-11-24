@@ -1,0 +1,52 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a2db8cbcd5e58126a
+
+ ❯ src/ki/strategien/folgeschluessel.test.ts (2 tests | 1 failed) 54ms
+     × K2/X3: eine von drei blauen Karten an dasselbe Ende ergibt dreimal denselben Schlüssel 44ms
+ ❯ src/ki/strategien/solideKi_basis.test.ts (1 test | 1 failed) 8997ms
+     × X3: die Prüfsumme der Wahlen über sechs Partien ohne Erweiterung ist die vom Stand ohne X3 8996ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/ki/strategien/folgeschluessel.test.ts > K2/X3: der Folgeschlüssel der Zugsuche kennt keine Karten-Ids > K2/X3: eine von drei blauen Karten an dasselbe Ende ergibt dreimal denselben Schlüssel
+AssertionError: X3: der Schlüssel unterscheidet gleichwertige Folgen nach der Karten-Id: expected 3 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 3
+
+ ❯ src/ki/strategien/folgeschluessel.test.ts:35:113
+     33|     const schluessel = schluesselNachAnlegen(start, 'Blau')
+     34|     expect(schluessel).toHaveLength(3)
+     35|     expect(new Set(schluessel).size, 'X3: der Schlüssel unterscheidet …
+       |                                                                                                                 ^
+     36|   })
+     37|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/ki/strategien/solideKi_basis.test.ts > X3/K2: ohne Erweiterung wählt die solide KI wie vor X3 > X3: die Prüfsumme der Wahlen über sechs Partien ohne Erweiterung ist die vom Stand ohne X3
+AssertionError: X3: die solide KI wählt ohne Erweiterung anders als vor X3: expected '006a4507659b7775847d5d5beebc4a1d75909…' to be '095a4b72479d5ef49a323a84c3da37420e94e…' // Object.is equality
+
+Expected: "095a4b72479d5ef49a323a84c3da37420e94ef0511efec4b493fc752269e20f9 1064"
+Received: "006a4507659b7775847d5d5beebc4a1d75909eab3188e25dee229523c23adc21 1065"
+
+ ❯ src/ki/strategien/solideKi_basis.test.ts:43:111
+     41|       hash.update(protokoll.join('\n'))
+     42|     })
+     43|     expect(`${hash.digest('hex')} ${schritte}`, 'X3: die solide KI wäh…
+       |                                                                                                               ^
+     44|   }, 120_000)
+     45| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 1 passed (3)
+   Start at  13:06:01
+   Duration  10.72s (transform 1.70s, setup 892ms, import 1.84s, tests 9.05s, environment 3.46s)
+
+exit 1

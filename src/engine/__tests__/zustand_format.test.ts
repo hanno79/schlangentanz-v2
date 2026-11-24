@@ -23,6 +23,9 @@ describe('A1/A5/A10: Zustand im Format 2', () => {
       verdopplerGespielt: false,
       farbenfusionGespielt: false,
       abschnitt: 'Ausspielen',
+      zusatzaktionen: [],
+      verwendet: [],
+      runde: [],
     })
     const zweiterZug = baukasten({ spielerzahl: 2, erweiterung: false }).amZug(1, 2).zustand()
     expect(zweiterZug.zug).toMatchObject({ spielerIndex: 1, teilzug: 2 })

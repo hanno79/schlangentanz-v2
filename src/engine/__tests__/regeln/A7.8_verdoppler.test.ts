@@ -121,6 +121,10 @@ describe('A7.8/A5: Auffüllen und der zweite Zug', () => {
       verdopplerGespielt: false,
       farbenfusionGespielt: false,
       abschnitt: 'Ausspielen',
+      zusatzaktionen: [],
+      verwendet: [],
+      // D47, D50: Die Runde läuft im zweiten Zug weiter; der Verdoppler bleibt ihre Zugerweiterung.
+      runde: ['Verdoppler'],
     })
     expect(zustand.spieler.map((spieler) => spieler.hand.length)).toEqual([5, 5, 5])
     expect(ermittleEntscheider(zustand)).toBe(0)

@@ -31,6 +31,7 @@ export function alleKartenorte(zustand: Spielzustand, ohne: string | null = null
   for (const grube of zustand.ausliegendeGruben) orte.set(grube.karte.id, { ort: 'VorSpieler', spielerIndex: grube.vor });
   if (zustand.schwebend !== null) orte.set(zustand.schwebend.karte.id, { ort: 'Schwebend' });
   for (const karte of zustand.ausDemSpiel) orte.set(karte.id, { ort: 'AusDemSpiel' });
+  sichtbar(zustand.aufgedeckt).forEach((karte, position) => orte.set(karte.id, { ort: 'Aufgedeckt', position }));
   if (ohne !== null) orte.delete(ohne);
   return orte;
 }
@@ -94,7 +95,9 @@ function schlangenIds(zustand: Spielzustand): string[] {
 /**
  * Führt die Wirkung der gespielten Karte `karteId` aus und meldet, was sie
  * ausser dieser Karte bewegt hat (`KartenVersetzt`); bewegt sie nichts sonst,
- * kein Ereignis. Die gespielte Karte meldet der Aufrufer danach selbst.
+ * kein Ereignis. Die gespielte Karte meldet der Aufrufer danach selbst. Bei
+ * einer Entscheidung (X3) ist `ohne` `null`: Dann wird keine Karte ausgenommen,
+ * auch die nicht, zu der die Entscheidung gehört.
  */
 export function wirkeUndMeldeVersetzte(
   zustand: Spielzustand,
@@ -102,11 +105,12 @@ export function wirkeUndMeldeVersetzte(
   karteId: string,
   wirkung: (zustand: Spielzustand) => Spielzustand,
   ereignisse: Ereignis[],
+  ohne: string | null = karteId,
 ): Spielzustand {
-  const vorher = alleKartenorte(zustand, karteId);
+  const vorher = alleKartenorte(zustand, ohne);
   const schlangenVorher = schlangenIds(zustand);
   const nach = wirkung(zustand);
-  const karten = versetzungen(vorher, alleKartenorte(nach, karteId));
+  const karten = versetzungen(vorher, alleKartenorte(nach, ohne));
   const bestehend = new Set(schlangenIds(nach));
   const aufgeloest = schlangenVorher.filter((schlangenId) => !bestehend.has(schlangenId));
   if (karten.length > 0 || aufgeloest.length > 0) ereignisse.push({ typ: 'KartenVersetzt', spielerIndex, karteId, karten, aufgeloest });

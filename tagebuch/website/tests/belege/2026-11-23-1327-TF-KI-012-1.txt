@@ -1,0 +1,26 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a2db8cbcd5e58126a
+
+ ✓ src/engine/__tests__/x3_pruefer_grenzfaelle.test.ts > Prüfer X3: Grenzfälle > G1 D56/D27: eine abgewehrte Fusion im ersten Zug nach Verdoppler sperrt die Fusion des zweiten Zuges nicht 33ms
+ ✓ src/engine/__tests__/x3_pruefer_grenzfaelle.test.ts > Prüfer X3: Grenzfälle > G2 A10/D55: wird die letzte Karte aufgedeckt und wählt der Gegner danach „stapel“, zieht er aus leerem Stapel nichts; nichts geht verloren 29ms
+ ✓ src/engine/__tests__/x3_pruefer_grenzfaelle.test.ts > Prüfer X3: Grenzfälle > G3 D43/D46: Zusatzaktion nur für gezogene Karten, aber die gezogene Karte ist schon auf dem normalen Platz gespielt: eine nicht gezogene zweite Farbkarte bekommt keinen Platz 6ms
+stdout | src/engine/__tests__/x3_pruefer_stoerprobe.test.ts > Prüfer X3: Störprobe B2 > B2/D52: die Ereignisse der ganzen Entscheidungskette bleiben gleich, wenn Stapel und fremde Hände neu gemischt sind
+Störprobe Ereignisse: 120 gemischte Abläufe verglichen
+
+ ✓ src/engine/__tests__/x3_pruefer_stoerprobe.test.ts > Prüfer X3: Störprobe B2 > B2/D43: die Sicht eines Gegners bleibt gleich, wenn die verdeckt gezogenen Karten andere sind 59ms
+ ✓ src/engine/__tests__/x3_pruefer_stoerprobe.test.ts > Prüfer X3: Störprobe B2 > B2/D52: die Ereignisse der ganzen Entscheidungskette bleiben gleich, wenn Stapel und fremde Hände neu gemischt sind 591ms
+stdout | src/engine/__tests__/x3_pruefer_suche.test.ts > Prüfer X3: Suchgrenzen
+GRENZE_SUCHE 49
+Partien ohne: 1074 Schritte, höchstens 40 Stellungen, max 111.3 ms, p99 60.4 ms, Median 5.37 ms
+Partien mit: 1103 Schritte, höchstens 40 Stellungen, max 80.4 ms, p99 61.5 ms, Median 6.50 ms
+Späte Stellung ohne Zusatzaktionen: 1500 Aktionen, höchstens 40 Stellungen, Zeiten 47/49/48/46/54 ms
+Späte Stellung mit Zusatzaktionen: 1500 Aktionen, höchstens 40 Stellungen, Zeiten 117/112/136/132/109 ms
+
+ ✓ src/engine/__tests__/x3_pruefer_suche.test.ts > Prüfer X3: Suchgrenzen 22739ms
+
+ Test Files  3 passed (3)
+      Tests  6 passed (6)
+   Start at  13:06:56
+   Duration  24.76s (transform 2.55s, setup 1.34s, import 2.78s, tests 23.46s, environment 7.99s)
+
+exit 0

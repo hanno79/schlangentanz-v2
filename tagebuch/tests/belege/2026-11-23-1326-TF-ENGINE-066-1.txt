@@ -1,0 +1,16 @@
+Basisprobe Prüfer X3, Iteration 2 (eigene Saaten 70001-74006), Probedatei wie Iteration 1
+== origin/neuaufbau 47f2676 (ohne X3, mit K3) ==
+zufall ohne Erweiterung: 120 Partien, 21625 Schritte, 233ea0ae444d302d125956804d94df36935b7267a937583b4b358dd7f1d8cbdc
+zufall mit Erweiterung: 60 Partien, 11148 Schritte, 04de6711c437dd46bf2a57fc408c6f4f65cc0adcc36992a85f17bfdafe465fa3
+zufallsKi ohne Erweiterung: 30 Partien, 5387 Schritte, ff89061469d4b39d692cabcb55de490b6444a2cf11a36b8b9d28f2de875713d2
+solideKi ohne Erweiterung: 12 Partien, 2131 Schritte, fe95e2cfd11fec7a01e3b413f27e184fb4fb4ee49586012efb720730c2971d97
+solideKi mit Erweiterung: 6 Partien, 1099 Schritte, 9b231ecad15775aaddb070a0f6cb24e95b753b1729b75903c9d779c3c563b8f8
+
+== X3 d1f2f42 ==
+zufall ohne Erweiterung: 120 Partien, 21625 Schritte, 233ea0ae444d302d125956804d94df36935b7267a937583b4b358dd7f1d8cbdc
+zufall mit Erweiterung: 60 Partien, 11148 Schritte, 04de6711c437dd46bf2a57fc408c6f4f65cc0adcc36992a85f17bfdafe465fa3
+zufallsKi ohne Erweiterung: 30 Partien, 5387 Schritte, ff89061469d4b39d692cabcb55de490b6444a2cf11a36b8b9d28f2de875713d2
+solideKi ohne Erweiterung: 12 Partien, 2131 Schritte, fe95e2cfd11fec7a01e3b413f27e184fb4fb4ee49586012efb720730c2971d97
+solideKi mit Erweiterung: 6 Partien, 1099 Schritte, 9b231ecad15775aaddb070a0f6cb24e95b753b1729b75903c9d779c3c563b8f8
+
+Aktionsprotokolle der soliden KI: 3230 und 3230 Zeilen, gleich: True

@@ -1,0 +1,29 @@
+{
+ "saat": "777",
+ "spieler": "4",
+ "erweiterung": "1",
+ "schritt": "Schritt 173",
+ "phase": "Partiephase\nBeendet",
+ "invarianten": "Invarianten (alle erfüllt)",
+ "zaehler": {
+  "ki": 125,
+  "mensch": 48,
+  "verletzt": 0,
+  "ereignisse": {
+   "KarteGespielt": 79,
+   "KarteAngesagt": 14,
+   "AbwehrGefragt": 16,
+   "AnsageEntschieden": 14,
+   "KartenGezogen": 64,
+   "Ausgesetzt": 2,
+   "ZugBegonnen": 63,
+   "Abgewehrt": 4,
+   "SchlussrundeBegonnen": 1
+  }
+ },
+ "konsolenfehler": [],
+ "scroll": [
+  1280,
+  1280
+ ]
+}

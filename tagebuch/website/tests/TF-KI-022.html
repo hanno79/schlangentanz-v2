@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-KI-022 Die solide KI spielt nach X3 dieselben Partien wie vor X3, weil X3 nur Felder anfügt, die im Basis-Spiel nichts entscheiden. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-KI-022 Die solide KI spielt nach X3 dieselben Partien wie vor X3, weil X3 nur Felder anfügt, die im Basis-Spiel nichts entscheiden.</h1><p class="etiketten"><span class="etikett">Bereich KI-Gegner</span><span class="etikett">Regression nein</span><span class="etikett">Priorität hoch</span><span class="etikett">Art manuell</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>X3 soll das Basis-Spiel nicht ändern, auch nicht das Verhalten der soliden KI aus K2. Die KI liest den Zug aus ihrer Sicht, und der Zug hat seit X3 neue Felder. Die Probe spielt dieselben Partien vor und nach X3 und vergleicht jede Wahl.</p><h2>Bestanden, wenn</h2><p>Über 12 Partien ohne und 6 mit Erweiterung (Saaten 73001–73012 und 74001–74006, KI-Saat × 13 + 5) sind Schrittzahl und SHA-256 über Sicht, Aktionen, Ereignisse und Spielstand auf 589e2a7 und 686159e gleich.</p><h2>Fehlgeschlagen, wenn</h2><p>Schrittzahl oder Summe weichen ab, also wählt die KI in mindestens einem Schritt anders.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>23.11.2026</dd><dt>Änderung</dt><dd>task/X3-zusatzaktionen (PR #108)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Repo, einmal auf 589e2a7 und einmal auf 686159e ausgecheckt</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Saaten wie oben; Strategie <code>solideKi</code> aus <code>src/ki/strategien/index.ts</code>.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Repo und Konsole</td><td>wie TF-ENGINE-066, Schritte 1 bis 3</td><td></td><td>Dateien `basis.txt` und `x3.txt`</td></tr><tr><td>2</td><td>Konsole</td><td>die Zeilen „solideKi ohne Erweiterung“ und „solideKi mit Erweiterung“ vergleichen</td><td></td><td>Schritte und Summe gleich</td></tr><tr><td>3</td><td>Konsole</td><td>bei Abweichung das Aktionsprotokoll beider Stände vergleichen</td><td>`diff basis.txt.ki.txt x3.txt.ki.txt`</td><td>erste abweichende Zeile nennt Partie und Schritt</td></tr><tr><td>4</td><td>Repo</td><td>Probedatei löschen</td><td></td><td>`git status` ist leer</td></tr></tbody></table></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p>Dieselbe Probedatei wie in TF-ENGINE-066; für die KI kommt je Schritt die Sicht des Entscheiders ohne die X3-Felder in die Summe, und jede gewählte Aktion wird mitgeschrieben, damit sich die erste Abweichung finden lässt.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Partien mit Zusatzaktionen gibt es erst mit X4 bis X6.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-23">23.11.2026 13:26</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer X3) &middot; agent &middot; pruefung-X3 @ <span class="commit" title="d1f2f4211700b1477ec95babb79ef656eab2bcb7">d1f2f42</span></p><p>Iteration 2, Vergleichsbasis origin/neuaufbau 47f2676 (ohne X3, mit K3): solideKi ohne Erweiterung 12 Partien 2131 Schritte fe95e2cf…1d97 auf beiden Ständen; mit Erweiterung 6 Partien 1099 Schritte 9b231eca…b8f8 auf beiden; Aktionsprotokolle der soliden KI zeilengleich. Zufallswahl und Zufalls-KI ebenfalls gleich. Gegenprobe: karteId zurück in zugOhneIds macht folgeschluessel.test (3 statt 1 Schlüssel) und solideKi_basis.test rot (Exit 1).</p><ul class="belege"><li><a href="belege/2026-11-23-1326-TF-KI-022-1.txt">2026-11-23-1326-TF-KI-022-1.txt</a></li><li><a href="belege/2026-11-23-1326-TF-KI-022-2.txt">2026-11-23-1326-TF-KI-022-2.txt</a></li></ul></article><article class="lauf status-fehlgeschlagen"><h3><time datetime="2026-11-23">23.11.2026 09:22</time> <span class="status status-fehlgeschlagen">fehlgeschlagen</span></h3><p class="angaben">Claude Code (Prüfer X3) &middot; agent &middot; pruefung-X3 @ <span class="commit" title="686159eb5b975d58441c1acfaf14addf2f7204ab">686159e</span></p><p>solideKi ohne Erweiterung: 589e2a7 2128 Schritte ba6b68ff…c321, 686159e 2132 Schritte 9f7f8e4f…cdf52b; mit Erweiterung 1090 vs 1092 Schritte. Erste Abweichung Partie 73001 Schritt 2: Basis FarbendiebSpielen farbendieb-02, X3 FarbkarteLegen braun-04. Ursache: folgeschluessel in src/ki/strategien/zugsuche.ts nimmt JSON.stringify(sicht.zug), seit X3 mit zug.verwendet (Karten-Ids); ohne verwendet/zusatzaktionen/runde im Schlüssel sind alle Summen wieder gleich der Basis. Alte KI-Dateien sicht.ts/vorauswahl.ts auf X3-Engine ändern nichts (gleich X3).</p><ul class="belege"><li><a href="belege/2026-11-23-0922-TF-KI-022-1.txt">2026-11-23-0922-TF-KI-022-1.txt</a></li><li><a href="belege/2026-11-23-0922-TF-KI-022-2.txt">2026-11-23-0922-TF-KI-022-2.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

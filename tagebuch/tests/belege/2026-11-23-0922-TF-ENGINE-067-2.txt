@@ -1,0 +1,56 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a2db8cbcd5e58126a
+
+ ❯ src/engine/__tests__/x3_pruefer_stoerprobe.test.ts (2 tests | 1 failed) 290ms
+     × B2/D43: die Sicht eines Gegners bleibt gleich, wenn die verdeckt gezogenen Karten andere sind 20ms
+ ❯ src/ki/sicht.test.ts (16 tests | 1 failed) 631ms
+     × B2: gelten Zusatzaktionen nur für gezogene Karten, sieht nur der Spieler am Zug, welche es sind 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/ki/sicht.test.ts > B2/D43: Zusatzaktionen für bestimmte Karten verraten keine fremde Handkarte > B2: gelten Zusatzaktionen nur für gezogene Karten, sieht nur der Spieler am Zug, welche es sind
+AssertionError: B2: die Sicht des Gegners nennt eine Handkarte von Spieler 1: expected [ 'braun-02', 'rot-01', 'violett-05' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "braun-02",
++   "rot-01",
++   "violett-05",
++ ]
+
+ ❯ src/ki/sicht.test.ts:204:115
+    202|     expect(sichtFuer(zustand, 0).zug.zusatzaktionen[0].nurKarten, 'der…
+    203|     const fremd = alleTexte(sichtFuer(zustand, 1))
+    204|     expect(gezogen.filter((id) => fremd.has(id)), 'B2: die Sicht des G…
+       |                                                                                                                   ^
+    205|   })
+    206| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/engine/__tests__/x3_pruefer_stoerprobe.test.ts > Prüfer X3: Störprobe B2 > B2/D43: die Sicht eines Gegners bleibt gleich, wenn die verdeckt gezogenen Karten andere sind
+AssertionError: Sicht von 1, Saat 1: expected '{"ich":1,"hand":[{"typ":"Farbkarte","…' to be '{"ich":1,"hand":[{"typ":"Farbkarte","…' // Object.is equality
+
+Expected: "{"ich":1,"hand":[{"typ":"Farbkarte","id":"gruen-02","farbe":"Grün","punkte":3},{"typ":"Sonderkarte","id":"schlangenhaeutung-01","name":"Schlangenhäutung"},{"typ":"Farbkarte","id":"braun-03","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"gruen-03","farbe":"Grün","punkte":3},{"typ":"Farbkarte","id":"gruen-09","farbe":"Grün","punkte":3}],"geheimeAufgabe":{"typ":"Aufgabenkarte","id":"aufgabe-11","name":"Schlangenbändiger","punkte":7,"bedingung":"Habe in einer Schlange ein sich wiederholendes Muster aus min. 3 versch. Farben."},"geheimeAufgabeErfuellt":false,"spieler":[{"id":"spieler-1","name":"Spieler 1","steuerung":"Mensch","handgroesse":5,"schlangen":[],"ablagestapel":[],"ausgespielteSonderkarten":[],"schlangenhaeutungDreiergruppen":0,"erfuellteAufgaben":[],"comeback":{"karte":{"typ":"Comeback","id":"comeback-01"},"verbraucht":false},"risikoKarten":[{"typ":"Risiko-Belohnung","id":"risiko-belohnung-01"},{"typ":"Risiko-Belohnung","id":"risiko-belohnung-02"}]},{"id":"spieler-2","name":"KI-Gegner 1","steuerung":"KI","handgroesse":5,"schlangen":[],"ablagestapel":[],"ausgespielteSonderkarten":[],"schlangenhaeutungDreiergruppen":0,"erfuellteAufgaben":[],"comeback":{"karte":{"typ":"Comeback","id":"comeback-02"},"verbraucht":false},"risikoKarten":[{"typ":"Risiko-Belohnung","id":"risiko-belohnung-03"},{"typ":"Risiko-Belohnung","id":"risiko-belohnung-04"}]},{"id":"spieler-3","name":"KI-Gegner 2","steuerung":"KI","handgroesse":5,"schlangen":[],"ablagestapel":[],"ausgespielteSonderkarten":[],"schlangenhaeutungDreiergruppen":0,"erfuellteAufgaben":[],"comeback":{"karte":{"typ":"Comeback","id":"comeback-03"},"verbraucht":false},"risikoKarten":[{"typ":"Risiko-Belohnung","id":"risiko-belohnung-05"},{"typ":"Risiko-Belohnung","id":"risiko-belohnung-06"}]}],"erweiterung":true,"partiephase":"Laufend","zug":{"spielerIndex":0,"teilzug":1,"gespielteFarbkarten":0,"gespielteSonderkarten":0,"verdopplerGespielt":false,"farbenfusionGespielt":false,"abschnitt":"Ausspielen","zusatzaktionen":[{"quelle":"Schlangenkorb","erlaubt":["Farbkarte","Sonderkarte"],"nurKarten":["blau-12","blau-11","farbendieb-01"]},{"quelle":"Schlangenkorb","erlaubt":["Farbkarte","Sonderkarte"],"nurKarten":["blau-12","blau-11","farbendieb-01"]}],"verwendet":[],"runde":["Schlangenkorb"]},"entscheider":0,"schlussrundeAusloeser":null,"nachziehstapelGroesse":97,"aufgabenstapelGroesse":9,"offeneAufgaben":[{"typ":"Aufgabenkarte","id":"aufgabe-07","name":"Fusionsexperte","punkte":6,"bedingung":"Habe eine Schlange mit mindestens 2 Farbfusionen."},{"typ":"Aufgabenkarte","id":"aufgabe-14","name":"Gelber Schatz","punkte":5,"bedingung":"Bilde eine Gruppe aus min. 6 gelben Karten."},{"typ":"Aufgabenkarte","id":"aufgabe-10","name":"Schlangenrepertoire","punkte":4,"bedingung":"Spiele min. 5 versch. Arten von Sonderkarten aus."}],"ausliegendeGruben":[],"angesagt":null,"entscheidung":null,"aufgedeckt":[],"ausDemSpiel":[],"schlangenZaehler":0}"
+Received: "{"ich":1,"hand":[{"typ":"Farbkarte","id":"gruen-02","farbe":"Grün","punkte":3},{"typ":"Sonderkarte","id":"schlangenhaeutung-01","name":"Schlangenhäutung"},{"typ":"Farbkarte","id":"braun-03","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"gruen-03","farbe":"Grün","punkte":3},{"typ":"Farbkarte","id":"gruen-09","farbe":"Grün","punkte":3}],"geheimeAufgabe":{"typ":"Aufgabenkarte","id":"aufgabe-11","name":"Schlangenbändiger","punkte":7,"bedingung":"Habe in einer Schlange ein sich wiederholendes Muster aus min. 3 versch. Farben."},"geheimeAufgabeErfuellt":false,"spieler":[{"id":"spieler-1","name":"Spieler 1","steuerung":"Mensch","handgroesse":5,"schlangen":[],"ablagestapel":[],"ausgespielteSonderkarten":[],"schlangenhaeutungDreiergruppen":0,"erfuellteAufgaben":[],"comeback":{"karte":{"typ":"Comeback","id":"comeback-01"},"verbraucht":false},"risikoKarten":[{"typ":"Risiko-Belohnung","id":"risiko-belohnung-01"},{"typ":"Risiko-Belohnung","id":"risiko-belohnung-02"}]},{"id":"spieler-2","name":"KI-Gegner 1","steuerung":"KI","handgroesse":5,"schlangen":[],"ablagestapel":[],"ausgespielteSonderkarten":[],"schlangenhaeutungDreiergruppen":0,"erfuellteAufgaben":[],"comeback":{"karte":{"typ":"Comeback","id":"comeback-02"},"verbraucht":false},"risikoKarten":[{"typ":"Risiko-Belohnung","id":"risiko-belohnung-03"},{"typ":"Risiko-Belohnung","id":"risiko-belohnung-04"}]},{"id":"spieler-3","name":"KI-Gegner 2","steuerung":"KI","handgroesse":5,"schlangen":[],"ablagestapel":[],"ausgespielteSonderkarten":[],"schlangenhaeutungDreiergruppen":0,"erfuellteAufgaben":[],"comeback":{"karte":{"typ":"Comeback","id":"comeback-03"},"verbraucht":false},"risikoKarten":[{"typ":"Risiko-Belohnung","id":"risiko-belohnung-05"},{"typ":"Risiko-Belohnung","id":"risiko-belohnung-06"}]}],"erweiterung":true,"partiephase":"Laufend","zug":{"spielerIndex":0,"teilzug":1,"gespielteFarbkarten":0,"gespielteSonderkarten":0,"verdopplerGespielt":false,"farbenfusionGespielt":false,"abschnitt":"Ausspielen","zusatzaktionen":[{"quelle":"Schlangenkorb","erlaubt":["Farbkarte","Sonderkarte"],"nurKarten":["verdoppler-01","rot-12","farbenfusion-04"]},{"quelle":"Schlangenkorb","erlaubt":["Farbkarte","Sonderkarte"],"nurKarten":["verdoppler-01","rot-12","farbenfusion-04"]}],"verwendet":[],"runde":["Schlangenkorb"]},"entscheider":0,"schlussrundeAusloeser":null,"nachziehstapelGroesse":97,"aufgabenstapelGroesse":9,"offeneAufgaben":[{"typ":"Aufgabenkarte","id":"aufgabe-07","name":"Fusionsexperte","punkte":6,"bedingung":"Habe eine Schlange mit mindestens 2 Farbfusionen."},{"typ":"Aufgabenkarte","id":"aufgabe-14","name":"Gelber Schatz","punkte":5,"bedingung":"Bilde eine Gruppe aus min. 6 gelben Karten."},{"typ":"Aufgabenkarte","id":"aufgabe-10","name":"Schlangenrepertoire","punkte":4,"bedingung":"Spiele min. 5 versch. Arten von Sonderkarten aus."}],"ausliegendeGruben":[],"angesagt":null,"entscheidung":null,"aufgedeckt":[],"ausDemSpiel":[],"schlangenZaehler":0}"
+
+ ❯ src/engine/__tests__/x3_pruefer_stoerprobe.test.ts:43:92
+     41|       for (let saat = 1; saat <= 25; saat += 1) {
+     42|         const anders = gemischt(zustand, fuer, saat)
+     43|         expect(JSON.stringify(sichtFuer(anders, fuer)), `Sicht von ${f…
+       |                                                                                            ^
+     44|       }
+     45|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 16 passed (18)
+   Start at  08:48:33
+   Duration  4.47s (transform 1.28s, setup 627ms, import 1.35s, tests 921ms, environment 5.11s)
+
+exit 1

@@ -47,6 +47,7 @@ describe('A5/A6/A7: die Aktionstypen', () => {
       'ZugBeenden',
       'UeberhandAbwerfen',
       'Reagieren',
+      'Entscheiden',
     ])
   })
 

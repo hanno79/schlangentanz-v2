@@ -1,0 +1,15 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a2db8cbcd5e58126a
+
+stdout | src/engine/__tests__/x3_pruefer_stoerprobe.test.ts > Prüfer X3: Störprobe B2 > B2/D52: die Ereignisse der ganzen Entscheidungskette bleiben gleich, wenn Stapel und fremde Hände neu gemischt sind
+Störprobe Ereignisse: 120 gemischte Abläufe verglichen
+
+ ✓ src/engine/__tests__/x3_pruefer_stoerprobe.test.ts > Prüfer X3: Störprobe B2 > B2/D43: die Sicht eines Gegners bleibt gleich, wenn die verdeckt gezogenen Karten andere sind 27ms
+ ✓ src/engine/__tests__/x3_pruefer_stoerprobe.test.ts > Prüfer X3: Störprobe B2 > B2/D52: die Ereignisse der ganzen Entscheidungskette bleiben gleich, wenn Stapel und fremde Hände neu gemischt sind 249ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  08:48:10
+   Duration  3.95s (transform 653ms, setup 284ms, import 687ms, tests 277ms, environment 2.39s)
+
+exit 0

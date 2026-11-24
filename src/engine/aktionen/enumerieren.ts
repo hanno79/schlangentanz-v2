@@ -1,8 +1,8 @@
-import { definitionFuer } from '../karten/register';
-import { reaktionsAktionen } from '../reaktion';
+import { entscheidungsAktionen, reaktionsAktionen } from '../reaktion';
 import type { Spielkarte, Spielzustand } from '../types';
-import { darfZugBeenden, kartengrenze, ueberzaehligeKarten } from '../zugablauf';
-import { ermittleEntscheider, ohneZielAblegbar } from './pruefen';
+import { ueberzaehligeKarten } from '../zugablauf';
+import { darfZugBeenden, kartengrenze } from '../zuggrenzen';
+import { ermittleEntscheider, moeglicheZiele, ohneZielAblegbar } from './pruefen';
 import type { SpielAktion, UeberhandAbwerfenAktion } from './typen';
 
 /**
@@ -13,11 +13,13 @@ import type { SpielAktion, UeberhandAbwerfenAktion } from './typen';
  * wirkungslose Ablegen (D13, D25), zuletzt „Zug beenden“. Am Zugende mit mehr
  * als 5 Karten nur das Abwerfen (A5). Schwebt eine angesagte Karte, nur die
  * Reaktionen des Gefragten: jeder seiner Farbenschutz, dann durchlassen (A6).
+ * Ist eine Entscheidung offen, nur die Wahl ihres Entscheiders (X3).
  */
 export function ermittleAktionen(zustand: Spielzustand): SpielAktion[] {
   const entscheider = ermittleEntscheider(zustand);
   if (entscheider === null) return [];
   if (zustand.schwebend !== null) return reaktionsAktionen(zustand, entscheider);
+  if (zustand.entscheidung !== null) return entscheidungsAktionen(zustand, entscheider);
   const spieler = zustand.spieler[entscheider];
   if (zustand.zug.abschnitt === 'Abwerfen') return abwurfAktionen(spieler.id, spieler.hand, ueberzaehligeKarten(spieler));
 
@@ -25,7 +27,7 @@ export function ermittleAktionen(zustand: Spielzustand): SpielAktion[] {
   const wirkungslos: SpielAktion[] = [];
   for (const karte of spieler.hand) {
     if (kartengrenze(zustand.zug, karte) !== null) continue;
-    const ziele = definitionFuer(karte).ziele(zustand, entscheider, karte);
+    const ziele = moeglicheZiele(zustand, entscheider, karte);
     mitWirkung.push(...ziele);
     if (ohneZielAblegbar(karte, () => ziele)) wirkungslos.push({ typ: 'SonderkarteWirkungslosAblegen', spielerId: spieler.id, karteId: karte.id });
   }
