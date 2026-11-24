@@ -104,13 +104,31 @@ describe('A8.2: der Einsatz zählt nicht als reguläre Aktion (X5, Kriterium 2)'
     expect(gespielt.zug.zusatzaktionen).toEqual([])
   })
 
-  it('A8.2: die zusätzliche Farbkarte aus Aktion 2 belegt keinen Platz; die Farbkarte des Zuges bleibt frei', () => {
+  it('A8.2: die zusätzliche Farbkarte aus Aktion 2 belegt keinen Platz; die Farbkarte und die Sonderkarte des Zuges bleiben frei', () => {
     const start = tisch()
     const schritt = spieleRisiko(start, 2, idVon(start, 0, 'Blau'))
     const eigene = start.spieler[0].schlangen[0].id
     const gelegt = waehle(schritt.zustand, `${idVon(start, 0, 'Rot')} ${eigene} ende`).zustand
-    expect(gelegt.zug.verwendet).toEqual([])
+    expect(gelegt.zug).toMatchObject({ gespielteFarbkarten: 0, gespielteSonderkarten: 0 })
     expect(aktionen(gelegt, 'FarbkarteLegen').length).toBeGreaterThan(0)
+    expect(aktionen(gelegt, 'SchlangenfrassSpielen').length).toBeGreaterThan(0)
+  })
+
+  it('A5/D12 (Autor, 24.11.2026): die gelegte Zusatzfarbkarte aus Aktion 2 zählt als Karte des Zuges; danach darf er den Zug beenden', () => {
+    const start = tisch()
+    const eigene = start.spieler[0].schlangen[0].id
+    const offen = spieleRisiko(start, 2, idVon(start, 0, 'Blau')).zustand
+    expect(aktionen(offen, 'ZugBeenden'), 'vor dem Anlegen liegt noch keine Karte').toEqual([])
+    const gelegt = waehle(offen, `${idVon(start, 0, 'Rot')} ${eigene} ende`).zustand
+    expect(aktionen(gelegt, 'ZugBeenden'), 'A5: mindestens eine Karte, die Zusatzfarbkarte zählt').toHaveLength(1)
+  })
+
+  it('A5/D12 (Autor, 24.11.2026): bei Misserfolg legt Aktion 2 keine Karte; dann zählt nichts, und „Zug beenden“ fehlt weiter', () => {
+    const start = risikoTisch({ hand: ['Blau', 'Rot'], schlange: ['Gelb'], oben: ['Farbendieb', 'Violett'] })
+    const gegner = waehle(spieleRisiko(start, 2, idVon(start, 0, 'Blau')).zustand, 'spieler-2').zustand
+    const genommen = waehle(gegner, 'geplante').zustand
+    expect(aktionen(genommen, 'ZugBeenden')).toEqual([])
+    expect(aktionen(waehle(gegner, 'stapel').zustand, 'ZugBeenden')).toEqual([])
   })
 })
 
