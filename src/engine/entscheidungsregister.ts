@@ -25,6 +25,8 @@ export interface EntscheidungsDefinition {
    * liegt. Die KI legt sie beim Erraten des Verdeckten dorthin (Plan K2).
    */
   offeneHandkarte?(entscheidung: OffeneEntscheidung): { spielerIndex: number; karteId: string } | null;
+  /** Was an den Daten der Entscheidung im Zustand nicht stimmt, etwa eine benannte Karte, die nicht dort liegt; leer, wenn alles stimmt. Die Invarianten fragen es ab. */
+  befunde?(zustand: Spielzustand, entscheidung: OffeneEntscheidung): string[];
   /**
    * Die Wirkung der Wahl. Sie darf Karten bewegen (die Engine meldet sie selbst,
    * Plan E4b) und eine weitere Entscheidung verlangen, etwa vom gewählten Gegner.

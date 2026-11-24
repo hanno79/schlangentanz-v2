@@ -246,13 +246,20 @@ export function zaehlerPassen(zug: Zug): string | null {
  * B2: Der Zug, wie ihn `spielerIndex` sehen darf. Gilt eine Zusatzaktion nur für
  * bestimmte Karten, etwa die mit dem Korb verdeckt gezogenen (D43), nennt sie
  * keine, die auf einer fremden Hand liegt; welche es sind, sieht nur ihr Besitzer.
+ * Ebenso nennt `verwendet` keine gespielte Karte, die wieder auf einer fremden
+ * Hand liegt, etwa nach einem Tausch mit Risiko-Aktion 3 (A8.2, D51); ihr Platz
+ * bleibt belegt.
  */
+/** Steht in der Sicht für eine gespielte Karte, die wieder verdeckt auf einer fremden Hand liegt (B2). */
+const VERDECKT = 'verdeckte Karte';
+
 export function zugInSicht(zustand: Spielzustand, spielerIndex: number): Zug {
   const fremd = new Set(zustand.spieler.flatMap((spieler, index) => (index === spielerIndex ? [] : spieler.hand.map((karte) => karte.id))));
   const { zug } = zustand;
   return {
     ...zug,
     zusatzaktionen: zug.zusatzaktionen.map((zusatz) => (zusatz.nurKarten === null ? zusatz : { ...zusatz, nurKarten: zusatz.nurKarten.filter((id) => !fremd.has(id)) })),
+    verwendet: zug.verwendet.map((eintrag) => (eintrag.karteId !== null && fremd.has(eintrag.karteId) ? { ...eintrag, karteId: VERDECKT } : eintrag)),
   };
 }
 

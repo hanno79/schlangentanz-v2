@@ -262,11 +262,26 @@ function benannteFarbkarte(entscheidung: OffeneEntscheidung): { spielerIndex: nu
   return typeof benannt === 'string' ? { spielerIndex: entscheidung.ausgeloestVon, karteId: benannt } : null;
 }
 
+/** Liegen die Karten, die die Entscheidung nennt, dort, wo sie liegen müssen (D52, A8.2 Aktion 3)? Für die Invarianten, etwa beim Laden. */
+function befundeDerDaten(zustand: Spielzustand, entscheidung: OffeneEntscheidung): string[] {
+  const befunde: string[] = [];
+  const benannt = benannteFarbkarte(entscheidung);
+  if (benannt !== null && !zustand.spieler[benannt.spielerIndex].hand.some((karte) => karte.id === benannt.karteId && istFarbkarte(karte))) {
+    befunde.push(`Die für Risiko-Aktion 2 benannte Farbkarte ${benannt.karteId} liegt nicht auf der Hand von ${zustand.spieler[benannt.spielerIndex].id} (D52).`);
+  }
+  const { schlangenkarte } = entscheidung.daten;
+  if (schlangenkarte !== undefined && eigeneSchlangenkarte(zustand.spieler[entscheidung.entscheider], String(schlangenkarte)) === undefined) {
+    befunde.push(`Die für Risiko-Aktion 3 benannte Karte ${schlangenkarte} ist keine Farbkarte in einer Schlange von ${zustand.spieler[entscheidung.entscheider].id} (A8.2).`);
+  }
+  return befunde;
+}
+
 const ENTSCHEIDUNGEN: readonly EntscheidungsDefinition[] = [
   {
     // A8.2: Wahl ist die Id des Gegners. Aktion 1 gibt ihm die aufgedeckte Sonderkarte; bei Aktion 2 und 4 wählt er danach selbst (D52, D54).
     art: GEGNERWAHL,
     offeneHandkarte: benannteFarbkarte,
+    befunde: befundeDerDaten,
     loese(zustand, entscheidung, wahl) {
       const gegner = spielerIndexVon(zustand, wahl);
       const { risikoAktion, benannt } = entscheidung.daten;
@@ -280,6 +295,7 @@ const ENTSCHEIDUNGEN: readonly EntscheidungsDefinition[] = [
     // D52: Der begünstigte Gegner nimmt die benannte Farbkarte von der Hand des Spielers oder die oberste Stapelkarte.
     art: GEPLANTE_ODER_STAPEL,
     offeneHandkarte: benannteFarbkarte,
+    befunde: befundeDerDaten,
     loese(zustand, entscheidung, wahl) {
       if (wahl === STAPEL) zieheVomStapel(zustand, entscheidung.entscheider, 1);
       else zustand.spieler[entscheidung.entscheider].hand.push(entnehmeHandkarte(zustand, zustand.spieler[entscheidung.ausgeloestVon].id, String(entscheidung.daten.benannt)));
@@ -313,6 +329,7 @@ const ENTSCHEIDUNGEN: readonly EntscheidungsDefinition[] = [
   {
     // A8.2 Aktion 3, D51, D53: jede Farbkarte der Hand ersetzt die benannte, die ersetzte kommt auf die Hand; „Du darfst“ lässt den Verzicht zu.
     art: TAUSCH,
+    befunde: befundeDerDaten,
     verdeckteWahlen(zustand, entscheidung) {
       return [...zustand.spieler[entscheidung.entscheider].hand.filter(istFarbkarte).map((karte) => karte.id), KEIN_TAUSCH];
     },
@@ -327,6 +344,7 @@ const ENTSCHEIDUNGEN: readonly EntscheidungsDefinition[] = [
   {
     // A8.2 Aktion 3, D53: Farbkarte mit anderem Punktewert zusätzlich an die Stelle der gewählten, davor oder dahinter.
     art: SEITE,
+    befunde: befundeDerDaten,
     loese(zustand, entscheidung, wahl) {
       const { karten, stelle } = stelleDerSchlangenkarte(zustand, entscheidung);
       karten.splice(wahl === 'davor' ? stelle : stelle + 1, 0, ...zustand.aufgedeckt.splice(0));
