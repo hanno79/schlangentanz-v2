@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-ENGINE-081 Die Risiko-Karten verhalten sich in sechs Randlagen, die die Regeltests nicht nennen, so wie A8.2, D52 bis D55 und D57 es verlangen. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-ENGINE-081 Die Risiko-Karten verhalten sich in sechs Randlagen, die die Regeltests nicht nennen, so wie A8.2, D52 bis D55 und D57 es verlangen.</h1><p class="etiketten"><span class="etikett">Bereich Spiel-Engine: Regeln, Zugablauf, Wertung, Speicherformat</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-ENGINE-080</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Sechs Randlagen: Aktion 4 deckt die letzte Stapelkarte auf, einmal mit Erfolg und leerem eigenem Ablagestapel, einmal mit Misserfolg und einem Gegner ohne Ablagestapel. Dazu ein Tausch mit der eben aufgedeckten Karte, Aktion 2 mit nur einem Gegner samt Speichern und Laden, Aktion 3 in der zweiten eigenen Schlange und eine Risiko-Aktion in einer Partie ohne Erweiterung.</p><h2>Bestanden, wenn</h2><p>Alle sechs Fälle der Grenzfall-Datei sind grün. G1: keine Entscheidung, die aufgedeckte Karte liegt auf der Hand, „SchlussrundeBegonnen“ nennt Spieler 1, er kann sie noch legen. G2: Spieler 1 wählt zwischen spieler-2 und spieler-3, der Gewählte bekommt nichts, Spieler 1 ist wieder dran. G3: die aufgedeckte Karte liegt vorn in der Schlange, die ersetzte auf der Hand, kein Gegner sieht ihre Id im Zug. G4: genau eine Gegnerwahl, nach dem Laden dieselben Aktionen, der Gegner nimmt die geplante Karte. G5: „dahinter“ hängt die Karte ans Ende der zweiten Schlange. G6: Ablehnung „nicht in der eigenen Auslage“.</p><h2>Fehlgeschlagen, wenn</h2><p>Einer der sechs Fälle ist rot oder die Engine wirft einen Fehler.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>24.11.2026</dd><dt>Änderung</dt><dd>task/X5-risiko (PR #117)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Repo auf dem geprüften Stand von <code>task/X5-risiko</code>, <code>npm ci</code> gelaufen</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Tische aus <code>risikoTisch</code> (drei Spieler mit Erweiterung, bei G4 zwei); die Grenzfall-Datei liegt dem Lauf als Beleg bei.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Repo</td><td>Grenzfall-Datei aus dem Beleg als `src/engine/__tests__/x5_pruefer_grenzfaelle.test.ts` ablegen</td><td></td><td>Datei liegt neben `risiko_hilfen.ts`</td></tr><tr><td>2</td><td>Konsole</td><td>ausführen</td><td>`npx vitest run src/engine/__tests__/x5_pruefer_grenzfaelle.test.ts --reporter=verbose`</td><td>6 Tests bestanden, Exit-Code 0</td></tr><tr><td>3</td><td>Repo</td><td>Datei löschen</td><td></td><td>`git status` ist leer</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-24">24.11.2026 21:43</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer X5) &middot; agent &middot; pruefung-X5 @ <span class="commit" title="1973adcce811adb7fcfebb3b7d018870719c46bb">1973adc</span></p><p>6 von 6 Grenzfällen grün: G1 letzte Karte bei Aktion 4 Erfolg ohne eigene Ablage, keine Entscheidung, Schlussrunde von Spieler 1; G2 Misserfolg ohne Gegner-Ablage, Gewählter bekommt nichts; G3 Tausch mit der aufgedeckten Karte; G4 zwei Spieler, Laden zwischen den Wahlen; G5 zweite Schlange dahinter; G6 ohne Erweiterung abgelehnt</p><ul class="belege"><li><a href="belege/2026-11-24-2143-TF-ENGINE-081-1.txt">2026-11-24-2143-TF-ENGINE-081-1.txt</a></li><li><a href="belege/2026-11-24-2143-TF-ENGINE-081-2.txt">2026-11-24-2143-TF-ENGINE-081-2.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

@@ -1,5 +1,5 @@
 import type { EntscheidenAktion, Ereignis, KartenAktion, ReagierenAktion } from './aktionen/typen';
-import { befundeDerEntscheidung, definitionDerEntscheidung } from './entscheidungsregister';
+import { befundeDerEntscheidung, definitionDerEntscheidung, wahlenDer } from './entscheidungsregister';
 import { merkeAusgespielteSonderkarte } from './aufgaben/sonderkartenZaehler';
 import { definitionFuer } from './karten/register';
 import { wirkeUndMeldeVersetzte } from './kartenorte';
@@ -147,17 +147,21 @@ export function verlangeEntscheidung(zustand: Spielzustand, entscheidung: Offene
   zustand.entscheidung = structuredClone(entscheidung);
 }
 
-/** X3: Was der Entscheider wählen darf: jede Option, in ihrer Reihenfolge. */
+/** X3: Was der Entscheider wählen darf: jede Wahl, in ihrer Reihenfolge; verdeckte Wahlen aus seiner Hand (B2) wie offene. */
 export function entscheidungsAktionen(zustand: Spielzustand, spielerIndex: number): EntscheidenAktion[] {
   const spielerId = zustand.spieler[spielerIndex].id;
-  return (zustand.entscheidung?.optionen ?? []).map((wahl) => ({ typ: 'Entscheiden', spielerId, wahl }));
+  return zustand.entscheidung === null ? [] : wahlenDer(zustand, zustand.entscheidung).map((wahl) => ({ typ: 'Entscheiden', spielerId, wahl }));
 }
 
-/** Der Grund, warum diese Wahl nicht geht, oder `null`. Ob eine Entscheidung offen ist und der Spieler sie trifft, prüft die Aktionsschicht. */
-export function pruefeEntscheidung(entscheidung: OffeneEntscheidung, wahl: string, spielerzahl: number): string | null {
-  const [befund] = befundeDerEntscheidung(entscheidung, spielerzahl);
+/**
+ * Der Grund, warum diese Wahl nicht geht, oder `null`. Ob eine Entscheidung
+ * offen ist und der Spieler sie trifft, prüft die Aktionsschicht. Der Grund
+ * nennt nur die offenen Optionen, nie eine verdeckte Wahl (B2).
+ */
+export function pruefeEntscheidung(zustand: Spielzustand, entscheidung: OffeneEntscheidung, wahl: string): string | null {
+  const [befund] = befundeDerEntscheidung(entscheidung, zustand.spieler.length);
   if (befund !== undefined) return befund;
-  if (!entscheidung.optionen.includes(wahl)) return `„${wahl}“ steht bei „${entscheidung.art}“ nicht zur Wahl; möglich sind: ${entscheidung.optionen.join(', ')}.`;
+  if (!wahlenDer(zustand, entscheidung).includes(wahl)) return `„${wahl}“ steht bei „${entscheidung.art}“ nicht zur Wahl; möglich sind: ${entscheidung.optionen.join(', ')}.`;
   return null;
 }
 

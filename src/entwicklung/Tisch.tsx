@@ -1,6 +1,6 @@
 import { Fragment, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
-import { anwendeAktion, ermittleAktionen, erzeugeZufall, serialisiere } from '../engine'
+import { anwendeAktion, ermittleAktionen, erzeugeZufall, risikoaktionText, serialisiere } from '../engine'
 import type { Ereignis, Kartenort, SpielAktion, Spielzustand } from '../engine'
 import { AUFGABENNAMEN } from '../engine/aufgabenKarten'
 import { mitTestbedingungen } from '../engine/testing/testaufgaben'
@@ -292,6 +292,10 @@ function beschreibeEreignis(zustand: Spielzustand, ereignis: Ereignis): string {
       return `EntscheidungVerlangt: ${wer(ereignis.spielerIndex)} entscheidet über „${ereignis.art}“ zu ${ereignis.karteId}; zur Wahl: ${ereignis.optionen.join(', ')}`
     case 'Entschieden':
       return `Entschieden: ${wer(ereignis.spielerIndex)} wählt bei „${ereignis.art}“ „${ereignis.wahl}“`
+    case 'RisikoKarteGespielt': {
+      const benannt = ereignis.benannt === null ? '' : `, benannt ${ereignis.benannt}`
+      return `RisikoKarteGespielt: ${wer(ereignis.spielerIndex)}, ${ereignis.karteId}, ${risikoaktionText(ereignis.risikoAktion)}${benannt}; aufgedeckt ${ereignis.aufgedeckt}: ${ereignis.erfolg ? 'Erfolg' : 'Misserfolg'}`
+    }
     case 'ComebackEingesetzt':
       return `ComebackEingesetzt: ${wer(ereignis.spielerIndex)} dreht ${ereignis.karteId} um, zwei Zusatzaktionen`
     case 'SchlussrundeBegonnen':

@@ -1,3 +1,4 @@
+import { risikoaktionText } from '../../engine'
 import type { Ereignis, SpielAktion, Spielkarte, Spielzustand } from '../../engine'
 import { kartenkurzname } from '../karten/kartentexte'
 import { SCHRITT, kartenSatz } from '../tisch/protokolltexte'
@@ -15,12 +16,19 @@ wer abwehrt; so sieht der Ablauf bei einer KI gleich aus, ob sie einen
 Farbenschutz hält oder nicht (Kriterium 5, D33).
 */
 
-/** Die Karte, die der Spieler mit dieser Aktion aus der Hand spielt; mit dem Spielen liegt sie offen. */
+/**
+ * Die Karte, die der Spieler mit dieser Aktion aus der Hand spielt; mit dem
+ * Spielen liegt sie offen. Bei einer Risiko-Karte ist es die Handkarte, die er
+ * für Aktion 2 offen benennt (A8.2, D52).
+ */
 function gespielteKarte(vorher: Spielzustand, aktion: SpielAktion): Spielkarte[] {
-  if (!('karteId' in aktion)) return []
-  const spieler = vorher.spieler.find((eintrag) => eintrag.id === aktion.spielerId)
-  const karte = spieler?.hand.find((handkarte) => handkarte.id === aktion.karteId)
-  if (karte === undefined) throw new Error(`Protokoll: Die Karte ${aktion.karteId} liegt nicht auf der Hand von ${aktion.spielerId}.`)
+  const benannt = aktion.typ === 'RisikoKarteSpielen' ? aktion.benannt : null
+  if (!('karteId' in aktion) && benannt === null) return []
+  const karteId = 'karteId' in aktion ? aktion.karteId : benannt
+  const karte = vorher.spieler.find((eintrag) => eintrag.id === aktion.spielerId)?.hand.find((handkarte) => handkarte.id === karteId)
+  // Bei Aktion 3 liegt die benannte Karte in der Schlange; die Namen am Tisch kennen sie schon.
+  if (karte === undefined && benannt !== null) return []
+  if (karte === undefined) throw new Error(`Protokoll: Die Karte ${karteId} liegt nicht auf der Hand von ${aktion.spielerId}.`)
   return [karte]
 }
 
@@ -59,12 +67,21 @@ export function protokollSchritt(vorher: Spielzustand, aktion: SpielAktion, erei
       case 'KartenGezogen':
         saetze.push(SCHRITT.zieht(person(ereignis.spielerIndex), ereignis.anzahl))
         break
+      case 'AbwerfenVerlangt':
+        saetze.push(SCHRITT.mussAblegen(person(ereignis.spielerIndex), ereignis.anzahl))
+        break
       case 'KartenAbgeworfen':
         // A5: Überzählig sind nur die Karten am Zugende; wer mitten im Zug abwirft (D49), legt keine überzähligen ab.
         saetze.push((vorher.zug.abschnitt === 'Abwerfen' ? SCHRITT.legtAb : SCHRITT.wirftAb)(person(ereignis.spielerIndex), ereignis.karteIds.length))
         break
       case 'ComebackEingesetzt':
         saetze.push(SCHRITT.comeback(person(ereignis.spielerIndex)))
+        break
+      case 'RisikoKarteGespielt':
+        saetze.push(SCHRITT.risiko(person(ereignis.spielerIndex), risikoaktionText(ereignis.risikoAktion), ereignis.benannt === null ? null : kurz(ereignis.benannt)))
+        break
+      case 'Entschieden':
+        saetze.push(SCHRITT.entscheidet(person(ereignis.spielerIndex), ereignis.art))
         break
       case 'SchlussrundeBegonnen':
         saetze.push(SCHRITT.schlussrunde)
@@ -75,7 +92,6 @@ export function protokollSchritt(vorher: Spielzustand, aktion: SpielAktion, erei
       // Wer als Nächster gefragt ist, sagt die Statuszeile; wie die Karten wandern, sagt schon die Ansage.
       case 'AbwehrGefragt':
       case 'KartenVersetzt':
-      case 'AbwerfenVerlangt':
         break
     }
   }

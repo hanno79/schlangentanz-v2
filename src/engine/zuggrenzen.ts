@@ -15,7 +15,9 @@ Die Grenzen eines Zuges, an einer Stelle (X3, Kriterium 1).
   Folge von Karten und Aktionen, die sich so auf die Plätze des Zuges verteilen
   lässt, dass jeder Platz höchstens eine nimmt; die Reihenfolge des Spielens
   spielt keine Rolle. Eine Zusatzaktion, die keine Karte spielt, zählt nicht als
-  Karte des Zuges (A8.1 „zählt nicht als reguläre Aktion“).
+  Karte des Zuges (A8.1 „zählt nicht als reguläre Aktion“). Legt eine Wirkung
+  selbst eine Karte, etwa Risiko-Aktion 2 (A8.2), belegt sie keinen Platz des
+  Zuges, zählt aber als Karte des Zuges (Autor, 24.11.2026; `zaehleKarteOhnePlatz`).
 - Was trotzdem bleibt: je Zug nur eine Farbenfusion (A7.7, D27, D46), auch
   wenn ein Gegner die erste abgewehrt hat oder sie wirkungslos abgelegt ist (D56,
   „gespielt ist gespielt“, D13), und ein
@@ -103,15 +105,22 @@ function zuordenbar(platzliste: readonly Zusatzaktion[], verwendungen: readonly 
   return verwendungen.every((_, index) => unterbringen(index, new Set()));
 }
 
+/** Eine Karte, die eine Wirkung zusätzlich gelegt hat (`zaehleKarteOhnePlatz`), braucht keinen Platz. */
+const OHNE_PLATZ = 'ohne Platz';
+
+function belegtPlaetze(zug: Zugrahmen): Verwendung[] {
+  return zug.verwendet.filter((eintrag) => eintrag.art !== OHNE_PLATZ);
+}
+
 function hatPlatz(zug: Zugrahmen, verwendung: Verwendung): boolean {
   // Ohne Zusatzaktion gibt es nur die beiden Plätze des Zuges; belegt ist einer, wenn seine Art schon gespielt ist.
   if (zug.zusatzaktionen.length === 0) return (verwendung.art === 'Farbkarte' || verwendung.art === 'Sonderkarte') && !zug.verwendet.some((eintrag) => eintrag.art === verwendung.art);
-  return zuordenbar(plaetze(zug), [...zug.verwendet, verwendung]);
+  return zuordenbar(plaetze(zug), [...belegtPlaetze(zug), verwendung]);
 }
 
 /** A5, D12, D46: Belegt alles, was in diesem Teilzug gespielt oder genutzt ist, je einen eigenen Platz? Für Prüfer, die einen Zug nachträglich ansehen. */
 export function belegungGueltig(zug: Zugrahmen): boolean {
-  return zuordenbar(plaetze(zug), zug.verwendet);
+  return zuordenbar(plaetze(zug), belegtPlaetze(zug));
 }
 
 /** A5, D12, D46: Der Grund, warum diese Handkarte in diesem Teilzug keinen Platz mehr hat, oder `null`. */
@@ -133,6 +142,19 @@ export function zaehleZusatzaktion(zug: Zugrahmen, name: string): void {
   zug.verwendet.push({ art: name, karteId: null, kartenart: null });
 }
 
+function kartenartDer(karte: Spielkarte): Kartenart {
+  return karte.typ === 'Farbkarte' ? 'Farbkarte' : karte.name;
+}
+
+/**
+ * Eine Karte, die eine Wirkung zusätzlich legt, etwa die Farbkarte aus
+ * Risiko-Aktion 2 (A8.2): Sie belegt keinen der Plätze des Zuges, zählt aber
+ * für „mindestens eine Karte je Zug“ (A5, D12, Antwort des Autors vom 24.11.2026).
+ */
+export function zaehleKarteOhnePlatz(zug: Zugrahmen, karte: Spielkarte): void {
+  zug.verwendet.push({ art: OHNE_PLATZ, karteId: karte.id, kartenart: kartenartDer(karte) });
+}
+
 type GespielteKarte = KartenAktion | SonderkarteWirkungslosAblegenAktion;
 
 /**
@@ -145,7 +167,7 @@ export function zaehleGespielteKarte(zustand: Spielzustand, aktion: GespielteKar
   const karte = spieler?.hand.find((handkarte) => handkarte.id === aktion.karteId);
   if (spieler === undefined || karte === undefined) throw new Error(`Die Karte ${aktion.karteId} liegt nicht auf der Hand von ${aktion.spielerId}.`);
   const { zug } = zustand;
-  zug.verwendet.push({ art: karte.typ, karteId: karte.id, kartenart: karte.typ === 'Farbkarte' ? 'Farbkarte' : karte.name });
+  zug.verwendet.push({ art: karte.typ, karteId: karte.id, kartenart: kartenartDer(karte) });
   if (karte.typ === 'Farbkarte') zug.gespielteFarbkarten += 1;
   else {
     zug.gespielteSonderkarten += 1;
@@ -246,13 +268,20 @@ export function zaehlerPassen(zug: Zug): string | null {
  * B2: Der Zug, wie ihn `spielerIndex` sehen darf. Gilt eine Zusatzaktion nur für
  * bestimmte Karten, etwa die mit dem Korb verdeckt gezogenen (D43), nennt sie
  * keine, die auf einer fremden Hand liegt; welche es sind, sieht nur ihr Besitzer.
+ * Ebenso nennt `verwendet` keine gespielte Karte, die wieder auf einer fremden
+ * Hand liegt, etwa nach einem Tausch mit Risiko-Aktion 3 (A8.2, D51); ihr Platz
+ * bleibt belegt.
  */
+/** Steht in der Sicht für eine gespielte Karte, die wieder verdeckt auf einer fremden Hand liegt (B2). */
+const VERDECKT = 'verdeckte Karte';
+
 export function zugInSicht(zustand: Spielzustand, spielerIndex: number): Zug {
   const fremd = new Set(zustand.spieler.flatMap((spieler, index) => (index === spielerIndex ? [] : spieler.hand.map((karte) => karte.id))));
   const { zug } = zustand;
   return {
     ...zug,
     zusatzaktionen: zug.zusatzaktionen.map((zusatz) => (zusatz.nurKarten === null ? zusatz : { ...zusatz, nurKarten: zusatz.nurKarten.filter((id) => !fremd.has(id)) })),
+    verwendet: zug.verwendet.map((eintrag) => (eintrag.karteId !== null && fremd.has(eintrag.karteId) ? { ...eintrag, karteId: VERDECKT } : eintrag)),
   };
 }
 

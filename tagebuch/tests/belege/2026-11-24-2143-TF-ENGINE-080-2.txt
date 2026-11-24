@@ -1,0 +1,895 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a0d9ada43080fda42
+
+ ❯ src/engine/__tests__/regeln/A8.2_risiko_dauerlauf.test.ts (1 test | 1 failed) 795ms
+     × A8.2/D50/D55/B2: 60 Zufallspartien enden alle; jede Aktion kommt mit Erfolg und Misserfolg vor, auch Entscheidungen eines Gegners 793ms
+ ❯ src/engine/__tests__/regeln/A8.2_risiko_comeback.test.ts (3 tests | 1 failed) 74ms
+     × D50: auch mit Comeback bleibt es bei einer Risiko-Karte in der Runde 18ms
+ ❯ src/engine/__tests__/regeln/A8.2_risiko_rahmen.test.ts (26 tests | 2 failed) 269ms
+     × D50: nach einer Risiko-Karte bietet die Engine in dieser Runde keine zweite an und lehnt sie ab 19ms
+     × D50: der zweite Zug nach einem Verdoppler gehört zur selben Runde; ein Verdoppler gibt keine zweite Risiko-Karte 14ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/engine/__tests__/regeln/A8.2_risiko_comeback.test.ts > D47/D50: Risiko-Karte und Comeback-Karte im selben Zug > D50: auch mit Comeback bleibt es bei einer Risiko-Karte in der Runde
+AssertionError: D50: keine zweite Risiko-Karte: expected [ { …(5) }, { …(5) }, { …(5) }, …(8) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "benannt": null,
++     "risikoAktion": 1,
++     "risikoKarteId": "risiko-belohnung-02",
++     "spielerId": "spieler-1",
++     "typ": "RisikoKarteSpielen",
++   },
++   {
++     "benannt": "blau-01",
++     "risikoAktion": 2,
++     "risikoKarteId": "risiko-belohnung-02",
++     "spielerId": "spieler-1",
++     "typ": "RisikoKarteSpielen",
++   },
++   {
++     "benannt": "rot-01",
++     "risikoAktion": 2,
++     "risikoKarteId": "risiko-belohnung-02",
++     "spielerId": "spieler-1",
++     "typ": "RisikoKarteSpielen",
++   },
++   {
++     "benannt": "gelb-01",
++     "risikoAktion": 2,
++     "risikoKarteId": "risiko-belohnung-02",
++     "spielerId": "spieler-1",
++     "typ": "RisikoKarteSpielen",
++   },
++   {
++     "benannt": "violett-01",
++     "risikoAktion": 2,
++     "risikoKarteId": "risiko-belohnung-02",
++     "spielerId": "spieler-1",
++     "typ": "RisikoKarteSpielen",
++   },
++   {
++     "benannt": "braun-01",
++     "risikoAktion": 2,
++     "risikoKarteId": "risiko-belohnung-02",
++     "spielerId": "spieler-1",
++     "typ": "RisikoKarteSpielen",
++   },
++   {
++     "benannt": "gruen-03",
++     "risikoAktion": 2,
++     "risikoKarteId": "risiko-belohnung-02",
++     "spielerId": "spieler-1",
++     "typ": "RisikoKarteSpielen",
++   },
++   {
++     "benannt": "gelb-04",
++     "risikoAktion": 2,
++     "risikoKarteId": "risiko-belohnung-02",
++     "spielerId": "spieler-1",
++     "typ": "RisikoKarteSpielen",
++   },
++   {
++     "benannt": "blau-05",
++     "risikoAktion": 2,
++     "risikoKarteId": "risiko-belohnung-02",
++     "spielerId": "spieler-1",
++     "typ": "RisikoKarteSpielen",
++   },
++   {
++     "benannt": "blau-03",
++     "risikoAktion": 3,
++     "risikoKarteId": "risiko-belohnung-02",
++     "spielerId": "spieler-1",
++     "typ": "RisikoKarteSpielen",
++   },
++   {
++     "benannt": null,
++     "risikoAktion": 4,
++     "risikoKarteId": "risiko-belohnung-02",
++     "spielerId": "spieler-1",
++     "typ": "RisikoKarteSpielen",
++   },
++ ]
+
+ ❯ src/engine/__tests__/regeln/A8.2_risiko_comeback.test.ts:35:69
+     33|     const beide = einsetzen(spieleRisiko(tisch(HAND), 1).zustand).zust…
+     34|     expect(beide.spieler[0].comeback?.verbraucht).toBe(true)
+     35|     expect(risikoAktionen(beide), 'D50: keine zweite Risiko-Karte').to…
+       |                                                                     ^
+     36|   })
+     37|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/engine/__tests__/regeln/A8.2_risiko_dauerlauf.test.ts > A8.2: Risiko-Karten im Dauerlauf mit Erweiterung (X5) > A8.2/D50/D55/B2: 60 Zufallspartien enden alle; jede Aktion kommt mit Erfolg und Misserfolg vor, auch Entscheidungen eines Gegners
+AssertionError: Partien, die nicht regulär endeten: expected [ { …(4) }, { …(4) }, { …(4) }, …(57) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8001, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":3,\"benannt\":\"braun-12\"}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8001,
++       "spielerzahl": 2,
++     },
++     "schritte": 4,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8002, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":4,\"benannt\":null}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8002,
++       "spielerzahl": 3,
++     },
++     "schritte": 4,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8003, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":2,\"benannt\":\"gelb-05\"}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8003,
++       "spielerzahl": 4,
++     },
++     "schritte": 4,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8004, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":2,\"benannt\":\"rot-02\"}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8004,
++       "spielerzahl": 2,
++     },
++     "schritte": 4,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8005, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":4,\"benannt\":null}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8005,
++       "spielerzahl": 3,
++     },
++     "schritte": 6,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8006, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-2\",\"risikoKarteId\":\"risiko-belohnung-04\",\"risikoAktion\":2,\"benannt\":\"gelb-10\"}: D50: zweite Risiko-Karte in Runde 1.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8006,
++       "spielerzahl": 4,
++     },
++     "schritte": 8,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8007, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-2\",\"risikoKarteId\":\"risiko-belohnung-04\",\"risikoAktion\":4,\"benannt\":null}: D50: zweite Risiko-Karte in Runde 1.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8007,
++       "spielerzahl": 2,
++     },
++     "schritte": 10,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8008, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":1,\"benannt\":null}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8008,
++       "spielerzahl": 3,
++     },
++     "schritte": 4,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8009, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":3,\"benannt\":\"violett-06\"}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8009,
++       "spielerzahl": 4,
++     },
++     "schritte": 5,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8010, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":2,\"benannt\":\"braun-09\"}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8010,
++       "spielerzahl": 2,
++     },
++     "schritte": 3,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8011, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-3\",\"risikoKarteId\":\"risiko-belohnung-06\",\"risikoAktion\":1,\"benannt\":null}: D50: zweite Risiko-Karte in Runde 5.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8011,
++       "spielerzahl": 3,
++     },
++     "schritte": 23,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8012, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":2,\"benannt\":\"violett-07\"}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8012,
++       "spielerzahl": 4,
++     },
++     "schritte": 3,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8013, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-2\",\"risikoKarteId\":\"risiko-belohnung-04\",\"risikoAktion\":2,\"benannt\":\"gruen-04\"}: D50: zweite Risiko-Karte in Runde 3.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8013,
++       "spielerzahl": 2,
++     },
++     "schritte": 17,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8014, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":2,\"benannt\":\"blau-14\"}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8014,
++       "spielerzahl": 3,
++     },
++     "schritte": 4,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8015, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":3,\"benannt\":\"gelb-11\"}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8015,
++       "spielerzahl": 4,
++     },
++     "schritte": 5,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8016, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-2\",\"risikoKarteId\":\"risiko-belohnung-04\",\"risikoAktion\":2,\"benannt\":\"braun-04\"}: D50: zweite Risiko-Karte in Runde 1.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8016,
++       "spielerzahl": 2,
++     },
++     "schritte": 8,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8017, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":4,\"benannt\":null}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8017,
++       "spielerzahl": 3,
++     },
++     "schritte": 5,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8018, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":2,\"benannt\":\"rot-15\"}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8018,
++       "spielerzahl": 4,
++     },
++     "schritte": 4,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8019, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-2\",\"risikoKarteId\":\"risiko-belohnung-04\",\"risikoAktion\":2,\"benannt\":\"braun-08\"}: D50: zweite Risiko-Karte in Runde 1.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8019,
++       "spielerzahl": 2,
++     },
++     "schritte": 9,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8020, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":2,\"benannt\":\"gruen-01\"}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8020,
++       "spielerzahl": 3,
++     },
++     "schritte": 6,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8021, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":2,\"benannt\":\"rot-13\"}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8021,
++       "spielerzahl": 4,
++     },
++     "schritte": 4,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8022, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":2,\"benannt\":\"braun-12\"}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8022,
++       "spielerzahl": 2,
++     },
++     "schritte": 4,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8023, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":1,\"benannt\":null}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8023,
++       "spielerzahl": 3,
++     },
++     "schritte": 4,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8024, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":1,\"benannt\":null}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8024,
++       "spielerzahl": 4,
++     },
++     "schritte": 5,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8025, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-2\",\"risikoKarteId\":\"risiko-belohnung-04\",\"risikoAktion\":2,\"benannt\":\"blau-14\"}: D50: zweite Risiko-Karte in Runde 1.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8025,
++       "spielerzahl": 2,
++     },
++     "schritte": 8,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8026, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":3,\"benannt\":\"gruen-08\"}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8026,
++       "spielerzahl": 3,
++     },
++     "schritte": 4,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8027, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-2\",\"risikoKarteId\":\"risiko-belohnung-04\",\"risikoAktion\":1,\"benannt\":null}: D50: zweite Risiko-Karte in Runde 1.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8027,
++       "spielerzahl": 4,
++     },
++     "schritte": 7,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8028, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-2\",\"risikoKarteId\":\"risiko-belohnung-04\",\"risikoAktion\":1,\"benannt\":null}: D50: zweite Risiko-Karte in Runde 1.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8028,
++       "spielerzahl": 2,
++     },
++     "schritte": 7,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8029, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":3,\"benannt\":\"gruen-04\"}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8029,
++       "spielerzahl": 3,
++     },
++     "schritte": 6,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8030, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":1,\"benannt\":null}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8030,
++       "spielerzahl": 4,
++     },
++     "schritte": 5,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8031, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":1,\"benannt\":null}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8031,
++       "spielerzahl": 2,
++     },
++     "schritte": 5,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8032, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":2,\"benannt\":\"rot-09\"}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8032,
++       "spielerzahl": 3,
++     },
++     "schritte": 3,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8033, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":4,\"benannt\":null}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8033,
++       "spielerzahl": 4,
++     },
++     "schritte": 4,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8034, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":2,\"benannt\":\"gelb-02\"}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8034,
++       "spielerzahl": 2,
++     },
++     "schritte": 6,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8035, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-2\",\"risikoKarteId\":\"risiko-belohnung-04\",\"risikoAktion\":1,\"benannt\":null}: D50: zweite Risiko-Karte in Runde 1.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8035,
++       "spielerzahl": 3,
++     },
++     "schritte": 7,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8036, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":2,\"benannt\":\"gruen-03\"}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8036,
++       "spielerzahl": 4,
++     },
++     "schritte": 4,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8037, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-2\",\"risikoKarteId\":\"risiko-belohnung-04\",\"risikoAktion\":2,\"benannt\":\"braun-10\"}: D50: zweite Risiko-Karte in Runde 1.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8037,
++       "spielerzahl": 2,
++     },
++     "schritte": 5,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8038, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":2,\"benannt\":\"rot-14\"}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8038,
++       "spielerzahl": 3,
++     },
++     "schritte": 3,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8039, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":3,\"benannt\":\"rot-04\"}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8039,
++       "spielerzahl": 4,
++     },
++     "schritte": 5,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8040, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":4,\"benannt\":null}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8040,
++       "spielerzahl": 2,
++     },
++     "schritte": 3,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8041, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":2,\"benannt\":\"braun-01\"}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8041,
++       "spielerzahl": 3,
++     },
++     "schritte": 4,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8042, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-4\",\"risikoKarteId\":\"risiko-belohnung-08\",\"risikoAktion\":1,\"benannt\":null}: D50: zweite Risiko-Karte in Runde 3.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8042,
++       "spielerzahl": 4,
++     },
++     "schritte": 16,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8043, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":2,\"benannt\":\"blau-01\"}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8043,
++       "spielerzahl": 2,
++     },
++     "schritte": 4,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8044, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":2,\"benannt\":\"rot-01\"}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8044,
++       "spielerzahl": 3,
++     },
++     "schritte": 6,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8045, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-4\",\"risikoKarteId\":\"risiko-belohnung-08\",\"risikoAktion\":1,\"benannt\":null}: D50: zweite Risiko-Karte in Runde 3.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8045,
++       "spielerzahl": 4,
++     },
++     "schritte": 17,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8046, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":3,\"benannt\":\"violett-01\"}: D50: zweite Risiko-Karte in Runde 4.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8046,
++       "spielerzahl": 2,
++     },
++     "schritte": 18,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8047, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-2\",\"risikoKarteId\":\"risiko-belohnung-04\",\"risikoAktion\":4,\"benannt\":null}: D50: zweite Risiko-Karte in Runde 1.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8047,
++       "spielerzahl": 3,
++     },
++     "schritte": 6,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8048, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":1,\"benannt\":null}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8048,
++       "spielerzahl": 4,
++     },
++     "schritte": 4,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8049, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":2,\"benannt\":\"braun-01\"}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8049,
++       "spielerzahl": 2,
++     },
++     "schritte": 4,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8050, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-2\",\"risikoKarteId\":\"risiko-belohnung-04\",\"risikoAktion\":1,\"benannt\":null}: D50: zweite Risiko-Karte in Runde 1.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8050,
++       "spielerzahl": 3,
++     },
++     "schritte": 11,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8051, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-2\",\"risikoKarteId\":\"risiko-belohnung-04\",\"risikoAktion\":1,\"benannt\":null}: D50: zweite Risiko-Karte in Runde 1.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8051,
++       "spielerzahl": 4,
++     },
++     "schritte": 8,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8052, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":4,\"benannt\":null}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8052,
++       "spielerzahl": 2,
++     },
++     "schritte": 3,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8053, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":3,\"benannt\":\"blau-14\"}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8053,
++       "spielerzahl": 3,
++     },
++     "schritte": 4,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8054, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":3,\"benannt\":\"rot-05\"}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8054,
++       "spielerzahl": 4,
++     },
++     "schritte": 4,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8055, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":1,\"benannt\":null}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8055,
++       "spielerzahl": 2,
++     },
++     "schritte": 5,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8056, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":1,\"benannt\":null}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8056,
++       "spielerzahl": 3,
++     },
++     "schritte": 4,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8057, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":4,\"benannt\":null}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8057,
++       "spielerzahl": 4,
++     },
++     "schritte": 4,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8058, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":2,\"benannt\":\"gelb-11\"}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8058,
++       "spielerzahl": 2,
++     },
++     "schritte": 5,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8059, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":2,\"benannt\":\"rot-05\"}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8059,
++       "spielerzahl": 3,
++     },
++     "schritte": 5,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8060, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":2,\"benannt\":\"gelb-14\"}: D50: zweite Risiko-Karte in Runde 0.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8060,
++       "spielerzahl": 4,
++     },
++     "schritte": 5,
++   },
++ ]
+
+ ❯ src/engine/__tests__/regeln/A8.2_risiko_dauerlauf.test.ts:65:115
+     63|     const neuerPruefer = () => allePruefer(regelPruefer(), reaktionsPr…
+     64|     const ergebnisse = dauerlauf(dauerlaufPartien(60, true, 8001), { n…
+     65|     expect(ergebnisse.filter((ergebnis) => ergebnis.ausgang !== 'beend…
+       |                                                                                                                   ^
+     66|     for (const aktion of [1, 2, 3, 4]) {
+     67|       for (const ausgang of ['Erfolg', 'Misserfolg']) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/engine/__tests__/regeln/A8.2_risiko_rahmen.test.ts > A8.2/D50: höchstens eine Risiko-Karte je Runde (X5, Kriterium 2) > D50: nach einer Risiko-Karte bietet die Engine in dieser Runde keine zweite an und lehnt sie ab
+AssertionError: expected [ { …(5) }, { …(5) }, { …(5) }, …(6) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "benannt": null,
++     "risikoAktion": 1,
++     "risikoKarteId": "risiko-belohnung-02",
++     "spielerId": "spieler-1",
++     "typ": "RisikoKarteSpielen",
++   },
++   {
++     "benannt": "blau-01",
++     "risikoAktion": 2,
++     "risikoKarteId": "risiko-belohnung-02",
++     "spielerId": "spieler-1",
++     "typ": "RisikoKarteSpielen",
++   },
++   {
++     "benannt": "rot-01",
++     "risikoAktion": 2,
++     "risikoKarteId": "risiko-belohnung-02",
++     "spielerId": "spieler-1",
++     "typ": "RisikoKarteSpielen",
++   },
++   {
++     "benannt": "gruen-03",
++     "risikoAktion": 2,
++     "risikoKarteId": "risiko-belohnung-02",
++     "spielerId": "spieler-1",
++     "typ": "RisikoKarteSpielen",
++   },
++   {
++     "benannt": "braun-03",
++     "risikoAktion": 2,
++     "risikoKarteId": "risiko-belohnung-02",
++     "spielerId": "spieler-1",
++     "typ": "RisikoKarteSpielen",
++   },
++   {
++     "benannt": "violett-01",
++     "risikoAktion": 2,
++     "risikoKarteId": "risiko-belohnung-02",
++     "spielerId": "spieler-1",
++     "typ": "RisikoKarteSpielen",
++   },
++   {
++     "benannt": "gelb-03",
++     "risikoAktion": 3,
++     "risikoKarteId": "risiko-belohnung-02",
++     "spielerId": "spieler-1",
++     "typ": "RisikoKarteSpielen",
++   },
++   {
++     "benannt": "gelb-04",
++     "risikoAktion": 3,
++     "risikoKarteId": "risiko-belohnung-02",
++     "spielerId": "spieler-1",
++     "typ": "RisikoKarteSpielen",
++   },
++   {
++     "benannt": null,
++     "risikoAktion": 4,
++     "risikoKarteId": "risiko-belohnung-02",
++     "spielerId": "spieler-1",
++     "typ": "RisikoKarteSpielen",
++   },
++ ]
+
+ ❯ src/engine/__tests__/regeln/A8.2_risiko_rahmen.test.ts:53:38
+     51|   it('D50: nach einer Risiko-Karte bietet die Engine in dieser Runde k…
+     52|     const gespielt = spieleRisiko(tisch(), 1).zustand
+     53|     expect(risikoAktionen(gespielt)).toEqual([])
+       |                                      ^
+     54|     const zweite: SpielAktion = { typ: 'RisikoKarteSpielen', spielerId…
+     55|     expect(grund(gespielt, zweite)).toMatch(/D50/)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/engine/__tests__/regeln/A8.2_risiko_rahmen.test.ts > A8.2/D50: höchstens eine Risiko-Karte je Runde (X5, Kriterium 2) > D50: der zweite Zug nach einem Verdoppler gehört zur selben Runde; ein Verdoppler gibt keine zweite Risiko-Karte
+AssertionError: expected [ { …(5) }, { …(5) }, { …(5) }, …(5) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "benannt": null,
++     "risikoAktion": 1,
++     "risikoKarteId": "risiko-belohnung-02",
++     "spielerId": "spieler-1",
++     "typ": "RisikoKarteSpielen",
++   },
++   {
++     "benannt": "rot-01",
++     "risikoAktion": 2,
++     "risikoKarteId": "risiko-belohnung-02",
++     "spielerId": "spieler-1",
++     "typ": "RisikoKarteSpielen",
++   },
++   {
++     "benannt": "gruen-03",
++     "risikoAktion": 2,
++     "risikoKarteId": "risiko-belohnung-02",
++     "spielerId": "spieler-1",
++     "typ": "RisikoKarteSpielen",
++   },
++   {
++     "benannt": "braun-03",
++     "risikoAktion": 2,
++     "risikoKarteId": "risiko-belohnung-02",
++     "spielerId": "spieler-1",
++     "typ": "RisikoKarteSpielen",
++   },
++   {
++     "benannt": "violett-01",
++     "risikoAktion": 2,
++     "risikoKarteId": "risiko-belohnung-02",
++     "spielerId": "spieler-1",
++     "typ": "RisikoKarteSpielen",
++   },
++   {
++     "benannt": "gelb-03",
++     "risikoAktion": 3,
++     "risikoKarteId": "risiko-belohnung-02",
++     "spielerId": "spieler-1",
++     "typ": "RisikoKarteSpielen",
++   },
++   {
++     "benannt": "gelb-04",
++     "risikoAktion": 3,
++     "risikoKarteId": "risiko-belohnung-02",
++     "spielerId": "spieler-1",
++     "typ": "RisikoKarteSpielen",
++   },
++   {
++     "benannt": null,
++     "risikoAktion": 4,
++     "risikoKarteId": "risiko-belohnung-02",
++     "spielerId": "spieler-1",
++     "typ": "RisikoKarteSpielen",
++   },
++ ]
+
+ ❯ src/engine/__tests__/regeln/A8.2_risiko_rahmen.test.ts:65:40
+     63|     const zweiterZug = folge(gespielt, () => verdoppler[0], zugBeenden…
+     64|     expect(zweiterZug.zug).toMatchObject({ spielerIndex: 0, teilzug: 2…
+     65|     expect(risikoAktionen(zweiterZug)).toEqual([])
+       |                                        ^
+     66|   })
+     67|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  4 failed | 26 passed (30)
+   Start at  21:31:18
+   Duration  6.82s (transform 2.72s, setup 1.46s, import 2.99s, tests 1.14s, environment 9.33s)
+

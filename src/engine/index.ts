@@ -24,6 +24,8 @@ export type {
   Pruefergebnis,
   ReagierenAktion,
   RegenbogenschlangeLegenAktion,
+  RisikoKarteSpielenAktion,
+  Risikoaktion,
   SchlangenfrassSpielenAktion,
   SchlangengrubeSpielenAktion,
   SchlangenhaeutungSpielenAktion,
@@ -47,6 +49,10 @@ export { hatNochLetztenZug } from './zugablauf';
 export { zugInSicht, zugOhneIds } from './zuggrenzen';
 export { ermittleEntscheider, pruefeAktion, zugBeendenGesperrt } from './aktionen/pruefen';
 export { anwendeAktion } from './aktionen/anwenden';
+/** A8.2: Texte zu Risiko-Aktionen und ihren Wahlen, für Protokolle und Knöpfe (X5). */
+export { ablagestapelStelle, risikoaktionText } from './erweiterung/risiko';
+/** D52: die Handkarte, die eine offene Entscheidung offen nennt, für die Sicht der KI (X5). */
+export { offeneHandkarteDer } from './entscheidungsregister';
 /** Reproduzierbarer Zufall aus einer Saat, für Partie und KI (U4: Zufall kommt als Parameter). */
 export { erzeugeZufall } from './testing/zufall';
 

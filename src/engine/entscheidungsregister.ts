@@ -13,6 +13,21 @@ aus.
 export interface EntscheidungsDefinition {
   readonly art: string;
   /**
+   * Nur für eine Wahl aus der eigenen Hand des Entscheiders, etwa welche
+   * Farbkarte er anlegt (A8.2, D53): Die Wahlen würden eine Handkarte verraten
+   * und stehen deshalb nicht in `optionen` (B2); dort steht nur, was jeder sehen
+   * darf. Ohne diese Funktion sind die Wahlen genau `optionen`.
+   */
+  verdeckteWahlen?(zustand: Spielzustand, entscheidung: OffeneEntscheidung): string[];
+  /**
+   * Nur wenn die Entscheidung eine Handkarte offen nennt, etwa die für
+   * Risiko-Aktion 2 benannte Farbkarte (D52): welche und auf wessen Hand sie
+   * liegt. Die KI legt sie beim Erraten des Verdeckten dorthin (Plan K2).
+   */
+  offeneHandkarte?(entscheidung: OffeneEntscheidung): { spielerIndex: number; karteId: string } | null;
+  /** Was an den Daten der Entscheidung im Zustand nicht stimmt, etwa eine benannte Karte, die nicht dort liegt; leer, wenn alles stimmt. Die Invarianten fragen es ab. */
+  befunde?(zustand: Spielzustand, entscheidung: OffeneEntscheidung): string[];
+  /**
    * Die Wirkung der Wahl. Sie darf Karten bewegen (die Engine meldet sie selbst,
    * Plan E4b) und eine weitere Entscheidung verlangen, etwa vom gewählten Gegner.
    */
@@ -32,6 +47,16 @@ export function definitionDerEntscheidung(art: string): EntscheidungsDefinition 
   return definition;
 }
 
+/** Was der Entscheider jetzt wählen kann: die offenen `optionen` oder die verdeckten Wahlen seiner Art. */
+export function wahlenDer(zustand: Spielzustand, entscheidung: OffeneEntscheidung): readonly string[] {
+  return definitionDerEntscheidung(entscheidung.art).verdeckteWahlen?.(zustand, entscheidung) ?? entscheidung.optionen;
+}
+
+/** D52: die Handkarte, die die offene Entscheidung offen nennt, mit ihrem Besitzer; sonst `null`. */
+export function offeneHandkarteDer(entscheidung: OffeneEntscheidung | null): { spielerIndex: number; karteId: string } | null {
+  return entscheidung === null ? null : (definitionDerEntscheidung(entscheidung.art).offeneHandkarte?.(entscheidung) ?? null);
+}
+
 /**
  * Was an einer Entscheidung nicht stimmt, gleich ob sie verlangt oder geladen
  * wird: unbekannte Art, keine Wahl, eine Option doppelt, ein Spieler ausserhalb
@@ -48,7 +73,7 @@ export function befundeDerEntscheidung(entscheidung: OffeneEntscheidung, spieler
   return befunde;
 }
 
-/** Trägt diese Arten ein, für Tests und den Entwicklertisch; der Rückgabewert trägt sie wieder aus. */
+/** Trägt diese Arten ein: die Erweiterung beim Laden ihres Moduls (X5), Tests und der Entwicklertisch ihre Test-Entscheidungen; der Rückgabewert trägt sie wieder aus. */
 export function trageEntscheidungenEin(definitionen: readonly EntscheidungsDefinition[]): () => void {
   for (const definition of definitionen) ENTSCHEIDUNGSREGISTER.set(definition.art, definition);
   return () => {

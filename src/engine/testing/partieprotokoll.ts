@@ -1,6 +1,7 @@
 import { ermittleAktionen } from '../aktionen/enumerieren';
 import type { Ereignis, Kartenort, SpielAktion } from '../aktionen/typen';
 import { AUFGABENNAMEN } from '../aufgabenKarten';
+import { risikoaktionText } from '../erweiterung/risiko';
 import { alleSpielkarten } from '../invarianten';
 import { findeSchlange } from '../schlangen';
 import { berechneEndwertung } from '../scoring';
@@ -157,6 +158,10 @@ class Schreiber {
         return aktion.farbenschutzId === null ? `${wer} lässt durch.` : `${wer} wehrt mit ${this.karte(aktion.farbenschutzId)} ab.`;
       case 'Entscheiden':
         return `${wer} wählt „${aktion.wahl}“.`;
+      case 'RisikoKarteSpielen': {
+        const benannt = aktion.benannt === null ? '' : `, benannt: ${this.karte(aktion.benannt)}`;
+        return `${wer} spielt die Risiko-Belohnungs-Karte ${aktion.risikoKarteId}, ${risikoaktionText(aktion.risikoAktion)}${benannt}.`;
+      }
       case 'ComebackEinsetzen':
         return `${wer} setzt die Comeback-Karte ${aktion.comebackId} ein.`;
       case 'ZweiAbwerfenDreiZiehen':
@@ -200,6 +205,8 @@ class Schreiber {
         return `${this.spieler(ereignis.spielerIndex)} entscheidet über „${ereignis.art}“ zu ${this.karte(ereignis.karteId)}: ${ereignis.optionen.join(', ')}.`;
       case 'Entschieden':
         return `${this.spieler(ereignis.spielerIndex)} hat bei „${ereignis.art}“ „${ereignis.wahl}“ gewählt.`;
+      case 'RisikoKarteGespielt':
+        return `Risikoprüfung: ${this.karte(ereignis.aufgedeckt)} aufgedeckt, ${ereignis.erfolg ? 'Erfolg' : 'Misserfolg'}; ${ereignis.karteId} ist aus dem Spiel.`;
       case 'ComebackEingesetzt':
         return `${this.spieler(ereignis.spielerIndex)} dreht die Comeback-Karte ${ereignis.karteId} um und hat zwei zusätzliche Aktionen.`;
       case 'SchlussrundeBegonnen':

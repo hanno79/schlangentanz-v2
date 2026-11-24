@@ -31,7 +31,7 @@ describe('X3: Szenarien des Rahmens am Entwicklertisch', () => {
     const fusion: Wahl = (aktion) => aktion.typ === 'FusionLegen'
     const gespielt = klicke(start, farbe('blau'), farbe('rot'), farbe('gelb'), fusion)
     expect(gespielt.zustand.zug).toMatchObject({ gespielteFarbkarten: 3, gespielteSonderkarten: 1 })
-    expect(ermittleAktionen(gespielt.zustand).map((aktion) => aktion.typ)).toEqual(['ZugBeenden'])
+    expect([...new Set(ermittleAktionen(gespielt.zustand).map((aktion) => aktion.typ))], 'X5: daneben nur die Risiko-Karte, die keinen Platz des Zuges braucht').toEqual(['RisikoKarteSpielen', 'ZugBeenden'])
     const fusionZuerst = klicke(start, fusion).zustand
     expect(mitWirkung(fusionZuerst, 'farbenfusion'), 'D46/D56').toBe(false)
     const naechster = klicke(gespielt.zustand, beenden).zustand

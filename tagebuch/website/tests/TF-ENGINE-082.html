@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-ENGINE-082 Partien ohne Erweiterung laufen mit den Risiko-Karten genau so wie vorher. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-ENGINE-082 Partien ohne Erweiterung laufen mit den Risiko-Karten genau so wie vorher.</h1><p class="etiketten"><span class="etikett">Bereich Spiel-Engine: Regeln, Zugablauf, Wertung, Speicherformat</span><span class="etikett">Regression nein</span><span class="etikett">Priorität hoch</span><span class="etikett">Art manuell</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Die Risiko-Karten gibt es nur mit Erweiterung. Eine Partie ohne Erweiterung darf sich deshalb in keinem Schritt ändern, weder bei den angebotenen Aktionen und Ereignissen noch im Endstand. Verglichen wird eine Prüfsumme über viele Partien auf <code>origin/neuaufbau</code> und auf dem Task-Stand.</p><h2>Bestanden, wenn</h2><p>Die drei Prüfsummen sind auf beiden Ständen gleich: Zufallsaktionen über 60 Partien (Saaten 9101 bis 9160), Zufalls-KI über 30 Partien (Saaten 9201 bis 9230) und solide KI gegen Zufalls-KI über 4 Partien (Saaten 9301 bis 9304).</p><h2>Fehlgeschlagen, wenn</h2><p>Eine der drei Prüfsummen unterscheidet sich.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>24.11.2026</dd><dt>Änderung</dt><dd>task/X5-risiko (PR #117)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Repo auf dem geprüften Stand von <code>task/X5-risiko</code>, dazu ein Abzug von <code>origin/neuaufbau</code> (<code>git archive</code>) mit verknüpftem <code>node_modules</code></td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Prüfsummen-Datei aus dem Beleg; sie hasht je Schritt die Aktionsliste und die Ereignisse, am Ende den gespeicherten Zustand, bei den KI-Partien den Verlauf und die Punkte.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Abzug von `origin/neuaufbau`</td><td>Datei als `src/x5_pruefsumme.test.ts` ablegen und ausführen</td><td>`PRUEFSUMME_DATEI=&lt;datei&gt; npx vitest run src/x5_pruefsumme.test.ts`</td><td>Zeile `PRUEFSUMME …` in der Datei</td></tr><tr><td>2</td><td>Repo auf dem Task-Stand</td><td>dasselbe, danach die Datei wieder löschen</td><td>wie in Schritt 1</td><td>dieselbe Zeile `PRUEFSUMME …`, `git status` leer</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Partien mit Erweiterung ändern sich mit X5 absichtlich, weil die Zufalls-KI jetzt Risiko-Karten spielt; sie sind nicht verglichen. Die solide KI ist nur in 4 Partien verglichen, weil sie langsam rechnet; die Golden-Master-Tests und <code>solideKi_basis.test.ts</code> laufen zusätzlich in <code>npm test</code>.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-24">24.11.2026 21:43</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer X5) &middot; agent &middot; pruefung-X5 @ <span class="commit" title="1973adcce811adb7fcfebb3b7d018870719c46bb">1973adc</span></p><p>Prüfsummen gleich auf origin/neuaufbau 6f7ee643 und X5 1973adcc: zufallsaktionen f2e309f44ce3983f (60 Partien), zufallsKi 78379f0a181e1d23 (30), solide 793320a948e98075 (4)</p><ul class="belege"><li><a href="belege/2026-11-24-2143-TF-ENGINE-082-1.txt">2026-11-24-2143-TF-ENGINE-082-1.txt</a></li><li><a href="belege/2026-11-24-2143-TF-ENGINE-082-2.txt">2026-11-24-2143-TF-ENGINE-082-2.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

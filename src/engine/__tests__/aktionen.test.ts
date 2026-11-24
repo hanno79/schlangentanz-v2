@@ -32,8 +32,8 @@ function mitHand(karten: Parameters<ReturnType<typeof baukasten>['hand']>[1]): S
 }
 
 describe('A5/A6/A7: die Aktionstypen', () => {
-  it('A5/A6/A7: alle Aktionstypen der Basis-Engine sind festgelegt, auch die der späteren Tasks', () => {
-    expect([...AKTIONSTYPEN]).toEqual([
+  it('A5/A6/A7: alle Aktionstypen der Basis-Engine sind festgelegt, auch die der späteren Tasks; die Erweiterung hängt ihre an (U13)', () => {
+    expect(AKTIONSTYPEN.slice(0, 16)).toEqual([
       'FarbkarteLegen',
       'RegenbogenschlangeLegen',
       'BlockadeLegen',
@@ -52,6 +52,7 @@ describe('A5/A6/A7: die Aktionstypen', () => {
       'ComebackEinsetzen',
       'ZweiAbwerfenDreiZiehen',
     ])
+    expect(AKTIONSTYPEN, 'X5: die Risiko-Belohnungs-Karte (A8.2)').toContain('RisikoKarteSpielen')
   })
 
   it('A7.9: die Schlangenhäutung hat einen eigenen Aktionstyp', () => {

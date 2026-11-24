@@ -67,7 +67,7 @@ describe('A8.1/D46: Zusatzaktionen kommen obendrauf', () => {
     expect(zustand.zug.gespielteFarbkarten).toBe(3)
     expect(mitWirkung(zustand, karteVon(zustand, 'Grün')), 'D46: eine vierte Farbkarte geht nicht mehr').toBe(false)
     expect(grund(zustand, { typ: 'FarbkarteLegen', spielerId: 'spieler-1', karteId: karteVon(zustand, 'Grün'), ziel: { art: 'schlange', schlangenId: zustand.spieler[0].schlangen[0].id, seite: 'ende' } })).toMatch(/D46/)
-    expect(typen(zustand)).toEqual(['ZugBeenden'])
+    expect(typen(zustand)).toEqual(['RisikoKarteSpielen', 'ZugBeenden'])
   })
 
   it('D46: neben der Farbkarte gehen so auch drei Sonderkarten, zusammen vier Karten', () => {
@@ -75,7 +75,7 @@ describe('A8.1/D46: Zusatzaktionen kommen obendrauf', () => {
     zustand = spiele(zustand, karteVon(zustand, 'Rot'))
     for (let nummer = 0; nummer < 3; nummer += 1) zustand = spiele(zustand, karteVon(zustand, 'Schlangenblockade'))
     expect(zustand.zug).toMatchObject({ gespielteFarbkarten: 1, gespielteSonderkarten: 3 })
-    expect(typen(zustand)).toEqual(['ZugBeenden'])
+    expect(typen(zustand)).toEqual(['RisikoKarteSpielen', 'ZugBeenden'])
   })
 
   it('A7.7/D27/D46: eine zweite Farbenfusion geht auch mit freier Zusatzaktion nicht; sie lässt sich nur wirkungslos ablegen', () => {
@@ -150,9 +150,9 @@ describe('A8.1: eine Zusatzaktion, die keine Karte spielt', () => {
     zaehleZusatzaktion(zustand.zug, 'Testaktion')
     zaehleZusatzaktion(zustand.zug, 'Testaktion')
     expect(darfZugBeenden(zustand.zug, zustand.spieler[0])).toBe(false)
-    expect(typen(zustand)).toEqual(['FarbkarteLegen'])
+    expect(typen(zustand)).toEqual(['FarbkarteLegen', 'RisikoKarteSpielen'])
     const gelegt = spiele(zustand, karteVon(zustand, 'Blau'))
-    expect(typen(gelegt)).toEqual(['ZugBeenden'])
+    expect(typen(gelegt)).toEqual(['RisikoKarteSpielen', 'ZugBeenden'])
   })
 })
 
@@ -182,7 +182,7 @@ describe('A7.10/D43: Zusatzaktionen nur für bestimmte Karten', () => {
     zustand = spiele(zustand, karteVon(zustand, 'Blau'))
     expect(mitWirkung(zustand, karteVon(zustand, 'Rot')), 'Rot ist gezogen und nimmt die zweite Zusatzaktion').toBe(true)
     zustand = spiele(zustand, karteVon(zustand, 'Rot'))
-    expect(typen(zustand)).toEqual(['ZugBeenden'])
+    expect(typen(zustand)).toEqual(['RisikoKarteSpielen', 'ZugBeenden'])
   })
 
   it('D43: eine Karte, die nicht gezogen ist, bekommt keine Zusatzaktion: nach Blau geht Gelb nicht mehr', () => {

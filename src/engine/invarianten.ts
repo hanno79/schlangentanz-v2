@@ -1,7 +1,7 @@
 import { MAX_SCHLANGEN_PRO_SPIELER, OFFENE_AUFGABEN } from './constants';
 import { erstelleAuslagekarten, erstelleSpielkarten } from './deck';
 import { erstelleAufgabenStapel } from './aufgabenKarten';
-import { befundeDerEntscheidung } from './entscheidungsregister';
+import { ENTSCHEIDUNGSREGISTER, befundeDerEntscheidung } from './entscheidungsregister';
 import { zaehlerPassen } from './zuggrenzen';
 import type { KartenAktion } from './aktionen/typen';
 import { istKartenaktionstyp, kartenartFuer, kartenartVon } from './karten/register';
@@ -254,7 +254,10 @@ function verweiseGueltig(zustand: Spielzustand): string[] {
   }
   const { entscheidung } = zustand;
   if (entscheidung !== null) {
-    probleme.push(...befundeDerEntscheidung(entscheidung, anzahl));
+    const form = befundeDerEntscheidung(entscheidung, anzahl);
+    probleme.push(...form);
+    // X5: Was die Entscheidung über Karten im Zustand sagt, prüft ihre Art selbst, sobald ihre Form stimmt.
+    if (form.length === 0) probleme.push(...(ENTSCHEIDUNGSREGISTER.get(entscheidung.art)?.befunde?.(zustand, entscheidung) ?? []));
     // X3: Abwehr und Entscheidung laufen nacheinander, nie zugleich; sonst wäre unklar, wer entscheidet.
     if (schwebend !== null) probleme.push(`Die Entscheidung „${entscheidung.art}“ ist offen, während ${schwebend.karte.id} schwebt.`);
   }

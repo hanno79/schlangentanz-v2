@@ -16,7 +16,9 @@ für die besten drei die zweite Karte desselben Zuges. Nach einem Verdoppler beg
 mit dem zweiten Zug eine neue Suche auf der echten neuen Hand.
 
 Ein Gegner, den eine Sonderkarte trifft, lässt sie in der Rechnung durch; ob er
-abwehrt, sieht die KI nicht. Wird sie selbst gefragt, entscheidet `abwehr.ts`
+abwehrt, sieht die KI nicht. Eine Risiko-Belohnungs-Karte (A8.2) spielt die solide KI
+noch nicht; das lernt sie mit K4. Verlangt die Karte eines Gegners von ihr eine
+Wahl, rechnet sie die Wahlen durch wie Karten (X5). Wird sie selbst gefragt, entscheidet `abwehr.ts`
 (Plan K3, Kriterium 4).
 
 Feste Regeln neben der Bewertung, Vorgaben des Autors:
@@ -186,7 +188,7 @@ function erstelleSuche(sicht: Sicht, zufall: () => number) {
   /** Die Karten, die von `stand` aus in Frage kommen, durchgerechnet; mit `nachlese` weitere, solange keine erlaubt ist. */
   const kandidaten = (stellung: Stellung, stand: Sicht, aktionen: readonly SpielAktion[], anzahl: number, nachlese = 0): Folge[] => {
     const gesperrt = zumGegnerGesperrt(stand, aktionen, merker);
-    const karten = aktionen.filter((aktion) => aktion.typ !== 'ZugBeenden' && !gesperrt(aktion));
+    const karten = aktionen.filter((aktion) => aktion.typ !== 'ZugBeenden' && aktion.typ !== 'RisikoKarteSpielen' && !gesperrt(aktion));
     const { geordnet, bewertet } = vorauswahl(stand, karten, anzahl, merker);
     bewertungen.angeboten += karten.length;
     bewertungen.vorauswahl += bewertet;

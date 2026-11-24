@@ -1,0 +1,5 @@
+PRUEFSUMME zufallsaktionen=f2e309f44ce3983f zufallsKi=78379f0a181e1d23 solide=793320a948e98075
+EINZELN solide=9f1b02022973fb8c,142e1e56263c3e3a,aa4053021660311e,28927aa85b4cd425
+--- oben: origin/neuaufbau (6f7ee643), unten: task/X5-risiko (1973adcc)
+PRUEFSUMME zufallsaktionen=f2e309f44ce3983f zufallsKi=78379f0a181e1d23 solide=793320a948e98075
+EINZELN solide=9f1b02022973fb8c,142e1e56263c3e3a,aa4053021660311e,28927aa85b4cd425
