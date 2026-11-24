@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { deserialisiere, ermittleAktionen, ermittleEntscheider, erstellePartie, erzeugeZufall, pruefeAktion, serialisiere } from '../../index'
 import type { SpielAktion, Spielzustand } from '../../index'
-import { zugerweiterungGesperrt } from '../../zuggrenzen'
+import { zugerweiterungGesperrt, zugInSicht } from '../../zuggrenzen'
 import { aktionen, ereignisseVom, farbkarte, folge, fuehreAus, grund, hand, spieleZug, zugBeenden } from '../zugablauf_hilfen'
 import { idVon, risikoAktionen, risikoTisch, schlangenkarte, spieleRisiko, waehle } from '../risiko_hilfen'
 
@@ -214,5 +214,31 @@ describe('A8.2/X3 Kriterium 4: überzählige Karten und Speichern', () => {
       expect(geladen).toEqual(zustand)
       expect(ermittleAktionen(geladen)).toEqual(ermittleAktionen(zustand))
     }
+  })
+})
+
+describe('B2: Risiko-Aktion 3 legt eine schon gespielte Karte zurück auf die Hand (Codex-Review X5)', () => {
+  it('B2/D51: tauscht der Spieler eine in diesem Zug gelegte Farbkarte zurück auf die Hand, nennt der Zug in der Sicht der Gegner ihre Id nicht mehr', () => {
+    const start = risikoTisch({ hand: ['Blau', 'Gelb'], schlange: ['Grün'], oben: ['Rot'] })
+    const blau = idVon(start, 0, 'Blau')
+    const gelegt = folge(start, (jetzt) => aktionen(jetzt, 'FarbkarteLegen').find((aktion) => aktion.typ === 'FarbkarteLegen' && aktion.karteId === blau && aktion.ziel.art === 'schlange' && aktion.ziel.seite === 'ende')!).zustand
+    const getauscht = waehle(spieleRisiko(gelegt, 3, blau).zustand, idVon(start, 0, 'Gelb')).zustand
+    expect(hand(getauscht, 0), 'D51: die ersetzte Karte liegt wieder auf der Hand').toContain(blau)
+    for (const gegner of [1, 2]) expect(JSON.stringify(zugInSicht(getauscht, gegner)), `B2: Sicht von Spieler ${gegner}`).not.toContain(blau)
+    expect(JSON.stringify(zugInSicht(getauscht, 0)), 'der Spieler selbst sieht seine Karte').toContain(blau)
+    expect(aktionen(getauscht, 'FarbkarteLegen'), 'A5/D12: der Platz der Farbkarte bleibt belegt').toEqual([])
+  })
+})
+
+describe('X3 Kriterium 3: Laden prüft, worauf eine Risiko-Entscheidung verweist (Codex-Review X5)', () => {
+  it('D52/D53: eine Entscheidung, deren benannte Karte nicht dort liegt, lehnt das Laden mit Grund ab', () => {
+    const gegner = waehle(spieleRisiko(risikoTisch({ hand: ['Blau'], schlange: ['Gelb'], oben: ['Farbendieb'] }), 2, 'blau-01').zustand, 'spieler-2').zustand
+    const verbogen = JSON.parse(serialisiere(gegner))
+    verbogen.entscheidung.daten.benannt = 'rot-15'
+    expect(() => deserialisiere(JSON.stringify(verbogen))).toThrow(/rot-15/)
+    const start = risikoTisch({ hand: ['Blau'], schlange: ['Gelb'], oben: ['Violett'] })
+    const seite = JSON.parse(serialisiere(spieleRisiko(start, 3, schlangenkarte(start, 0, 0)).zustand))
+    seite.entscheidung.daten.schlangenkarte = 'blau-01'
+    expect(() => deserialisiere(JSON.stringify(seite))).toThrow(/blau-01/)
   })
 })

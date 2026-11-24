@@ -244,4 +244,12 @@ describe('A8.2 Aktion 4: Karten aus dem Ablage- oder Nachziehstapel (D51, D54)',
     expect(hand(gezogen.zustand, 2)).toContain(braun)
     expect(imSpiel(gezogen.zustand)).toContain(RISIKO)
   })
+
+  it('A8.2 Aktion 4 „Wichtig“: auch bei Misserfolg bietet die Engine dem Gegner keinen Schlangenkorb von seinem Ablagestapel an', () => {
+    // Abgeworfen, etwa als Überzahl, kann der Korb auf einem Ablagestapel liegen (Entscheid des Autors vom 24.11.2026); genommen werden darf er nicht.
+    const gegnerwahl = (ablage: Kartenwahl[]) => spieleRisiko(risikoTisch({ hand: ['Rot'], oben: ['Schlangengrube'], weiter: (bau) => bau.ablage(1, ablage) }), 4).zustand
+    expect(wahlen(gegnerwahl(['Schlangenkorb des Glücks'])), 'A8.2: der Gegner bleibt frei wählbar').toEqual(['spieler-2', 'spieler-3'])
+    expect(wahlen(waehle(gegnerwahl(['Schlangenkorb des Glücks', 'Verdoppler']), 'spieler-2').zustand), 'nur der Verdoppler an Stelle 1 und der Stapel').toEqual(['ablagestapel-1', 'stapel'])
+    expect(wahlen(waehle(gegnerwahl(['Schlangenkorb des Glücks']), 'spieler-2').zustand), 'D54: liegt dort nur der Korb, bleibt der Stapel').toEqual(['stapel'])
+  })
 })
