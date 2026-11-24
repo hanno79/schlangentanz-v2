@@ -104,6 +104,11 @@ export function nachtragEintrag(nummer: string): { frage: string; antwort: strin
   return { frage: treffer?.[1] ?? '', antwort: treffer?.[2] ?? '' }
 }
 
+/** Jede Fragezeile `**…** (Dnn)` im Website-Nachtrag: Nummer und ob sie mit zwei Leerzeichen (hartem Umbruch) endet. */
+export function nachtragFragezeilen(): { nummer: string; harterUmbruch: boolean }[] {
+  return [...websiteNachtrag.matchAll(/^\*\*.+\*\* \((D\d+)\)( *)$/gm)].map(([, nummer, leer]) => ({ nummer, harterUmbruch: leer.length >= 2 }))
+}
+
 /** Kernaussagen stehen im Eintrag, die Gegenteile nicht. */
 export function pruefeKern(nummer: string, antwort: string, kern: string[], verboten: string[]): void {
   for (const aussage of kern) expect(antwort, `${nummer} ohne Kernaussage „${aussage}“`).toContain(aussage.toLowerCase())

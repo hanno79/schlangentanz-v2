@@ -1,0 +1,26 @@
+Prüfer P0.5g Iteration 2, Gegenproben auf ee42bcd0 (gegenprobe_i2.py)
+
+B1_einleitung_alt: Tests  1 failed | 140 passed (141)
+  × P0.5g: die Einleitung von B1 nennt den Stand der Tabelle nicht mehr mit dem 12.11.2026
+M1_D63_ohne_satz: Tests  1 failed | 140 passed (141)
+  × P0.5g: D63: Rückfrage aus X2 vom 23.11.2026 steht als Regel mit gewählter Möglichkeit in Teil D
+M2_D63_nachtrag_noch_liegen: Tests  1 failed | 140 passed (141)
+  × P0.5g: D63: der Website-Nachtrag führt die Antwort ohne „Website folgt“
+M3_D60_ohne_umbruch: Tests  1 failed | 140 passed (141)
+  × P0.5g: jede Fragezeile im Website-Nachtrag endet mit zwei Leerzeichen (harter Umbruch vor der Antwort)
+M4_D14_ein_leerzeichen: Tests  1 failed | 140 passed (141)
+  × P0.5g: jede Fragezeile im Website-Nachtrag endet mit zwei Leerzeichen (harter Umbruch vor der Antwort)
+M5_D60_tab: Tests  141 passed (141)
+N1_D66_wahl: Tests  1 failed | 140 passed (141)
+  × P0.5g: D66: Rückfrage aus X2 vom 23.11.2026 steht als Regel mit gewählter Möglichkeit in Teil D
+N2_D66_lesart: Tests  1 failed | 140 passed (141)
+  × P0.5g: D66: Rückfrage aus X2 vom 23.11.2026 steht als Regel mit gewählter Möglichkeit in Teil D
+N3_D67_nein: Tests  1 failed | 140 passed (141)
+  × P0.5g: D67: Rückfrage aus X2 vom 23.11.2026 steht als Regel mit gewählter Möglichkeit in Teil D
+N4_D67_nachtrag_genau: Tests  1 failed | 140 passed (141)
+  × P0.5g: D67: der Website-Nachtrag führt die Antwort ohne „Website folgt“
+N5_D67_datum: Tests  1 failed | 140 passed (141)
+  × P0.5g: D67: Rückfrage aus X2 vom 23.11.2026 steht als Regel mit gewählter Möglichkeit in Teil D
+N6_D66_fehlt_nachtrag: Tests  2 failed | 139 passed (141)
+  × P0.5g: D66: der Website-Nachtrag führt die Antwort ohne „Website folgt“
+  × P0.5f, P0.5g: der Website-Nachtrag führt jede Rückfrage ab D56 im Abschnitt Erweiterung

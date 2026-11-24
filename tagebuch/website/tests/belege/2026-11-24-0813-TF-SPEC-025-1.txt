@@ -1,0 +1,26 @@
+Prüfer P0.5g Iteration 2, Gegenproben A bis L aus Iteration 1 auf ee42bcd0
+
+A_D59_wahl: Tests  1 failed | 140 passed (141)
+  × P0.5g: D59: Rückfrage aus X2 vom 23.11.2026 steht als Regel mit gewählter Möglichkeit in Teil D
+B_D63_selber_zug: Tests  1 failed | 140 passed (141)
+  × P0.5g: D63: Rückfrage aus X2 vom 23.11.2026 steht als Regel mit gewählter Möglichkeit in Teil D
+C_D58_ja: Tests  1 failed | 140 passed (141)
+  × P0.5g: D58: Rückfrage aus X2 vom 23.11.2026 steht als Regel mit gewählter Möglichkeit in Teil D
+D_D61_nachtrag: Tests  1 failed | 140 passed (141)
+  × P0.5g: D61: der Website-Nachtrag führt die Antwort ohne „Website folgt“
+E_D64_wahl: Tests  1 failed | 140 passed (141)
+  × P0.5g: D64: Rückfrage aus X2 vom 23.11.2026 steht als Regel mit gewählter Möglichkeit in Teil D
+F_D48_ohne_rueckfrage: Tests  1 failed | 140 passed (141)
+  × P0.5e: G16: Teil D besteht genau aus dem ganzen Satz je gewähltem Teil, dazu Wortlaut und „Website folgt.“
+G_C10_fundstelle: Tests  1 failed | 140 passed (141)
+  × P0.5g: jede Fundstelle in Teil C nennt eine Datei, die es gibt
+H_C21_zurueck: Tests  1 failed | 140 passed (141)
+  × P0.5g: C21 und C23 sind nach X2b gestrichen; C10 und C14 nennen den Stand nach X2b und X2c
+I_regelfragen: Tests  1 failed | 140 passed (141)
+  × P0.5g: der Stand-Absatz verweist auf die Rückfragen aus den Prüfungen von X2 und X3 vom 23.11.2026 und die Ergänzung von D48
+J_D56_anfang: Tests  1 failed | 140 passed (141)
+  × P0.5f: D56: Rückfrage aus X3 vom 22.11.2026 steht als Regel mit gewählter Möglichkeit in Teil D
+K_D48_datum: Tests  1 failed | 140 passed (141)
+  × P0.5g: D48 bleibt Eintrag der Sammelantwort, und der Website-Nachtrag sagt schon, dass die Comeback-Karte im zweiten Zug nach einem Verdoppler nicht einsetzbar ist
+L_D65_datum: Tests  1 failed | 140 passed (141)
+  × P0.5g: D65: Rückfrage aus X3 vom 23.11.2026 steht als Regel mit gewählter Möglichkeit in Teil D

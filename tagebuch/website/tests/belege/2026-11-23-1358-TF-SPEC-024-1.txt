@@ -1,0 +1,12 @@
+Prüfer P0.5g, Stand e8280ba0: D63 in Teil D
+
+| D63 | „Schlangentanz“: Muss die Häutung mit zwei neuen Dreiergruppen in dem Zug liegen, in dem der Spieler die Aufgabe einlöst, oder genügt eine frühere Häutung? | Eine frühere Häutung genügt: Hat der Spieler einmal mit einer Schlangenhäutung zwei neue Dreiergruppen gebildet (D37, D62), gilt das für „Schlangentanz“ die ganze Partie; die Häutung muss nicht im Zug des Einlösens liegen. Wird „Schlangentanz“ erst danach aufgedeckt, löst er die Aufgabe ein, sobald er am Zug ist (A9). Antwort des Autors auf eine Rückfrage aus X2, gewählte Möglichkeit: „Gilt die ganze Partie“. Website folgt. | X2 | 23.11.2026 |
+
+Lesarten in docs/abnahme/X2c.md (origin/neuaufbau), Auslegungsfrage 3:
+- (a, umgesetzt) Die Häutung bleibt für die Partie gültig, wie „spiele … aus“. Zug 3: Schlangentanz eingelöst, +7.
+- (b) Nur eine Häutung im selben Zug zählt („Bilde“ als Handlung im Zug). Zug 3: nicht eingelöst; der Spieler braucht eine neue Häutung.
+- (c) Die Häutung bleibt gültig, aber beide Gruppen müssen beim Einlösen noch liegen. Hat ein Gegner dazwischen eine der Gruppen mit Schlangenfrass zerstört, nicht eingelöst.
+
+Antwort des Autors laut Auftrag des Orchestrators: „Gilt die ganze Partie“; „Nur im selben Zug“ und
+„Gruppen müssen liegen“ (beide Gruppen müssen beim Einlösen noch liegen) wurden nicht gewählt.
+Befund: D63 sagt nicht, dass die Gruppen beim Einlösen nicht mehr liegen müssen; die Lesart (c) ist im Text nicht ausgeschlossen.
