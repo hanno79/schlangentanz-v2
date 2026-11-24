@@ -292,6 +292,47 @@ export function werteSchlangen(schlangen: readonly Schlange[], mitVielfalt: bool
 }
 
 /*
+Für Aufgaben (A9 „Wichtig für Sonderkarten“, X2): Regenbogenschlange und
+Farbenfusion zählen als eine Karte der Farbe, mit der die Aufgabe erfüllt ist;
+die Karten unter einer Farbenfusion zählen nicht einzeln (A7.7). Andere
+Sonderkarten zählen nicht und unterbrechen Reihen.
+*/
+
+export { farbIndex };
+
+/** Was eine Aufgabe an Karten je Farbe in Schlangen findet. */
+export interface Farbbestand {
+  /** Die Farbkarten je Farbe, in der Reihenfolge von `FARBEN`. */
+  jeFarbe: number[];
+  /** Regenbogenschlangen und Farbenfusionen; jede zählt als eine Karte einer beliebigen Farbe. */
+  joker: number;
+}
+
+/** Zählt Farbkarten und Joker in diesen Schlangen (A9). */
+export function farbbestand(schlangen: readonly Schlange[]): Farbbestand {
+  const jeFarbe = FARBEN.map(() => 0);
+  let joker = 0;
+  for (const schlange of schlangen) {
+    for (const karte of schlange.karten) {
+      if (karte.typ === 'Farbkarte') jeFarbe[farbIndex(karte.farbe)] += 1;
+      else if (istJoker(karte)) joker += 1;
+    }
+  }
+  return { jeFarbe, joker };
+}
+
+/** Die längste Reihe nebeneinanderliegender Karten, die als `farbe` zählen: Farbkarten dieser Farbe und Joker (A9, D41). */
+export function laengsteReihe(schlange: Schlange, farbe: Farbe): number {
+  let laengste = 0;
+  let laufend = 0;
+  for (const karte of schlange.karten) {
+    laufend = (karte.typ === 'Farbkarte' && karte.farbe === farbe) || istJoker(karte) ? laufend + 1 : 0;
+    laengste = Math.max(laengste, laufend);
+  }
+  return laengste;
+}
+
+/*
 Joker in Aufgaben (A9, „Wichtig für Sonderkarten“; A7.3, A7.7): Regenbogenschlange
 und Farbenfusion zählen für eine Aufgabe als Karte einer Farbe, und zwar als die,
 mit der die Aufgabe erfüllt ist. Jede Aufgabe wählt diese Farbe für sich, auch

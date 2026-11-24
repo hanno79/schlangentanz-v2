@@ -1,0 +1,6 @@
+npm test: 167 Dateien, 2912 Tests, exit 0
+typecheck 0, build 0, test-lines 0, css-asserts 0, check:regeln 0, eslint 0, regelcheck 0 (7 Warnungen)
+test:dauerlauf 4/4, exit 0
+test:layout 2200 passed, exit 0
+Pruefsumme ohne Erweiterung (Saat 1-30, 2-4 Spieler) origin/neuaufbau und 4dcd05d: 8c27f6b8753e912c2e6857b8f76c22e101295b3728a659241e5a51b4058765ef
+PRUEFSUMME 8c27f6b8753e912c2e6857b8f76c22e101295b3728a659241e5a51b4058765ef

@@ -1,4 +1,5 @@
 import type { Aktionstyp, Ereignis, Kartenort, SonderkarteWirkungslosAblegenAktion } from './aktionen/typen';
+import { pruefeAufgabenAmZugende } from './aufgaben/rahmen';
 import { HANDKARTEN } from './constants';
 import { alleKartenorte, istVerdeckt } from './kartenorte';
 import { beginneSchlussrundeBeiLeeremStapel, zieheVomStapel } from './stapel';
@@ -128,12 +129,15 @@ export function werfeUeberhandAb(zustand: Spielzustand, karteIds: readonly strin
 }
 
 /**
+ * Am Ende jedes Zuges prüft der Rahmen die Aufgaben, die erst dann gelten (A9),
+ * auch nach dem ersten Zug mit Verdoppler (A7.8); wer aussetzt, hat kein Zugende.
  * Nach einem ersten Zug mit Verdoppler spielt derselbe Spieler sofort einen
  * zweiten Zug, der wie ein normaler Zug abläuft (A7.8); aufgefüllt hat er beim
  * Beenden schon. Nach dem zweiten Zug folgt kein weiterer (D11), sondern der
  * Nächste ist dran.
  */
 function schliesseZugAb(zustand: Spielzustand, ereignisse: Ereignis[]): void {
+  pruefeAufgabenAmZugende(zustand, ereignisse);
   const { spielerIndex, teilzug, verdopplerGespielt, runde } = zustand.zug;
   if (teilzug === 1 && verdopplerGespielt) {
     beginneZug(zustand, spielerIndex, 2, ereignisse, runde);

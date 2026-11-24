@@ -1,6 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { anwendeAktion, deserialisiere, ermittleAktionen, ermittleEntscheider, pruefeAktion, serialisiere } from '../index'
 import type { Spielzustand } from '../index'
+import { giltNachJederAktion } from '../aufgaben/definition'
+import { definitionFuerAufgabe } from '../aufgabenKarten'
 import { ENTSCHEIDUNGSREGISTER } from '../entscheidungsregister'
 import { verlangeEntscheidung } from '../reaktion'
 import { entferneTestbedingungen, immer, setzeTestbedingungen } from '../testing/testaufgaben'
@@ -181,7 +183,8 @@ describe('A9/X3: die Aufgabenprüfung wartet, bis die Entscheidung gefallen ist'
 
   it('A9: solange eine Entscheidung offen ist, löst niemand eine Aufgabe ein; nach der letzten Wahl prüft die Engine für den Spieler am Zug', () => {
     const start = tisch()
-    const name = start.offeneAufgaben[0].name
+    // Eine Aufgabe, die nach jeder Aktion gilt; Farbenpracht gilt erst am Zugende (X2a).
+    const name = start.offeneAufgaben.find((aufgabe) => giltNachJederAktion(definitionFuerAufgabe(aufgabe)))!.name
     setzeTestbedingungen({ [name]: immer(0) })
     const erste = spieleTestkarte(start)
     expect(typenDer(erste.ereignisse), 'A9: keine Prüfung, solange Spieler 1 noch entscheidet').not.toContain('AufgabeErfuellt')

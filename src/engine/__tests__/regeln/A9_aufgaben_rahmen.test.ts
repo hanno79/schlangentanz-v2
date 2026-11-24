@@ -262,7 +262,8 @@ describe('D35/A9: die geheime Aufgabe', () => {
 
 describe('A9: Prüfung zu Beginn des ersten Zuges (Codex-Befund X1)', () => {
   it('A9: der erste Zug der Partie beginnt mit einer Prüfung: Ist eine Bedingung schon erfüllt, hat Spieler 1 die Aufgabe sofort', () => {
-    const bedingt = ['Farbenpracht', 'Farbkombination', 'Fusionsexperte', 'Lila Riese', 'Schlangentanz', 'Symmetriemeister']
+    // Farbenpracht gilt erst am Ende des eigenen Zuges (Entscheid des Autors vom 23.11.2026), nicht zu Zugbeginn.
+    const bedingt = ['Farbkombination', 'Fusionsexperte', 'Lila Riese', 'Schlangentanz', 'Symmetriemeister']
     setzeTestbedingungen(Object.fromEntries(bedingt.map((name) => [name, immer(0)])))
     const zustand = erstellePartie({ spielerzahl: 2, erweiterung: true, zufall: erzeugeZufall(3) })
     const eingeloest = namen(zustand.spieler[0].erfuellteAufgaben)

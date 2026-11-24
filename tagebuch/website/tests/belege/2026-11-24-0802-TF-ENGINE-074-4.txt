@@ -1,0 +1,280 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a811891994bcc6ed4
+
+ ❯ src/engine/__tests__/regeln/tmp_x2a_it2.test.ts (3 tests | 2 failed) 95ms
+   × I1 Überhand: Farbenpracht wird erst nach dem Abwerfen eingelöst, dort vor ZugBegonnen des Nächsten 55ms
+   × I3 Verdoppler: erst im zweiten Zug erfüllt, am Ende des zweiten Zuges eingelöst 18ms
+ ❯ src/engine/__tests__/regeln/A9_farbenpracht_zugende.test.ts (11 tests | 7 failed) 128ms
+     × A9: die zweite grüne Karte erfüllt die Bedingung, eingelöst wird aber erst beim „Zug beenden“, vor dem Zug des Nächsten 50ms
+     × A7.8: mit Verdoppler endet der erste Zug beim „Zug beenden“; dort wird Farbenpracht eingelöst, vor dem zweiten Zug 10ms
+     × D35: die geheime Farbenpracht zählt erst am Zugende, still 7ms
+     × A9/A10: der letzte eigene Zug in der Schlussrunde: Farbenpracht wird beim „Zug beenden“ eingelöst, dann endet die Partie 9ms
+     × A9: erfüllt ein Gegnerzug die Bedingung, wird Farbenpracht nicht zu Zugbeginn eingelöst, sondern am Ende des eigenen Zuges 12ms
+     × D5: am Zugende eingelöst, wird die aufgedeckte Farbkombination sofort mitgeprüft und eingelöst 8ms
+     × D5: mitten im Zug aufgedeckt, wird Farbenpracht nicht sofort eingelöst, obwohl die Bedingung gilt, sondern am Zugende 6ms
+ ❯ src/entwicklung/szenarienAufgabenA.test.ts (7 tests | 1 failed) 114ms
+     × A9/D38, Entscheid 23.11.2026: aufgabe-farbenpracht: die zweite grüne Karte erfüllt die Bedingung; eingelöst wird beim „Zug beenden“; Rot löst nichts ein 34ms
+ ❯ src/engine/__tests__/regeln/A9_aufgaben_ereignisse.test.ts (6 tests | 1 failed) 2229ms
+     × A9/D5/D35: 30 Zufallspartien mit Erweiterung enden alle; eingelöst wird nur vom Spieler am Zug, in Ketten und bis der Stapel leer ist 2141ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 11 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/entwicklung/szenarienAufgabenA.test.ts > X2 Paket A: Szenarien je Aufgabe, eingelöst mit echten Karten > A9/D38, Entscheid 23.11.2026: aufgabe-farbenpracht: die zweite grüne Karte erfüllt die Bedingung; eingelöst wird beim „Zug beenden“; Rot löst nichts ein
+AssertionError: expected [ 'KartenGezogen', 'ZugBegonnen' ] to deeply equal [ 'KartenGezogen', …(3) ]
+
+- Expected
++ Received
+
+  [
+    "KartenGezogen",
+-   "AufgabeErfuellt",
+-   "AufgabeAufgedeckt",
+    "ZugBegonnen",
+  ]
+
+ ❯ src/entwicklung/szenarienAufgabenA.test.ts:41:56
+     39|     expect(aufgabenTypen(gelegt.ereignisse), 'mitten im Zug: nichts').…
+     40|     const { zustand, ereignisse } = klicke(gelegt.zustand, (aktion) =>…
+     41|     expect(ereignisse.map((ereignis) => ereignis.typ)).toEqual(['Karte…
+       |                                                        ^
+     42|     expect(namen(zustand.spieler[0].erfuellteAufgaben)).toEqual(['Farb…
+     43|     expect(namen(zustand.offeneAufgaben)).toEqual(['Gelber Schatz', 'F…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/11]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgaben_ereignisse.test.ts > A9/D5/D35: Dauerlauf mit Testbedingungen > A9/D5/D35: 30 Zufallspartien mit Erweiterung enden alle; eingelöst wird nur vom Spieler am Zug, in Ketten und bis der Stapel leer ist
+AssertionError: Partien, die nicht regulär endeten: expected [ …(3) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "Saat 4001, nach {\"typ\":\"ZugBeenden\",\"spielerId\":\"spieler-1\"}: A9: Farbenpracht ist am Ende des Zuges von Spieler 0 erfüllt, liegt aber noch offen.",
++   "Saat 4002, nach {\"typ\":\"ZugBeenden\",\"spielerId\":\"spieler-1\"}: D35: Die geheime Aufgabe von Spieler 0 ist am Zugende erfüllt, aber nicht vermerkt.",
++   "Saat 4003, nach {\"typ\":\"ZugBeenden\",\"spielerId\":\"spieler-1\"}: A9: Farbenpracht ist am Ende des Zuges von Spieler 0 erfüllt, liegt aber noch offen.",
++ ]
+
+ ❯ src/engine/__tests__/regeln/A9_aufgaben_ereignisse.test.ts:164:162
+    162|     const zaehler: Aufgabenzaehler = { erfuellt: 0, aufgedeckt: 0, lee…
+    163|     const ergebnisse = dauerlauf(dauerlaufPartien(30, true, 4001), { n…
+    164|     expect(ergebnisse.filter((ergebnis) => ergebnis.ausgang !== 'beend…
+       |                                                                                                                                                                  ^
+    165|     expect(zaehler.erfuellt, 'A9: eingelöste Aufgaben').toBeGreaterTha…
+    166|     expect(zaehler.kette, 'D5: sofort eingelöste aufgedeckte Aufgaben'…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/11]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_farbenpracht_zugende.test.ts > A9 Farbenpracht, Entscheid des Autors 23.11.2026: geprüft wird am Ende des eigenen Zuges > A9: die zweite grüne Karte erfüllt die Bedingung, eingelöst wird aber erst beim „Zug beenden“, vor dem Zug des Nächsten
+AssertionError: expected [] to deeply equal [ { typ: 'AufgabeErfuellt', …(2) } ]
+
+- Expected
++ Received
+
+- [
+-   {
+-     "aufgabeId": "aufgabe-01",
+-     "spielerIndex": 0,
+-     "typ": "AufgabeErfuellt",
+-   },
+- ]
++ []
+
+ ❯ src/engine/__tests__/regeln/A9_farbenpracht_zugende.test.ts:62:34
+     60|     expect(namen(gelegt.zustand.offeneAufgaben)).toContain('Farbenprac…
+     61|     const { zustand, ereignisse } = beenden(gelegt.zustand)
+     62|     expect(erfuellt(ereignisse)).toEqual([{ typ: 'AufgabeErfuellt', sp…
+       |                                  ^
+     63|     expect(typen(ereignisse).indexOf('AufgabeErfuellt'), 'vor ZugBegon…
+     64|     expect(namen(zustand.spieler[0].erfuellteAufgaben)).toEqual(['Farb…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/11]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_farbenpracht_zugende.test.ts > A9 Farbenpracht, Entscheid des Autors 23.11.2026: geprüft wird am Ende des eigenen Zuges > A7.8: mit Verdoppler endet der erste Zug beim „Zug beenden“; dort wird Farbenpracht eingelöst, vor dem zweiten Zug
+AssertionError: expected [] to deeply equal [ { typ: 'AufgabeErfuellt', …(2) } ]
+
+- Expected
++ Received
+
+- [
+-   {
+-     "aufgabeId": "aufgabe-01",
+-     "spielerIndex": 0,
+-     "typ": "AufgabeErfuellt",
+-   },
+- ]
++ []
+
+ ❯ src/engine/__tests__/regeln/A9_farbenpracht_zugende.test.ts:85:34
+     83|     expect(aufgabenEreignisse(gelegt.ereignisse)).toEqual([])
+     84|     const { zustand, ereignisse } = beenden(gelegt.zustand)
+     85|     expect(erfuellt(ereignisse)).toEqual([{ typ: 'AufgabeErfuellt', sp…
+       |                                  ^
+     86|     expect(ereignisse.at(-1), 'danach beginnt der zweite Zug').toEqual…
+     87|     expect(zustand.zug).toMatchObject({ spielerIndex: 0, teilzug: 2 })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/11]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_farbenpracht_zugende.test.ts > A9 Farbenpracht, Entscheid des Autors 23.11.2026: geprüft wird am Ende des eigenen Zuges > D35: die geheime Farbenpracht zählt erst am Zugende, still
+AssertionError: am Zugende: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/engine/__tests__/regeln/A9_farbenpracht_zugende.test.ts:95:69
+     93|     expect(gelegt.zustand.spieler[0].geheimeAufgabeErfuellt, 'mitten i…
+     94|     const { zustand, ereignisse } = beenden(gelegt.zustand)
+     95|     expect(zustand.spieler[0].geheimeAufgabeErfuellt, 'am Zugende').to…
+       |                                                                     ^
+     96|     expect(aufgabenEreignisse(ereignisse)).toEqual([])
+     97|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/11]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_farbenpracht_zugende.test.ts > A9 Farbenpracht, Entscheid des Autors 23.11.2026: geprüft wird am Ende des eigenen Zuges > A9/A10: der letzte eigene Zug in der Schlussrunde: Farbenpracht wird beim „Zug beenden“ eingelöst, dann endet die Partie
+AssertionError: expected [ 'PartieBeendet' ] to deeply equal [ 'AufgabeErfuellt', 'PartieBeendet' ]
+
+- Expected
++ Received
+
+  [
+-   "AufgabeErfuellt",
+    "PartieBeendet",
+  ]
+
+ ❯ src/engine/__tests__/regeln/A9_farbenpracht_zugende.test.ts:102:101
+    100|     const start = tisch().schlussrunde(1).amZug(0).zustand()
+    101|     const { zustand, ereignisse } = beenden(legeAn(start, 'Grün').zust…
+    102|     expect(typen(ereignisse).filter((typ) => typ === 'AufgabeErfuellt'…
+       |                                                                                                     ^
+    103|     expect(berechneEndwertung(zustand).spieler[0].aufgaben?.map((aufga…
+    104|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/11]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_farbenpracht_zugende.test.ts > A9 Farbenpracht, Entscheid des Autors 23.11.2026: geprüft wird am Ende des eigenen Zuges > A9: erfüllt ein Gegnerzug die Bedingung, wird Farbenpracht nicht zu Zugbeginn eingelöst, sondern am Ende des eigenen Zuges
+AssertionError: expected [] to deeply equal [ { typ: 'AufgabeErfuellt', …(2) } ]
+
+- Expected
++ Received
+
+- [
+-   {
+-     "aufgabeId": "aufgabe-01",
+-     "spielerIndex": 1,
+-     "typ": "AufgabeErfuellt",
+-   },
+- ]
++ []
+
+ ❯ src/engine/__tests__/regeln/A9_farbenpracht_zugende.test.ts:115:34
+    113|     expect(aufgabenEreignisse(gespielt.ereignisse)).toEqual([])
+    114|     const { zustand, ereignisse } = beenden(gespielt.zustand)
+    115|     expect(erfuellt(ereignisse)).toEqual([{ typ: 'AufgabeErfuellt', sp…
+       |                                  ^
+    116|     expect(namen(zustand.spieler[1].erfuellteAufgaben)).toEqual(['Farb…
+    117|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/11]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_farbenpracht_zugende.test.ts > D5: Kette mit Aufgaben verschiedener Prüfzeitpunkte > D5: am Zugende eingelöst, wird die aufgedeckte Farbkombination sofort mitgeprüft und eingelöst
+AssertionError: expected [] to deeply equal [ [ 'AufgabeErfuellt', …(1) ], …(3) ]
+
+- Expected
++ Received
+
+- [
+-   [
+-     "AufgabeErfuellt",
+-     "aufgabe-01",
+-   ],
+-   [
+-     "AufgabeAufgedeckt",
+-     "aufgabe-03",
+-   ],
+-   [
+-     "AufgabeErfuellt",
+-     "aufgabe-03",
+-   ],
+-   [
+-     "AufgabeAufgedeckt",
+-     "aufgabe-02",
+-   ],
+- ]
++ []
+
+ ❯ src/engine/__tests__/regeln/A9_farbenpracht_zugende.test.ts:134:129
+    132|     const start = tisch({ schlange: ['Blau', ...FAST.slice(0, 2), ...m…
+    133|     const { ereignisse } = beenden(legeAn(start, 'Grün').zustand)
+    134|     expect(aufgabenEreignisse(ereignisse).map((ereignis) => [ereignis.…
+       |                                                                                                                                 ^
+    135|       ['AufgabeErfuellt', aufgabeId('Farbenpracht')],
+    136|       ['AufgabeAufgedeckt', aufgabeId('Farbkombination')],
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/11]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_farbenpracht_zugende.test.ts > D5: Kette mit Aufgaben verschiedener Prüfzeitpunkte > D5: mitten im Zug aufgedeckt, wird Farbenpracht nicht sofort eingelöst, obwohl die Bedingung gilt, sondern am Zugende
+AssertionError: expected [ 'Farbkombination' ] to deeply equal [ 'Farbkombination', 'Farbenpracht' ]
+
+- Expected
++ Received
+
+  [
+    "Farbkombination",
+-   "Farbenpracht",
+  ]
+
+ ❯ src/engine/__tests__/regeln/A9_farbenpracht_zugende.test.ts:149:57
+    147|     expect(namen(gelegt.zustand.offeneAufgaben)).toEqual(['Farbenprach…
+    148|     const { zustand } = beenden(gelegt.zustand)
+    149|     expect(namen(zustand.spieler[0].erfuellteAufgaben)).toEqual(['Farb…
+       |                                                         ^
+    150|   })
+    151| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/11]⎯
+
+ FAIL  src/engine/__tests__/regeln/tmp_x2a_it2.test.ts > I1 Überhand: Farbenpracht wird erst nach dem Abwerfen eingelöst, dort vor ZugBegonnen des Nächsten
+AssertionError: expected [ 'KartenAbgeworfen', 'ZugBegonnen' ] to include 'AufgabeErfuellt'
+ ❯ src/engine/__tests__/regeln/tmp_x2a_it2.test.ts:29:13
+     27|   const danach = fuehreAus(ende.zustand, aktionen(ende.zustand, 'Ueber…
+     28|   const t = typen(danach.ereignisse)
+     29|   expect(t).toContain('AufgabeErfuellt')
+       |             ^
+     30|   expect(t.indexOf('AufgabeErfuellt')).toBeLessThan(t.indexOf('ZugBego…
+     31|   expect(namen(danach.zustand.spieler[0].erfuellteAufgaben)).toEqual([…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/11]⎯
+
+ FAIL  src/engine/__tests__/regeln/tmp_x2a_it2.test.ts > I3 Verdoppler: erst im zweiten Zug erfüllt, am Ende des zweiten Zuges eingelöst
+AssertionError: expected undefined to deeply equal { typ: 'AufgabeErfuellt', …(2) }
+
+- Expected:
+{
+  "aufgabeId": "aufgabe-01",
+  "spielerIndex": 0,
+  "typ": "AufgabeErfuellt",
+}
+
++ Received:
+undefined
+
+ ❯ src/engine/__tests__/regeln/tmp_x2a_it2.test.ts:57:53
+     55|   expect(aufgabenEreignisse(gruen.ereignisse)).toEqual([])
+     56|   const zweiter = beenden(gruen.zustand)
+     57|   expect(aufgabenEreignisse(zweiter.ereignisse)[0]).toEqual({ typ: 'Au…
+       |                                                     ^
+     58|   expect(zweiter.zustand.zug.spielerIndex).toBe(1)
+     59| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/11]⎯
+
+
+ Test Files  4 failed (4)
+      Tests  11 failed | 16 passed (27)
+   Start at  07:47:26
+   Duration  10.64s (transform 5.15s, setup 2.46s, import 5.79s, tests 2.57s, environment 22.97s)
+
