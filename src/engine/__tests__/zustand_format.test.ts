@@ -23,6 +23,7 @@ describe('A1/A5/A10: Zustand im Format 2', () => {
       verdopplerGespielt: false,
       farbenfusionGespielt: false,
       abschnitt: 'Ausspielen',
+      comebackBedingung: false,
       zusatzaktionen: [],
       verwendet: [],
       runde: [],

@@ -1,0 +1,89 @@
+Schritte: 173
+ComebackEingesetzt: 3
+Abwerfen mitten im Zug (Zeilen): 2
+Invarianten (alle erfüllt)
+erf
+
+scrollWidth/clientWidth: 1280,1280
+Konsolenfehler: 0 
+Schritt 38: Ereignisse des letzten Schritts (1) | ComebackEingesetzt: KI-Gegner 1 (spieler-2) dreht comeback-02 um, zwei Zusatzaktionen | 
+Schritt 49: Ereignisse des letzten Schritts (1) | ComebackEingesetzt: KI-Gegner 3 (spieler-4) dreht comeback-04 um, zwei Zusatzaktionen | 
+Schritt 52: Ereignisse des letzten Schritts (1) | ComebackEingesetzt: Spieler 1 (spieler-1) dreht comeback-01 um, zwei Zusatzaktionen | 
+Schritt 53: Ereignisse des letzten Schritts (2) | KartenAbgeworfen: Spieler 1 (spieler-1) legt gelb-15, verdoppler-03 ab | KartenGezogen: Spieler 1 (spieler-1) zieht 3 | 
+Schritt 54: Ereignisse des letzten Schritts (2) | KartenAbgeworfen: Spieler 1 (spieler-1) legt braun-08, braun-12 ab | KartenGezogen: Spieler 1 (spieler-1) zieht 3 | 
+
+Skript:
+import { chromium } from 'playwright'
+import { writeFileSync } from 'node:fs'
+import { GERAETEKLASSEN, chromiumPfad, kontextOptionen } from './scripts/pruefung/geraeteklassen.mjs'
+
+const ziel = 'C:/Users/hanno/AppData/Local/Temp/claude/29dfebc845fc3914/302a7f32-1072-4fc8-a34d-c8f4b23507c9/scratchpad/X4-pruefer'
+const desktop = GERAETEKLASSEN.find((klasse) => klasse.name === 'desktop')
+const browser = await chromium.launch({ executablePath: chromiumPfad() })
+const kontext = await browser.newContext({ ...kontextOptionen(desktop), reducedMotion: 'reduce' })
+const seite = await kontext.newPage()
+const fehler = []
+seite.on('console', (m) => { if (m.type() === 'error') fehler.push(m.text()) })
+seite.on('pageerror', (e) => fehler.push(String(e)))
+await seite.goto(process.env.X4_URL ?? 'http://localhost:4187/dev?szenario=start-erweiterung')
+const knopf = seite.getByRole('button', { name: 'KI-Schritt', exact: true })
+const protokoll = []
+let comeback = 0
+let abwerfen = 0
+let fotoComeback = false
+let schritte = 0
+const ereignisse = async () => {
+  const text = await seite.locator('main').innerText()
+  const a = text.indexOf('Ereignisse des letzten')
+  const b = text.indexOf('Invarianten')
+  return text.slice(a, b)
+}
+let saat = 12345
+const zufall = () => { saat = (saat * 1103515245 + 12345) % 2147483648; return saat / 2147483648 }
+let mensch = 0
+for (; schritte < 4000; schritte += 1) {
+  if (await knopf.isEnabled()) await knopf.click()
+  else {
+    // Spieler 1 (Mensch) entscheidet: einen Aktionsknopf der Engine anklicken, Comeback zuerst.
+    const aktionen = seite.locator('button[aria-label^="{"], button[title^="{"]')
+    let liste = await seite.locator('button').evaluateAll((els) => els.map((b, i) => [i, b.getAttribute('aria-label') ?? b.getAttribute('title') ?? '']).filter(([, n]) => n.startsWith('{"typ"')))
+    if (liste.length === 0) {
+      await seite.waitForTimeout(300)
+      liste = await seite.locator('button').evaluateAll((els) => els.map((b, i) => [i, b.getAttribute('aria-label') ?? b.getAttribute('title') ?? '']).filter(([, n]) => n.startsWith('{"typ"')))
+    }
+    if (liste.length === 0) {
+      const t = await seite.locator('main').innerText()
+      if (t.includes('Partiephase\nBeendet')) break
+      throw new Error('kein Aktionsknopf für Spieler 1: ' + t.slice(0, 1500))
+    }
+    const comebackKnopf = liste.find(([, n]) => n.includes('ComebackEinsetzen'))
+    const tauschKnopf = liste.find(([, n]) => n.includes('ZweiAbwerfenDreiZiehen'))
+    const wahl = comebackKnopf ?? (tauschKnopf && zufall() < 0.5 ? tauschKnopf : liste[Math.floor(zufall() * liste.length)])
+    mensch += 1
+    await seite.locator('button').nth(wahl[0]).click()
+    void aktionen
+  }
+  const e = await ereignisse()
+  if (e.includes('ComebackEingesetzt')) {
+    comeback += 1
+    protokoll.push(`Schritt ${schritte + 1}: ${e.replace(/\n/g, ' | ')}`)
+    if (!fotoComeback) {
+      await seite.screenshot({ path: `${ziel}/X4-zufallspartie-comeback-desktop.png`, fullPage: false })
+      fotoComeback = true
+    }
+  }
+  if (e.includes('KartenAbgeworfen') && e.includes('KartenGezogen') && !e.includes('ZugBegonnen')) {
+    abwerfen += 1
+    protokoll.push(`Schritt ${schritte + 1}: ${e.replace(/\n/g, ' | ')}`)
+  }
+  if (e.includes('PartieBeendet')) break
+}
+const text = await seite.locator('main').innerText()
+const inv = text.slice(text.indexOf('Invarianten'), text.indexOf('Invarianten') + 30)
+const wertung = text.slice(text.indexOf('Endwertung, wenn'), text.indexOf('Endwertung, wenn') + 300)
+await seite.screenshot({ path: `${ziel}/X4-zufallspartie-ende-desktop.png`, fullPage: false })
+const breite = await seite.evaluate(() => [document.documentElement.scrollWidth, document.documentElement.clientWidth])
+const bericht = [`Schritte: ${schritte + 1}`, `ComebackEingesetzt: ${comeback}`, `Abwerfen mitten im Zug (Zeilen): ${abwerfen}`, inv, wertung, `scrollWidth/clientWidth: ${breite}`, `Konsolenfehler: ${fehler.length} ${fehler.join(' / ')}`, ...protokoll].join('\n')
+writeFileSync(`${ziel}/X4-zufallspartie.txt`, bericht + '\n')
+console.log(bericht.slice(0, 3000))
+await browser.close()

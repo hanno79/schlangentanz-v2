@@ -23,6 +23,8 @@ export const AKTIONSTYPEN = [
   'UeberhandAbwerfen',
   'Reagieren',
   'Entscheiden',
+  'ComebackEinsetzen',
+  'ZweiAbwerfenDreiZiehen',
 ] as const;
 
 export type Aktionstyp = (typeof AKTIONSTYPEN)[number];
@@ -140,13 +142,29 @@ export interface EntscheidenAktion {
   wahl: string;
 }
 
+/** X4, A8.1: die eigene Comeback-Karte einsetzen; `comebackId` ist ihre Id. Sie liegt offen vor dem Spieler, nicht auf der Hand. */
+export interface ComebackEinsetzenAktion {
+  typ: 'ComebackEinsetzen';
+  spielerId: string;
+  comebackId: string;
+}
+
+/** X4, A8.1, D49: als Zusatzaktion zwei Handkarten auf den eigenen Ablagestapel, dann drei vom Nachziehstapel. */
+export interface ZweiAbwerfenDreiZiehenAktion {
+  typ: 'ZweiAbwerfenDreiZiehen';
+  spielerId: string;
+  karteIds: string[];
+}
+
 export type SpielAktion =
   | KartenAktion
   | SonderkarteWirkungslosAblegenAktion
   | ZugBeendenAktion
   | UeberhandAbwerfenAktion
   | ReagierenAktion
-  | EntscheidenAktion;
+  | EntscheidenAktion
+  | ComebackEinsetzenAktion
+  | ZweiAbwerfenDreiZiehenAktion;
 
 /**
  * Eine Ablehnung, die einen Spieler nennt, als Art mit Werten (Plan O6): So kann
@@ -257,6 +275,8 @@ export type Ereignis =
   | { typ: 'EntscheidungVerlangt'; spielerIndex: number; art: string; karteId: string; optionen: string[] }
   /** X3: `spielerIndex` hat `wahl` gewählt; was die Wahl bewegt, meldet danach `KartenVersetzt` mit derselben `karteId`. */
   | { typ: 'Entschieden'; spielerIndex: number; art: string; karteId: string; wahl: string }
+  /** X4, A8.1: Der Spieler setzt seine Comeback-Karte `karteId` ein; sie liegt danach umgedreht vor ihm, und sein Zug hat zwei Zusatzaktionen. */
+  | { typ: 'ComebackEingesetzt'; spielerIndex: number; karteId: string }
   /** A10, D55: Der Nachziehstapel ist leer; `ausloeser` ist der Spieler am Zug, gleich wer die letzte Karte genommen hat. */
   | { typ: 'SchlussrundeBegonnen'; ausloeser: number }
   | { typ: 'PartieBeendet' }

@@ -134,15 +134,7 @@ function folgeSchlangen(sicht: Sicht, aktion: SpielAktion, karte: Spielkarte | u
 
 /** Die Karte, die eine Aktion von der Hand spielt; `null`, wenn sie keine spielt. */
 function gespielteKarte(aktion: SpielAktion): string | null {
-  switch (aktion.typ) {
-    case 'ZugBeenden':
-    case 'UeberhandAbwerfen':
-    case 'Reagieren':
-    case 'Entscheiden':
-      return null;
-    default:
-      return aktion.karteId;
-  }
+  return 'karteId' in aktion ? aktion.karteId : null;
 }
 
 /**

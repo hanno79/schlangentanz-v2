@@ -292,6 +292,8 @@ function beschreibeEreignis(zustand: Spielzustand, ereignis: Ereignis): string {
       return `EntscheidungVerlangt: ${wer(ereignis.spielerIndex)} entscheidet über „${ereignis.art}“ zu ${ereignis.karteId}; zur Wahl: ${ereignis.optionen.join(', ')}`
     case 'Entschieden':
       return `Entschieden: ${wer(ereignis.spielerIndex)} wählt bei „${ereignis.art}“ „${ereignis.wahl}“`
+    case 'ComebackEingesetzt':
+      return `ComebackEingesetzt: ${wer(ereignis.spielerIndex)} dreht ${ereignis.karteId} um, zwei Zusatzaktionen`
     case 'SchlussrundeBegonnen':
       return `SchlussrundeBegonnen: ausgelöst von ${wer(ereignis.ausloeser)}`
     case 'PartieBeendet':

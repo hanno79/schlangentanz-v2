@@ -1,4 +1,5 @@
-import { vi } from 'vitest'
+import { isDeepStrictEqual } from 'node:util'
+import { expect, vi } from 'vitest'
 import type { Ereignis, KartenAktion, Spielzustand } from '../index'
 import { trageEntscheidungenEin } from '../entscheidungsregister'
 import type { EntscheidungsDefinition } from '../entscheidungsregister'
@@ -65,10 +66,9 @@ export function entscheidung(zustand: Spielzustand, wahl: string): Schritt {
  * (B2), und jede Invariante hält, auch die Kartenerhaltung.
  */
 export function pruefeSchritt(vorher: Spielzustand, schritt: Schritt): Schritt {
-  const nachgerechnet = spieleNach(lageVon(vorher), schritt.ereignisse)
-  if (JSON.stringify(nachgerechnet) !== JSON.stringify(lageVon(schritt.zustand))) {
-    throw new Error(`E4b/X3: nicht nachrechenbar: ${JSON.stringify(schritt.ereignisse)}`)
-  }
+  // Verglichen wird der Inhalt, nicht die Reihenfolge der Schlüssel: Eine neue Schlange steht in der nachgerechneten Lage hinten.
+  const [nachgerechnet, erwartet] = [spieleNach(lageVon(vorher), schritt.ereignisse), lageVon(schritt.zustand)]
+  if (!isDeepStrictEqual(nachgerechnet, erwartet)) expect(nachgerechnet, `E4b/X3: nicht nachrechenbar: ${JSON.stringify(schritt.ereignisse)}`).toEqual(erwartet)
   const verraten = verrateneHandkarten(schritt.zustand, schritt.ereignisse)
   if (verraten.length > 0) throw new Error(`B2: ein Ereignis nennt die Handkarten ${verraten.join(', ')}`)
   const verletzt = verletzteInvarianten(schritt.zustand)

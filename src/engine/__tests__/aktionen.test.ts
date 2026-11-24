@@ -48,6 +48,9 @@ describe('A5/A6/A7: die Aktionstypen', () => {
       'UeberhandAbwerfen',
       'Reagieren',
       'Entscheiden',
+      // X4 (Plan, „Zusätzliche Dateien für alle drei“): die Aktionen der Comeback-Karte, nach den Basistypen.
+      'ComebackEinsetzen',
+      'ZweiAbwerfenDreiZiehen',
     ])
   })
 

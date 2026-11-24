@@ -48,6 +48,7 @@ function Kopf({ zustand }: { zustand: Spielzustand }) {
               Farbkarte(n), {zug.gespielteSonderkarten} Sonderkarte(n)
               {zug.verdopplerGespielt ? ', Verdoppler' : ''}
               {zug.farbenfusionGespielt ? ', Farbenfusion' : ''}
+              {zustand.erweiterung ? `; Comeback-Bedingung zu Zugbeginn ${zug.comebackBedingung ? 'erfüllt' : 'nicht erfüllt'} (A8.1, D48)` : ''}
             </>
           )}
         </dd>
