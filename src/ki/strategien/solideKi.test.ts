@@ -148,9 +148,9 @@ describe('K2 Kriterium 1: Kann sie mit einer Handkarte eine Dreiergruppe vollend
   })
 
   /*
-  K2.1 sichert das Basis-Spiel (Entscheid des Orchestrators zu X6, 24.11.2026): dieselben elf Partien mit denselben
-  Saaten wie bisher, alle ohne Erweiterung. Dieselbe Aussage mit Erweiterung (Schlangenkorb, Comeback, Risiko) gehört
-  zu K4, ebenso die Partie aus dem Prüfprotokoll K2, Iteration 2, Hinweis 2 (Saat 7154) mit Erweiterung.
+  K2.1 prüft die elf Partien mit ihren Saaten ohne Erweiterung (Entscheid des Orchestrators zu X6, 24.11.2026) und
+  zusätzlich wieder die sechs mit Erweiterung, darunter die Partie aus dem Prüfprotokoll K2, Iteration 2, Hinweis 2
+  (Saat 7154); seit K2b und dem Merge mit X5 ist die Aussage auch dort erfüllt. Den Korb klug zu nutzen gehört zu K4.
   */
   const K2_1_PARTIEN: Entscheidung[][] = [
     ...PARTIEN.map((partie, nummer) =>
@@ -162,11 +162,10 @@ describe('K2 Kriterium 1: Kann sie mit einer Handkarte eine Dreiergruppe vollend
           )
         : ENTSCHEIDUNGEN[nummer],
     ),
-    entscheidungenVon(
-      { spielerzahl: 2, erweiterung: false, saat: 7154 },
-      [erstelleSolideKi(erzeugeZufall(7154 * 13 + 3)), erstelleZufallsKi(erzeugeZufall(7154 * 7 + 1 + 11))],
-      0,
+    ...[false, true].map((erweiterung) =>
+      entscheidungenVon({ spielerzahl: 2, erweiterung, saat: 7154 }, [erstelleSolideKi(erzeugeZufall(7154 * 13 + 3)), erstelleZufallsKi(erzeugeZufall(7154 * 7 + 1 + 11))], 0),
     ),
+    ...ENTSCHEIDUNGEN.filter((_, nummer) => PARTIEN[nummer].erweiterung),
   ]
 
   /**
@@ -182,10 +181,10 @@ describe('K2 Kriterium 1: Kann sie mit einer Handkarte eine Dreiergruppe vollend
     return gespielt.reduce((stand, { aktion }) => nachDurchlassen(stand, aktion, 0), zug[0].vorher)
   }
 
-  it('K2.1: in Partien vollendet sie in jedem Zug, in dem irgendeine Handkarte eine eigene Dreiergruppe vollenden kann, eine Gruppe oder spielt eine Vollendung, die abgewehrt wird, ausser ihr Zug ist strikt besser bewertet als jede Vollendung samt zweiter Karte (Basis-Spiel, elf Partien ohne Erweiterung, Saat 7154 eingeschlossen)', () => {
+  it('K2.1: in Partien vollendet sie in jedem Zug, in dem irgendeine Handkarte eine eigene Dreiergruppe vollenden kann, eine Gruppe oder spielt eine Vollendung, die abgewehrt wird, ausser ihr Zug ist strikt besser bewertet als jede Vollendung samt zweiter Karte (elf Partien ohne und sechs mit Erweiterung, Saat 7154 beide Male eingeschlossen)', () => {
     let geprueft = 0
     let vollendet = 0
-    expect(K2_1_PARTIEN.every((partie) => !partie[0].vorher.erweiterung), 'K2.1: nur Partien ohne Erweiterung').toBe(true)
+    expect(K2_1_PARTIEN.map((partie) => partie[0].vorher.erweiterung).filter(Boolean), 'K2.1: sechs Partien mit Erweiterung').toHaveLength(6)
     for (const zug of K2_1_PARTIEN.flatMap(zuege)) {
       const start = zug[0].vorher
       const gruppen = gruppenzahl(start, 0)
