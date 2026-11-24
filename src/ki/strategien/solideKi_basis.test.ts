@@ -14,16 +14,15 @@ zusammen. Die erwartete Summe ist auf `origin/neuaufbau` 47f2676 gemessen, dem
 Stand ohne X3. Ändert eine spätere KI-Task die Wahl mit Absicht, misst sie die
 Summe neu und nennt das im PR.
 
-K2b (Vollenden bei Gleichstand) ändert die Wahl mit Absicht und hat die Summe neu
-gemessen. Auf dem Verlauf dieser sechs Partien wählt die KI von K2b in 4 von 1064
-Wahlen anders (Partie 73004 Schritte 104 und 120, 73005 Schritt 134, 73006 Schritt
-143). Jedes Mal sind beide Züge gleich bewertet und gleich in Gruppen und Punkten;
-vorher entschied dort ein Rundungsrest im Vorwert der Vorauswahl, jetzt die
-Reihenfolge der Engine. Vorher: 095a4b72479d5ef49a323a84c3da37420e94ef0511efec4b493fc752269e20f9 1064.
+K2b (Vollenden bei Gleichstand) hat die Summe neu gemessen: Sie bleibt gleich.
+Die neue Regel entscheidet nur zwischen durchgerechneten Plänen, die gleich bewertet
+sind und sich in Gruppen oder sicheren Punkten unterscheiden; auf dem Verlauf dieser
+sechs Partien kommt das in keiner der 1064 Wahlen vor. Dass sich die Wahl ändert,
+zeigt `solideKi_gleichstand.test.ts` an einer Stellung aus Partie 651.
 */
 
 const PARTIEN = [73001, 73002, 73003, 73004, 73005, 73006]
-const ERWARTET = 'c55351e4d24c6ea562801a694248ce4c0f18702abc8c093b1b021ea8c025e2f7 1064'
+const ERWARTET = '095a4b72479d5ef49a323a84c3da37420e94ef0511efec4b493fc752269e20f9 1064'
 
 /** Die Wahlen der soliden KI in einer Partie ohne Erweiterung, Schritt für Schritt. */
 function wahlen(saat: number, spielerzahl: number): string[] {

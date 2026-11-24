@@ -159,7 +159,8 @@ describe('K2 Kriterium 1: Kann sie mit einer Handkarte eine Dreiergruppe vollend
    * so wie sie ihn gewählt hat: Ein Gegner, den eine ihrer Karten fragt, lässt durch, wie bei den Vollendungen, mit
    * denen der Zug verglichen wird (A6). Wehrt er in der Partie ab, sieht sie das bei der Wahl nicht (K2.7); gemessen
    * wird ihre Wahl, nicht die Abwehr (K2b, Befunde aus X6 und X5: geplant 40.00 und 27.80, nach der Abwehr 39.50 und
-   * 27.30, beste Vollendung 39.60 und 27.40; `solideKi_gleichstand.test.ts`).
+   * 27.30, beste Vollendung 39.60 und 27.40; `solideKi_gleichstand.test.ts`). Karten nach einer Abwehr stammen aus
+   * dem Partieverlauf; hätte sie ohne Abwehr anders weitergespielt, ist die Messung dort nur eine Näherung.
    */
   function geplantesEnde(zug: readonly Entscheidung[], beendet: number): Spielzustand {
     const gespielt = zug.slice(0, beendet < 0 ? zug.length - 1 : beendet)

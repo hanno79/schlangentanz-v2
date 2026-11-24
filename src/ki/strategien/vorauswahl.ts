@@ -1,6 +1,6 @@
 import type { Schlange, SpielAktion, Spielkarte } from '../../engine';
 import type { Sicht } from '../sicht';
-import { bewerte, eigeneGruppen, eigenePunkte, sichtbarePunkte, vergleiche } from './bewertung';
+import { bewerte, eigenePunkte } from './bewertung';
 import type { Wertungsmerker } from './bewertung';
 
 /*
@@ -165,22 +165,14 @@ export function punkteNach(sicht: Sicht, aktion: SpielAktion, merker: Wertungsme
 /**
  * Die Aktionen in der Reihenfolge, in der sie durchgerechnet werden: vorn höchstens
  * `anzahl`, die mit dem höchsten Vorwert, von jeder Handkarte mindestens ihre beste;
- * dahinter die übrigen nach Vorwert, für eine Nachlese. Geordnet wird wie in der
- * Zugsuche (`vergleiche`): bei gleichem Vorwert erst mehr eigene Gruppen, dann mehr
- * sichere Punkte, erst danach die Reihenfolge der Engine, damit die Wahl nur von der
- * Sicht abhängt (K2b). Die Schätzung kennt keine Aufgaben, die eine Aktion erfüllt;
- * das zeigt erst die Simulation. `bewertet` sagt,
+ * dahinter die übrigen nach Vorwert, für eine Nachlese. Bei gleichem Vorwert gilt die
+ * Reihenfolge der Engine, damit die Wahl nur von der Sicht abhängt. `bewertet` sagt,
  * wie oft dafür `bewerte` lief: einmal je Aktion, oder gar nicht, wenn alle in die
  * Auswahl passen (Kriterium 8).
  */
 export function vorauswahl(sicht: Sicht, aktionen: readonly SpielAktion[], anzahl: number, merker: Wertungsmerker): { geordnet: SpielAktion[]; bewertet: number } {
   if (aktionen.length <= anzahl) return { geordnet: [...aktionen], bewertet: 0 };
-  const geordnet = aktionen
-    .map((aktion, stelle) => {
-      const danach = folgeSicht(sicht, aktion);
-      return { aktion, stelle, wert: bewerte(danach, merker), gruppen: eigeneGruppen(danach, merker), punkte: sichtbarePunkte(danach, merker) };
-    })
-    .sort((a, b) => vergleiche(b, a) || a.stelle - b.stelle);
+  const geordnet = aktionen.map((aktion, stelle) => ({ aktion, stelle, wert: bewerte(folgeSicht(sicht, aktion), merker) })).sort((a, b) => b.wert - a.wert || a.stelle - b.stelle);
   const gewaehlt = new Set<number>();
   const karten = new Set<string | null>();
   for (const eintrag of geordnet) {

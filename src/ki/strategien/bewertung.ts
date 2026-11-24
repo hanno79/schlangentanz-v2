@@ -124,24 +124,6 @@ export function sichtbarePunkte(sicht: Sicht, merker: Wertungsmerker = neuerMerk
   return eigenePunkte(sicht, merker) + offene + geheime;
 }
 
-/** Was beim Vergleich zweier Züge zählt (Zugsuche und Vorauswahl): die Bewertung, die eigenen Gruppen und die sicheren Punkte (`sichtbarePunkte`). */
-export interface Ergebnis {
-  wert: number;
-  gruppen: number;
-  punkte: number;
-}
-
-/**
- * Wie `a` zu `b` steht, positiv, wenn `a` besser ist: höher bewertet; bei gleicher
- * Bewertung (Abstand höchstens GLEICH) mehr eigene Gruppen, dann mehr sichere Punkte
- * (Plan K2, Kriterium 1, K2b). Weil verschiedene Bewertungen mindestens 0.00001
- * auseinanderliegen, ist die Ordnung auch zum Sortieren eindeutig.
- */
-export function vergleiche(a: Ergebnis, b: Ergebnis): number {
-  if (Math.abs(a.wert - b.wert) > GLEICH) return a.wert - b.wert;
-  return a.gruppen - b.gruppen || a.punkte - b.punkte;
-}
-
 /** Wie viele Farbgruppen der Betrachter der Sicht hat (A11). */
 export function eigeneGruppen(sicht: Sicht, merker: Wertungsmerker = neuerMerker()): number {
   return schlangenwert(sicht.spieler[sicht.ich].schlangen, sicht.erweiterung, merker).gruppen;
