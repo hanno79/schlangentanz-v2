@@ -148,12 +148,9 @@ describe('K2 Kriterium 1: Kann sie mit einer Handkarte eine Dreiergruppe vollend
   })
 
   /*
-  K2.1 sichert das Verhalten im Basis-Spiel und spielt deshalb nur Partien ohne
-  Erweiterung (Entscheid des Orchestrators zu X6, 24.11.2026): dieselben elf
-  Partien mit denselben Saaten wie bisher, die sechs mit Erweiterung jetzt ohne.
-  Dieselbe Aussage mit Erweiterung, also mit Schlangenkorb, Comeback- und
-  Risiko-Karten, gehört zu K4 (Plan K4, wird nachgetragen), ebenso die Partie aus
-  dem Prüfprotokoll K2, Iteration 2, Hinweis 2 (Saat 7154) mit Erweiterung.
+  K2.1 sichert das Basis-Spiel (Entscheid des Orchestrators zu X6, 24.11.2026): dieselben elf Partien mit denselben
+  Saaten wie bisher, alle ohne Erweiterung. Dieselbe Aussage mit Erweiterung (Schlangenkorb, Comeback, Risiko) gehört
+  zu K4, ebenso die Partie aus dem Prüfprotokoll K2, Iteration 2, Hinweis 2 (Saat 7154) mit Erweiterung.
   */
   const K2_1_PARTIEN: Entscheidung[][] = [
     ...PARTIEN.map((partie, nummer) =>
