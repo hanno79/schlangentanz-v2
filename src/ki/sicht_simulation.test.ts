@@ -98,13 +98,13 @@ describe('K2 Vorgabe: der Rahmen errät aus der Sicht einen Zustand (Determinisi
 })
 
 describe('K2 Vorgabe: die Folgefunktion liefert der Strategie die Sicht danach', () => {
-  /** Je Stellung, in der jemand entscheidet, bis zu sechs seiner Aktionen, ohne die, die verdeckte Karten zieht. */
+  /** Je Stellung, in der jemand entscheidet, bis zu sechs seiner Aktionen, ohne die, die verdeckte Karten zieht oder aufdeckt (A8.2: Risiko-Karte, Wahl „stapel“). */
   const proben = STELLUNGEN.flatMap((zustand, nummer) => {
     const entscheider = ermittleEntscheider(zustand)
     if (entscheider === null) return []
-    // X4: „Zwei Karten abwerfen, drei ziehen“ zieht verdeckt wie „Zug beenden“ (D49).
-    const ziehtVerdeckt = new Set(['ZugBeenden', 'UeberhandAbwerfen', 'ZweiAbwerfenDreiZiehen'])
-    const aktionen = ermittleAktionen(zustand).filter((aktion) => !ziehtVerdeckt.has(aktion.typ))
+    // X4: „Zwei Karten abwerfen, drei ziehen“ zieht verdeckt wie „Zug beenden“ (D49); X5: eine Risiko-Karte deckt auf, die Wahl „stapel“ zieht verdeckt (A8.2).
+    const ziehtVerdeckt = new Set(['ZugBeenden', 'UeberhandAbwerfen', 'ZweiAbwerfenDreiZiehen', 'RisikoKarteSpielen'])
+    const aktionen = ermittleAktionen(zustand).filter((aktion) => !ziehtVerdeckt.has(aktion.typ) && !(aktion.typ === 'Entscheiden' && aktion.wahl === 'stapel'))
     return jederNte(aktionen, Math.max(1, Math.floor(aktionen.length / 6))).map((aktion) => ({ zustand, nummer, entscheider, aktion }))
   })
 

@@ -1,0 +1,23 @@
+{
+ "schritte": 177,
+ "beendet": true,
+ "fehler": []
+}
+11: Ereignisse des letzten Schritts (4) | KartenVersetzt durch risiko-belohnung-03 von KI-Gegner 1 (spieler-2): gruen-09: Nachziehstapel → aufgedeckt, Stelle 0 | RisikoKarteGespielt: KI-Gegner 1 (spieler-2), risiko-belohnung-03, Aktion 4 (Karten aus dem Ablagestapel oder Nachziehstapel nehmen); aufgedeckt gruen-09: Erfolg | KartenVersetzt durch risiko-belohnung-03 von KI-Gegner 1 (spieler-2): verdeckte Karte: aufgedeckt, Stelle 0 → Hand von KI-Gegner 1 (spieler-2) | EntscheidungVerlangt: KI-Gegner 1 (spieler-2) entscheidet über „Risiko: Karte vom eigenen Ablagestapel oder oberste Stapelkarte“ zu risiko-belohnung-03; zur Wahl: ablagestapel-0, stapel | 
+12: Ereignisse des letzten Schritts (2) | Entschieden: KI-Gegner 1 (spieler-2) wählt bei „Risiko: Karte vom eigenen Ablagestapel oder oberste Stapelkarte“ „ablagestapel-0“ | KartenVersetzt durch risiko-belohnung-03 von KI-Gegner 1 (spieler-2): verdeckte Karte: Ablagestapel von KI-Gegner 1 (spieler-2), Stelle 0 → Hand von KI-Gegner 1 (spieler-2) | 
+15: Ereignisse des letzten Schritts (4) | KartenVersetzt durch risiko-belohnung-05 von KI-Gegner 2 (spieler-3): farbendieb-02: Nachziehstapel → aufgedeckt, Stelle 0 | RisikoKarteGespielt: KI-Gegner 2 (spieler-3), risiko-belohnung-05, Aktion 2 (Zusätzliche Farbkarte spielen), benannt rot-12; aufgedeckt farbendieb-02: Misserfolg | KartenVersetzt durch risiko-belohnung-05 von KI-Gegner 2 (spieler-3): farbendieb-02: aufgedeckt, Stelle 0 → Ablagestapel von KI-Gegner 2 (spieler-3), Stelle 0 | EntscheidungVerlangt: KI-Gegner 2 (spieler-3) entscheidet über „Risiko: begünstigten Gegner wählen“ zu risiko-belohnung-05; zur Wahl: spieler-1, spieler-2 | 
+16: Ereignisse des letzten Schritts (2) | Entschieden: KI-Gegner 2 (spieler-3) wählt bei „Risiko: begünstigten Gegner wählen“ „spieler-2“ | EntscheidungVerlangt: KI-Gegner 1 (spieler-2) entscheidet über „Risiko: geplante Farbkarte oder oberste Stapelkarte“ zu risiko-belohnung-05; zur Wahl: geplante, stapel | 
+17: Ereignisse des letzten Schritts (2) | Entschieden: KI-Gegner 1 (spieler-2) wählt bei „Risiko: geplante Farbkarte oder oberste Stapelkarte“ „geplante“ | KartenVersetzt durch risiko-belohnung-05 von KI-Gegner 2 (spieler-3): verdeckte Karte: Hand von KI-Gegner 2 (spieler-3) → Hand von KI-Gegner 1 (spieler-2) | 
+25: Ereignisse des letzten Schritts (3) | KartenVersetzt durch risiko-belohnung-04 von KI-Gegner 1 (spieler-2): rot-07: Nachziehstapel → aufgedeckt, Stelle 0 | RisikoKarteGespielt: KI-Gegner 1 (spieler-2), risiko-belohnung-04, Aktion 1 (Zusätzliche Karten ziehen); aufgedeckt rot-07: Erfolg | KartenVersetzt durch risiko-belohnung-04 von KI-Gegner 1 (spieler-2): verdeckte Karte: Nachziehstapel → Hand von KI-Gegner 1 (spieler-2); verdeckte Karte: Nachziehstapel → Hand von KI-Gegner 1 (spieler-2); verdeckte Karte: aufgedeckt, Stelle 0 → Hand von KI-Gegner 1 (spieler-2) | 
+32: Ereignisse des letzten Schritts (3) | KartenVersetzt durch risiko-belohnung-06 von KI-Gegner 2 (spieler-3): schlangenfrass-04: Nachziehstapel → aufgedeckt, Stelle 0 | RisikoKarteGespielt: KI-Gegner 2 (spieler-3), risiko-belohnung-06, Aktion 3 (Karten tauschen), benannt violett-04; aufgedeckt schlangenfrass-04: Misserfolg | KartenVersetzt durch risiko-belohnung-06 von KI-Gegner 2 (spieler-3): schlangenfrass-04: aufgedeckt, Stelle 0 → Ablagestapel von KI-Gegner 2 (spieler-3), Stelle 3 | 
+172: Ereignisse des letzten Schritts (3) | KartenGezogen: Spieler 1 (spieler-1) zieht 1 | SchlussrundeBegonnen: ausgelöst von Spieler 1 (spieler-1) | ZugBegonnen: KI-Gegner 1 (spieler-2), Teilzug 1 | 
+176: Ereignisse des letzten Schritts (1) | PartieBeendet | 
+Endwertung
+Spie­ler	Grup­pen	Viel­falt	Kette	Aufg.	Sum­me
+Spieler 1	0	0	0	22	22
+KI-Gegner 1	0	0	0	0	0
+KI-Gegner 2	18	0	0	30	48
+
+Gewonnen: KI-Gegner 2 (48)
+
+

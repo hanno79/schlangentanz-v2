@@ -191,7 +191,7 @@ describe('K2 Kriterium 1: Kann sie mit einer Handkarte eine Dreiergruppe vollend
       const gruppen = gruppenzahl(start, 0)
       // Jede Karte zählt, auch Schlangenfrass, Fusion und Farbendieb; ein Gegner lässt eine angesagte Karte durch.
       const vollendend = ermittleAktionen(start)
-        .filter((aktion) => aktion.typ !== 'ZugBeenden' && aktion.typ !== 'UeberhandAbwerfen')
+        .filter((aktion) => aktion.typ !== 'ZugBeenden' && aktion.typ !== 'UeberhandAbwerfen' && aktion.typ !== 'RisikoKarteSpielen')
         .map((aktion) => nachDurchlassen(start, aktion, 0))
         .filter((danach) => gruppenzahl(danach, 0) > gruppen)
       if (vollendend.length === 0) continue

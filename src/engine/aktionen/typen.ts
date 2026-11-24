@@ -26,6 +26,7 @@ export const AKTIONSTYPEN = [
   'ComebackEinsetzen',
   'ZweiAbwerfenDreiZiehen',
   'SchlangenkorbSpielen',
+  'RisikoKarteSpielen',
 ] as const;
 
 export type Aktionstyp = (typeof AKTIONSTYPEN)[number];
@@ -175,6 +176,24 @@ export interface EntscheidenAktion {
   wahl: string;
 }
 
+/** A8.2: die vier Risiko-Aktionen, wie die Website sie zählt. */
+export type Risikoaktion = 1 | 2 | 3 | 4;
+
+/**
+ * X5, A8.2: eine Risiko-Belohnungs-Karte aus der eigenen Auslage spielen.
+ * `benannt` ist bei Aktion 2 die geplante Farbkarte der Hand (D52), bei Aktion 3
+ * die Farbkarte der eigenen Schlange, die getauscht werden soll; sonst `null`.
+ * Die Ansage ist offen, auch die benannte Handkarte (B2, D52).
+ */
+export interface RisikoKarteSpielenAktion {
+  typ: 'RisikoKarteSpielen';
+  spielerId: string;
+  /** Die Risiko-Belohnungs-Karte aus der Auslage; keine Handkarte, deshalb nicht `karteId`. */
+  risikoKarteId: string;
+  risikoAktion: Risikoaktion;
+  benannt: string | null;
+}
+
 /** X4, A8.1: die eigene Comeback-Karte einsetzen; `comebackId` ist ihre Id. Sie liegt offen vor dem Spieler, nicht auf der Hand. */
 export interface ComebackEinsetzenAktion {
   typ: 'ComebackEinsetzen';
@@ -196,6 +215,7 @@ export type SpielAktion =
   | UeberhandAbwerfenAktion
   | ReagierenAktion
   | EntscheidenAktion
+  | RisikoKarteSpielenAktion
   | ComebackEinsetzenAktion
   | ZweiAbwerfenDreiZiehenAktion;
 
@@ -308,6 +328,13 @@ export type Ereignis =
   | { typ: 'EntscheidungVerlangt'; spielerIndex: number; art: string; karteId: string; optionen: string[] }
   /** X3: `spielerIndex` hat `wahl` gewählt; was die Wahl bewegt, meldet danach `KartenVersetzt` mit derselben `karteId`. */
   | { typ: 'Entschieden'; spielerIndex: number; art: string; karteId: string; wahl: string }
+  /**
+   * X5, A8.2: `spielerIndex` hat die Risiko-Belohnungs-Karte `karteId` gespielt; sie
+   * ist aus dem Spiel (D54). Davor meldet `KartenVersetzt` das offene Aufdecken von
+   * `aufgedeckt`; `erfolg` sagt, wie die Prüfung ausging. Was die Aktion danach
+   * bewegt, meldet ein weiteres `KartenVersetzt` mit derselben `karteId`.
+   */
+  | { typ: 'RisikoKarteGespielt'; spielerIndex: number; karteId: string; risikoAktion: Risikoaktion; benannt: string | null; aufgedeckt: string; erfolg: boolean }
   /** X4, A8.1: Der Spieler setzt seine Comeback-Karte `karteId` ein; sie liegt danach umgedreht vor ihm, und sein Zug hat zwei Zusatzaktionen. */
   | { typ: 'ComebackEingesetzt'; spielerIndex: number; karteId: string }
   /** A10, D55: Der Nachziehstapel ist leer; `ausloeser` ist der Spieler am Zug, gleich wer die letzte Karte genommen hat. */

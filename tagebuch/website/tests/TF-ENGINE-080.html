@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-ENGINE-080 Die Risiko-Belohnungs-Karten wirken in allen vier Aktionen mit Erfolg und Misserfolg so, wie A8.2 und D50 bis D55 es verlangen. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-ENGINE-080 Die Risiko-Belohnungs-Karten wirken in allen vier Aktionen mit Erfolg und Misserfolg so, wie A8.2 und D50 bis D55 es verlangen.</h1><p class="etiketten"><span class="etikett">Bereich Spiel-Engine: Regeln, Zugablauf, Wertung, Speicherformat</span><span class="etikett">Regression ja</span><span class="etikett">Priorität hoch</span><span class="etikett">Art automatisch</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Jeder Spieler hat mit Erweiterung zwei Risiko-Karten. Spielt er eine, wird die oberste Stapelkarte offen aufgedeckt: Eine Farbkarte bringt die Belohnung, eine Sonderkarte hilft einem Gegner seiner Wahl. Geprüft wird, wohin jede Karte danach kommt, wer wann entscheidet und dass es bei einer Karte je Runde bleibt.</p><h2>Bestanden, wenn</h2><p>Die drei Regeltestdateien <code>A8.2_risiko_aktionen.test.ts</code> (20 Tests), <code>A8.2_risiko_rahmen.test.ts</code> (26 Tests) und <code>A8.2_risiko_comeback.test.ts</code> (3 Tests) sind grün, und <code>A8.2_risiko_dauerlauf.test.ts</code> meldet in 60 Partien jede der acht Kombinationen aus Aktion und Ausgang mindestens einmal.</p><h2>Fehlgeschlagen, wenn</h2><p>Ein Test ist rot, etwa weil eine zweite Risiko-Karte in derselben Runde angeboten wird, eine gespielte Risiko-Karte auf einem Ablagestapel liegt oder bei Aktion 2 eine fremde Schlange als Ziel erscheint.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>24.11.2026</dd><dt>Änderung</dt><dd>task/X5-risiko (PR #117)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Repo auf dem geprüften Stand von <code>task/X5-risiko</code>, <code>npm ci</code> gelaufen</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Tische aus <code>src/engine/__tests__/risiko_hilfen.ts</code>: drei Spieler mit Erweiterung, Spieler 1 am Zug, die obersten Stapelkarten je Test fest vorgegeben.</p></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p><code>npx vitest run src/engine/__tests__/regeln/A8.2_risiko_aktionen.test.ts src/engine/__tests__/regeln/A8.2_risiko_rahmen.test.ts src/engine/__tests__/regeln/A8.2_risiko_comeback.test.ts src/engine/__tests__/regeln/A8.2_risiko_dauerlauf.test.ts</code> endet mit Exit-Code 0.</p></section>
+<section><h2>Grenzfälle</h2><table><thead><tr><th>ID</th><th>Titel</th><th>Letzter Lauf</th></tr></thead><tbody><tr><td><a href="TF-ENGINE-081.html">TF-ENGINE-081</a></td><td>Die Risiko-Karten verhalten sich in sechs Randlagen, die die Regeltests nicht nennen, so wie A8.2, D52 bis D55 und D57 es verlangen.</td><td><span class="status status-bestanden">bestanden</span> 24.11.2026</td></tr></tbody></table></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Sechs Randlagen ohne eigene Regeltests stehen in TF-ENGINE-081. Der Schlangenkorb auf einem Ablagestapel ist nur über den Baukasten gelegt, weil X6 noch nicht gemergt ist. Ob der begünstigte Gegner die Sonderkarte aus Aktion 1 ablehnen darf („darf … nehmen“), ist nicht geprüft; die Engine gibt sie ihm immer.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-24">24.11.2026 21:43</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer X5) &middot; agent &middot; pruefung-X5 @ <span class="commit" title="1973adcce811adb7fcfebb3b7d018870719c46bb">1973adc</span></p><p>7 X5-Testdateien 65 Tests grün (aktionen 20, rahmen 26, comeback 3, dauerlauf 1 mit allen 8 Kombinationen, sicht 4, solide KI 3, Szenarien 8); Gegenproben rot: D50-Sperre entfernt 4 rot, Aktion-3-Punktewert und ohne Platz 7 rot, Handkarten in offenen Optionen 3 rot (B2)</p><ul class="belege"><li><a href="belege/2026-11-24-2143-TF-ENGINE-080-1.txt">2026-11-24-2143-TF-ENGINE-080-1.txt</a></li><li><a href="belege/2026-11-24-2143-TF-ENGINE-080-2.txt">2026-11-24-2143-TF-ENGINE-080-2.txt</a></li><li><a href="belege/2026-11-24-2143-TF-ENGINE-080-3.txt">2026-11-24-2143-TF-ENGINE-080-3.txt</a></li><li><a href="belege/2026-11-24-2143-TF-ENGINE-080-4.txt">2026-11-24-2143-TF-ENGINE-080-4.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

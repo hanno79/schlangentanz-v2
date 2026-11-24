@@ -81,7 +81,8 @@ function verschenkteKarten(): { zugenden: number; verschenkt: Verschenkt[] } {
       platz === sitz ? erstelleSolideKi(erzeugeZufall(partie.kiSaat(platz))) : erstelleZufallsKi(erzeugeZufall(partie.kiSaat(platz))),
     )
     for (const { vorher, aktion } of entscheidungenVon(partie, kis, sitz)) {
-      const andere = ermittleAktionen(vorher).filter((angeboten) => angeboten.typ !== 'ZugBeenden')
+      // X5: Risiko-Karten spielt die solide KI erst ab K4; sie zählen hier nicht als liegen gebliebene Karte.
+      const andere = ermittleAktionen(vorher).filter((angeboten) => angeboten.typ !== 'ZugBeenden' && angeboten.typ !== 'RisikoKarteSpielen')
       if (aktion.typ !== 'ZugBeenden' || andere.length === 0) continue
       zugenden += 1
       const jetzt = endpunkte(vorher)

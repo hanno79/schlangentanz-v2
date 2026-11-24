@@ -153,7 +153,11 @@ export interface OffeneEntscheidung {
   entscheider: number;
   /** Wer die Entscheidung ausgelöst hat, meist der Spieler am Zug. */
   ausgeloestVon: number;
-  /** Was zur Wahl steht; jede Wahl ist offen und verrät keine Handkarte (B2). */
+  /**
+   * Was zur Wahl steht, offen für alle; keine Option verrät eine Handkarte (B2).
+   * Hängen die Wahlen an der eigenen Hand des Entscheiders, stehen sie verdeckt
+   * bei der Art (`verdeckteWahlen`), und hier steht nur, was jeder sehen darf.
+   */
   optionen: string[];
   /** Was die Art sich bis zur Wahl merkt, etwa eine benannte Karte (D52). */
   daten: Record<string, string | number>;

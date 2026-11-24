@@ -1,0 +1,15 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a0d9ada43080fda42
+
+ ✓ src/engine/__tests__/x5_pruefer_grenzfaelle.test.ts > Prüfer X5: Grenzfälle > G1 D54/D55/D57: Aktion 4 deckt die letzte Karte auf (Erfolg), eigener Ablagestapel leer: keine Entscheidung, Karte auf der Hand, Schlussrunde von Spieler 1, er spielt weiter 32ms
+ ✓ src/engine/__tests__/x5_pruefer_grenzfaelle.test.ts > Prüfer X5: Grenzfälle > G2 D54/D55: Aktion 4 deckt die letzte Karte auf (Misserfolg), der Gegner hat keinen Ablagestapel: Gegnerwahl bleibt, der Gewählte bekommt nichts, Spieler 1 ist wieder dran 11ms
+ ✓ src/engine/__tests__/x5_pruefer_grenzfaelle.test.ts > Prüfer X5: Grenzfälle > G3 D53: Aktion 3, Erfolg: die eben aufgedeckte Farbkarte selbst ersetzt die benannte; die ersetzte liegt auf der Hand, keine Gegnersicht nennt sie 9ms
+ ✓ src/engine/__tests__/x5_pruefer_grenzfaelle.test.ts > Prüfer X5: Grenzfälle > G4 A8.2/D52: zwei Spieler, Aktion 2 scheitert: genau ein wählbarer Gegner; Speichern und Laden zwischen beiden Wahlen; der Gegner nimmt die geplante Karte 12ms
+ ✓ src/engine/__tests__/x5_pruefer_grenzfaelle.test.ts > Prüfer X5: Grenzfälle > G5 A8.2/D53: Aktion 3 nennt eine Karte der zweiten eigenen Schlange; „dahinter“ am Ende der Schlange hängt die Karte hinten an 8ms
+ ✓ src/engine/__tests__/x5_pruefer_grenzfaelle.test.ts > Prüfer X5: Grenzfälle > G6 A4/B1: ohne Erweiterung lehnt die Engine eine erfundene Risiko-Aktion mit deutschem Grund ab 3ms
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  21:38:49
+   Duration  6.51s (transform 1.30s, setup 468ms, import 1.39s, tests 78ms, environment 4.06s)
+

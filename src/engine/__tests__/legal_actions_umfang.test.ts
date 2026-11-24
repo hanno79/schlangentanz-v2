@@ -108,7 +108,8 @@ describe('E11 Kriterium 4: die Zahl der erlaubten Aktionen ist gemessen und begr
       expect(eigeneHaeutungen.filter((aktion) => aktion.karteId === karte.id).length, `ermittleAktionen: Häutungen mit ${karte.id}`).toBe(haeutungenErwartet(folge))
     }
     // Schlangenfrass a) frisst jede der 78 eigenen Karten; der Farbendieb findet keine gegnerische Farbkarte und ist nur wirkungslos ablegbar (D13).
-    expect(zaehleTypen(ermittleAktionen(eigene))).toEqual({ SchlangenhaeutungSpielen: 32_733, SchlangenfrassSpielen: 78, SonderkarteWirkungslosAblegen: 1 })
+    // X5: Die Risiko-Karte bietet Aktion 1 und 4 und Aktion 3 je Farbkarte der eigenen Schlange an (A8.2); ohne Farbkarte auf der Hand kein Aktion 2 (D52).
+    expect(zaehleTypen(ermittleAktionen(eigene))).toEqual({ SchlangenhaeutungSpielen: 32_733, SchlangenfrassSpielen: 78, SonderkarteWirkungslosAblegen: 1, RisikoKarteSpielen: 80 })
   })
 
   it('A7.9: gleichwertige Aktionen: die drei Häutungen unterscheiden sich nur in der Karte; je Karte führen 10911 Aktionen zu 7127 verschiedenen Schlangen', () => {
@@ -129,15 +130,16 @@ describe('E11 Kriterium 4: die Zahl der erlaubten Aktionen ist gemessen und begr
     expect(endlagen.size, 'verschiedene Farbfolgen der Schlange nach der Häutung').toBe(7_127)
   })
 
-  it('E11: der ungünstigste Tisch: drei Häutungen und zwei Schlangenfrass, beim Gegner die bunte Schlange mit vier Regenbogenschlangen dahinter; 39375 Aktionen, jede erlaubt', () => {
+  it('E11: der ungünstigste Tisch: drei Häutungen und zwei Schlangenfrass, beim Gegner die bunte Schlange mit vier Regenbogenschlangen dahinter; 39377 Aktionen, jede erlaubt', () => {
     const regenbogen: Kartenwahl[] = ['Regenbogenschlange', 'Regenbogenschlange', 'Regenbogenschlange', 'Regenbogenschlange']
     const zustand = tisch(1, [...HAEUTUNGEN, 'Schlangenfrass', 'Schlangenfrass'], regenbogen)
     const aktionen = ermittleAktionen(zustand)
     // Schlangenfrass c): jedes Paar aus den 82 gegnerischen Karten (A7.4); a) und b) gibt es ohne eigene Schlange nicht.
-    expect(zaehleTypen(aktionen)).toEqual({ SchlangenhaeutungSpielen: 3 * 10_911, SchlangenfrassSpielen: 2 * ((82 * 81) / 2) })
-    expect(aktionen.length).toBe(39_375)
+    // X5: ohne eigene Schlange und ohne Farbkarte auf der Hand nur Risiko-Aktion 1 und 4 (A8.2, D52).
+    expect(zaehleTypen(aktionen)).toEqual({ SchlangenhaeutungSpielen: 3 * 10_911, SchlangenfrassSpielen: 2 * ((82 * 81) / 2), RisikoKarteSpielen: 2 })
+    expect(aktionen.length).toBe(39_377)
     expect(aktionen.filter((aktion) => !pruefeAktion(zustand, aktion).erlaubt), 'aufgezählt, aber abgelehnt').toEqual([])
     // Ohne die Regenbogenschlangen sind es weniger.
-    expect(ermittleAktionen(tisch(1, [...HAEUTUNGEN, 'Schlangenfrass', 'Schlangenfrass'])).length).toBe(38_739)
+    expect(ermittleAktionen(tisch(1, [...HAEUTUNGEN, 'Schlangenfrass', 'Schlangenfrass'])).length).toBe(38_741)
   })
 })

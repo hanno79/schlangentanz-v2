@@ -13,6 +13,7 @@ import { SPIEL_SZENARIEN } from './szenarienSpiel'
 import { HAEUTUNG_SZENARIEN } from './szenarienHaeutung'
 import { KI_SZENARIEN } from './szenarienKi'
 import { RAHMEN_SZENARIEN } from './szenarienRahmen'
+import { RISIKO_SZENARIEN } from './szenarienRisiko'
 import { KI_ANGRIFF_SZENARIEN } from './szenarienKiAngriff'
 import { AUFGABEN_SZENARIEN } from './szenarienAufgaben'
 import { AUFGABEN_SZENARIEN_A } from './szenarienAufgabenA'
@@ -256,6 +257,7 @@ export const SZENARIEN: readonly Szenario[] = [
   ...HAEUTUNG_SZENARIEN,
   ...KI_SZENARIEN,
   ...RAHMEN_SZENARIEN,
+  ...RISIKO_SZENARIEN,
   ...KI_ANGRIFF_SZENARIEN,
   ...AUFGABEN_SZENARIEN,
   ...AUFGABEN_SZENARIEN_A,

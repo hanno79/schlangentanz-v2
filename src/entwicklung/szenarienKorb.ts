@@ -22,7 +22,7 @@ export const KORB_SZENARIEN: readonly Szenario[] = [
     beschreibung:
       'X6, A7.10, D43: Zwei Spieler. Spieler 1 hält den Schlangenkorb und Blau und hat die Schlange Grün. Oben auf dem Nachziehstapel liegen Verdoppler, Rot und Gelb.',
     erwartet:
-      'Angeboten sind die Boni ziehen, tauschen (Blau gegen Grün) und aktionen; entfernen nicht, weil nirgends eine passende Sonderkarte liegt. Mit „ziehen“ hält Spieler 1 Blau, Verdoppler, Rot und Gelb; der Korb steht unter „Aus dem Spiel“, die Lage nennt zwei Zusatzaktionen „Schlangenkorb“ nur für die drei gezogenen Karten und „in dieser Runde: Schlangenkorb“. Der Verdoppler hat nur „SonderkarteWirkungslosAblegen“ (D43, D47). Spieler 1 legt Blau, Rot und Gelb an (drei Farbkarten); danach bleibt nur „Zug beenden“.',
+      'Angeboten sind die Boni ziehen, tauschen (Blau gegen Grün) und aktionen; entfernen nicht, weil nirgends eine passende Sonderkarte liegt. Mit „ziehen“ hält Spieler 1 Blau, Verdoppler, Rot und Gelb; der Korb steht unter „Aus dem Spiel“, die Lage nennt zwei Zusatzaktionen „Schlangenkorb“ nur für die drei gezogenen Karten und „in dieser Runde: Schlangenkorb“. Der Verdoppler hat nur „SonderkarteWirkungslosAblegen“ (D43, D47). Spieler 1 legt Blau, Rot und Gelb an (drei Farbkarten); danach ist keine Handkarte mehr spielbar, angeboten sind „Zug beenden“ und die Risiko-Karten aus der Auslage.',
     erzeuge: () =>
       tisch(601).hand(0, ['Schlangenkorb des Glücks', 'Blau']).hand(1, GEGNER).schlange(0, ['Grün']).stapelOben(['Verdoppler', 'Rot', 'Gelb']).zustand(),
   },

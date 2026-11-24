@@ -45,7 +45,9 @@ describe('A7.10/D43: Ziehe 3, spiele bis zu 2', () => {
     zustand = spieleKarte(zustand, handIds(zustand, 0, 'Gelb')[0]).zustand
     expect(zustand.zug).toMatchObject({ gespielteFarbkarten: 3, gespielteSonderkarten: 1 })
     expect(mitWirkung(zustand, handIds(zustand, 0, 'Grün')[0]), 'D43: bis zu 2, die dritte gezogene nicht mehr').toBe(false)
-    expect(aktionen(zustand).map((aktion) => aktion.typ)).toEqual(['ZugBeenden'])
+    // Keine Handkarte mehr, auch nicht wirkungslos; „Zug beenden“ ist angeboten. Die Risiko-Karte aus der Auslage (X5) ist keine Handkarte.
+    expect(aktionen(zustand).filter((aktion) => 'karteId' in aktion), 'D43: keine weitere Karte').toEqual([])
+    expect(aktionen(zustand).map((aktion) => aktion.typ)).toContain('ZugBeenden')
   })
 
   it('D43: in beliebiger Art: zwei gezogene Sonderkarten gehen beide, obwohl der Korb die Sonderkarte des Zuges war', () => {

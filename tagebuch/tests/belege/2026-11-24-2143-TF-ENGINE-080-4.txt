@@ -1,0 +1,265 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a0d9ada43080fda42
+
+ ❯ src/engine/__tests__/regeln/A8.2_risiko_aktionen.test.ts (20 tests | 2 failed) 179ms
+     × A8.2 Aktion 3, Erfolg (D51, D53): gleicher Punktewert; die aufgedeckte Karte kommt auf die Hand, eine Farbkarte der Hand ersetzt die benannte, die ersetzte kommt auf die Hand 11ms
+     × A8.2 Aktion 3, Erfolg: „Du darfst den Tausch ausführen“ – er darf auch verzichten; die Schlange bleibt, die aufgedeckte Karte behält er 5ms
+ ❯ src/engine/__tests__/regeln/A8.2_risiko_dauerlauf.test.ts (1 test | 1 failed) 10031ms
+     × A8.2/D50/D55/B2: 60 Zufallspartien enden alle; jede Aktion kommt mit Erfolg und Misserfolg vor, auch Entscheidungen eines Gegners 10030ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/engine/__tests__/regeln/A8.2_risiko_aktionen.test.ts > A8.2 Aktion 3: Karten tauschen (D51, D53) > A8.2 Aktion 3, Erfolg (D51, D53): gleicher Punktewert; die aufgedeckte Karte kommt auf die Hand, eine Farbkarte der Hand ersetzt die benannte, die ersetzte kommt auf die Hand
+Error: B2: ein Ereignis nennt die Handkarten rot-01, gelb-01
+ ❯ pruefeSchritt src/engine/__tests__/rahmen_hilfen.ts:73:34
+     71|   if (!isDeepStrictEqual(nachgerechnet, erwartet)) expect(nachgerechne…
+     72|   const verraten = verrateneHandkarten(schritt.zustand, schritt.ereign…
+     73|   if (verraten.length > 0) throw new Error(`B2: ein Ereignis nennt die…
+       |                                  ^
+     74|   const verletzt = verletzteInvarianten(schritt.zustand)
+     75|   if (verletzt.length > 0) throw new Error(`Invariante verletzt: ${ver…
+ ❯ spieleRisiko src/engine/__tests__/risiko_hilfen.ts:71:10
+ ❯ src/engine/__tests__/regeln/A8.2_risiko_aktionen.test.ts:140:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/engine/__tests__/regeln/A8.2_risiko_aktionen.test.ts > A8.2 Aktion 3: Karten tauschen (D51, D53) > A8.2 Aktion 3, Erfolg: „Du darfst den Tausch ausführen“ – er darf auch verzichten; die Schlange bleibt, die aufgedeckte Karte behält er
+Error: B2: ein Ereignis nennt die Handkarten rot-01, gelb-01
+ ❯ pruefeSchritt src/engine/__tests__/rahmen_hilfen.ts:73:34
+     71|   if (!isDeepStrictEqual(nachgerechnet, erwartet)) expect(nachgerechne…
+     72|   const verraten = verrateneHandkarten(schritt.zustand, schritt.ereign…
+     73|   if (verraten.length > 0) throw new Error(`B2: ein Ereignis nennt die…
+       |                                  ^
+     74|   const verletzt = verletzteInvarianten(schritt.zustand)
+     75|   if (verletzt.length > 0) throw new Error(`Invariante verletzt: ${ver…
+ ❯ spieleRisiko src/engine/__tests__/risiko_hilfen.ts:71:10
+ ❯ src/engine/__tests__/regeln/A8.2_risiko_aktionen.test.ts:154:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/engine/__tests__/regeln/A8.2_risiko_dauerlauf.test.ts > A8.2: Risiko-Karten im Dauerlauf mit Erweiterung (X5) > A8.2/D50/D55/B2: 60 Zufallspartien enden alle; jede Aktion kommt mit Erfolg und Misserfolg vor, auch Entscheidungen eines Gegners
+AssertionError: Partien, die nicht regulär endeten: expected [ { …(4) }, { …(4) }, { …(4) }, …(17) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8003, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":3,\"benannt\":\"rot-04\"}: B2: ein Ereignis nennt die Handkarten blau-04, gelb-11, gelb-05",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8003,
++       "spielerzahl": 4,
++     },
++     "schritte": 26,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8005, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-2\",\"risikoKarteId\":\"risiko-belohnung-03\",\"risikoAktion\":3,\"benannt\":\"gelb-12\"}: B2: ein Ereignis nennt die Handkarten rot-04, braun-03",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8005,
++       "spielerzahl": 3,
++     },
++     "schritte": 11,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8009, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-4\",\"risikoKarteId\":\"risiko-belohnung-07\",\"risikoAktion\":3,\"benannt\":\"violett-06\"}: B2: ein Ereignis nennt die Handkarten braun-07, gruen-05, braun-06",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8009,
++       "spielerzahl": 4,
++     },
++     "schritte": 42,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8015, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-01\",\"risikoAktion\":3,\"benannt\":\"gelb-08\"}: B2: ein Ereignis nennt die Handkarten rot-10, gelb-11",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8015,
++       "spielerzahl": 4,
++     },
++     "schritte": 3,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8017, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-3\",\"risikoKarteId\":\"risiko-belohnung-05\",\"risikoAktion\":3,\"benannt\":\"rot-11\"}: B2: ein Ereignis nennt die Handkarten gruen-02",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8017,
++       "spielerzahl": 3,
++     },
++     "schritte": 24,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8020, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":3,\"benannt\":\"rot-13\"}: B2: ein Ereignis nennt die Handkarten gruen-01, gruen-03, violett-06, violett-10",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8020,
++       "spielerzahl": 3,
++     },
++     "schritte": 16,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8021, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-4\",\"risikoKarteId\":\"risiko-belohnung-08\",\"risikoAktion\":3,\"benannt\":\"blau-11\"}: B2: ein Ereignis nennt die Handkarten blau-04, gruen-06",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8021,
++       "spielerzahl": 4,
++     },
++     "schritte": 32,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8023, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-3\",\"risikoKarteId\":\"risiko-belohnung-05\",\"risikoAktion\":3,\"benannt\":\"rot-02\"}: B2: ein Ereignis nennt die Handkarten gruen-04, rot-07, braun-10, blau-03",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8023,
++       "spielerzahl": 3,
++     },
++     "schritte": 10,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8024, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-2\",\"risikoKarteId\":\"risiko-belohnung-03\",\"risikoAktion\":3,\"benannt\":\"rot-07\"}: B2: ein Ereignis nennt die Handkarten gelb-02, blau-02, violett-09",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8024,
++       "spielerzahl": 4,
++     },
++     "schritte": 9,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8027, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-01\",\"risikoAktion\":3,\"benannt\":\"rot-09\"}: B2: ein Ereignis nennt die Handkarten blau-12, gelb-03, braun-02",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8027,
++       "spielerzahl": 4,
++     },
++     "schritte": 22,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8029, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":3,\"benannt\":\"rot-13\"}: B2: ein Ereignis nennt die Handkarten blau-01, gruen-04, violett-01, blau-13",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8029,
++       "spielerzahl": 3,
++     },
++     "schritte": 23,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8033, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-2\",\"risikoKarteId\":\"risiko-belohnung-04\",\"risikoAktion\":3,\"benannt\":\"blau-01\"}: B2: ein Ereignis nennt die Handkarten gruen-03, blau-15, rot-06",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8033,
++       "spielerzahl": 4,
++     },
++     "schritte": 96,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8035, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-01\",\"risikoAktion\":3,\"benannt\":\"violett-07\"}: B2: ein Ereignis nennt die Handkarten rot-15",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8035,
++       "spielerzahl": 3,
++     },
++     "schritte": 16,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8050, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-3\",\"risikoKarteId\":\"risiko-belohnung-06\",\"risikoAktion\":3,\"benannt\":\"gelb-12\"}: B2: ein Ereignis nennt die Handkarten gelb-01, braun-08, rot-06",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8050,
++       "spielerzahl": 3,
++     },
++     "schritte": 32,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8051, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-2\",\"risikoKarteId\":\"risiko-belohnung-04\",\"risikoAktion\":3,\"benannt\":\"blau-07\"}: B2: ein Ereignis nennt die Handkarten gelb-14, gelb-03",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8051,
++       "spielerzahl": 4,
++     },
++     "schritte": 26,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8052, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":3,\"benannt\":\"blau-10\"}: B2: ein Ereignis nennt die Handkarten violett-03, rot-10",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8052,
++       "spielerzahl": 2,
++     },
++     "schritte": 12,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8053, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-3\",\"risikoKarteId\":\"risiko-belohnung-06\",\"risikoAktion\":3,\"benannt\":\"violett-02\"}: B2: ein Ereignis nennt die Handkarten violett-09, blau-15, gruen-07",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8053,
++       "spielerzahl": 3,
++     },
++     "schritte": 25,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8054, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-2\",\"risikoKarteId\":\"risiko-belohnung-04\",\"risikoAktion\":3,\"benannt\":\"blau-01\"}: B2: ein Ereignis nennt die Handkarten braun-10",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8054,
++       "spielerzahl": 4,
++     },
++     "schritte": 26,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8057, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-3\",\"risikoKarteId\":\"risiko-belohnung-05\",\"risikoAktion\":3,\"benannt\":\"violett-07\"}: B2: ein Ereignis nennt die Handkarten rot-06, violett-12",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8057,
++       "spielerzahl": 4,
++     },
++     "schritte": 25,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8058, nach {\"typ\":\"RisikoKarteSpielen\",\"spielerId\":\"spieler-1\",\"risikoKarteId\":\"risiko-belohnung-02\",\"risikoAktion\":3,\"benannt\":\"gelb-09\"}: B2: ein Ereignis nennt die Handkarten gruen-07, braun-11, gelb-11, violett-10",
++     "partie": {
++       "erweiterung": true,
++       "saat": 8058,
++       "spielerzahl": 2,
++     },
++     "schritte": 12,
++   },
++ ]
+
+ ❯ src/engine/__tests__/regeln/A8.2_risiko_dauerlauf.test.ts:65:115
+     63|     const neuerPruefer = () => allePruefer(regelPruefer(), reaktionsPr…
+     64|     const ergebnisse = dauerlauf(dauerlaufPartien(60, true, 8001), { n…
+     65|     expect(ergebnisse.filter((ergebnis) => ergebnis.ausgang !== 'beend…
+       |                                                                                                                   ^
+     66|     for (const aktion of [1, 2, 3, 4]) {
+     67|       for (const ausgang of ['Erfolg', 'Misserfolg']) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  2 failed | 1 passed (3)
+      Tests  3 failed | 22 passed (25)
+   Start at  21:32:00
+   Duration  11.32s (transform 2.08s, setup 849ms, import 3.06s, tests 10.35s, environment 2.34s)
+

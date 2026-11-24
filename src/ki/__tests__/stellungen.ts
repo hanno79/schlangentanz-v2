@@ -85,10 +85,13 @@ export function gruppenzahl(zustand: Spielzustand, sitz: number): number {
   return werteSchlangen(zustand.spieler[sitz].schlangen, zustand.erweiterung).schlangen.reduce((summe, schlange) => summe + schlange.gruppen.length, 0)
 }
 
-/** Der Stand nach einer Karte, dazu jeder Stand nach einer zweiten Karte desselben Spielers im selben Zug (A5, D12); gefragte Gegner lassen durch. */
+/**
+ * Der Stand nach einer Karte, dazu jeder Stand nach einer zweiten Karte desselben Spielers im selben Zug (A5, D12); gefragte Gegner lassen durch.
+ * Ohne Risiko-Karten: Die spielt die solide KI erst ab K4 (X5), und ihre Prüfung deckt verdeckt auf.
+ */
 export function mitZweiterKarte(danach: Spielzustand, sitz: number): Spielzustand[] {
   if (danach.schwebend !== null || danach.zug.spielerIndex !== sitz || danach.zug.abschnitt !== 'Ausspielen') return [danach]
-  const zweite = ermittleAktionen(danach).filter((aktion) => aktion.typ !== 'ZugBeenden' && aktion.typ !== 'UeberhandAbwerfen')
+  const zweite = ermittleAktionen(danach).filter((aktion) => aktion.typ !== 'ZugBeenden' && aktion.typ !== 'UeberhandAbwerfen' && aktion.typ !== 'RisikoKarteSpielen')
   return [danach, ...zweite.map((aktion) => nachDurchlassen(danach, aktion, sitz))]
 }
 

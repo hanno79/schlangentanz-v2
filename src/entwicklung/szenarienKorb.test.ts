@@ -52,7 +52,9 @@ describe('X6: Szenarien des Schlangenkorbs am Entwicklertisch', () => {
     expect(ermittleAktionen(gezogen).some((aktion) => aktion.typ === 'VerdopplerSpielen')).toBe(false)
     const gespielt = klicke(gezogen, karteDerArt('Blau'), karteDerArt('Rot'), karteDerArt('Gelb')).zustand
     expect(gespielt.zug).toMatchObject({ gespielteFarbkarten: 3, gespielteSonderkarten: 1 })
-    expect(typen(gespielt)).toEqual(['ZugBeenden'])
+    // Keine Handkarte mehr; „Zug beenden“ ist angeboten, daneben höchstens die Risiko-Karte aus der Auslage (X5).
+    expect(ermittleAktionen(gespielt).filter((aktion) => 'karteId' in aktion)).toEqual([])
+    expect(typen(gespielt)).toContain('ZugBeenden')
   })
 
   it('D44: korb-tauschen: Gelb an den Platz von Rot, Rot auf die Hand', () => {

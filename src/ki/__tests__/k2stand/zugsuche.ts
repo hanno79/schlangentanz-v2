@@ -182,7 +182,8 @@ function erstelleSuche(sicht: Sicht, zufall: () => number) {
 
   /** Die Karten, die von `stand` aus in Frage kommen, durchgerechnet; mit `nachlese` weitere, solange keine erlaubt ist. */
   const kandidaten = (stellung: Stellung, stand: Sicht, aktionen: readonly SpielAktion[], anzahl: number, nachlese = 0): Folge[] => {
-    const karten = aktionen.filter((aktion) => aktion.typ !== 'ZugBeenden' && !regenbogenZumGegner(stand, aktion, aktionen));
+    // X5: Risiko-Karten spielt der eingefrorene Stand so wenig wie die solide KI bis K4.
+    const karten = aktionen.filter((aktion) => aktion.typ !== 'ZugBeenden' && aktion.typ !== 'RisikoKarteSpielen' && !regenbogenZumGegner(stand, aktion, aktionen));
     const { geordnet, bewertet } = vorauswahl(stand, karten, anzahl, merker);
     bewertungen.angeboten += karten.length;
     bewertungen.vorauswahl += bewertet;

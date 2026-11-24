@@ -47,7 +47,7 @@ describe('X4: Szenarien der Comeback-Karte am Entwicklertisch', () => {
     expect(knoepfe(eingesetzt.zustand)).not.toContain('VerdopplerSpielen')
     const gespielt = klicke(eingesetzt.zustand, farbe('Blau'), farbe('Rot'), farbe('Gelb'), (aktion) => aktion.typ === 'BlockadeLegen')
     expect(gespielt.zustand.zug).toMatchObject({ gespielteFarbkarten: 3, gespielteSonderkarten: 1 })
-    expect(knoepfe(gespielt.zustand)).toEqual(['ZugBeenden'])
+    expect([...new Set(knoepfe(gespielt.zustand))], 'X5: daneben nur die Risiko-Karte, die keinen Platz braucht').toEqual(['RisikoKarteSpielen', 'ZugBeenden'])
     const naechster = klicke(gespielt.zustand, beenden).zustand
     expect(naechster.zug).toMatchObject({ spielerIndex: 1, zusatzaktionen: [], runde: [] })
   })

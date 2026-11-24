@@ -137,7 +137,7 @@ describe('A8.1/D47/D48: einsetzbar irgendwann im eigenen Zug, nie im zweiten Zug
     const eine = spiele(start, karteVon(start, 'Blau')).zustand
     expect(einsetzbar(eine), 'nach einer Farbkarte').toBe(true)
     const beide = spiele(eine, karteVon(eine, 'Schlangenblockade')).zustand
-    expect(typen(beide), 'Testaufbau: ohne Comeback bliebe nur das Beenden').toEqual(['ComebackEinsetzen', 'ZugBeenden'])
+    expect(typen(beide), 'Testaufbau: ohne Comeback bliebe nur das Beenden (X5: und die Risiko-Karte, die keinen Platz braucht)').toEqual(['ComebackEinsetzen', 'RisikoKarteSpielen', 'ZugBeenden'])
     const eingesetzt = einsetzen(beide).zustand
     expect(mitWirkung(eingesetzt, karteVon(eingesetzt, 'Rot')), 'A8.1: nach dem Einsatz geht noch eine Karte').toBe(true)
   })

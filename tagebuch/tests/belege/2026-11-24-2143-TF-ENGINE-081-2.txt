@@ -1,0 +1,84 @@
+import { describe, expect, it } from 'vitest'
+import { deserialisiere, ermittleAktionen, ermittleEntscheider, erstellePartie, erzeugeZufall, pruefeAktion, serialisiere } from '../index'
+import type { Spielzustand } from '../index'
+import { zugInSicht } from '../zuggrenzen'
+import { idVon, risikoTisch, schlangenkarte, spieleRisiko, waehle, wahlen } from './risiko_hilfen'
+import { ereignisseVom, hand } from './zugablauf_hilfen'
+
+/* Eigene Grenzfälle des Prüfers X5 (nicht in den Kriterien). */
+
+/** Leert den Ablagestapel von Spieler 1, indem die Karten auf den von Spieler 2 wandern. */
+function ohneEigeneAblage(zustand: Spielzustand): void {
+  zustand.spieler[1].ablagestapel.push(...zustand.spieler[0].ablagestapel.splice(0))
+}
+
+describe('Prüfer X5: Grenzfälle', () => {
+  it('G1 D54/D55/D57: Aktion 4 deckt die letzte Karte auf (Erfolg), eigener Ablagestapel leer: keine Entscheidung, Karte auf der Hand, Schlussrunde von Spieler 1, er spielt weiter', () => {
+    const start = risikoTisch({ hand: ['Rot'], oben: ['Gelb'], weiter: (bau) => bau.stapelBehalten(1).aendere(ohneEigeneAblage) })
+    expect(start.spieler[0].ablagestapel).toEqual([])
+    const gelb = start.nachziehstapel[0].id
+    const schritt = spieleRisiko(start, 4)
+    expect(schritt.zustand.entscheidung).toBeNull()
+    expect(hand(schritt.zustand, 0)).toContain(gelb)
+    expect(ereignisseVom(schritt.ereignisse, 'SchlussrundeBegonnen')).toEqual([{ typ: 'SchlussrundeBegonnen', ausloeser: 0 }])
+    expect(ermittleEntscheider(schritt.zustand)).toBe(0)
+    expect(ermittleAktionen(schritt.zustand).some((aktion) => aktion.typ === 'FarbkarteLegen' && aktion.karteId === gelb)).toBe(true)
+  })
+
+  it('G2 D54/D55: Aktion 4 deckt die letzte Karte auf (Misserfolg), der Gegner hat keinen Ablagestapel: Gegnerwahl bleibt, der Gewählte bekommt nichts, Spieler 1 ist wieder dran', () => {
+    const start = risikoTisch({ hand: ['Rot'], oben: ['Schlangengrube'], weiter: (bau) => bau.stapelBehalten(1).aendere((zustand) => { zustand.spieler[0].ablagestapel.push(...zustand.spieler[2].ablagestapel.splice(0)) }) })
+    expect(start.spieler[2].ablagestapel).toEqual([])
+    const schritt = spieleRisiko(start, 4)
+    expect(wahlen(schritt.zustand)).toEqual(['spieler-2', 'spieler-3'])
+    const vorher = hand(schritt.zustand, 2).length
+    const gewaehlt = waehle(schritt.zustand, 'spieler-3')
+    expect(gewaehlt.zustand.entscheidung).toBeNull()
+    expect(hand(gewaehlt.zustand, 2)).toHaveLength(vorher)
+    expect(ermittleEntscheider(gewaehlt.zustand)).toBe(0)
+    expect(gewaehlt.zustand.partiephase).toBe('Schlussrunde')
+  })
+
+  it('G3 D53: Aktion 3, Erfolg: die eben aufgedeckte Farbkarte selbst ersetzt die benannte; die ersetzte liegt auf der Hand, keine Gegnersicht nennt sie', () => {
+    const start = risikoTisch({ hand: ['Rot'], schlange: ['Blau', 'Grün'], oben: ['Gelb'] })
+    const blau = schlangenkarte(start, 0, 0)
+    const gelb = start.nachziehstapel[0].id
+    const offen = spieleRisiko(start, 3, blau).zustand
+    expect(wahlen(offen)).toContain(gelb)
+    const getauscht = waehle(offen, gelb).zustand
+    expect(getauscht.spieler[0].schlangen[0].karten[0].id).toBe(gelb)
+    expect(hand(getauscht, 0)).toContain(blau)
+    for (const gegner of [1, 2]) expect(JSON.stringify(zugInSicht(getauscht, gegner))).not.toContain(blau)
+  })
+
+  it('G4 A8.2/D52: zwei Spieler, Aktion 2 scheitert: genau ein wählbarer Gegner; Speichern und Laden zwischen beiden Wahlen; der Gegner nimmt die geplante Karte', () => {
+    const start = risikoTisch({ hand: ['Blau', 'Rot'], schlange: ['Gelb'], oben: ['Farbendieb', 'Violett'], spielerzahl: 2 })
+    const blau = idVon(start, 0, 'Blau')
+    const misserfolg = spieleRisiko(start, 2, blau).zustand
+    expect(wahlen(misserfolg)).toEqual(['spieler-2'])
+    const gegner = waehle(misserfolg, 'spieler-2').zustand
+    const geladen = deserialisiere(serialisiere(gegner))
+    expect(ermittleEntscheider(geladen)).toBe(1)
+    expect(ermittleAktionen(geladen)).toEqual(ermittleAktionen(gegner))
+    const genommen = waehle(geladen, 'geplante').zustand
+    expect(hand(genommen, 1)).toContain(blau)
+    expect(hand(genommen, 0)).not.toContain(blau)
+  })
+
+  it('G5 A8.2/D53: Aktion 3 nennt eine Karte der zweiten eigenen Schlange; „dahinter“ am Ende der Schlange hängt die Karte hinten an', () => {
+    const start = risikoTisch({ hand: ['Rot'], schlange: ['Blau'], oben: ['Violett'], weiter: (bau) => bau.schlange(0, ['Gelb', 'Gelb']) })
+    expect(start.spieler[0].schlangen).toHaveLength(2)
+    const letzte = start.spieler[0].schlangen[1].karten[1].id
+    const violett = start.nachziehstapel[0].id
+    const offen = spieleRisiko(start, 3, letzte).zustand
+    expect(wahlen(offen)).toEqual(['davor', 'dahinter'])
+    const gelegt = waehle(offen, 'dahinter').zustand
+    expect(gelegt.spieler[0].schlangen[1].karten.map((karte) => karte.id).at(-1)).toBe(violett)
+    expect(gelegt.spieler[0].schlangen[0].karten).toHaveLength(1)
+  })
+
+  it('G6 A4/B1: ohne Erweiterung lehnt die Engine eine erfundene Risiko-Aktion mit deutschem Grund ab', () => {
+    const ohne = erstellePartie({ spielerzahl: 2, erweiterung: false, zufall: erzeugeZufall(77) })
+    const ergebnis = pruefeAktion(ohne, { typ: 'RisikoKarteSpielen', spielerId: 'spieler-1', risikoKarteId: 'risiko-belohnung-01', risikoAktion: 1, benannt: null })
+    expect(ergebnis).toMatchObject({ erlaubt: false, grund: expect.stringMatching(/nicht in der eigenen Auslage/) })
+  })
+})

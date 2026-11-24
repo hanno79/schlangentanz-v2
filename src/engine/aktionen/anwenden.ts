@@ -1,4 +1,5 @@
 import { pruefeAufgabenAmZug } from '../aufgaben/rahmen';
+import { spieleRisikoKarte } from '../erweiterung/risiko';
 import { setzeComebackEin, werfeZweiAbZieheDrei } from '../erweiterung/comeback';
 import { entscheide, meldeOffeneEntscheidung, reagiere, spieleKarte } from '../reaktion';
 import { beginneSchlussrundeBeiLeeremStapel } from '../stapel';
@@ -43,6 +44,9 @@ export function anwendeAktion(zustand: Spielzustand, aktion: SpielAktion): Aktio
       break;
     case 'Entscheiden':
       ergebnis = entscheide(neu, aktion, ereignisse);
+      break;
+    case 'RisikoKarteSpielen':
+      ergebnis = spieleRisikoKarte(neu, aktion, ereignisse);
       break;
     case 'ComebackEinsetzen':
       setzeComebackEin(neu, spielerIndexVon(neu, aktion.spielerId), ereignisse);

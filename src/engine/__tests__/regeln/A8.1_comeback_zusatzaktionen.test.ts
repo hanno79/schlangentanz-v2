@@ -31,14 +31,14 @@ describe('A8.1/D46: zwei Zusatzaktionen aus drei Möglichkeiten, obendrauf', () 
     for (const farbe of ['Blau', 'Rot', 'Gelb', 'Schlangenblockade']) zustand = spiele(zustand, karteVon(zustand, farbe)).zustand
     expect(zustand.zug).toMatchObject({ gespielteFarbkarten: 3, gespielteSonderkarten: 1 })
     expect(mitWirkung(zustand, karteVon(zustand, 'Violett')), 'D46: eine vierte Farbkarte geht nicht').toBe(false)
-    expect(typen(zustand)).toEqual(['ZugBeenden'])
+    expect(typen(zustand), 'X5: daneben nur die Risiko-Karte, die keinen Platz braucht').toEqual(['RisikoKarteSpielen', 'ZugBeenden'])
   })
 
   it('A8.1/D46: zweimal eine Sonderkarte: eine Farbkarte und drei Sonderkarten', () => {
     let zustand = eingesetzt(['Schlangenblockade', 'Schlangenblockade', 'Rot', 'Schlangenblockade', 'Blau'])
     for (const art of ['Schlangenblockade', 'Schlangenblockade', 'Rot', 'Schlangenblockade']) zustand = spiele(zustand, karteVon(zustand, art)).zustand
     expect(zustand.zug).toMatchObject({ gespielteFarbkarten: 1, gespielteSonderkarten: 3 })
-    expect(typen(zustand)).toEqual(['ZugBeenden'])
+    expect(typen(zustand), 'X5: daneben nur die Risiko-Karte, die keinen Platz braucht').toEqual(['RisikoKarteSpielen', 'ZugBeenden'])
   })
 
   it('A8.1: in beliebiger Reihenfolge mit den normalen Aktionen: erst zwei Karten, dann Comeback, dann je eine weitere Farb- und Sonderkarte', () => {
@@ -48,7 +48,7 @@ describe('A8.1/D46: zwei Zusatzaktionen aus drei Möglichkeiten, obendrauf', () 
     zustand = spiele(spiele(zustand, karteVon(zustand, 'Rot')).zustand, karteVon(zustand, 'Schlangenblockade')).zustand
     expect(zustand.zug).toMatchObject({ gespielteFarbkarten: 2, gespielteSonderkarten: 2 })
     expect(zustand.spieler[0].hand).toEqual([])
-    expect(typen(zustand)).toEqual(['ZugBeenden'])
+    expect(typen(zustand), 'X5: daneben nur die Risiko-Karte, die keinen Platz braucht').toEqual(['RisikoKarteSpielen', 'ZugBeenden'])
   })
 
   it('A8.1/D49: zweimal „Zwei Karten abwerfen, drei ziehen“, und die normale Farb- und Sonderkarte bleiben', () => {

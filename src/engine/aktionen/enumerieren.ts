@@ -1,3 +1,4 @@
+import { risikoAktionen } from '../erweiterung/risiko';
 import { pruefeComebackEinsetzen, ZWEI_ABWERFEN_DREI_ZIEHEN, zweiAbwerfenGesperrt } from '../erweiterung/comeback';
 import { entscheidungsAktionen, reaktionsAktionen } from '../reaktion';
 import type { Spieler, Spielkarte, Spielzustand } from '../types';
@@ -12,8 +13,8 @@ import type { SpielAktion, UeberhandAbwerfenAktion } from './typen';
  *
  * Reihenfolge: Karten mit Wirkung in der Reihenfolge der Hand, dann das
  * wirkungslose Ablegen (D13, D25), mit Erweiterung die Aktionen der
- * Comeback-Karte (A8.1, D49), zuletzt „Zug beenden“. Am Zugende mit mehr
- * als 5 Karten nur das Abwerfen (A5). Schwebt eine angesagte Karte, nur die
+ * Comeback-Karte (A8.1, D49) und die Risiko-Aktionen (A8.2), zuletzt „Zug
+ * beenden“. Am Zugende mit mehr als 5 Karten nur das Abwerfen (A5). Schwebt eine angesagte Karte, nur die
  * Reaktionen des Gefragten: jeder seiner Farbenschutz, dann durchlassen (A6).
  * Ist eine Entscheidung offen, nur die Wahl ihres Entscheiders (X3).
  */
@@ -34,7 +35,7 @@ export function ermittleAktionen(zustand: Spielzustand): SpielAktion[] {
     if (ohneZielAblegbar(karte, () => ziele)) wirkungslos.push({ typ: 'SonderkarteWirkungslosAblegen', spielerId: spieler.id, karteId: karte.id });
   }
   const beenden: SpielAktion[] = darfZugBeenden(zustand.zug, spieler) ? [{ typ: 'ZugBeenden', spielerId: spieler.id }] : [];
-  return [...mitWirkung, ...wirkungslos, ...comebackAktionen(zustand, entscheider, spieler), ...beenden];
+  return [...mitWirkung, ...wirkungslos, ...comebackAktionen(zustand, entscheider, spieler), ...risikoAktionen(zustand, entscheider), ...beenden];
 }
 
 /**
