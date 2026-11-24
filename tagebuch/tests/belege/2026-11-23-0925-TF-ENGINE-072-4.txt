@@ -1,0 +1,36 @@
+fortschritt 0
+fortschritt 500
+fortschritt 1000
+fortschritt 1500
+fortschritt 2000
+fortschritt 2500
+{
+ "stellungen": 3000,
+ "zaehler": {
+  "Farbenpracht": [
+   84,
+   2916
+  ],
+  "Farbharmonie": [
+   0,
+   3000
+  ],
+  "Farbkombination": [
+   2126,
+   874
+  ],
+  "Gelber Schatz": [
+   224,
+   2776
+  ],
+  "Lila Riese": [
+   489,
+   2511
+  ]
+ },
+ "zeitUmsetzungMs": 20,
+ "zeitBruteMs": 219,
+ "abweichungen": []
+}
+{"farbharmonieWorstMsJe":0.22581630000000041,"ergebnis":true,"bruteZeitMs":[true,53]}
+{"harmonie":{"ja":215,"nein":1785,"abweichungen":[]}}

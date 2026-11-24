@@ -23,6 +23,8 @@ export const AKTIONSTYPEN = [
   'UeberhandAbwerfen',
   'Reagieren',
   'Entscheiden',
+  'ComebackEinsetzen',
+  'ZweiAbwerfenDreiZiehen',
   'RisikoKarteSpielen',
 ] as const;
 
@@ -159,6 +161,20 @@ export interface RisikoKarteSpielenAktion {
   benannt: string | null;
 }
 
+/** X4, A8.1: die eigene Comeback-Karte einsetzen; `comebackId` ist ihre Id. Sie liegt offen vor dem Spieler, nicht auf der Hand. */
+export interface ComebackEinsetzenAktion {
+  typ: 'ComebackEinsetzen';
+  spielerId: string;
+  comebackId: string;
+}
+
+/** X4, A8.1, D49: als Zusatzaktion zwei Handkarten auf den eigenen Ablagestapel, dann drei vom Nachziehstapel. */
+export interface ZweiAbwerfenDreiZiehenAktion {
+  typ: 'ZweiAbwerfenDreiZiehen';
+  spielerId: string;
+  karteIds: string[];
+}
+
 export type SpielAktion =
   | KartenAktion
   | SonderkarteWirkungslosAblegenAktion
@@ -166,7 +182,9 @@ export type SpielAktion =
   | UeberhandAbwerfenAktion
   | ReagierenAktion
   | EntscheidenAktion
-  | RisikoKarteSpielenAktion;
+  | RisikoKarteSpielenAktion
+  | ComebackEinsetzenAktion
+  | ZweiAbwerfenDreiZiehenAktion;
 
 /**
  * Eine Ablehnung, die einen Spieler nennt, als Art mit Werten (Plan O6): So kann
@@ -284,6 +302,8 @@ export type Ereignis =
    * bewegt, meldet ein weiteres `KartenVersetzt` mit derselben `karteId`.
    */
   | { typ: 'RisikoKarteGespielt'; spielerIndex: number; karteId: string; risikoAktion: Risikoaktion; benannt: string | null; aufgedeckt: string; erfolg: boolean }
+  /** X4, A8.1: Der Spieler setzt seine Comeback-Karte `karteId` ein; sie liegt danach umgedreht vor ihm, und sein Zug hat zwei Zusatzaktionen. */
+  | { typ: 'ComebackEingesetzt'; spielerIndex: number; karteId: string }
   /** A10, D55: Der Nachziehstapel ist leer; `ausloeser` ist der Spieler am Zug, gleich wer die letzte Karte genommen hat. */
   | { typ: 'SchlussrundeBegonnen'; ausloeser: number }
   | { typ: 'PartieBeendet' }

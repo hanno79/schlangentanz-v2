@@ -16,8 +16,10 @@ import { RAHMEN_SZENARIEN } from './szenarienRahmen'
 import { RISIKO_SZENARIEN } from './szenarienRisiko'
 import { KI_ANGRIFF_SZENARIEN } from './szenarienKiAngriff'
 import { AUFGABEN_SZENARIEN } from './szenarienAufgaben'
+import { AUFGABEN_SZENARIEN_A } from './szenarienAufgabenA'
 import { AUFGABEN_B_SZENARIEN } from './szenarienAufgabenB'
 import { AUFGABEN_C_SZENARIEN } from './szenarienAufgabenC'
+import { COMEBACK_SZENARIEN } from './szenarienComeback'
 
 export interface Szenario {
   /** Steht in der Adresse: `/dev?szenario=<name>`. */
@@ -257,8 +259,10 @@ export const SZENARIEN: readonly Szenario[] = [
   ...RISIKO_SZENARIEN,
   ...KI_ANGRIFF_SZENARIEN,
   ...AUFGABEN_SZENARIEN,
+  ...AUFGABEN_SZENARIEN_A,
   ...AUFGABEN_B_SZENARIEN,
   ...AUFGABEN_C_SZENARIEN,
+  ...COMEBACK_SZENARIEN,
 ]
 
 export function findeSzenario(name: string): Szenario | undefined {

@@ -296,6 +296,8 @@ function beschreibeEreignis(zustand: Spielzustand, ereignis: Ereignis): string {
       const benannt = ereignis.benannt === null ? '' : `, benannt ${ereignis.benannt}`
       return `RisikoKarteGespielt: ${wer(ereignis.spielerIndex)}, ${ereignis.karteId}, ${risikoaktionText(ereignis.risikoAktion)}${benannt}; aufgedeckt ${ereignis.aufgedeckt}: ${ereignis.erfolg ? 'Erfolg' : 'Misserfolg'}`
     }
+    case 'ComebackEingesetzt':
+      return `ComebackEingesetzt: ${wer(ereignis.spielerIndex)} dreht ${ereignis.karteId} um, zwei Zusatzaktionen`
     case 'SchlussrundeBegonnen':
       return `SchlussrundeBegonnen: ausgelöst von ${wer(ereignis.ausloeser)}`
     case 'PartieBeendet':

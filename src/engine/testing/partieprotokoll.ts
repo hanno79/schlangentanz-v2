@@ -162,6 +162,10 @@ class Schreiber {
         const benannt = aktion.benannt === null ? '' : `, benannt: ${this.karte(aktion.benannt)}`;
         return `${wer} spielt die Risiko-Belohnungs-Karte ${aktion.risikoKarteId}, ${risikoaktionText(aktion.risikoAktion)}${benannt}.`;
       }
+      case 'ComebackEinsetzen':
+        return `${wer} setzt die Comeback-Karte ${aktion.comebackId} ein.`;
+      case 'ZweiAbwerfenDreiZiehen':
+        return `${wer} wirft zwei Karten ab und zieht drei: ${aktion.karteIds.map((id) => this.karte(id)).join(', ')}.`;
     }
   }
 
@@ -203,6 +207,8 @@ class Schreiber {
         return `${this.spieler(ereignis.spielerIndex)} hat bei „${ereignis.art}“ „${ereignis.wahl}“ gewählt.`;
       case 'RisikoKarteGespielt':
         return `Risikoprüfung: ${this.karte(ereignis.aufgedeckt)} aufgedeckt, ${ereignis.erfolg ? 'Erfolg' : 'Misserfolg'}; ${ereignis.karteId} ist aus dem Spiel.`;
+      case 'ComebackEingesetzt':
+        return `${this.spieler(ereignis.spielerIndex)} dreht die Comeback-Karte ${ereignis.karteId} um und hat zwei zusätzliche Aktionen.`;
       case 'SchlussrundeBegonnen':
         return `Der Nachziehstapel ist leer: Die Schlussrunde beginnt, ausgelöst von ${this.spieler(ereignis.ausloeser)}.`;
       case 'PartieBeendet':

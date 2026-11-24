@@ -1,0 +1,22 @@
+B2-Störprobe 1: comeback.ts werfeZweiAbZieheDrei: Ereignis KartenGezogen trägt zusätzlich 'verraten' mit den Ids der gezogenen Karten
+     × A8.1/D49: zweimal „Zwei Karten abwerfen, drei ziehen“, und die normale Farb- und Sonderkarte bleiben 11ms
+     × A8.1: eine Zusatzaktion zum Abwerfen und eine für eine Karte: danach zwei Farbkarten, aber keine dritte 6ms
+     × D49: die zwei gewählten Karten kommen auf den eigenen Ablagestapel, drei neue vom Nachziehstapel auf die Hand 5ms
+     × B2: kein Ereignis und nicht die Sicht des Gegners nennen eine der gezogenen Karten 5ms
+     × D49/A5: das Abwerfen zählt nicht als Karte des Zuges: ohne gespielte Karte lässt sich der Zug nicht beenden 5ms
+     × D49/D55: liegen weniger als drei Karten im Stapel, zieht man, was da ist; die Schlussrunde löst der Spieler am Zug aus 5ms
+     × D57: wer so die letzte Karte zieht, spielt sie im selben Zug noch; danach hat jeder andere einen letzten Zug 5ms
+     × D49: zieht das erste Abwerfen die letzte Karte, ist das zweite nicht mehr wählbar 5ms
+     × A8.1: die Zusatzaktion steht im Zug als belegter Platz ohne Karte 5ms
+     × D49/D57/A10: comeback-letzte-karte: das Abwerfen zieht die letzten zwei Karten, Spieler 1 löst die Schlussrunde aus und spielt weiter 13ms
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  2 failed | 1 passed (3)
+exit 1
+
+B2-Störprobe 2: comeback.ts werfeZweiAbZieheDrei schreibt die Ids der gezogenen Karten zusätzlich in zug.runde (öffentlicher Zugzustand, in jeder Sicht)
+     × B2: die Sicht des Gegners nennt keine der verdeckt gezogenen Karten, die eigene schon 16ms
+     × B2: kein Ereignis und nicht die Sicht des Gegners nennen eine der gezogenen Karten 36ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  2 failed (2)
+      Tests  2 failed | 20 skipped (22)
+exit 1

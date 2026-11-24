@@ -71,7 +71,11 @@ export function protokollSchritt(vorher: Spielzustand, aktion: SpielAktion, erei
         saetze.push(SCHRITT.mussAblegen(person(ereignis.spielerIndex), ereignis.anzahl))
         break
       case 'KartenAbgeworfen':
-        saetze.push(SCHRITT.legtAb(person(ereignis.spielerIndex), ereignis.karteIds.length))
+        // A5: Überzählig sind nur die Karten am Zugende; wer mitten im Zug abwirft (D49), legt keine überzähligen ab.
+        saetze.push((vorher.zug.abschnitt === 'Abwerfen' ? SCHRITT.legtAb : SCHRITT.wirftAb)(person(ereignis.spielerIndex), ereignis.karteIds.length))
+        break
+      case 'ComebackEingesetzt':
+        saetze.push(SCHRITT.comeback(person(ereignis.spielerIndex)))
         break
       case 'RisikoKarteGespielt':
         saetze.push(SCHRITT.risiko(person(ereignis.spielerIndex), risikoaktionText(ereignis.risikoAktion), ereignis.benannt === null ? null : kurz(ereignis.benannt)))

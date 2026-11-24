@@ -1,0 +1,81 @@
+Probedatei K3.2, temporär als src/ki/strategien/x4_pruefer_k3.test.ts:
+// @vitest-environment node
+import { writeFileSync } from 'node:fs'
+import { describe, it } from 'vitest'
+import { anwendeAktion, berechneEndwertung, ermittleAktionen } from '../../engine'
+import type { SpielAktion, Spielzustand } from '../../engine'
+import { sichtFuer } from '../sicht'
+import { entscheidungenVon, nachDurchlassen } from '../__tests__/stellungen'
+import { kisK3gegenK2, partienK3gegenK2 } from '../__tests__/k3partien'
+import { bewerte } from './bewertung'
+
+// Prüfer X4, temporär: K3.2 mit der alten Ausnahme, je Partie ausgewertet.
+const summen = (zustand: Spielzustand) => berechneEndwertung(zustand).spieler.map((spieler) => spieler.summe)
+function vorsprung(zustand: Spielzustand): number {
+  const werte = summen(zustand)
+  return Math.max(...werte.slice(1)) - werte[0]
+}
+function mitBesterZweiter(zustand: Spielzustand, jetzt: number): number {
+  if (zustand.zug.spielerIndex !== 0 || zustand.schwebend !== null) return jetzt
+  const weitere = ermittleAktionen(zustand).filter((aktion) => 'karteId' in aktion)
+  return Math.max(jetzt, ...weitere.map((aktion) => bewerte(sichtFuer(nachDurchlassen(zustand, aktion, 0), 0))))
+}
+function getroffen(zustand: Spielzustand, aktion: SpielAktion): number[] {
+  if (aktion.typ === 'ZugBeenden' || aktion.typ === 'UeberhandAbwerfen' || aktion.typ === 'Reagieren' || aktion.typ === 'FarbkarteLegen') return []
+  return anwendeAktion(zustand, aktion).zustand.schwebend?.ausstehend ?? []
+}
+
+describe('Prüfer X4: K3.2 alte Ausnahme', () => {
+  it('wertet aus', () => {
+    const zeilen: string[] = []
+    let geprueft = 0
+    let ausnahmenAlt = 0
+    let ausnahmenGesamt = 0
+    let nurVertieft = 0
+    for (const partie of partienK3gegenK2(18, 42_000)) {
+      const alle = entscheidungenVon(partie, kisK3gegenK2(partie), 0)
+      const comebackZuege = alle.filter(({ aktion }) => aktion.typ === 'ComebackEinsetzen' || aktion.typ === 'ZweiAbwerfenDreiZiehen').length
+      for (const { vorher, aktion } of alle) {
+        if ((aktion.typ !== 'BlockadeLegen' && aktion.typ !== 'FarbendiebSpielen') || getroffen(vorher, aktion).length === 0) continue
+        geprueft += 1
+        const varianten = ermittleAktionen(vorher)
+          .filter((angeboten) => 'karteId' in angeboten && angeboten.karteId === aktion.karteId && getroffen(vorher, angeboten).length > 0)
+          .map((angeboten) => {
+            const danach = nachDurchlassen(vorher, angeboten, 0)
+            return { angeboten, danach, vorsprung: vorsprung(danach), wert: bewerte(sichtFuer(danach, 0)) }
+          })
+        const kleinster = varianten.reduce((beste, variante) => (variante.vorsprung < beste.vorsprung ? variante : beste))
+        const gewaehlt = varianten.find((variante) => JSON.stringify(variante.angeboten) === JSON.stringify(aktion))!
+        if (gewaehlt.vorsprung === kleinster.vorsprung) continue
+        ausnahmenGesamt += 1
+        const alt = gewaehlt.wert > kleinster.wert + 1e-9
+        const vertieftGew = mitBesterZweiter(gewaehlt.danach, gewaehlt.wert)
+        const vertieftKl = mitBesterZweiter(kleinster.danach, kleinster.wert)
+        if (alt) ausnahmenAlt += 1
+        else if (vertieftGew > vertieftKl + 1e-9) nurVertieft += 1
+        const imZug = ermittleAktionen(vorher).map((a) => a.typ).filter((t) => t === 'ComebackEinsetzen' || t === 'ZweiAbwerfenDreiZiehen')
+        zeilen.push(
+          `saat ${partie.saat} sp ${partie.spielerzahl} erw ${partie.erweiterung} comebackZuegeInPartie ${comebackZuege} zusatz ${JSON.stringify(vorher.zug.zusatzaktionen.map((z) => z.quelle))} comebackAktionenJetzt ${JSON.stringify(imZug)} ${aktion.typ}: vorsprung ${gewaehlt.vorsprung} statt ${kleinster.vorsprung}, wert ${gewaehlt.wert.toFixed(2)} gegen ${kleinster.wert.toFixed(2)}, vertieft ${vertieftGew.toFixed(2)} gegen ${vertieftKl.toFixed(2)} -> alt ${alt ? 'ok' : 'ROT'}`,
+        )
+      }
+    }
+    zeilen.push(`geprueft ${geprueft}, ausnahmen ${ausnahmenGesamt}, davon alt ok ${ausnahmenAlt}, nur vertieft ok ${nurVertieft}, grenze 20% ${Math.floor(0.2 * geprueft)}`)
+    writeFileSync(process.env.X4_K3_ZIEL ?? 'x4-k3.txt', zeilen.join('\n') + '\n')
+  }, 600_000)
+})
+
+X4 9e253382:
+saat 42000 sp 2 erw false comebackZuegeInPartie 0 zusatz [] comebackAktionenJetzt [] BlockadeLegen: vorsprung 5 statt 4, wert -6.30 gegen -6.60, vertieft -4.80 gegen -5.10 -> alt ok
+saat 42001 sp 3 erw true comebackZuegeInPartie 3 zusatz [] comebackAktionenJetzt [] BlockadeLegen: vorsprung 8 statt 7, wert 1.70 gegen -4.15, vertieft 5.26 gegen -2.35 -> alt ok
+saat 42007 sp 3 erw true comebackZuegeInPartie 2 zusatz [] comebackAktionenJetzt [] FarbendiebSpielen: vorsprung -20 statt -22, wert 20.36 gegen 20.07, vertieft 20.36 gegen 20.07 -> alt ok
+saat 42007 sp 3 erw true comebackZuegeInPartie 2 zusatz [] comebackAktionenJetzt [] FarbendiebSpielen: vorsprung -9 statt -10, wert 10.16 gegen 9.91, vertieft 12.66 gegen 10.66 -> alt ok
+saat 42008 sp 4 erw false comebackZuegeInPartie 0 zusatz [] comebackAktionenJetzt [] FarbendiebSpielen: vorsprung 2 statt 0, wert -1.41 gegen -2.79, vertieft -1.16 gegen -2.54 -> alt ok
+saat 42013 sp 3 erw true comebackZuegeInPartie 1 zusatz [] comebackAktionenJetzt [] FarbendiebSpielen: vorsprung 24 statt 23, wert -6.55 gegen -5.85, vertieft -5.35 gegen -5.45 -> alt ROT
+geprueft 39, ausnahmen 6, davon alt ok 5, nur vertieft ok 1, grenze 20% 7
+
+neuaufbau 4eedf334:
+saat 42000 sp 2 erw false comebackZuegeInPartie 0 zusatz [] comebackAktionenJetzt [] BlockadeLegen: vorsprung 5 statt 4, wert -6.30 gegen -6.60, vertieft -4.80 gegen -5.10 -> alt ok
+saat 42001 sp 3 erw true comebackZuegeInPartie 0 zusatz [] comebackAktionenJetzt [] BlockadeLegen: vorsprung 26 statt 16, wert -14.92 gegen -15.93, vertieft -14.64 gegen -15.65 -> alt ok
+saat 42007 sp 3 erw true comebackZuegeInPartie 0 zusatz [] comebackAktionenJetzt [] FarbendiebSpielen: vorsprung 0 statt -1, wert 2.87 gegen -6.26, vertieft 3.37 gegen -6.16 -> alt ok
+saat 42008 sp 4 erw false comebackZuegeInPartie 0 zusatz [] comebackAktionenJetzt [] FarbendiebSpielen: vorsprung 2 statt 0, wert -1.41 gegen -2.79, vertieft -1.16 gegen -2.54 -> alt ok
+geprueft 40, ausnahmen 4, davon alt ok 4, nur vertieft ok 0, grenze 20% 8

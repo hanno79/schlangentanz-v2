@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { afterEach, describe, expect, it } from 'vitest'
 import { anwendeAktion, ermittleAktionen, ermittleEntscheider, erzeugeZufall, pruefeInvarianten } from '../engine'
-import type { SpielAktion, Spielzustand } from '../engine'
+import type { Spielzustand } from '../engine'
 import { baukasten } from '../engine/testing/szenario'
 import { AUFGABENREGISTER } from '../engine/aufgabenKarten'
 import { erstellePartie } from '../engine'
@@ -102,8 +102,9 @@ describe('K2 Vorgabe: die Folgefunktion liefert der Strategie die Sicht danach',
   const proben = STELLUNGEN.flatMap((zustand, nummer) => {
     const entscheider = ermittleEntscheider(zustand)
     if (entscheider === null) return []
-    const ziehtVerdeckt = (aktion: SpielAktion) => aktion.typ === 'RisikoKarteSpielen' || (aktion.typ === 'Entscheiden' && aktion.wahl === 'stapel')
-    const aktionen = ermittleAktionen(zustand).filter((aktion) => aktion.typ !== 'ZugBeenden' && aktion.typ !== 'UeberhandAbwerfen' && !ziehtVerdeckt(aktion))
+    // X4: „Zwei Karten abwerfen, drei ziehen“ zieht verdeckt wie „Zug beenden“ (D49); X5: eine Risiko-Karte deckt auf, die Wahl „stapel“ zieht verdeckt (A8.2).
+    const ziehtVerdeckt = new Set(['ZugBeenden', 'UeberhandAbwerfen', 'ZweiAbwerfenDreiZiehen', 'RisikoKarteSpielen'])
+    const aktionen = ermittleAktionen(zustand).filter((aktion) => !ziehtVerdeckt.has(aktion.typ) && !(aktion.typ === 'Entscheiden' && aktion.wahl === 'stapel'))
     return jederNte(aktionen, Math.max(1, Math.floor(aktionen.length / 6))).map((aktion) => ({ zustand, nummer, entscheider, aktion }))
   })
 

@@ -111,6 +111,11 @@ export interface Zug extends Zugrahmen {
   farbenfusionGespielt: boolean;
   /** `Abwerfen`: Der Zug ist beendet, der Spieler hält mehr als 5 Karten und wählt, welche er ablegt (A5). */
   abschnitt: 'Ausspielen' | 'Abwerfen';
+  /**
+   * X4, A8.1, D48: Zu Beginn dieses Zuges lag die längste eigene Schlange mindestens 5 Karten hinter der
+   * längsten auf dem Tisch; das gilt den ganzen Zug. Nur mit Erweiterung, sonst `false` (`erweiterung/comeback.ts`).
+   */
+  comebackBedingung: boolean;
 }
 
 /** Eine Schlangengrube liegt vor dem getroffenen Spieler, bis er ausgesetzt hat (A7.6). */

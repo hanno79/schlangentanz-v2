@@ -1,3 +1,4 @@
+import { pruefeComebackEinsetzen, zweiAbwerfenGesperrt } from '../erweiterung/comeback';
 import { abweichendeFelder, istGanzeZahl, istObjekt, istText } from '../form';
 import { KARTENREGISTER, definitionFuer, istKartenaktionstyp, kartenartFuer, kartenartVon } from '../karten/register';
 import { istRisikoaktion, pruefeRisikoKarte } from '../erweiterung/risiko';
@@ -13,8 +14,9 @@ type Feld = (wert: unknown) => boolean;
 const text: Feld = istText;
 const position: Feld = istGanzeZahl;
 const textOderNull: Feld = (wert) => wert === null || istText(wert);
+// `Array.from` macht Lücken zu `undefined`; `every` allein überspränge sie.
 const textliste = (minimum: number, maximum = Infinity): Feld => (wert) =>
-  Array.isArray(wert) && wert.length >= minimum && wert.length <= maximum && wert.every(istText);
+  Array.isArray(wert) && wert.length >= minimum && wert.length <= maximum && Array.from(wert).every(istText);
 
 function genau(felder: Record<string, Feld>): Feld {
   return (wert) =>
@@ -60,6 +62,8 @@ const FELDER: Record<Aktionstyp, Record<string, Feld>> = {
   Reagieren: { spielerId: text, farbenschutzId: textOderNull },
   Entscheiden: { spielerId: text, wahl: text },
   RisikoKarteSpielen: { spielerId: text, risikoKarteId: text, risikoAktion: istRisikoaktion, benannt: textOderNull },
+  ComebackEinsetzen: { spielerId: text, comebackId: text },
+  ZweiAbwerfenDreiZiehen: { spielerId: text, karteIds: textliste(2, 2) },
 };
 
 export function istKartenaktion(aktion: SpielAktion): aktion is KartenAktion {
@@ -203,6 +207,14 @@ export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): Pruefe
       const grund = pruefeRisikoKarte(zustand, spielerIndex, aktion);
       return grund === null ? JA : nein(grund);
     }
+    case 'ComebackEinsetzen': {
+      const grund = pruefeComebackEinsetzen(zustand, spielerIndex, aktion.comebackId);
+      return grund === null ? JA : nein(grund);
+    }
+    case 'ZweiAbwerfenDreiZiehen': {
+      const grund = zweiAbwerfenGesperrt(zustand, spielerIndex);
+      return grund === null ? (pruefeHandkartenWahl(zustand, spielerIndex, aktion.karteIds) ?? JA) : nein(grund);
+    }
     default:
       break;
   }
@@ -260,14 +272,21 @@ export function ohneZielAblegbar(karte: Spielkarte, ziele: () => readonly unknow
   return istFarbenschutz(karte) || ziele().length === 0;
 }
 
+/** Abwerfen (A5, D49): Jede genannte Karte liegt auf der eigenen Hand und ist nur einmal genannt; sonst die Ablehnung. */
+function pruefeHandkartenWahl(zustand: Spielzustand, spielerIndex: number, karteIds: readonly string[]): Ablehnung | null {
+  const spieler = zustand.spieler[spielerIndex];
+  if (new Set(karteIds).size !== karteIds.length) return nein('Beim Abwerfen ist eine Karte doppelt genannt.');
+  const fremd = karteIds.find((id) => !spieler.hand.some((karte) => karte.id === id));
+  return fremd === undefined ? null : nichtAufHand(spieler.name, spielerIndex, fremd);
+}
+
 /** A5: Am Zugende kommen genau die überzähligen Karten auf den eigenen Ablagestapel, jede einmal. */
 function pruefeUeberhand(zustand: Spielzustand, spielerIndex: number, karteIds: readonly string[]): Pruefergebnis {
   const spieler = zustand.spieler[spielerIndex];
   const anzahl = ueberzaehligeKarten(spieler);
   if (zustand.zug.abschnitt !== 'Abwerfen') return nein('Überzählige Karten wirft man erst am Zugende ab, nach dem Auffüllen (A5).');
-  if (new Set(karteIds).size !== karteIds.length) return nein('Beim Abwerfen ist eine Karte doppelt genannt.');
-  const fremd = karteIds.find((id) => !spieler.hand.some((karte) => karte.id === id));
-  if (fremd !== undefined) return nichtAufHand(spieler.name, spielerIndex, fremd);
+  const wahl = pruefeHandkartenWahl(zustand, spielerIndex, karteIds);
+  if (wahl !== null) return wahl;
   if (karteIds.length !== anzahl) {
     return nein(`${spieler.name} hält ${spieler.hand.length} Karten und legt genau ${anzahl} Karten ab, nicht ${karteIds.length} (A5).`, {
       art: 'abwerfenAnzahl',

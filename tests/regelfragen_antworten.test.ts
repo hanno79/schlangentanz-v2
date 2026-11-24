@@ -20,6 +20,8 @@ import {
   teileDerFrage,
 } from './regelfragen_lesen'
 import { DATUM_G, ERWARTET_G, type Teil } from './regelfragen_sammelantwort'
+import { fehlende } from './spec_documentation_hilfen'
+import { RUECKFRAGEN_NUMMERN } from './spec_documentation_rueckfragen'
 
 // Stand der Antworten des Autors. Die Form jeder Antwort prüft
 // tests/regelfragen.test.ts; hier steht, was der Autor wann geantwortet hat.
@@ -200,6 +202,10 @@ describe('P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026',
   it('P0.5f: der Stand-Absatz verweist auf die Rückfragen aus X3 vom 22.11.2026 in Teil D', () => {
     const stand = normalisiert(kopf)
     for (const text of ['22.11.2026', 'D56', 'D57']) expect(stand, `REGELFRAGEN.md: Stand-Absatz ohne „${text}“`).toContain(text)
+  })
+
+  it('P0.5g: der Stand-Absatz verweist auf die Rückfragen aus den Prüfungen von X2 und X3 vom 23.11.2026 und die Ergänzung von D48', () => {
+    expect(fehlende(kopf, ['Prüfungen von X2 und X3', 'am 23.11.2026 beantwortet', `D58–${RUECKFRAGEN_NUMMERN.at(-1)}`, 'ergänzt D48']), 'REGELFRAGEN.md: Stand-Absatz').toEqual([])
   })
 
   it('P0.5: F8a steht so da, wie die Nachfrage dem Autor gestellt wurde', () => {

@@ -41,6 +41,9 @@ export type Wahl =
   | { art: 'entscheiden'; wahl: string }
   /** X5: eine Risiko-Aktion mit ihrer benannten Karte (A8.2); wie sie am Tisch erscheint, legt O10 fest. */
   | ({ art: 'risiko' } & Pick<RisikoKarteSpielenAktion, 'risikoKarteId' | 'risikoAktion' | 'benannt'>)
+  /** X4: die eigene Comeback-Karte einsetzen und „Zwei Karten abwerfen, drei ziehen“; wie es am Tisch erscheint, legt O10 fest. */
+  | { art: 'comeback' }
+  | { art: 'zweiAbwerfenDreiZiehen' }
 
 /** Die Wahl einer bestimmten Art. */
 export type WahlDerArt<A extends Wahl['art']> = Extract<Wahl, { art: A }>
@@ -116,6 +119,10 @@ export function wegZu(aktion: SpielAktion): Weg {
       return { folge: [{ art: 'entscheiden', wahl: aktion.wahl }], menge: [] }
     case 'RisikoKarteSpielen':
       return { folge: [{ art: 'risiko', risikoKarteId: aktion.risikoKarteId, risikoAktion: aktion.risikoAktion, benannt: aktion.benannt }], menge: [] }
+    case 'ComebackEinsetzen':
+      return { folge: [{ art: 'comeback' }], menge: [] }
+    case 'ZweiAbwerfenDreiZiehen':
+      return { folge: [{ art: 'zweiAbwerfenDreiZiehen' }], menge: aktion.karteIds.map((karteId): Wahl => ({ art: 'abwerfen', karteId })) }
   }
 }
 

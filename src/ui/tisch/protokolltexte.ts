@@ -61,6 +61,10 @@ export const SCHRITT = {
   risiko: (person: Person, aktion: string, benannt: string | null) =>
     `${satzanfang(person, 'Du spielst', 'spielt')} eine Risiko-Belohnungs-Karte: ${aktion}${benannt === null ? '' : `, benannt: ${benannt}`}.`,
   entscheidet: (person: Person, art: string) => `${satzanfang(person, 'Du entscheidest', 'entscheidet')}: ${art}.`,
+  // X4, A8.1, D49: die Comeback-Karte und ihre Zusatzaktion „Zwei Karten abwerfen, drei ziehen“.
+  comeback: (person: Person) =>
+    person.ich ? 'Du setzt die Comeback-Karte ein und hast zwei zusätzliche Aktionen.' : `${person.name} setzt die Comeback-Karte ein und hat zwei zusätzliche Aktionen.`,
+  wirftAb: (person: Person, anzahl: number) => `${satzanfang(person, 'Du wirfst', 'wirft')} ${anzahlKarten(anzahl)} ab.`,
   schlussrunde: 'Der Nachziehstapel ist leer: Die Schlussrunde beginnt.',
   beendet: 'Die Partie ist beendet.',
 }

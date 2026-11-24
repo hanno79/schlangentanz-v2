@@ -34,6 +34,12 @@ function vorsprung(zustand: Spielzustand): number {
   const werte = summen(zustand)
   return Math.max(...werte.slice(1)) - werte[0]
 }
+/** Die eigene Bewertung nach der besten weiteren Karte, solange die KI noch am Zug ist; sonst `jetzt`, die Bewertung ohne sie (K2.1, Vertiefung). */
+function mitBesterZweiter(zustand: Spielzustand, jetzt: number): number {
+  if (zustand.zug.spielerIndex !== 0 || zustand.schwebend !== null) return jetzt
+  const weitere = ermittleAktionen(zustand).filter((aktion) => 'karteId' in aktion)
+  return Math.max(jetzt, ...weitere.map((aktion) => bewerte(sichtFuer(nachDurchlassen(zustand, aktion, 0), 0))))
+}
 /** Die Gegner, die eine Sonderkarte der KI fragt (A6, D33); leer für alles, was keinen Gegner trifft. */
 function getroffen(zustand: Spielzustand, aktion: SpielAktion): number[] {
   if (aktion.typ === 'ZugBeenden' || aktion.typ === 'UeberhandAbwerfen' || aktion.typ === 'Reagieren' || aktion.typ === 'FarbkarteLegen') return []
@@ -51,14 +57,17 @@ describe('K3 Kriterium 2 in Partien: Schlangenblockade und Farbendieb treffen do
         .filter((angeboten) => 'karteId' in angeboten && angeboten.karteId === aktion.karteId && getroffen(vorher, angeboten).length > 0)
         .map((angeboten) => {
           const danach = nachDurchlassen(vorher, angeboten, 0)
-          return { angeboten, vorsprung: vorsprung(danach), wert: bewerte(sichtFuer(danach, 0)) }
+          return { angeboten, danach, vorsprung: vorsprung(danach), wert: bewerte(sichtFuer(danach, 0)) }
         })
       const kleinster = varianten.reduce((beste, variante) => (variante.vorsprung < beste.vorsprung ? variante : beste))
       const gewaehlt = varianten.find((variante) => JSON.stringify(variante.angeboten) === JSON.stringify(aktion))!
       if (gewaehlt.vorsprung === kleinster.vorsprung) continue
       // Ausnahme wie in K2.1: Die eigene Bewertung (Aussichten, Hand, alle Gegner) stellt den gewählten Zug strikt höher.
+      // In Partien mit Erweiterung (seit X4 mit Comeback-Karte) genügt, wie die Zugsuche vertieft (K2.1), auch die
+      // Bewertung nach der besten zweiten Karte desselben Zuges; ohne Erweiterung gilt die Ausnahme wie bisher.
       const zahlen = `${aktion.typ}: Vorsprung ${gewaehlt.vorsprung} statt ${kleinster.vorsprung}, Bewertung ${gewaehlt.wert.toFixed(2)} gegen ${kleinster.wert.toFixed(2)}`
-      expect(gewaehlt.wert, `K3.2: ${zahlen}`).toBeGreaterThan(kleinster.wert + 1e-9)
+      const vertieft = () => mitBesterZweiter(gewaehlt.danach, gewaehlt.wert) > mitBesterZweiter(kleinster.danach, kleinster.wert) + 1e-9
+      expect(gewaehlt.wert > kleinster.wert + 1e-9 || (vorher.erweiterung && vertieft()), `K3.2: ${zahlen}`).toBe(true)
       ausnahmen.push(zahlen)
     }
     expect(geprueft, 'K3.2: genug Blockaden und Farbendiebe gegen Gegner').toBeGreaterThan(30)

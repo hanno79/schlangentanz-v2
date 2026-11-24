@@ -12,6 +12,7 @@ export type {
   Aktionstyp,
   AktionsErgebnis,
   BlockadeLegenAktion,
+  ComebackEinsetzenAktion,
   EntscheidenAktion,
   Ereignis,
   FarbendiebSpielenAktion,
@@ -35,6 +36,7 @@ export type {
   VerdopplerSpielenAktion,
   Versetzung,
   ZugBeendenAktion,
+  ZweiAbwerfenDreiZiehenAktion,
 } from './aktionen/typen';
 
 // Partie beginnen, Aktionen aufzählen, prüfen und anwenden

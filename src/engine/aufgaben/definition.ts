@@ -15,6 +15,16 @@ export interface AufgabenDefinition {
    * Ob er am Zug ist und ob die Aufgabe noch frei ist, prüft der Rahmen (A9).
    */
   istErfuellt(zustand: Readonly<Spielzustand>, spielerIndex: number): boolean;
+  /**
+   * Wann der Rahmen die Bedingung für den Spieler am Zug prüft: ohne Angabe nach
+   * jeder vollständig aufgelösten Aktion (A9), `zugende` nur am Ende seines Zuges.
+   */
+  readonly pruefzeitpunkt?: 'zugende';
+}
+
+/** Prüft der Rahmen diese Aufgabe nach jeder vollständig aufgelösten Aktion (A9)? Sonst nur am Ende des Zuges. */
+export function giltNachJederAktion(definition: AufgabenDefinition): boolean {
+  return definition.pruefzeitpunkt === undefined;
 }
 
 const PLATZHALTER = new WeakSet<AufgabenDefinition>();
