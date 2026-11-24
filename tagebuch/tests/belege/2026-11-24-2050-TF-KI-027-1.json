@@ -1,0 +1,890 @@
+{
+ "zuegeGesamt": 654,
+ "zuegeMitAbwehr": 26,
+ "faelle": [
+  {
+   "start": {
+    "spielerIndex": 0,
+    "teilzug": 1,
+    "gespielteFarbkarten": 0,
+    "gespielteSonderkarten": 0,
+    "verdopplerGespielt": false,
+    "farbenfusionGespielt": false,
+    "abschnitt": "Ausspielen",
+    "comebackBedingung": false,
+    "zusatzaktionen": [],
+    "verwendet": [],
+    "runde": []
+   },
+   "abwehrBei": 1,
+   "nachAbwehrKarten": 0,
+   "real": 22,
+   "replay": 23.6,
+   "replayFehler": "",
+   "frisch": [
+    {
+     "wert": 23.6,
+     "karten": 0
+    },
+    {
+     "wert": 23.6,
+     "karten": 0
+    },
+    {
+     "wert": 23.6,
+     "karten": 0
+    }
+   ]
+  },
+  {
+   "start": {
+    "spielerIndex": 0,
+    "teilzug": 1,
+    "gespielteFarbkarten": 0,
+    "gespielteSonderkarten": 0,
+    "verdopplerGespielt": false,
+    "farbenfusionGespielt": false,
+    "abschnitt": "Ausspielen",
+    "comebackBedingung": false,
+    "zusatzaktionen": [],
+    "verwendet": [],
+    "runde": []
+   },
+   "abwehrBei": 0,
+   "nachAbwehrKarten": 1,
+   "real": 7.839999999999999,
+   "replay": 18.14,
+   "replayFehler": "",
+   "frisch": [
+    {
+     "wert": 18.14,
+     "karten": 1
+    },
+    {
+     "wert": 18.14,
+     "karten": 1
+    },
+    {
+     "wert": 18.14,
+     "karten": 1
+    }
+   ]
+  },
+  {
+   "start": {
+    "spielerIndex": 0,
+    "teilzug": 1,
+    "gespielteFarbkarten": 0,
+    "gespielteSonderkarten": 0,
+    "verdopplerGespielt": false,
+    "farbenfusionGespielt": false,
+    "abschnitt": "Ausspielen",
+    "comebackBedingung": false,
+    "zusatzaktionen": [],
+    "verwendet": [],
+    "runde": []
+   },
+   "abwehrBei": 0,
+   "nachAbwehrKarten": 0,
+   "real": 15.599999999999994,
+   "replay": 23.399999999999995,
+   "replayFehler": "",
+   "frisch": [
+    {
+     "wert": 24.1,
+     "karten": 1
+    },
+    {
+     "wert": 24.1,
+     "karten": 1
+    },
+    {
+     "wert": 24.1,
+     "karten": 1
+    }
+   ]
+  },
+  {
+   "start": {
+    "spielerIndex": 0,
+    "teilzug": 1,
+    "gespielteFarbkarten": 0,
+    "gespielteSonderkarten": 0,
+    "verdopplerGespielt": false,
+    "farbenfusionGespielt": false,
+    "abschnitt": "Ausspielen",
+    "comebackBedingung": false,
+    "zusatzaktionen": [],
+    "verwendet": [],
+    "runde": []
+   },
+   "abwehrBei": 1,
+   "nachAbwehrKarten": 0,
+   "real": -0.9579999999999973,
+   "replay": 0.6420000000000021,
+   "replayFehler": "",
+   "frisch": [
+    {
+     "wert": 0.6420000000000021,
+     "karten": 0
+    },
+    {
+     "wert": 0.6420000000000021,
+     "karten": 0
+    },
+    {
+     "wert": 0.6420000000000021,
+     "karten": 0
+    }
+   ]
+  },
+  {
+   "start": {
+    "spielerIndex": 0,
+    "teilzug": 1,
+    "gespielteFarbkarten": 0,
+    "gespielteSonderkarten": 0,
+    "verdopplerGespielt": false,
+    "farbenfusionGespielt": false,
+    "abschnitt": "Ausspielen",
+    "comebackBedingung": false,
+    "zusatzaktionen": [],
+    "verwendet": [],
+    "runde": []
+   },
+   "abwehrBei": 1,
+   "nachAbwehrKarten": 0,
+   "real": 3.05,
+   "replay": 10.05,
+   "replayFehler": "",
+   "frisch": [
+    {
+     "wert": 10.05,
+     "karten": 0
+    },
+    {
+     "wert": 10.05,
+     "karten": 0
+    },
+    {
+     "wert": 10.05,
+     "karten": 0
+    }
+   ]
+  },
+  {
+   "start": {
+    "spielerIndex": 0,
+    "teilzug": 1,
+    "gespielteFarbkarten": 0,
+    "gespielteSonderkarten": 0,
+    "verdopplerGespielt": false,
+    "farbenfusionGespielt": false,
+    "abschnitt": "Ausspielen",
+    "comebackBedingung": false,
+    "zusatzaktionen": [],
+    "verwendet": [],
+    "runde": []
+   },
+   "abwehrBei": 1,
+   "nachAbwehrKarten": 0,
+   "real": -9.030000000000001,
+   "replay": -2.4579999999999993,
+   "replayFehler": "",
+   "frisch": [
+    {
+     "wert": -2.4579999999999993,
+     "karten": 0
+    },
+    {
+     "wert": -2.4579999999999993,
+     "karten": 0
+    },
+    {
+     "wert": -2.4579999999999993,
+     "karten": 0
+    }
+   ]
+  },
+  {
+   "start": {
+    "spielerIndex": 0,
+    "teilzug": 1,
+    "gespielteFarbkarten": 0,
+    "gespielteSonderkarten": 0,
+    "verdopplerGespielt": false,
+    "farbenfusionGespielt": false,
+    "abschnitt": "Ausspielen",
+    "comebackBedingung": false,
+    "zusatzaktionen": [],
+    "verwendet": [],
+    "runde": []
+   },
+   "abwehrBei": 0,
+   "nachAbwehrKarten": 0,
+   "real": 25,
+   "replay": 32.900000000000006,
+   "replayFehler": "",
+   "frisch": [
+    {
+     "wert": 32.900000000000006,
+     "karten": 0
+    },
+    {
+     "wert": 32.900000000000006,
+     "karten": 0
+    },
+    {
+     "wert": 32.900000000000006,
+     "karten": 0
+    }
+   ]
+  },
+  {
+   "start": {
+    "spielerIndex": 0,
+    "teilzug": 1,
+    "gespielteFarbkarten": 0,
+    "gespielteSonderkarten": 0,
+    "verdopplerGespielt": false,
+    "farbenfusionGespielt": false,
+    "abschnitt": "Ausspielen",
+    "comebackBedingung": false,
+    "zusatzaktionen": [],
+    "verwendet": [],
+    "runde": []
+   },
+   "abwehrBei": 0,
+   "nachAbwehrKarten": 0,
+   "real": 22.4,
+   "replay": 34,
+   "replayFehler": "",
+   "frisch": [
+    {
+     "wert": 34,
+     "karten": 0
+    },
+    {
+     "wert": 34,
+     "karten": 0
+    },
+    {
+     "wert": 34,
+     "karten": 0
+    }
+   ]
+  },
+  {
+   "start": {
+    "spielerIndex": 0,
+    "teilzug": 1,
+    "gespielteFarbkarten": 0,
+    "gespielteSonderkarten": 0,
+    "verdopplerGespielt": false,
+    "farbenfusionGespielt": false,
+    "abschnitt": "Ausspielen",
+    "comebackBedingung": true,
+    "zusatzaktionen": [],
+    "verwendet": [],
+    "runde": []
+   },
+   "abwehrBei": 3,
+   "nachAbwehrKarten": 1,
+   "real": -9.990000000000004,
+   "replay": 14.547999999999998,
+   "replayFehler": "",
+   "frisch": [
+    {
+     "wert": 14.547999999999998,
+     "karten": 1
+    },
+    {
+     "wert": 14.547999999999998,
+     "karten": 1
+    },
+    {
+     "wert": 14.547999999999998,
+     "karten": 1
+    }
+   ]
+  },
+  {
+   "start": {
+    "spielerIndex": 0,
+    "teilzug": 1,
+    "gespielteFarbkarten": 0,
+    "gespielteSonderkarten": 0,
+    "verdopplerGespielt": false,
+    "farbenfusionGespielt": false,
+    "abschnitt": "Ausspielen",
+    "comebackBedingung": false,
+    "zusatzaktionen": [],
+    "verwendet": [],
+    "runde": []
+   },
+   "abwehrBei": 0,
+   "nachAbwehrKarten": 1,
+   "real": -2.2060000000000004,
+   "replay": 3.3939999999999984,
+   "replayFehler": "",
+   "frisch": [
+    {
+     "wert": 3.824000000000001,
+     "karten": 1
+    },
+    {
+     "wert": 3.824000000000001,
+     "karten": 1
+    },
+    {
+     "wert": 3.824000000000001,
+     "karten": 1
+    }
+   ]
+  },
+  {
+   "start": {
+    "spielerIndex": 0,
+    "teilzug": 1,
+    "gespielteFarbkarten": 0,
+    "gespielteSonderkarten": 0,
+    "verdopplerGespielt": false,
+    "farbenfusionGespielt": false,
+    "abschnitt": "Ausspielen",
+    "comebackBedingung": false,
+    "zusatzaktionen": [],
+    "verwendet": [],
+    "runde": []
+   },
+   "abwehrBei": 0,
+   "nachAbwehrKarten": 1,
+   "real": -1.33,
+   "replay": -0.14000000000000012,
+   "replayFehler": "",
+   "frisch": [
+    {
+     "wert": -0.14000000000000012,
+     "karten": 1
+    },
+    {
+     "wert": -0.14000000000000012,
+     "karten": 1
+    },
+    {
+     "wert": -0.14000000000000012,
+     "karten": 1
+    }
+   ]
+  },
+  {
+   "start": {
+    "spielerIndex": 0,
+    "teilzug": 1,
+    "gespielteFarbkarten": 0,
+    "gespielteSonderkarten": 0,
+    "verdopplerGespielt": false,
+    "farbenfusionGespielt": false,
+    "abschnitt": "Ausspielen",
+    "comebackBedingung": false,
+    "zusatzaktionen": [],
+    "verwendet": [],
+    "runde": []
+   },
+   "abwehrBei": 1,
+   "nachAbwehrKarten": 0,
+   "real": -5.25,
+   "replay": -3.6500000000000004,
+   "replayFehler": "",
+   "frisch": [
+    {
+     "wert": -3.6500000000000004,
+     "karten": 0
+    },
+    {
+     "wert": -3.6500000000000004,
+     "karten": 0
+    },
+    {
+     "wert": -3.6500000000000004,
+     "karten": 0
+    }
+   ]
+  },
+  {
+   "start": {
+    "spielerIndex": 0,
+    "teilzug": 1,
+    "gespielteFarbkarten": 0,
+    "gespielteSonderkarten": 0,
+    "verdopplerGespielt": false,
+    "farbenfusionGespielt": false,
+    "abschnitt": "Ausspielen",
+    "comebackBedingung": false,
+    "zusatzaktionen": [],
+    "verwendet": [],
+    "runde": []
+   },
+   "abwehrBei": 0,
+   "nachAbwehrKarten": 1,
+   "real": -4.950000000000001,
+   "replay": 10.149999999999999,
+   "replayFehler": "",
+   "frisch": [
+    {
+     "wert": 10.149999999999999,
+     "karten": 1
+    },
+    {
+     "wert": 10.149999999999999,
+     "karten": 1
+    },
+    {
+     "wert": 10.149999999999999,
+     "karten": 1
+    }
+   ]
+  },
+  {
+   "start": {
+    "spielerIndex": 0,
+    "teilzug": 1,
+    "gespielteFarbkarten": 0,
+    "gespielteSonderkarten": 0,
+    "verdopplerGespielt": false,
+    "farbenfusionGespielt": false,
+    "abschnitt": "Ausspielen",
+    "comebackBedingung": false,
+    "zusatzaktionen": [],
+    "verwendet": [],
+    "runde": []
+   },
+   "abwehrBei": 0,
+   "nachAbwehrKarten": 1,
+   "real": 2.6099999999999977,
+   "replay": 10.709999999999999,
+   "replayFehler": "",
+   "frisch": [
+    {
+     "wert": 10.709999999999999,
+     "karten": 1
+    },
+    {
+     "wert": 10.709999999999999,
+     "karten": 1
+    },
+    {
+     "wert": 10.709999999999999,
+     "karten": 1
+    }
+   ]
+  },
+  {
+   "start": {
+    "spielerIndex": 0,
+    "teilzug": 1,
+    "gespielteFarbkarten": 0,
+    "gespielteSonderkarten": 0,
+    "verdopplerGespielt": false,
+    "farbenfusionGespielt": false,
+    "abschnitt": "Ausspielen",
+    "comebackBedingung": false,
+    "zusatzaktionen": [],
+    "verwendet": [],
+    "runde": []
+   },
+   "abwehrBei": 0,
+   "nachAbwehrKarten": 1,
+   "real": -4.324999999999998,
+   "replay": 0.03500000000000025,
+   "replayFehler": "",
+   "frisch": [
+    {
+     "wert": 0.03500000000000025,
+     "karten": 1
+    },
+    {
+     "wert": 0.03500000000000025,
+     "karten": 1
+    },
+    {
+     "wert": 0.03500000000000025,
+     "karten": 1
+    }
+   ]
+  },
+  {
+   "start": {
+    "spielerIndex": 0,
+    "teilzug": 1,
+    "gespielteFarbkarten": 0,
+    "gespielteSonderkarten": 0,
+    "verdopplerGespielt": false,
+    "farbenfusionGespielt": false,
+    "abschnitt": "Ausspielen",
+    "comebackBedingung": false,
+    "zusatzaktionen": [],
+    "verwendet": [],
+    "runde": []
+   },
+   "abwehrBei": 0,
+   "nachAbwehrKarten": 1,
+   "real": 0.29900000000000126,
+   "replay": 1.799,
+   "replayFehler": "",
+   "frisch": [
+    {
+     "wert": 1.799,
+     "karten": 1
+    },
+    {
+     "wert": 1.799,
+     "karten": 1
+    },
+    {
+     "wert": 1.799,
+     "karten": 1
+    }
+   ]
+  },
+  {
+   "start": {
+    "spielerIndex": 0,
+    "teilzug": 1,
+    "gespielteFarbkarten": 0,
+    "gespielteSonderkarten": 0,
+    "verdopplerGespielt": false,
+    "farbenfusionGespielt": false,
+    "abschnitt": "Ausspielen",
+    "comebackBedingung": false,
+    "zusatzaktionen": [],
+    "verwendet": [],
+    "runde": []
+   },
+   "abwehrBei": 0,
+   "nachAbwehrKarten": 1,
+   "real": 2.04,
+   "replay": 11.776,
+   "replayFehler": "",
+   "frisch": [
+    {
+     "wert": 11.776,
+     "karten": 1
+    },
+    {
+     "wert": 11.776,
+     "karten": 1
+    },
+    {
+     "wert": 11.776,
+     "karten": 1
+    }
+   ]
+  },
+  {
+   "start": {
+    "spielerIndex": 0,
+    "teilzug": 1,
+    "gespielteFarbkarten": 0,
+    "gespielteSonderkarten": 0,
+    "verdopplerGespielt": false,
+    "farbenfusionGespielt": false,
+    "abschnitt": "Ausspielen",
+    "comebackBedingung": false,
+    "zusatzaktionen": [],
+    "verwendet": [],
+    "runde": []
+   },
+   "abwehrBei": 0,
+   "nachAbwehrKarten": 1,
+   "real": 2.7799999999999967,
+   "replay": 10.379999999999997,
+   "replayFehler": "",
+   "frisch": [
+    {
+     "wert": 10.379999999999997,
+     "karten": 1
+    },
+    {
+     "wert": 10.379999999999997,
+     "karten": 1
+    },
+    {
+     "wert": 10.379999999999997,
+     "karten": 1
+    }
+   ]
+  },
+  {
+   "start": {
+    "spielerIndex": 0,
+    "teilzug": 1,
+    "gespielteFarbkarten": 0,
+    "gespielteSonderkarten": 0,
+    "verdopplerGespielt": false,
+    "farbenfusionGespielt": false,
+    "abschnitt": "Ausspielen",
+    "comebackBedingung": false,
+    "zusatzaktionen": [],
+    "verwendet": [],
+    "runde": []
+   },
+   "abwehrBei": 0,
+   "nachAbwehrKarten": 1,
+   "real": -9.6705,
+   "replay": -0.3465000000000007,
+   "replayFehler": "",
+   "frisch": [
+    {
+     "wert": -0.3465000000000007,
+     "karten": 1
+    },
+    {
+     "wert": -0.3465000000000007,
+     "karten": 1
+    },
+    {
+     "wert": -0.3465000000000007,
+     "karten": 1
+    }
+   ]
+  },
+  {
+   "start": {
+    "spielerIndex": 0,
+    "teilzug": 1,
+    "gespielteFarbkarten": 0,
+    "gespielteSonderkarten": 0,
+    "verdopplerGespielt": false,
+    "farbenfusionGespielt": false,
+    "abschnitt": "Ausspielen",
+    "comebackBedingung": false,
+    "zusatzaktionen": [],
+    "verwendet": [],
+    "runde": []
+   },
+   "abwehrBei": 0,
+   "nachAbwehrKarten": 1,
+   "real": 13.5,
+   "replay": 18.8,
+   "replayFehler": "",
+   "frisch": [
+    {
+     "wert": 18.8,
+     "karten": 1
+    },
+    {
+     "wert": 18.8,
+     "karten": 1
+    },
+    {
+     "wert": 18.8,
+     "karten": 1
+    }
+   ]
+  },
+  {
+   "start": {
+    "spielerIndex": 0,
+    "teilzug": 1,
+    "gespielteFarbkarten": 0,
+    "gespielteSonderkarten": 0,
+    "verdopplerGespielt": false,
+    "farbenfusionGespielt": false,
+    "abschnitt": "Ausspielen",
+    "comebackBedingung": true,
+    "zusatzaktionen": [],
+    "verwendet": [],
+    "runde": []
+   },
+   "abwehrBei": 0,
+   "nachAbwehrKarten": 1,
+   "real": -4.5,
+   "replay": 8.100000000000001,
+   "replayFehler": "",
+   "frisch": [
+    {
+     "wert": 8.100000000000001,
+     "karten": 1
+    },
+    {
+     "wert": 8.100000000000001,
+     "karten": 1
+    },
+    {
+     "wert": 8.100000000000001,
+     "karten": 1
+    }
+   ]
+  },
+  {
+   "start": {
+    "spielerIndex": 0,
+    "teilzug": 1,
+    "gespielteFarbkarten": 0,
+    "gespielteSonderkarten": 0,
+    "verdopplerGespielt": false,
+    "farbenfusionGespielt": false,
+    "abschnitt": "Ausspielen",
+    "comebackBedingung": false,
+    "zusatzaktionen": [],
+    "verwendet": [],
+    "runde": []
+   },
+   "abwehrBei": 0,
+   "nachAbwehrKarten": 1,
+   "real": -6.742000000000001,
+   "replay": 1.2779999999999996,
+   "replayFehler": "",
+   "frisch": [
+    {
+     "wert": 1.2779999999999996,
+     "karten": 1
+    },
+    {
+     "wert": 1.2779999999999996,
+     "karten": 1
+    },
+    {
+     "wert": 1.2779999999999996,
+     "karten": 1
+    }
+   ]
+  },
+  {
+   "start": {
+    "spielerIndex": 0,
+    "teilzug": 1,
+    "gespielteFarbkarten": 0,
+    "gespielteSonderkarten": 0,
+    "verdopplerGespielt": false,
+    "farbenfusionGespielt": false,
+    "abschnitt": "Ausspielen",
+    "comebackBedingung": false,
+    "zusatzaktionen": [],
+    "verwendet": [],
+    "runde": []
+   },
+   "abwehrBei": 1,
+   "nachAbwehrKarten": 0,
+   "real": 1.9979999999999967,
+   "replay": 3.5979999999999963,
+   "replayFehler": "",
+   "frisch": [
+    {
+     "wert": 3.5979999999999963,
+     "karten": 0
+    },
+    {
+     "wert": 3.5979999999999963,
+     "karten": 0
+    },
+    {
+     "wert": 3.5979999999999963,
+     "karten": 0
+    }
+   ]
+  },
+  {
+   "start": {
+    "spielerIndex": 0,
+    "teilzug": 1,
+    "gespielteFarbkarten": 0,
+    "gespielteSonderkarten": 0,
+    "verdopplerGespielt": false,
+    "farbenfusionGespielt": false,
+    "abschnitt": "Ausspielen",
+    "comebackBedingung": false,
+    "zusatzaktionen": [],
+    "verwendet": [],
+    "runde": []
+   },
+   "abwehrBei": 0,
+   "nachAbwehrKarten": 1,
+   "real": 13.07,
+   "replay": 16.27,
+   "replayFehler": "",
+   "frisch": [
+    {
+     "wert": 16.27,
+     "karten": 1
+    },
+    {
+     "wert": 16.27,
+     "karten": 1
+    },
+    {
+     "wert": 16.27,
+     "karten": 1
+    }
+   ]
+  },
+  {
+   "start": {
+    "spielerIndex": 0,
+    "teilzug": 1,
+    "gespielteFarbkarten": 0,
+    "gespielteSonderkarten": 0,
+    "verdopplerGespielt": false,
+    "farbenfusionGespielt": false,
+    "abschnitt": "Ausspielen",
+    "comebackBedingung": false,
+    "zusatzaktionen": [],
+    "verwendet": [],
+    "runde": []
+   },
+   "abwehrBei": 0,
+   "nachAbwehrKarten": 1,
+   "real": 13.47,
+   "replay": 16.77,
+   "replayFehler": "",
+   "frisch": [
+    {
+     "wert": 16.77,
+     "karten": 1
+    },
+    {
+     "wert": 16.77,
+     "karten": 1
+    },
+    {
+     "wert": 16.77,
+     "karten": 1
+    }
+   ]
+  },
+  {
+   "start": {
+    "spielerIndex": 0,
+    "teilzug": 1,
+    "gespielteFarbkarten": 0,
+    "gespielteSonderkarten": 0,
+    "verdopplerGespielt": false,
+    "farbenfusionGespielt": false,
+    "abschnitt": "Ausspielen",
+    "comebackBedingung": false,
+    "zusatzaktionen": [],
+    "verwendet": [],
+    "runde": []
+   },
+   "abwehrBei": 0,
+   "nachAbwehrKarten": 1,
+   "real": 8.72,
+   "replay": 12.24,
+   "replayFehler": "",
+   "frisch": [
+    {
+     "wert": 12.24,
+     "karten": 1
+    },
+    {
+     "wert": 12.24,
+     "karten": 1
+    },
+    {
+     "wert": 12.24,
+     "karten": 1
+    }
+   ]
+  }
+ ]
+}

@@ -12,9 +12,17 @@ K3, Kriterien 2, 3 und 5 in Partien: die solide KI an Stelle 0 gegen die solide 
 Stand von K2, 2 bis 4 Spieler, mit und ohne Erweiterung. Gezählt wird jede
 Entscheidung der soliden KI. „Führend“ ist der Gegner mit der höchsten Endwertung
 (A11) im Moment der Entscheidung; Punkte zählen, wie die Engine sie rechnet.
+
+K3.2 sichert wie K2.1 und K3.4 das Verhalten im Basis-Spiel und spielt dieselben
+18 Partien mit denselben Saaten, alle ohne Erweiterung (Empfehlung des Prüfers zu
+X4, umgesetzt in K2b). Dieselbe Aussage mit Erweiterung gehört zu K4, Kriterium 5.
 */
 
-const ALLE = partienK3gegenK2(18, 42_000).flatMap((partie) => entscheidungenVon(partie, kisK3gegenK2(partie), 0))
+const PARTIEN = partienK3gegenK2(18, 42_000)
+const JE_PARTIE = PARTIEN.map((partie) => entscheidungenVon(partie, kisK3gegenK2(partie), 0))
+const ALLE = JE_PARTIE.flat()
+/** Dieselben Partien ohne Erweiterung; die schon ohne gespielten werden nicht noch einmal gespielt. */
+const BASIS = PARTIEN.flatMap((partie, nummer) => (partie.erweiterung ? entscheidungenVon({ ...partie, erweiterung: false }, kisK3gegenK2(partie), 0) : JE_PARTIE[nummer]))
 
 /** Die eigenen Punkte ohne Aufgaben: Gruppen, Vielfaltbonus, Kettenbonus (A11). */
 const punkte = (zustand: Spielzustand, sitz: number) => {
@@ -34,12 +42,6 @@ function vorsprung(zustand: Spielzustand): number {
   const werte = summen(zustand)
   return Math.max(...werte.slice(1)) - werte[0]
 }
-/** Die eigene Bewertung nach der besten weiteren Karte, solange die KI noch am Zug ist; sonst `jetzt`, die Bewertung ohne sie (K2.1, Vertiefung). */
-function mitBesterZweiter(zustand: Spielzustand, jetzt: number): number {
-  if (zustand.zug.spielerIndex !== 0 || zustand.schwebend !== null) return jetzt
-  const weitere = ermittleAktionen(zustand).filter((aktion) => 'karteId' in aktion)
-  return Math.max(jetzt, ...weitere.map((aktion) => bewerte(sichtFuer(nachDurchlassen(zustand, aktion, 0), 0))))
-}
 /** Die Gegner, die eine Sonderkarte der KI fragt (A6, D33); leer für alles, was keinen Gegner trifft. */
 function getroffen(zustand: Spielzustand, aktion: SpielAktion): number[] {
   if (aktion.typ === 'ZugBeenden' || aktion.typ === 'UeberhandAbwerfen' || aktion.typ === 'Reagieren' || aktion.typ === 'FarbkarteLegen') return []
@@ -47,27 +49,24 @@ function getroffen(zustand: Spielzustand, aktion: SpielAktion): number[] {
 }
 
 describe('K3 Kriterium 2 in Partien: Schlangenblockade und Farbendieb treffen dort, wo der Führende am meisten verliert', () => {
-  it('K3.2: jede Blockade und jeder Farbendieb gegen einen Gegner lässt dem stärksten Gegner den kleinsten Vorsprung, den diese Karte zulässt, oder ist nachweislich besser bewertet', () => {
+  it('K3.2: jede Blockade und jeder Farbendieb gegen einen Gegner lässt dem stärksten Gegner den kleinsten Vorsprung, den diese Karte zulässt, oder ist nachweislich besser bewertet (Basis-Spiel)', () => {
     let geprueft = 0
     const ausnahmen: string[] = []
-    for (const { vorher, aktion } of ALLE) {
+    for (const { vorher, aktion } of BASIS) {
       if ((aktion.typ !== 'BlockadeLegen' && aktion.typ !== 'FarbendiebSpielen') || getroffen(vorher, aktion).length === 0) continue
       geprueft += 1
       const varianten = ermittleAktionen(vorher)
         .filter((angeboten) => 'karteId' in angeboten && angeboten.karteId === aktion.karteId && getroffen(vorher, angeboten).length > 0)
         .map((angeboten) => {
           const danach = nachDurchlassen(vorher, angeboten, 0)
-          return { angeboten, danach, vorsprung: vorsprung(danach), wert: bewerte(sichtFuer(danach, 0)) }
+          return { angeboten, vorsprung: vorsprung(danach), wert: bewerte(sichtFuer(danach, 0)) }
         })
       const kleinster = varianten.reduce((beste, variante) => (variante.vorsprung < beste.vorsprung ? variante : beste))
       const gewaehlt = varianten.find((variante) => JSON.stringify(variante.angeboten) === JSON.stringify(aktion))!
       if (gewaehlt.vorsprung === kleinster.vorsprung) continue
       // Ausnahme wie in K2.1: Die eigene Bewertung (Aussichten, Hand, alle Gegner) stellt den gewählten Zug strikt höher.
-      // In Partien mit Erweiterung (seit X4 mit Comeback-Karte) genügt, wie die Zugsuche vertieft (K2.1), auch die
-      // Bewertung nach der besten zweiten Karte desselben Zuges; ohne Erweiterung gilt die Ausnahme wie bisher.
       const zahlen = `${aktion.typ}: Vorsprung ${gewaehlt.vorsprung} statt ${kleinster.vorsprung}, Bewertung ${gewaehlt.wert.toFixed(2)} gegen ${kleinster.wert.toFixed(2)}`
-      const vertieft = () => mitBesterZweiter(gewaehlt.danach, gewaehlt.wert) > mitBesterZweiter(kleinster.danach, kleinster.wert) + 1e-9
-      expect(gewaehlt.wert > kleinster.wert + 1e-9 || (vorher.erweiterung && vertieft()), `K3.2: ${zahlen}`).toBe(true)
+      expect(gewaehlt.wert, `K3.2: ${zahlen}`).toBeGreaterThan(kleinster.wert + 1e-9)
       ausnahmen.push(zahlen)
     }
     expect(geprueft, 'K3.2: genug Blockaden und Farbendiebe gegen Gegner').toBeGreaterThan(30)

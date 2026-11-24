@@ -24,7 +24,13 @@ Die Gewichte sind Schätzungen in Punkten; sie entscheiden nur zwischen Zügen,
 die die Engine erlaubt.
 */
 
-/** Unterhalb dieses Abstands gelten zwei Bewertungen als gleich (Zugsuche und Abwehr). */
+/**
+ * Unterhalb dieses Abstands gelten zwei Bewertungen als gleich (Zugsuche und Abwehr).
+ * Jeder Summand hat höchstens fünf Nachkommastellen (am meisten die Jokerreihe
+ * eines übrigen Gegners im halben Ausblick, 0.1 × 1.3 × 0.3 × 1.5 × 0.5), zwei
+ * verschiedene Bewertungen liegen also mindestens 0.00001 auseinander; die Rundung
+ * in Summen dieser Grösse bleibt unter 1e-11. Dazwischen liegt die Grenze.
+ */
 export const GLEICH = 1e-9;
 /** Was eine Handkarte eines Gegners im Mittel wert ist; seine Karten sieht die KI nicht. */
 const HANDKARTE_GEGNER = 0.4;
@@ -105,6 +111,17 @@ export function gruppenwert(spieler: SpielerSicht, erweiterung: boolean, merker:
 export function eigenePunkte(sicht: Sicht, merker: Wertungsmerker = neuerMerker()): number {
   const kette = kettenbonus(sicht.spieler.map((spieler) => schlangenwert(spieler.schlangen, sicht.erweiterung, merker).kette))[sicht.ich];
   return gruppenwert(sicht.spieler[sicht.ich], sicht.erweiterung, merker) + kette;
+}
+
+/**
+ * Die eigenen Punkte, die die Sicht schon sicher zeigt: `eigenePunkte`, dazu die
+ * erfüllten offenen Aufgaben und die eigene geheime Aufgabe, sobald sie erfüllt ist
+ * (A9). Ohne Erweiterung gibt es keine Aufgaben, dann ist es `eigenePunkte`.
+ */
+export function sichtbarePunkte(sicht: Sicht, merker: Wertungsmerker = neuerMerker()): number {
+  const offene = sicht.spieler[sicht.ich].erfuellteAufgaben.reduce((summe, aufgabe) => summe + aufgabe.punkte, 0);
+  const geheime = sicht.geheimeAufgabeErfuellt && sicht.geheimeAufgabe !== null ? sicht.geheimeAufgabe.punkte : 0;
+  return eigenePunkte(sicht, merker) + offene + geheime;
 }
 
 /** Wie viele Farbgruppen der Betrachter der Sicht hat (A11). */

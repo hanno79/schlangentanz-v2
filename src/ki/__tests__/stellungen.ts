@@ -1,9 +1,12 @@
-import { anwendeAktion, ermittleEntscheider, erstellePartie, erzeugeZufall } from '../../engine'
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
+import { anwendeAktion, deserialisiere, ermittleAktionen, ermittleEntscheider, erstellePartie, erzeugeZufall, werteSchlangen } from '../../engine'
 import type { Ereignis, SpielAktion, Spielzustand } from '../../engine'
 import { zufallszustand } from '../../engine/testing/zufallszustand'
+import { STRATEGIEN } from '../strategien'
 import type { Ki } from '../strategien/strategie'
 import { kiWahl } from '../schritt'
-import { entscheiderVon } from '../sicht'
+import { entscheiderVon, sichtFuer } from '../sicht'
 import { spielePartie } from '../turnier'
 
 /*
@@ -70,4 +73,40 @@ export function nachDurchlassen(zustand: Spielzustand, aktion: SpielAktion, sitz
     jetzt = anwendeAktion(jetzt, { typ: 'Reagieren', spielerId: jetzt.spieler[gefragt].id, farbenschutzId: null }).zustand
   }
   return jetzt
+}
+
+/** Eine gespeicherte Stellung aus `stellungen/`. */
+export function ladeStellung(datei: string): Spielzustand {
+  return deserialisiere(readFileSync(join(__dirname, 'stellungen', datei), 'utf8'))
+}
+
+/** Wie viele Farbgruppen der Spieler hat (A11); eine vollendete Dreiergruppe erhöht die Zahl. */
+export function gruppenzahl(zustand: Spielzustand, sitz: number): number {
+  return werteSchlangen(zustand.spieler[sitz].schlangen, zustand.erweiterung).schlangen.reduce((summe, schlange) => summe + schlange.gruppen.length, 0)
+}
+
+/**
+ * Der Stand nach einer Karte, dazu jeder Stand nach einer zweiten Karte desselben Spielers im selben Zug (A5, D12); gefragte Gegner lassen durch.
+ * Ohne Risiko-Karten: Die spielt die solide KI erst ab K4 (X5), und ihre Prüfung deckt verdeckt auf.
+ */
+export function mitZweiterKarte(danach: Spielzustand, sitz: number): Spielzustand[] {
+  if (danach.schwebend !== null || danach.zug.spielerIndex !== sitz || danach.zug.abschnitt !== 'Ausspielen') return [danach]
+  const zweite = ermittleAktionen(danach).filter((aktion) => aktion.typ !== 'ZugBeenden' && aktion.typ !== 'UeberhandAbwerfen' && aktion.typ !== 'RisikoKarteSpielen')
+  return [danach, ...zweite.map((aktion) => nachDurchlassen(danach, aktion, sitz))]
+}
+
+/**
+ * Der erste Teilzug der soliden KI (aus der Registry, je Schritt mit Saat `saat`) an
+ * Stelle `sitz` bis „Zug beenden“, wie sie ihn plant: gefragte Gegner lassen durch.
+ */
+export function ersterTeilzug(start: Spielzustand, sitz: number, saat: number): { aktionen: SpielAktion[]; ende: Spielzustand } {
+  let zustand = start
+  const aktionen: SpielAktion[] = []
+  for (let schritt = 0; schritt < 10; schritt += 1) {
+    const aktion = STRATEGIEN.solideKi(erzeugeZufall(saat)).waehle(sichtFuer(zustand, sitz), ermittleAktionen(zustand))
+    aktionen.push(aktion)
+    if (aktion.typ === 'ZugBeenden') return { aktionen, ende: zustand }
+    zustand = nachDurchlassen(zustand, aktion, sitz)
+  }
+  throw new Error('Testaufbau: Der Teilzug endet nicht nach zehn Schritten.')
 }

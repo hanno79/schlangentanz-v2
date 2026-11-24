@@ -1,0 +1,216 @@
+// @vitest-environment node
+// Vorübergehende Probe des Prüfers K2b; wird vor dem Commit gelöscht.
+import { writeFileSync } from 'node:fs'
+import { describe, expect, it } from 'vitest'
+import { berechneEndwertung, ermittleAktionen, erzeugeZufall } from '../../engine'
+import type { SpielAktion, Spielzustand } from '../../engine'
+import { sichtFuer } from '../sicht'
+import { entscheidungenVon, nachDurchlassen } from '../__tests__/stellungen'
+import type { Entscheidung } from '../__tests__/stellungen'
+import { turnier } from '../turnier'
+import type { Ki } from './strategie'
+import { bewerte, eigenePunkte, sichtbarePunkte } from './bewertung'
+import { planeZug } from './zugsuche'
+import { planeZug as planeAlt } from './zz_alt_zugsuche'
+import { PROTOKOLL, planeZug as planeInstr } from './zz_instr_zugsuche'
+import { erstelleZufallsKi } from './zufallsKi'
+import { erstelleSolideKi } from './solideKi'
+
+const AUS = process.env.K2B_AUS ?? '.'
+const alteKi = (zufall: () => number): Ki => ({ name: 'Solide KI alt', waehle: (sicht, aktionen) => planeAlt(sicht, aktionen, zufall).aktion })
+
+/** Eigenes Mischen (xorshift), unabhängig von mischeVerborgenes: fremde Hände und Stapel umgedreht und gemischt, fremde Aufgaben neu verteilt, Erfüllt umgedreht. */
+function stoere(zustand: Spielzustand, ich: number, saat: number): Spielzustand {
+  let x = (saat * 2654435761) >>> 0 || 1
+  const r = () => {
+    x ^= x << 13; x >>>= 0; x ^= x >>> 17; x ^= x << 5; x >>>= 0
+    return x / 4294967296
+  }
+  const neu = structuredClone(zustand)
+  const fremde = neu.spieler.filter((_, i) => i !== ich)
+  const karten = [...fremde.flatMap((s) => s.hand), ...neu.nachziehstapel].reverse()
+  for (let i = karten.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(r() * (i + 1))
+    ;[karten[i], karten[j]] = [karten[j], karten[i]]
+  }
+  for (const s of fremde) s.hand = karten.splice(0, s.hand.length)
+  neu.nachziehstapel = karten
+  const mit = fremde.filter((s) => s.geheimeAufgabe !== null)
+  const aufgaben = [...mit.map((s) => s.geheimeAufgabe!), ...neu.aufgabenStapel].reverse()
+  for (const s of mit) s.geheimeAufgabe = aufgaben.shift()!
+  neu.aufgabenStapel = aufgaben
+  for (const s of fremde) s.geheimeAufgabeErfuellt = !s.geheimeAufgabeErfuellt
+  return neu
+}
+
+interface Partie { spielerzahl: number; erweiterung: boolean; saat: number }
+function solideEntscheidungen(partie: Partie, alleSolide: boolean, nummer: number): Entscheidung[] {
+  const kis = Array.from({ length: partie.spielerzahl }, (_, sitz) =>
+    sitz === 0 || alleSolide ? erstelleSolideKi(erzeugeZufall(9000 + nummer * 7 + sitz)) : erstelleZufallsKi(erzeugeZufall(5000 + nummer * 11 + sitz)),
+  )
+  return entscheidungenVon(partie, kis, 0)
+}
+
+describe('Prüfer K2b', () => {
+  it('Wahl alt gegen neu, Suchgrenzen, Störprobe', () => {
+    const bericht: Record<string, unknown>[] = []
+    for (const erweiterung of [false, true]) {
+      let wahlen = 0
+      let abweichend = 0
+      let maxSuche = 0
+      let maxMs = 0
+      let vorauswahlUeber = 0
+      let sichtbarUngleich = 0
+      let instrUngleich = 0
+      let gestoert = 0
+      let stoerAbweichung = 0
+      const abweichungen: unknown[] = []
+      const anzahl = erweiterung ? 12 : 30
+      for (let n = 0; n < anzahl; n += 1) {
+        const partie = { spielerzahl: 2 + (n % 3), erweiterung, saat: 31_000 + n }
+        const ents = solideEntscheidungen(partie, n % 4 === 3, n)
+        for (const [k, { vorher }] of ents.entries()) {
+          const aktionen = ermittleAktionen(vorher)
+          if (aktionen.length < 2) continue
+          const sicht = sichtFuer(vorher, 0)
+          const saat = 77 + k
+          const t0 = performance.now()
+          const neu = planeZug(sicht, aktionen, erzeugeZufall(saat))
+          const ms = performance.now() - t0
+          const alt = planeAlt(sicht, aktionen, erzeugeZufall(saat))
+          PROTOKOLL.length = 0
+          const instr = planeInstr(sicht, aktionen, erzeugeZufall(saat))
+          wahlen += 1
+          maxSuche = Math.max(maxSuche, neu.bewertungen.suche)
+          maxMs = Math.max(maxMs, ms)
+          if (neu.bewertungen.vorauswahl > neu.bewertungen.angeboten) vorauswahlUeber += 1
+          if (!erweiterung && sichtbarePunkte(sicht) !== eigenePunkte(sicht)) sichtbarUngleich += 1
+          if (JSON.stringify(instr.aktion) !== JSON.stringify(neu.aktion)) instrUngleich += 1
+          if (JSON.stringify(alt.aktion) !== JSON.stringify(neu.aktion)) {
+            abweichend += 1
+            const zuNeu = nachDurchlassen(vorher, neu.aktion, 0)
+            const zuAlt = nachDurchlassen(vorher, alt.aktion, 0)
+            abweichungen.push({
+              partie, k, phase: vorher.partiephase,
+              alt: alt.aktion, neu: neu.aktion,
+              protokoll: PROTOKOLL.map((p) => ({ dw: p.dw, neuWaehlt: p.neu, a: p.a, b: p.b })),
+              nachEinerKarte: { bewertungAlt: bewerte(sichtFuer(zuAlt, 0)), bewertungNeu: bewerte(sichtFuer(zuNeu, 0)), endwertungAlt: berechneEndwertung(zuAlt).spieler[0].summe, endwertungNeu: berechneEndwertung(zuNeu).spieler[0].summe },
+            })
+          }
+          if (k % 3 === 0) {
+            const anders = stoere(vorher, 0, 1000 + k + n)
+            expect(JSON.stringify(sichtFuer(anders, 0))).toBe(JSON.stringify(sicht))
+            gestoert += 1
+            const s2 = planeZug(sichtFuer(anders, 0), ermittleAktionen(anders), erzeugeZufall(saat))
+            if (JSON.stringify(s2.aktion) !== JSON.stringify(neu.aktion)) stoerAbweichung += 1
+          }
+        }
+      }
+      bericht.push({ erweiterung, wahlen, abweichend, maxSuche, maxMs, vorauswahlUeber, sichtbarUngleich, instrUngleich, gestoert, stoerAbweichung, abweichungen })
+    }
+    writeFileSync(`${AUS}/wahl.json`, JSON.stringify(bericht, null, 1))
+  }, 3_600_000)
+
+  it('Spielstärke', () => {
+    const neu = { name: 'neu', erstelle: (z: () => number) => erstelleSolideKi(z) }
+    const alt = { name: 'alt', erstelle: alteKi }
+    const zufall = { name: 'zufall', erstelle: (z: () => number) => erstelleZufallsKi(z) }
+    const ergebnisse: Record<string, unknown> = {}
+    const lauf = (name: string, teilnehmer: { name: string; erstelle: (z: () => number) => Ki }[], partien: number, ersteSaat: number, erweiterung = false) => {
+      const t = turnier({ teilnehmer, partien, ersteSaat, kiSaat: 424_242, erweiterung })
+      const punkte = teilnehmer.map((_, w) => t.partien.reduce((s, p) => s + p.punkte[w], 0) / partien)
+      ergebnisse[name] = { siege: t.siege, punkteMittel: punkte, ausgaenge: [...new Set(t.partien.map((p) => p.ausgang))] }
+    }
+    lauf('neu gegen zufall, 2er, basis', [neu, zufall], 60, 55_000)
+    lauf('alt gegen zufall, 2er, basis', [alt, zufall], 60, 55_000)
+    lauf('neu gegen alt, 2er, basis', [neu, alt], 80, 56_000)
+    lauf('neu gegen alt, 2er, erweiterung', [neu, alt], 40, 57_000, true)
+    lauf('neu gegen alt gegen zufall gegen zufall, 4er, basis', [neu, alt, zufall, zufall], 24, 58_000)
+    writeFileSync(`${AUS}/staerke.json`, JSON.stringify(ergebnisse, null, 1))
+  }, 3_600_000)
+
+  it('Näherung geplantesEnde', () => {
+    const PARTIEN = [2, 2, 2, 2, 3, 3, 3, 4, 4, 4].map((spielerzahl, nummer) => ({ spielerzahl, erweiterung: nummer % 2 === 1, saat: 600 + nummer }))
+    const partien: Entscheidung[][] = PARTIEN.map((partie, nummer) =>
+      entscheidungenVon(partie, Array.from({ length: partie.spielerzahl }, (_, sitz) => (sitz === 0 ? erstelleSolideKi(erzeugeZufall(nummer)) : erstelleZufallsKi(erzeugeZufall(100 * nummer + sitz)))), 0),
+    )
+    partien.push(entscheidungenVon({ spielerzahl: 2, erweiterung: true, saat: 7154 }, [erstelleSolideKi(erzeugeZufall(7154 * 13 + 3)), erstelleZufallsKi(erzeugeZufall(7154 * 7 + 1 + 11))], 0))
+    for (let n = 0; n < 16; n += 1) partien.push(solideEntscheidungen({ spielerzahl: 2 + (n % 3), erweiterung: n % 2 === 0, saat: 33_000 + n }, true, n))
+    const zuege = (ents: readonly Entscheidung[]) => {
+      const erg: Entscheidung[][] = [[]]
+      for (const e of ents) {
+        if (e.aktion.typ === 'Reagieren') continue
+        erg[erg.length - 1].push(e)
+        if (e.nachher.zug.spielerIndex !== 0 || e.nachher.partiephase === 'Beendet') erg.push([])
+      }
+      return erg.filter((z) => z.length > 0)
+    }
+    const wert = (z: Spielzustand) => bewerte(sichtFuer(z, 0))
+    const faelle: unknown[] = []
+    let zuegeMitAbwehr = 0
+    let zuegeGesamt = 0
+    for (const ents of partien) {
+      for (const zug of zuege(ents)) {
+        zuegeGesamt += 1
+        const beendet = zug.findIndex((e) => e.aktion.typ === 'ZugBeenden')
+        const teil = zug.slice(0, beendet < 0 ? zug.length - 1 : beendet)
+        // Abwehr: der nächste Stand der KI ist nicht der Stand nach Durchlassen.
+        let abwehrBei = -1
+        for (let i = 0; i < teil.length; i += 1) {
+          const naechster = i + 1 < zug.length ? zug[i + 1].vorher : null
+          if (naechster !== null && JSON.stringify(nachDurchlassen(teil[i].vorher, teil[i].aktion, 0)) !== JSON.stringify(naechster)) {
+            abwehrBei = i
+            break
+          }
+        }
+        if (abwehrBei < 0) continue
+        zuegeMitAbwehr += 1
+        let replay: Spielzustand | null = null
+        let replayFehler = ''
+        try {
+          replay = teil.reduce((stand, { aktion }) => nachDurchlassen(stand, aktion, 0), zug[0].vorher)
+        } catch (fehler) {
+          replayFehler = String(fehler)
+        }
+        const nachAbwehrKarten = teil.length - abwehrBei - 1
+        // Frisch: ab dem Stand nach der abgewehrten Karte, durchgelassen, spielt die KI selbst weiter.
+        const frisch = [1, 2, 3].map((saat) => {
+          let z = teil.slice(0, abwehrBei + 1).reduce((stand, { aktion }) => nachDurchlassen(stand, aktion, 0), zug[0].vorher)
+          const gespielt: SpielAktion[] = []
+          for (let s = 0; s < 10; s += 1) {
+            if (z.zug.spielerIndex !== 0 || z.schwebend !== null || z.partiephase === 'Beendet') break
+            const a = erstelleSolideKi(erzeugeZufall(saat)).waehle(sichtFuer(z, 0), ermittleAktionen(z))
+            if (a.typ === 'ZugBeenden') break
+            gespielt.push(a)
+            z = nachDurchlassen(z, a, 0)
+          }
+          return { wert: wert(z), karten: gespielt.length }
+        })
+        faelle.push({
+          start: zug[0].vorher.zug, abwehrBei, nachAbwehrKarten,
+          real: wert(beendet < 0 ? zug[zug.length - 1].vorher : zug[beendet].vorher),
+          replay: replay === null ? null : wert(replay), replayFehler,
+          frisch,
+        })
+      }
+    }
+    writeFileSync(`${AUS}/naeherung.json`, JSON.stringify({ zuegeGesamt, zuegeMitAbwehr, faelle }, null, 1))
+  }, 3_600_000)
+  it('Kontrolle Spiegel', () => {
+    const neu = { name: 'neu', erstelle: (z: () => number) => erstelleSolideKi(z) }
+    const alt = { name: 'alt', erstelle: alteKi }
+    const zufall = { name: 'zufall', erstelle: (z: () => number) => erstelleZufallsKi(z) }
+    const erg: Record<string, unknown> = {}
+    const vergleich = (name: string, a: { name: string; erstelle: (z: () => number) => Ki }[], b: { name: string; erstelle: (z: () => number) => Ki }[], partien: number, ersteSaat: number, erweiterung: boolean) => {
+      const ta = turnier({ teilnehmer: a, partien, ersteSaat, kiSaat: 424_242, erweiterung })
+      const tb = turnier({ teilnehmer: b, partien, ersteSaat, kiSaat: 424_242, erweiterung })
+      const gleich = ta.partien.filter((p, i) => JSON.stringify(p.verlauf) === JSON.stringify(tb.partien[i].verlauf)).length
+      const differenz = ta.partien.map((p, i) => (p.punkte[0] - p.punkte[1]) - (tb.partien[i].punkte[0] - tb.partien[i].punkte[1]))
+      erg[name] = { partien, gleicheVerlaeufe: gleich, siegeA: ta.siege, siegeB: tb.siege, mittlereDifferenzVorsprungTeilnehmer0: differenz.reduce((x, y) => x + y, 0) / partien, abweichendeVorspruenge: differenz.filter((d) => d !== 0) }
+    }
+    vergleich('2er basis: neu+alt gegen alt+alt', [neu, alt], [alt, alt], 80, 56_000, false)
+    vergleich('4er basis: neu+alt+z+z gegen alt+alt+z+z', [neu, alt, zufall, zufall], [alt, alt, zufall, zufall], 24, 58_000, false)
+    vergleich('2er erweiterung: neu+alt gegen alt+alt', [neu, alt], [alt, alt], 40, 57_000, true)
+    writeFileSync(`${AUS}/kontrolle.json`, JSON.stringify(erg, null, 1))
+  }, 3_600_000)
+})
