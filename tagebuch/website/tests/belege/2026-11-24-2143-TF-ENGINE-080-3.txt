@@ -1,0 +1,115 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a0d9ada43080fda42
+
+ ❯ src/engine/__tests__/regeln/A8.2_risiko_comeback.test.ts (3 tests | 1 failed) 42ms
+     × A8.2/A8.1: die Zusatzfarbkarte aus Risiko-Aktion 2 belegt keine Zusatzaktion des Comebacks; danach gehen noch drei Farbkarten 10ms
+ ❯ src/engine/__tests__/regeln/A8.2_risiko_rahmen.test.ts (26 tests | 2 failed) 177ms
+     × A8.2: die zusätzliche Farbkarte aus Aktion 2 belegt keinen Platz; die Farbkarte und die Sonderkarte des Zuges bleiben frei 9ms
+     × A5/D12 (Autor, 24.11.2026): die gelegte Zusatzfarbkarte aus Aktion 2 zählt als Karte des Zuges; danach darf er den Zug beenden 5ms
+ ❯ src/engine/__tests__/regeln/A8.2_risiko_aktionen.test.ts (20 tests | 4 failed) 184ms
+     × A8.2 Aktion 2, Erfolg (D51, D52): die aufgedeckte Farbkarte kommt auf die Hand; der Spieler legt sofort eine Farbkarte der Hand an ein Ende einer eigenen Schlange 14ms
+     × A8.2 Aktion 2, Erfolg: legt er eine andere Karte der Hand an, behält er die gezogene Farbkarte 7ms
+     × A8.2 Aktion 3, Misserfolg mit anderem Punktewert (D53): die Karte kommt zusätzlich an die Stelle der gewählten, davor 11ms
+     × A8.2 Aktion 3, Misserfolg mit anderem Punktewert (D53): die Karte kommt zusätzlich an die Stelle der gewählten, dahinter 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/engine/__tests__/regeln/A8.2_risiko_aktionen.test.ts > A8.2 Aktion 2: Zusätzliche Farbkarte spielen (D51, D52) > A8.2 Aktion 2, Erfolg (D51, D52): die aufgedeckte Farbkarte kommt auf die Hand; der Spieler legt sofort eine Farbkarte der Hand an ein Ende einer eigenen Schlange
+Error: Invariante verletzt: Alle Verweise auf Spieler und Karten sind gültig: Der Zug zählt 0 Farb- und 0 Sonderkarten, verwendet sind 1 und 0.
+ ❯ pruefeSchritt src/engine/__tests__/rahmen_hilfen.ts:75:34
+     73|   if (verraten.length > 0) throw new Error(`B2: ein Ereignis nennt die…
+     74|   const verletzt = verletzteInvarianten(schritt.zustand)
+     75|   if (verletzt.length > 0) throw new Error(`Invariante verletzt: ${ver…
+       |                                  ^
+     76|   return schritt
+     77| }
+ ❯ waehle src/engine/__tests__/risiko_hilfen.ts:83:10
+ ❯ src/engine/__tests__/regeln/A8.2_risiko_aktionen.test.ts:82:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  src/engine/__tests__/regeln/A8.2_risiko_aktionen.test.ts > A8.2 Aktion 2: Zusätzliche Farbkarte spielen (D51, D52) > A8.2 Aktion 2, Erfolg: legt er eine andere Karte der Hand an, behält er die gezogene Farbkarte
+Error: Invariante verletzt: Alle Verweise auf Spieler und Karten sind gültig: Der Zug zählt 0 Farb- und 0 Sonderkarten, verwendet sind 1 und 0.
+ ❯ pruefeSchritt src/engine/__tests__/rahmen_hilfen.ts:75:34
+     73|   if (verraten.length > 0) throw new Error(`B2: ein Ereignis nennt die…
+     74|   const verletzt = verletzteInvarianten(schritt.zustand)
+     75|   if (verletzt.length > 0) throw new Error(`Invariante verletzt: ${ver…
+       |                                  ^
+     76|   return schritt
+     77| }
+ ❯ waehle src/engine/__tests__/risiko_hilfen.ts:83:10
+ ❯ src/engine/__tests__/regeln/A8.2_risiko_aktionen.test.ts:93:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  src/engine/__tests__/regeln/A8.2_risiko_aktionen.test.ts > A8.2 Aktion 3: Karten tauschen (D51, D53) > A8.2 Aktion 3, Misserfolg mit anderem Punktewert (D53): die Karte kommt zusätzlich an die Stelle der gewählten, davor
+ FAIL  src/engine/__tests__/regeln/A8.2_risiko_aktionen.test.ts > A8.2 Aktion 3: Karten tauschen (D51, D53) > A8.2 Aktion 3, Misserfolg mit anderem Punktewert (D53): die Karte kommt zusätzlich an die Stelle der gewählten, dahinter
+AssertionError: expected { typ: 'RisikoKarteGespielt', …(6) } to match object { erfolg: false }
+(6 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "erfolg": false,
++   "erfolg": true,
+  }
+
+ ❯ src/engine/__tests__/regeln/A8.2_risiko_aktionen.test.ts:168:73
+    166|     const violett = start.nachziehstapel[0].id
+    167|     const schritt = spieleRisiko(start, 3, blau)
+    168|     expect(ereignisseVom(schritt.ereignisse, 'RisikoKarteGespielt')[0]…
+       |                                                                         ^
+    169|     expect(wahlen(schritt.zustand)).toEqual(['davor', 'dahinter'])
+    170|     const gelegt = waehle(schritt.zustand, seite as string)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  src/engine/__tests__/regeln/A8.2_risiko_comeback.test.ts > D47/D50: Risiko-Karte und Comeback-Karte im selben Zug > A8.2/A8.1: die Zusatzfarbkarte aus Risiko-Aktion 2 belegt keine Zusatzaktion des Comebacks; danach gehen noch drei Farbkarten
+Error: Invariante verletzt: Alle Verweise auf Spieler und Karten sind gültig: Der Zug zählt 0 Farb- und 0 Sonderkarten, verwendet sind 1 und 0.
+ ❯ pruefeSchritt src/engine/__tests__/rahmen_hilfen.ts:75:34
+     73|   if (verraten.length > 0) throw new Error(`B2: ein Ereignis nennt die…
+     74|   const verletzt = verletzteInvarianten(schritt.zustand)
+     75|   if (verletzt.length > 0) throw new Error(`Invariante verletzt: ${ver…
+       |                                  ^
+     76|   return schritt
+     77| }
+ ❯ waehle src/engine/__tests__/risiko_hilfen.ts:83:10
+ ❯ src/engine/__tests__/regeln/A8.2_risiko_comeback.test.ts:42:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  src/engine/__tests__/regeln/A8.2_risiko_rahmen.test.ts > A8.2: der Einsatz zählt nicht als reguläre Aktion (X5, Kriterium 2) > A8.2: die zusätzliche Farbkarte aus Aktion 2 belegt keinen Platz; die Farbkarte und die Sonderkarte des Zuges bleiben frei
+Error: Invariante verletzt: Alle Verweise auf Spieler und Karten sind gültig: Der Zug zählt 0 Farb- und 0 Sonderkarten, verwendet sind 1 und 0.
+ ❯ pruefeSchritt src/engine/__tests__/rahmen_hilfen.ts:75:34
+     73|   if (verraten.length > 0) throw new Error(`B2: ein Ereignis nennt die…
+     74|   const verletzt = verletzteInvarianten(schritt.zustand)
+     75|   if (verletzt.length > 0) throw new Error(`Invariante verletzt: ${ver…
+       |                                  ^
+     76|   return schritt
+     77| }
+ ❯ waehle src/engine/__tests__/risiko_hilfen.ts:83:10
+ ❯ src/engine/__tests__/regeln/A8.2_risiko_rahmen.test.ts:111:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  src/engine/__tests__/regeln/A8.2_risiko_rahmen.test.ts > A8.2: der Einsatz zählt nicht als reguläre Aktion (X5, Kriterium 2) > A5/D12 (Autor, 24.11.2026): die gelegte Zusatzfarbkarte aus Aktion 2 zählt als Karte des Zuges; danach darf er den Zug beenden
+Error: Invariante verletzt: Alle Verweise auf Spieler und Karten sind gültig: Der Zug zählt 0 Farb- und 0 Sonderkarten, verwendet sind 1 und 0.
+ ❯ pruefeSchritt src/engine/__tests__/rahmen_hilfen.ts:75:34
+     73|   if (verraten.length > 0) throw new Error(`B2: ein Ereignis nennt die…
+     74|   const verletzt = verletzteInvarianten(schritt.zustand)
+     75|   if (verletzt.length > 0) throw new Error(`Invariante verletzt: ${ver…
+       |                                  ^
+     76|   return schritt
+     77| }
+ ❯ waehle src/engine/__tests__/risiko_hilfen.ts:83:10
+ ❯ src/engine/__tests__/regeln/A8.2_risiko_rahmen.test.ts:122:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  7 failed | 42 passed (49)
+   Start at  21:31:39
+   Duration  4.18s (transform 1.88s, setup 1.12s, import 2.12s, tests 403ms, environment 7.64s)
+

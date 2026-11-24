@@ -1,0 +1,53 @@
+// @vitest-environment node
+import { createHash } from 'node:crypto'
+import { appendFileSync } from 'node:fs'
+import { it } from 'vitest'
+import { anwendeAktion, ermittleAktionen, erstellePartie, erzeugeZufall, serialisiere } from './engine'
+import { spielePartie } from './ki/turnier'
+import { erstelleZufallsKi } from './ki/strategien/zufallsKi'
+import { erstelleSolideKi } from './ki/strategien/solideKi'
+
+function hash(teile: string[]): string {
+  const h = createHash('sha256')
+  for (const teil of teile) h.update(teil)
+  return h.digest('hex').slice(0, 16)
+}
+
+it('Prüfsummen ohne Erweiterung (Prüfer X5)', () => {
+  const zufallsaktionen: string[] = []
+  for (let saat = 9101; saat < 9161; saat += 1) {
+    const wahl = erzeugeZufall(saat * 3 + 1)
+    let zustand = erstellePartie({ spielerzahl: 2 + (saat % 3), erweiterung: false, zufall: erzeugeZufall(saat) })
+    const teile: string[] = []
+    for (let schritt = 0; zustand.partiephase !== 'Beendet' && schritt < 6000; schritt += 1) {
+      const aktionen = ermittleAktionen(zustand)
+      teile.push(JSON.stringify(aktionen))
+      const aktion = aktionen[Math.floor(wahl() * aktionen.length)]
+      const ergebnis = anwendeAktion(zustand, aktion)
+      teile.push(JSON.stringify(ergebnis.ereignisse))
+      zustand = ergebnis.zustand
+    }
+    teile.push(serialisiere(zustand))
+    zufallsaktionen.push(hash(teile))
+  }
+  const zufallsKi: string[] = []
+  for (let saat = 9201; saat < 9231; saat += 1) {
+    const spieler = 2 + (saat % 3)
+    const start = erstellePartie({ spielerzahl: spieler, erweiterung: false, zufall: erzeugeZufall(saat) })
+    const kis = Array.from({ length: spieler }, (_, sitz) => erstelleZufallsKi(erzeugeZufall(saat * 11 + sitz)))
+    const verlauf = spielePartie(start, kis)
+    zufallsKi.push(hash([verlauf.ausgang, JSON.stringify(verlauf.verlauf), JSON.stringify(verlauf.punkteSitze)]))
+  }
+  const solide: string[] = []
+  for (let saat = 9301; saat < 9305; saat += 1) {
+    const spieler = 2 + (saat % 3)
+    const start = erstellePartie({ spielerzahl: spieler, erweiterung: false, zufall: erzeugeZufall(saat) })
+    const kis = Array.from({ length: spieler }, (_, sitz) => (sitz === saat % spieler ? erstelleSolideKi(erzeugeZufall(saat * 13 + sitz)) : erstelleZufallsKi(erzeugeZufall(saat * 13 + sitz))))
+    const verlauf = spielePartie(start, kis)
+    solide.push(hash([verlauf.ausgang, JSON.stringify(verlauf.verlauf), JSON.stringify(verlauf.punkteSitze)]))
+  }
+  appendFileSync(process.env.PRUEFSUMME_DATEI!, `PRUEFSUMME zufallsaktionen=${hash(zufallsaktionen)} zufallsKi=${hash(zufallsKi)} solide=${hash(solide)}
+`)
+  appendFileSync(process.env.PRUEFSUMME_DATEI!, `EINZELN solide=${solide.join(',')}
+`)
+}, 900_000)

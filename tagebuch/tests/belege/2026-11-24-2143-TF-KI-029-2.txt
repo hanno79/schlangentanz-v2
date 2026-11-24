@@ -1,0 +1,92 @@
+// @vitest-environment node
+import { appendFileSync } from 'node:fs'
+import { isDeepStrictEqual } from 'node:util'
+import { it } from 'vitest'
+import { anwendeAktion, ermittleAktionen, ermittleEntscheider, erstellePartie, erzeugeZufall, offeneHandkarteDer } from './engine'
+import type { Spielzustand } from './engine'
+import { sichtFuer } from './ki/sicht'
+import { mischeVerborgenes } from './ki/__tests__/verborgenes'
+
+/* Störprobe des Prüfers X5 (B2): eigene Saaten, Zufallsaktionen mit Erweiterung. */
+
+function woerter(wert: unknown, gesammelt = new Set<string>()): Set<string> {
+  if (typeof wert === 'string') for (const wort of wert.split(/[ ,;:„“"()]+/)) gesammelt.add(wort)
+  else if (Array.isArray(wert)) for (const eintrag of wert) woerter(eintrag, gesammelt)
+  else if (wert !== null && typeof wert === 'object') for (const eintrag of Object.values(wert)) woerter(eintrag, gesammelt)
+  return gesammelt
+}
+
+function benannt(zustand: Spielzustand): string | undefined {
+  return offeneHandkarteDer(zustand.entscheidung)?.karteId
+}
+
+/** Was `p` nicht sehen darf: fremde Handkarten ausser der offen benannten (D52) und der Nachziehstapel. */
+function verborgen(zustand: Spielzustand, p: number): Set<string> {
+  const offen = benannt(zustand)
+  const ids = zustand.spieler.flatMap((spieler, index) => (index === p ? [] : spieler.hand.map((karte) => karte.id)))
+  return new Set([...ids, ...zustand.nachziehstapel.map((karte) => karte.id)].filter((id) => id !== offen))
+}
+
+/** Was vor dem Schritt offen lag: alles ausser Händen und Stapel, dazu die benannte Karte. */
+function offenVorher(zustand: Spielzustand, p: number): Set<string> {
+  const verdeckt = verborgen(zustand, p)
+  const alle = new Set<string>()
+  for (const spieler of zustand.spieler) for (const karte of spieler.hand) alle.add(karte.id)
+  for (const karte of zustand.nachziehstapel) alle.add(karte.id)
+  return new Set([...alle].filter((id) => !verdeckt.has(id)))
+}
+
+it('Störprobe B2 mit Risiko-Karten (Prüfer X5)', () => {
+  const befunde: string[] = []
+  let risikoSchritte = 0
+  let entscheidungen = 0
+  let gemischtGeprueft = 0
+  for (let saat = 8701; saat < 8741; saat += 1) {
+    const spielerzahl = 2 + (saat % 3)
+    const wahl = erzeugeZufall(saat * 7 + 3)
+    let zustand = erstellePartie({ spielerzahl, erweiterung: true, zufall: erzeugeZufall(saat) })
+    for (let schritt = 0; zustand.partiephase !== 'Beendet' && schritt < 6000; schritt += 1) {
+      const aktionen = ermittleAktionen(zustand)
+      const aktion = aktionen[Math.floor(wahl() * aktionen.length)]
+      const ergebnis = anwendeAktion(zustand, aktion)
+      const nachher = ergebnis.zustand
+      const risiko = ergebnis.ereignisse.some((ereignis) => ereignis.typ === 'RisikoKarteGespielt') || (zustand.entscheidung?.art.startsWith('Risiko') ?? false)
+      if (risiko) risikoSchritte += 1
+      const aufgedeckt = new Set(ergebnis.ereignisse.flatMap((ereignis) => (ereignis.typ === 'RisikoKarteGespielt' ? [ereignis.aufgedeckt, ...(ereignis.risikoAktion === 2 && ereignis.benannt !== null ? [ereignis.benannt] : [])] : [])))
+      const ereignisWoerter = woerter(ergebnis.ereignisse)
+      for (let p = 0; p < spielerzahl; p += 1) {
+        const bekannt = offenVorher(zustand, p)
+        for (const karte of zustand.spieler[p].hand) bekannt.add(karte.id)
+        const leck = [...verborgen(nachher, p)].filter((id) => ereignisWoerter.has(id) && !bekannt.has(id) && !aufgedeckt.has(id))
+        if (leck.length > 0) befunde.push(`Saat ${saat} Schritt ${schritt}: Ereignisse nennen für Spieler ${p} ${leck.join(',')} nach ${JSON.stringify(aktion)}`)
+        const sicht = sichtFuer(nachher, p)
+        const sichtLeck = [...verborgen(nachher, p)].filter((id) => woerter(sicht).has(id))
+        if (sichtLeck.length > 0) befunde.push(`Saat ${saat} Schritt ${schritt}: Sicht von ${p} nennt ${sichtLeck.join(',')}`)
+        if (nachher.entscheidung !== null) {
+          const daten = woerter([nachher.entscheidung.art, nachher.entscheidung.optionen, Object.values(nachher.entscheidung.daten).map(String)])
+          const datenLeck = [...verborgen(nachher, p)].filter((id) => daten.has(id))
+          if (datenLeck.length > 0) befunde.push(`Saat ${saat} Schritt ${schritt}: Entscheidung nennt für ${p} ${datenLeck.join(',')}`)
+        }
+        if (risiko && nachher.partiephase !== 'Beendet' && schritt % 3 === 0) {
+          const gemischt = mischeVerborgenes(nachher, p, erzeugeZufall(saat + schritt + p))
+          gemischtGeprueft += 1
+          const andere = sichtFuer(gemischt, p)
+          if (!isDeepStrictEqual(andere, sicht)) {
+            const unterschiede = Object.keys(sicht).filter((schluessel) => !isDeepStrictEqual((sicht as unknown as Record<string, unknown>)[schluessel], (andere as unknown as Record<string, unknown>)[schluessel]))
+            befunde.push(`Saat ${saat} Schritt ${schritt}: Sicht von ${p} ändert sich mit gemischtem Verdecktem in ${unterschiede.join(',')} nach ${JSON.stringify(aktion)}; entscheidung ${JSON.stringify(nachher.entscheidung)}; vorher ${JSON.stringify(unterschiede.map((k) => (sicht as unknown as Record<string, unknown>)[k]))}; gemischt ${JSON.stringify(unterschiede.map((k) => (andere as unknown as Record<string, unknown>)[k]))}`)
+          }
+        }
+      }
+      if (nachher.entscheidung !== null && nachher.entscheidung.art.startsWith('Risiko')) {
+        entscheidungen += 1
+        const entscheider = ermittleEntscheider(nachher)!
+        const wahlen = woerter(ermittleAktionen(nachher).map((angebot) => (angebot.typ === 'Entscheiden' ? angebot.wahl : '')))
+        const wahlLeck = [...verborgen(nachher, entscheider)].filter((id) => wahlen.has(id))
+        if (wahlLeck.length > 0) befunde.push(`Saat ${saat} Schritt ${schritt}: verdeckte Wahlen von ${entscheider} nennen ${wahlLeck.join(',')}`)
+      }
+      zustand = nachher
+    }
+    if (zustand.partiephase !== 'Beendet') befunde.push(`Saat ${saat}: nicht beendet`)
+  }
+  appendFileSync(process.env.PRUEFSUMME_DATEI!, `STOERPROBE risikoSchritte=${risikoSchritte} entscheidungen=${entscheidungen} gemischt=${gemischtGeprueft} befunde=${befunde.length}\n${befunde.slice(0, 60).join('\n')}\n`)
+}, 900_000)
