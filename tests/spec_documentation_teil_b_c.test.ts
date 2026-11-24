@@ -1,5 +1,6 @@
 import { existsSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
+import { abschnitt } from './regelfragen_lesen'
 import { fehlende, spalten, tabelleMitSpalte, teil } from './spec_documentation_hilfen'
 
 /*
@@ -73,7 +74,7 @@ describe('GAME_SPEC Teil C — Abweichungen der Engine', () => {
   })
 
   it('P0.5g: die Einleitung von B1 nennt den Stand der Tabelle nicht mehr mit dem 12.11.2026', () => {
-    const einleitung = teil('B').slice(teil('B').indexOf('### B1 Umfang'), teil('B').indexOf('| Bestandteil'))
+    const einleitung = abschnitt(teil('B'), '###', 'B1 Umfang').split('\n|')[0]
     expect(einleitung, 'B1: Einleitung').not.toContain('am 12.11.2026 umgesetzt')
     expect(fehlende(einleitung, ['Die Tabelle zeigt den Stand vom 23.11.2026'])).toEqual([])
   })

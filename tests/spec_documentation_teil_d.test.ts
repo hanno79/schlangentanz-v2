@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { ZITAT, abschnitt } from './regelfragen_lesen'
-import { eintragD, fehlende, fliesstext, nachtragEintrag, pruefeKern, spalten, tabelleMitSpalte, teil, websiteNachtrag } from './spec_documentation_hilfen'
+import { eintragD, fehlende, fliesstext, nachtragEintrag, nachtragFragezeilen, pruefeKern, spalten, tabelleMitSpalte, teil, websiteNachtrag } from './spec_documentation_hilfen'
 import { A10_EINORDNUNG, RUECKFRAGEN, RUECKFRAGEN_NUMMERN } from './spec_documentation_rueckfragen'
 import { DATUM_G } from './regelfragen_sammelantwort'
 
@@ -177,14 +177,13 @@ describe('GAME_SPEC Teil D — Fragen an den Autor und Antworten', () => {
   })
 
   it('P0.5g: jede Fragezeile im Website-Nachtrag endet mit zwei Leerzeichen (harter Umbruch vor der Antwort)', () => {
-    const fragezeilen = websiteNachtrag.split('\n').filter((zeile) => /^\*\*.+\*\* \(D\d+\)/.test(zeile))
+    const fragezeilen = nachtragFragezeilen()
     expect(fragezeilen.length, 'Website-Nachtrag ohne Fragezeilen').toBeGreaterThan(0)
-    const ohneUmbruch = fragezeilen.filter((zeile) => !/\) {2}$/.test(zeile)).map((zeile) => /\((D\d+)\)/.exec(zeile)?.[1])
-    expect(ohneUmbruch, 'Fragezeilen ohne zwei Leerzeichen am Ende').toEqual([])
+    expect(fragezeilen.filter(({ harterUmbruch }) => !harterUmbruch).map(({ nummer }) => nummer), 'Fragezeilen ohne zwei Leerzeichen am Ende').toEqual([])
   })
 
-  it('P0.5g: die Einleitung von Teil D nennt die Rückfragen aus den Prüfungen von X2 und X3 als D58–D67 und die Ergänzung von D48', () => {
-    expect(fehlende(teil('D'), ['D58–D67', 'Rückfragen aus den Prüfungen von X2 und X3', '23.11.2026', 'ergänzt D48'])).toEqual([])
+  it('P0.5g: die Einleitung von Teil D nennt die Rückfragen aus den Prüfungen von X2 und X3 ab D58 und die Ergänzung von D48', () => {
+    expect(fehlende(teil('D'), [`D58–${RUECKFRAGEN_NUMMERN.at(-1)}`, 'Rückfragen aus den Prüfungen von X2 und X3', '23.11.2026', 'ergänzt D48'])).toEqual([])
   })
 
   // Den Wortlaut von D48 samt Rückfrage vom 23.11.2026 prüft tests/regelfragen_antworten.test.ts Satz für Satz (ERWARTET_G.G16).
