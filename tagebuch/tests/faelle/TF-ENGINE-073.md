@@ -9,6 +9,7 @@ angelegt: 2026-11-23
 veraendert_daten: nein
 aenderung: task/X2a-aufgaben-farbmengen (PR #107)
 grenzfall_von: TF-ENGINE-072
+status: stillgelegt
 ---
 
 ## Worum es geht

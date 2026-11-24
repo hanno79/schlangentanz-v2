@@ -254,3 +254,117 @@ Alle drei Läufe auf `e0e8098`, sauber (ohne nicht committete Änderung ausserha
 2. `reihenaufgabe` liegt in `gelberSchatz.ts`, `lilaRiese.ts` importiert eine andere Aufgabendatei. Funktioniert; eine gemeinsame Stelle (etwa in `jokerGruppen.ts` oder `definition.ts`) wäre beim Lesen naheliegender.
 3. `origin/neuaufbau` ist seit der Basis um P0.5f (D56, D57) und Abnahmekriterien für X4–X6 weiter; `git merge-tree` zeigt keinen Konflikt, D56/D57 betreffen dieses Paket nicht.
 4. Bei jeder Prüfung ruft der Rahmen für jede offene Aufgabe `istErfuellt` auf; Farbharmonie ist die teuerste. Gemessene Laufzeit oben (G5); im Dauerlauf (`test:dauerlauf`, 79 s) ist kein Ausreisser zu sehen.
+
+---
+
+# Iteration 2
+
+| Feld | Wert |
+|---|---|
+| Geprüfter Stand | `4dcd05d` (Basis `f9a7c37`, `origin/neuaufbau` steht auf `4eedf33`, zwei reine Doku-Commits weiter; `git merge-tree` ohne Konflikt) |
+| Prüfer | Claude Code, derselbe Prüfer wie Iteration 1, eigener Worktree |
+| Datum | 24.11.2026 |
+| Anlass | Entscheide des Autors vom 23.11.2026 zu den drei Auslegungsfragen: Farbenpracht nur am Ende des eigenen Zuges („Nur am Zugende“), keine Zusatzprüfung bei Spielende für andere („Nur eigenes Zugende“), nach einem Verdoppler am Ende jedes der zwei Züge („Nach jedem der zwei“); bestätigt wie umgesetzt: Gruppe ab drei Karten bei Farbharmonie und reine Jokerreihen zählen immer |
+
+Vorbereitung: neuer Branch `pruefung-X2a-2` auf `origin/task/X2a-aufgaben-farbmengen`, 0 Dateien mit `w/crlf`, `npm ci` Exit 0.
+
+## Urteil Iteration 2: ABGENOMMEN
+
+Farbenpracht folgt den Entscheiden: geprüft wird an genau einer Stelle, am Anfang von `schliesseZugAb`, durch die jedes Zugende läuft; mitten im Zug und zu Zugbeginn nicht. Die Kriterien 1 bis 5 aus Iteration 1 gelten unverändert, alle Gates enden mit 0, beide Testcommits sind rot, zwei Gegenproben im Code machen Tests rot, Partien ohne Erweiterung sind unverändert. Die Anpassungen an Tests von X1, X2c und X3 erhalten deren Aussage. Im Testregister ändert der Branch nur Dateien von X2a.
+
+## 1. Farbenpracht nach den Entscheiden
+
+Umsetzung: `AufgabenDefinition` hat ein optionales `pruefzeitpunkt: 'zugende'`, gesetzt nur bei Farbenpracht. `pruefeAufgabenAmZug` (nach jeder aufgelösten Aktion, aus `anwendeAktion`) übergeht solche Aufgaben; `pruefeAufgabenAmZugende` prüft alle Aufgaben für den Spieler, dessen Zug endet, offen und geheim, mit Kette (D5). Aufgerufen wird es nur als erste Zeile von `schliesseZugAb` (`zugablauf.ts`), also vor dem zweiten Verdoppler-Zug, vor `gibZugWeiter` und damit vor Aussetzen, Zugbeginn des Nächsten und `PartieBeendet`.
+
+| Fall | Beleg | Ergebnis |
+|---|---|---|
+| offen, mitten im Zug erfüllt | `A9_farbenpracht_zugende.test.ts` › „A9: die zweite grüne Karte erfüllt die Bedingung, eingelöst wird aber erst beim ‚Zug beenden‘ …“ | kein Ereignis nach Grün; nach ZugBeenden AufgabeErfuellt vor ZugBegonnen |
+| im Zug erfüllt und wieder zerstört | „A9: im selben Zug erfüllt und mit einer eigenen Farbenfusion auf Blau-Blau wieder zerstört …“ | keine Aufgabe, Farbenpracht bleibt offen |
+| geheim | „D35: die geheime Farbenpracht zählt erst am Zugende, still“ | mitten im Zug `false`, am Zugende `true`, kein Ereignis |
+| Verdoppler, erster Zug | „A7.8: mit Verdoppler endet der erste Zug …“ | eingelöst, dann ZugBegonnen Teilzug 2 |
+| Verdoppler, erst im zweiten Zug erfüllt | eigener Grenzfall I3 | am Ende des ersten Zuges nichts, am Ende des zweiten eingelöst |
+| Schlussrunde, Spielende | „A9/A10: der letzte eigene Zug in der Schlussrunde …“ | AufgabeErfuellt vor PartieBeendet, Endwertung nennt Farbenpracht |
+| Aussetzen | „A7.6: wer aussetzt, spielt keinen Zug und hat kein Zugende …“ | keine Aufgabe für den Aussetzenden |
+| im Gegnerzug erfüllt | „A9: erfüllt ein Gegnerzug die Bedingung, wird Farbenpracht nicht zu Zugbeginn eingelöst, sondern am Ende des eigenen Zuges“ | erst bei seinem ZugBeenden |
+| im Gegnerzug erfüllt, im eigenen Zug selbst zerstört | eigener Grenzfall I2 | keine Aufgabe |
+| Ketten mit gemischten Zeitpunkten | „D5: am Zugende eingelöst, wird die aufgedeckte Farbkombination sofort mitgeprüft …“, „D5: mitten im Zug aufgedeckt, wird Farbenpracht nicht sofort eingelöst …“ | beide wie erwartet |
+| Zugende nach Überhand | eigener Grenzfall I1 | beim AbwerfenVerlangt nichts, nach UeberhandAbwerfen AufgabeErfuellt vor ZugBegonnen |
+
+Die eigenen Grenzfälle I1 bis I3 liegen als temporärer Test (`<scratchpad>/X2a-pruefer/it2/tmp_x2a_it2.test.ts`, nicht committet, als Beleg am Lauf von TF-ENGINE-075): 3 von 3 grün (`it2/X2a-it2-grenzfaelle.txt`).
+
+Erste Commits der Iteration: `e7471814` (nur Tests: `A9_farbenpracht_zugende.test.ts`, `A9_aufgaben_rahmen.test.ts`, `szenarienAufgabenA.test.ts`) ist rot, `Tests 9 failed | 32 passed`, Exit 1, je am Verhalten („eingelöst wird aber erst beim ‚Zug beenden‘“ usw.). `a11aff81` (nur Test) ist rot, 2 von 11 („A6: schwebt eine angesagte Karte, bricht die Prüfung am Zugende mit Grund ab …“, „X3: ist eine Entscheidung offen …“), Exit 1. Logs `it2/X2a-it2-testcommit-rot.txt`, `it2/X2a-it2-testcommit2-rot.txt`.
+
+**Gegenproben im Code** (Logs `it2/X2a-it2-gegenprobe-1.txt`, `-2.txt`), jeweils mit `A9_farbenpracht_zugende`, `szenarienAufgabenA`, `A9_aufgaben_ereignisse` und meinem temporären Test:
+
+1. `src/engine/aufgaben/farbenpracht.ts`: Zeile `pruefzeitpunkt: 'zugende',` entfernt. Exit 1, 12 Tests rot: 8 in `A9_farbenpracht_zugende`, das Szenario `aufgabe-farbenpracht`, alle drei eigenen Grenzfälle. Wiederhergestellt mit `git checkout`.
+2. `src/engine/zugablauf.ts`: Aufruf `pruefeAufgabenAmZugende(zustand, ereignisse);` in `schliesseZugAb` entfernt. Exit 1, 11 Tests rot: 7 in `A9_farbenpracht_zugende`, das Szenario, I1 und I3 sowie „A9/D5/D35: 30 Zufallspartien mit Erweiterung …“ in `A9_aufgaben_ereignisse` (dessen Prüfer verlangt jetzt, dass am Zugende keine erfüllte Aufgabe offen liegt). Wiederhergestellt; `git status` danach leer.
+
+## 2. Eine Stelle für jedes Zugende
+
+Ein Zug endet nur über die Aktionen `ZugBeenden` (`beendeZug`) und `UeberhandAbwerfen` (`werfeUeberhandAb`); beide münden in `schliesseZugAb`, und `beendeZug` geht bei Überhand erst in den Abschnitt „Abwerfen“, sodass die Prüfung erst nach dem Abwerfen läuft (I1). Andere Stellen, die einen Zug wechseln oder die Partie beenden, gibt es ausser `gibZugWeiter` (nur aus `schliesseZugAb`) nicht; gesucht mit `grep` nach `'Beendet'`, `beendeZug(`, `werfeUeberhandAb(`, `zustand.zug =` ausserhalb der Tests. Überhand eines nicht aktiven Spielers (X3, A8.2) baut dieser an seinem eigenen Zugende über denselben Weg ab. Zusatzaktionen (X3) verlängern den Zug, beenden ihn aber nicht; Comeback und Schlangenkorb kommen erst mit X4/X6 und haben heute noch kein eigenes Zugende.
+
+**Werfen bei offener Entscheidung:** `pruefeAufgabenAmZugende` wirft, wenn eine Karte schwebt oder eine Entscheidung offen ist. Über die Aktionen ist das nicht erreichbar: `pruefeAktion` lehnt jede Aktion ausser `Reagieren`/`Entscheiden` ab, solange etwas schwebt oder offen ist („… vorher geht keine andere Aktion (X3)“), und weder Auffüllen noch Abwerfen verlangt eine Entscheidung. Würde ein späterer Task das ändern, ginge Farbenpracht sonst still verloren; ein Abbruch mit Grund folgt der Kernregel Fail-Fast. Vertretbar.
+
+## 3. Angepasste Tests anderer Tasks
+
+| Datei | Änderung | Urteil |
+|---|---|---|
+| X1 `A9_aufgaben_rahmen.test.ts` | „Prüfung zu Beginn des ersten Zuges“: Farbenpracht aus der Liste der Aufgaben mit Testbedingung `immer(0)` genommen | Aussage erhalten: Zugbeginn-Prüfung, nur bedingte Aufgaben, keine bleibt erfüllt offen, geheime nach ihrer Bedingung, Gegner ohne Aufgabe. Farbenpracht gilt zu Zugbeginn nach dem Entscheid gerade nicht; `setzeTestbedingungen` ersetzt nur `istErfuellt`, der Prüfzeitpunkt bleibt |
+| X1 `A9_aufgaben_ereignisse.test.ts` | Der Prüfer des Aufgaben-Dauerlaufs ordnet AufgabeErfuellt dem Spieler zu, der beim Ereignis am Zug war (bis `ZugBegonnen`), und prüft zusätzlich: Endet in einem Schritt ein Zug, liegt für dessen Spieler keine erfüllte Aufgabe mehr offen und seine erfüllte geheime ist vermerkt; mitten im Zug darf eine erfüllte Zugende-Aufgabe offen liegen | erhalten und genauer; die neue Prüfung schlägt bei Gegenprobe 2 an |
+| X2c `A9_aufgaben_sonderkarten.test.ts` | Füllaufgabe Farbkombination durch Farbharmonie ersetzt | erhalten: Rot und drei Regenbogenschlangen erfüllen Farbkombination jetzt echt (reine Joker zählen, bestätigt), der Test prüft aber Schlangenbeschwörer; Farbharmonie ist dort nicht erfüllbar |
+| X3 `entscheidung.test.ts` | Testbedingung auf die erste offene Aufgabe, die nach jeder Aktion gilt, statt auf die erste überhaupt (Farbenpracht) | erhalten: geprüft wird weiter, dass während offener Entscheidung nichts eingelöst wird und nach der letzten Wahl schon |
+
+## 4. Testregister
+
+`git diff --name-status origin/neuaufbau -- tagebuch/tests/` zeigt 20 Dateien, alle mit `A` und alle zu TF-ENGINE-072, TF-ENGINE-073 und TF-DEV-051 (Fälle, Läufe, Belege); keine Datei von X2b, X2c oder X3 ist verändert. Die Fallnummern dieses Protokolls aus Iteration 1 stimmen mit 072/073/DEV-051 überein.
+
+Änderungen dieser Iteration im Register: TF-ENGINE-073 ist `status: stillgelegt`, weil ihr Titel die alte Farbenpracht-Regel festhält („bleibt eingelöst, wenn eine eigene Fusion sie im selben Zug zerstört“); seine Fälle G1 und G4 gelten weiter und stehen im alten Lauf. Neu: TF-ENGINE-074 (automatisch, `A9_farbenpracht_zugende.test.ts`) und TF-ENGINE-075 (Grenzfälle I1 bis I3). In TF-ENGINE-072 ist der Satz zu den offenen Fragen durch die Entscheide ersetzt, in TF-DEV-051 Schritt 3 auf das Einlösen beim „Zug beenden“ umgestellt.
+
+| Testfall | Inhalt | Lauf | Status |
+|---|---|---|---|
+| TF-ENGINE-072 | Bedingungen der fünf Aufgaben, Gates, Prüfsumme | `2026-11-24-0802-TF-ENGINE-072` | bestanden |
+| TF-ENGINE-074 | Farbenpracht am Zugende, Regeltests und zwei Gegenproben | `2026-11-24-0802-TF-ENGINE-074` | bestanden |
+| TF-ENGINE-075 | Grenzfälle I1 bis I3 | `2026-11-24-0802-TF-ENGINE-075` | bestanden |
+| TF-DEV-051 | Szenario `aufgabe-farbenpracht` am Entwicklertisch | `2026-11-24-0802-TF-DEV-051` | bestanden |
+
+Alle vier Läufe auf `4dcd05d`, sauber. Die Nummern 074 und 075 sind auf `origin/neuaufbau` und den offenen Branches X4 und X6 (bis 071) frei; vergibt ein paralleler Prüfer dieselben, nummeriert der Orchestrator beim Merge um.
+
+## 5. Kriterien 1 bis 5, Gates, ohne Erweiterung, Entwicklertisch
+
+Die Dateien der fünf Aufgaben (`farbharmonie.ts`, `farbkombination.ts`, `gelberSchatz.ts`, `lilaRiese.ts`) und ihre Tests sind seit Iteration 1 unverändert (`git diff e0e8098a HEAD`); `farbenpracht.ts` hat nur `pruefzeitpunkt` und den Kommentar dazubekommen. `jokerGruppen.ts` ist durch den Merge um Helfer von X2b gewachsen, die X2a-Helfer sind unverändert. Alle Regeltests der Kriterien sind in `npm test` grün. Kriterien 1 bis 5: weiter erfüllt.
+
+| Befehl | Exit | gekürzte Ausgabe |
+|---|---|---|
+| `npm test -- --run` | 0 | Test Files 167 passed (167), Tests 2912 passed (2912) |
+| `npm run typecheck` | 0 | `tsc -b` ohne Meldung |
+| `npm run build` | 0 | `✓ built in 1.47s` |
+| `npm run check:test-lines` | 0 | unter 500 Zeilen |
+| `npm run check:css-asserts` | 0 | 0 in 0 Dateien |
+| `npm run check:regeln` | 0 | keine Verstösse, Ausnahmen je 0, verglichen mit Merge-Basis `f9a7c37` |
+| `npx eslint .` | 0 | keine Meldung |
+| `python scripts/regelcheck.py` | 0 | 7 Warnungen (BOM in alten Belegen, Länge `tests/layout/messung.ts`), keine Fehler |
+| `npm run test:dauerlauf` | 0 | Test Files 4 passed (4), Tests 4 passed (4), 212 s |
+| `npm run test:layout` | 0 | 2200 passed (6.4m) |
+
+Ports vor `test:layout`: keine Zeile mit `LISTENING`/`ABHÖREN` auf 4173/4174.
+
+**Ohne Erweiterung unverändert:** SHA-256 über die Partieprotokolle ohne Erweiterung, Saat 1 bis 30 mit 2, 3 und 4 Spielern, auf `origin/neuaufbau` und auf `4dcd05d` gleich, `8c27f6b8753e912c2e6857b8f76c22e101295b3728a659241e5a51b4058765ef` (dieselbe Summe wie in Iteration 1). Golden Master in `npm test` grün.
+
+**Entwicklertisch:** Testhook-Build (`npm run build:testhooks`), eigener Server `npx vite preview --outDir dist-testhooks --port 4291 --strictPort`, Szenario `aufgabe-farbenpracht` im eingebauten Browser (1280×900) mit Klicks nachgespielt, danach dieselben Klicks mit Playwright für die Fotos.
+
+- „FarbkarteLegen: Feuerkeim (rot-03) → schlange-2 ende“, dann „ZugBeenden“: Ereignisse KartenGezogen (Spieler 1 zieht 1), ZugBegonnen KI-Gegner 1; Erfüllte Aufgaben: keine, Farbenpracht bleibt offen.
+- „Von vorn“, „FarbkarteLegen: Waldspross (gruen-02) → schlange-2 ende“: nur KarteGespielt (Stelle 5), Farbenpracht liegt weiter offen.
+- „ZugBeenden“: KartenGezogen, AufgabeErfuellt Spieler 1 nimmt Farbenpracht (aufgabe-01), AufgabeAufgedeckt Gelber Schatz an Stelle von Farbenpracht, ZugBegonnen KI-Gegner 1; offen Gelber Schatz, Farbkombination, Lila Riese; Endwertung Spieler 1 Aufg. 8, Summe 8.
+
+Invarianten alle erfüllt, keine Konsolenfehler, `scrollWidth` = `clientWidth` (1265 im eingebauten Browser). Das Ergebnis entspricht dem neuen Text „Erwartet“ des Szenarios.
+
+`bilder/X2a-it2-farbenpracht-nach-gruen-desktop.png`: Kopf „Szenario aufgabe-farbenpracht“, gelber Kasten mit der neuen Erwartung („Farbenpracht gilt erst am Ende des eigenen Zuges (Entscheid des Autors vom 23.11.2026) …“), „Schritt 1“, als einzige Aktion ZugBeenden, „Ereignisse des letzten Schritts (1)“ nur mit KarteGespielt gruen-02 → schlange-2, Stelle 5. Darunter Invarianten alle erfüllt. Nichts abgeschnitten.
+
+`bilder/X2a-it2-farbenpracht-zugende-desktop.png`: nach unten gescrollt; oben die 25 Farbkartenknöpfe von KI-Gegner 1 (spieler-2), darunter „Ereignisse des letzten Schritts (4)“: KartenGezogen, AufgabeErfuellt Farbenpracht (aufgabe-01), AufgabeAufgedeckt Gelber Schatz (aufgabe-14), ZugBegonnen KI-Gegner 1, Teilzug 1. Invarianten alle erfüllt, unter „Lage“ ist KI-Gegner 1 am Zug. Lesbar, keine Überlappung.
+
+Server danach beendet: PID 64316, Befehlszeile `"node" "E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a811891994bcc6ed4\node_modules\.bin\..\vite\bin\vite.js" preview --outDir dist-testhooks --port 4291 --strictPort`, mit `Stop-Process` beendet; auf 4291, 4173 und 4174 lauscht nichts mehr. Eigenen Browser-Tab geschlossen.
+
+## Hinweise Iteration 2 (kein Mangel)
+
+1. Die Prüfung am Zugende prüft alle Aufgaben, nicht nur die mit `pruefzeitpunkt: 'zugende'`. Für Aufgaben nach jeder Aktion ist das ohne Wirkung, weil das Zugende die Schlangen nicht ändert; es macht die Stelle aber robust, falls ein späterer Task am Zugende doch etwas an den Schlangen ändert.
+2. Ein Aussetzender in der Schlussrunde hat keinen letzten Zug und damit kein Zugende; Farbenpracht kann er dann nicht mehr einlösen. Das folgt aus „Nur eigenes Zugende“ und steht so im Test „A7.6: wer aussetzt …“.

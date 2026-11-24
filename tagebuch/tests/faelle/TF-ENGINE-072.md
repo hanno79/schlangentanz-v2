@@ -39,4 +39,4 @@ Stellungen aus dem Baukasten mit echten Karten (`farbmengen_hilfen.ts`), je Aufg
 
 ## Nicht abgedeckte Grenzfälle
 
-Reine Jokerreihen (fünf Joker ohne violette Karte als Lila Riese, zwei Regenbogenschlangen statt beider grünen Karten bei Farbenpracht) zählt die Umsetzung mit; ob das gilt, ist eine offene Auslegungsfrage an den Autor und hat keinen dauerhaften Test. Der Zeitpunkt „am Ende des Zugs“ bei Farbenpracht ist ebenso offen. Eine Gegenprobe mit vollständiger Jokersuche über zufällige Schlangen lief nur als temporärer Test des Prüfers.
+Reine Jokerreihen (fünf Joker ohne violette Karte als Lila Riese, zwei Regenbogenschlangen statt beider grünen Karten bei Farbenpracht) zählt die Umsetzung mit; der Autor hat das am 23.11.2026 bestätigt, einen dauerhaften Test dafür gibt es nicht. Wann Farbenpracht geprüft wird (nur am Ende des eigenen Zuges), prüft TF-ENGINE-074. Eine Gegenprobe mit vollständiger Jokersuche über zufällige Schlangen lief nur als temporärer Test des Prüfers.

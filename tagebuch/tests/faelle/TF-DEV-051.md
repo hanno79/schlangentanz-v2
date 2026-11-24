@@ -38,7 +38,7 @@ Die sechs Szenarien, dazu `/dev?seed=11&spieler=3&erweiterung=1`.
 |---|---|---|---|---|
 | 1 | Adresse | öffnen | `/dev?szenario=aufgabe-farbenpracht` | offen Farbenpracht, Farbkombination, Lila Riese |
 | 2 | Aktionen der Engine | „FarbkarteLegen: Feuerkeim (rot-03) → schlange-2 ende“ klicken | | nur KarteGespielt, Erfüllte Aufgaben: keine |
-| 3 | Kopf | „Von vorn“, dann „FarbkarteLegen: Waldspross (gruen-02) → schlange-2 ende“ | | AufgabeErfuellt Farbenpracht, AufgabeAufgedeckt Gelber Schatz; Endwertung Aufg. 8 |
+| 3 | Kopf | „Von vorn“, dann „FarbkarteLegen: Waldspross (gruen-02) → schlange-2 ende“, danach „ZugBeenden“ | | nach Grün nur KarteGespielt, Farbenpracht liegt weiter offen; nach „ZugBeenden“ KartenGezogen, AufgabeErfuellt Farbenpracht, AufgabeAufgedeckt Gelber Schatz, ZugBegonnen KI-Gegner 1 (seit dem Entscheid des Autors vom 23.11.2026 nur am Zugende) |
 | 4 | Adresse | öffnen | `/dev?szenario=aufgabe-farbharmonie` | schlange-2 endet mit Violett, Violett |
 | 5 | Aktionen der Engine | „RegenbogenschlangeLegen … → schlange-2 · Stelle 0“, dann „Von vorn“ und „… Stelle 8“ | | erst nur KarteGespielt, dann AufgabeErfuellt Farbharmonie, AufgabeAufgedeckt Gelber Schatz |
 | 6 | Adresse | öffnen | `/dev?szenario=aufgabe-farbkombination` | KI-Gegner 1 hat vier rote Karten |
