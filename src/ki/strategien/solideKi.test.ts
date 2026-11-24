@@ -147,12 +147,30 @@ describe('K2 Kriterium 1: Kann sie mit einer Handkarte eine Dreiergruppe vollend
     expect(punkte(zug.zustand, 1), 'K2.1: 18 statt 17').toBe(18)
   })
 
-  /** Die Partie aus dem Prüfprotokoll K2, Iteration 2, Hinweis 2 (Saat 7154, mit dessen Saaten), die solide KI an Stelle 0. */
-  const SAAT_7154 = entscheidungenVon(
-    { spielerzahl: 2, erweiterung: true, saat: 7154 },
-    [erstelleSolideKi(erzeugeZufall(7154 * 13 + 3)), erstelleZufallsKi(erzeugeZufall(7154 * 7 + 1 + 11))],
-    0,
-  )
+  /*
+  K2.1 sichert das Verhalten im Basis-Spiel und spielt deshalb nur Partien ohne
+  Erweiterung (Entscheid des Orchestrators zu X6, 24.11.2026): dieselben elf
+  Partien mit denselben Saaten wie bisher, die sechs mit Erweiterung jetzt ohne.
+  Dieselbe Aussage mit Erweiterung, also mit Schlangenkorb, Comeback- und
+  Risiko-Karten, gehört zu K4 (Plan K4, wird nachgetragen), ebenso die Partie aus
+  dem Prüfprotokoll K2, Iteration 2, Hinweis 2 (Saat 7154) mit Erweiterung.
+  */
+  const K2_1_PARTIEN: Entscheidung[][] = [
+    ...PARTIEN.map((partie, nummer) =>
+      partie.erweiterung
+        ? entscheidungenVon(
+            { ...partie, erweiterung: false },
+            Array.from({ length: partie.spielerzahl }, (_, sitz) => (sitz === 0 ? erstelleSolideKi(erzeugeZufall(nummer)) : erstelleZufallsKi(erzeugeZufall(100 * nummer + sitz)))),
+            0,
+          )
+        : ENTSCHEIDUNGEN[nummer],
+    ),
+    entscheidungenVon(
+      { spielerzahl: 2, erweiterung: false, saat: 7154 },
+      [erstelleSolideKi(erzeugeZufall(7154 * 13 + 3)), erstelleZufallsKi(erzeugeZufall(7154 * 7 + 1 + 11))],
+      0,
+    ),
+  ]
 
   /** Der Stand nach einer Karte, dazu jeder Stand nach einer zweiten Karte im selben Zug (A5, D12). */
   function mitZweiterKarte(danach: Spielzustand): Spielzustand[] {
@@ -161,10 +179,11 @@ describe('K2 Kriterium 1: Kann sie mit einer Handkarte eine Dreiergruppe vollend
     return [danach, ...zweite.map((aktion) => nachDurchlassen(danach, aktion, 0))]
   }
 
-  it('K2.1: in Partien vollendet sie in jedem Zug, in dem irgendeine Handkarte eine eigene Dreiergruppe vollenden kann, eine Gruppe oder spielt eine Vollendung, die abgewehrt wird, ausser ihr Zug ist strikt besser bewertet als jede Vollendung samt zweiter Karte (Saat 7154 eingeschlossen)', () => {
+  it('K2.1: in Partien vollendet sie in jedem Zug, in dem irgendeine Handkarte eine eigene Dreiergruppe vollenden kann, eine Gruppe oder spielt eine Vollendung, die abgewehrt wird, ausser ihr Zug ist strikt besser bewertet als jede Vollendung samt zweiter Karte (Basis-Spiel, elf Partien ohne Erweiterung, Saat 7154 eingeschlossen)', () => {
     let geprueft = 0
     let vollendet = 0
-    for (const zug of [...ENTSCHEIDUNGEN, SAAT_7154].flatMap(zuege)) {
+    expect(K2_1_PARTIEN.every((partie) => !partie[0].vorher.erweiterung), 'K2.1: nur Partien ohne Erweiterung').toBe(true)
+    for (const zug of K2_1_PARTIEN.flatMap(zuege)) {
       const start = zug[0].vorher
       const gruppen = gruppenzahl(start, 0)
       // Jede Karte zählt, auch Schlangenfrass, Fusion und Farbendieb; ein Gegner lässt eine angesagte Karte durch.
