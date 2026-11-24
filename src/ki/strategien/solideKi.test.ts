@@ -161,6 +161,18 @@ describe('K2 Kriterium 1: Kann sie mit einer Handkarte eine Dreiergruppe vollend
     return [danach, ...zweite.map((aktion) => nachDurchlassen(danach, aktion, 0))]
   }
 
+  /**
+   * Der Stand, mit dem sie den (ersten Teil-)Zug beendet, vor dem Nachziehen, so wie sie ihn gewählt hat: Ein Gegner,
+   * den eine ihrer Karten fragt, lässt durch, wie bei den Vollendungen, mit denen der Zug verglichen wird (A6). Wehrt
+   * er in der Partie ab, sieht sie das bei der Wahl nicht (K2.7); gemessen wird ihre Wahl, nicht die Abwehr (Befund aus
+   * X6, Saat 7154 ohne Erweiterung: geplant 40.00, nach der Abwehr 39.50, beste Vollendung 39.60; K2b).
+   */
+  function geplantesEnde(zug: readonly Entscheidung[]): Spielzustand {
+    const beendet = zug.findIndex((entscheidung) => entscheidung.aktion.typ === 'ZugBeenden')
+    const gespielt = zug.slice(0, beendet < 0 ? zug.length - 1 : beendet)
+    return gespielt.reduce((stand, { aktion }) => nachDurchlassen(stand, aktion, 0), zug[0].vorher)
+  }
+
   it('K2.1: in Partien vollendet sie in jedem Zug, in dem irgendeine Handkarte eine eigene Dreiergruppe vollenden kann, eine Gruppe oder spielt eine Vollendung, die abgewehrt wird, ausser ihr Zug ist strikt besser bewertet als jede Vollendung samt zweiter Karte (Saat 7154 eingeschlossen)', () => {
     let geprueft = 0
     let vollendet = 0
@@ -174,8 +186,7 @@ describe('K2 Kriterium 1: Kann sie mit einer Handkarte eine Dreiergruppe vollend
         .filter((danach) => gruppenzahl(danach, 0) > gruppen)
       if (vollendend.length === 0) continue
       geprueft += 1
-      // Der Stand, mit dem sie den (ersten Teil-)Zug beendet, vor dem Nachziehen.
-      const ende = (zug.find((entscheidung) => entscheidung.aktion.typ === 'ZugBeenden') ?? zug[zug.length - 1]).vorher
+      const ende = geplantesEnde(zug)
       // Eine Vollendung, die sie gespielt hat und die ein Gegner mit Farbenschutz abwehrte, zählt als versucht (A6, A7.2).
       const ersterTeilzug = zug.slice(0, Math.max(0, zug.findIndex((entscheidung) => entscheidung.aktion.typ === 'ZugBeenden')))
       const versucht = ersterTeilzug.some(({ aktion, vorher }) => gruppenzahl(nachDurchlassen(vorher, aktion, 0), 0) > gruppenzahl(vorher, 0))
