@@ -723,9 +723,9 @@ Entscheidungsablauf, Ziehen mitten im Zug über `stapel.ts`.*
      eins, auch Sonderkarten; eine Farbenfusion samt ihren zwei Karten zählt
      eins; ohne Schlange ist die Länge 0 (D48).
   3. Eingesetzt werden darf sie irgendwann in diesem Zug; ihr Einsatz zählt
-     nicht als reguläre Aktion. Im zweiten Zug nach Verdoppler nur, wenn D47
-     es zulässt; Verdoppler, Comeback und Korb-Erweiterung schliessen sich aus
-     (D47).
+     nicht als reguläre Aktion. Im zweiten Zug nach einem Verdoppler ist sie
+     nie einsetzbar, weil sich Verdoppler, Comeback und Korb-Erweiterung
+     ausschliessen (D47; Nachtrag zu D48 vom 23.11.2026).
   4. Zwei Zusatzaktionen aus den drei Möglichkeiten, in beliebiger Reihenfolge
      mit den normalen Aktionen, auch zweimal dieselbe; die Grenze „eine
      Farbenfusion pro Zug“ gilt weiter (D46, D56).
