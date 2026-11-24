@@ -8,7 +8,7 @@ import { verlangeEntscheidung } from '../reaktion';
 import { deckeAuf, zieheVomStapel } from '../stapel';
 import type { FarbkarteInfo, OffeneEntscheidung, Spieler, Spielkarte, Spielzustand } from '../types';
 import { entnehmeHandkarte, mitspielerImUhrzeigersinn, spielerIndexVon } from '../zugablauf';
-import { einmalJeRundeGesperrt, merkeEinmalJeRunde } from '../zuggrenzen';
+import { einmalJeRundeGesperrt, merkeEinmalJeRunde, zaehleKarteOhnePlatz } from '../zuggrenzen';
 
 /*
 Die Risiko-Belohnungs-Karten (A8.2, X5). Jeder Spieler hat mit Erweiterung
@@ -36,9 +36,10 @@ wie bei Aktion 3, und der begünstigte Gegner wählt zwischen ihr und der
 obersten Stapelkarte (D52). Sie steht deshalb in der Ansage und in der
 Entscheidung (`offeneHandkarte`).
 
-Annahmen, die Teil A und D nicht ausdrücklich hergeben, stehen im PR von X5:
-Aktion 2 braucht eine eigene Schlange; bei Aktion 3 darf der Spieler auf den
-Tausch verzichten („Du darfst den Tausch ausführen“).
+Drei Fragen hat der Autor am 24.11.2026 beantwortet: Aktion 2 braucht eine
+eigene Schlange; bei Aktion 3 darf der Spieler auf den Tausch verzichten („Du
+darfst den Tausch ausführen“); die bei Aktion 2 gelegte Farbkarte belegt keinen
+Platz des Zuges, zählt aber als seine Karte (A5, D12).
 */
 
 /** D50: So heisst die Risiko-Karte in der Runde des Zuges. */
@@ -87,7 +88,7 @@ function stapelOption(zustand: Spielzustand): string[] {
   return zustand.nachziehstapel.length > 0 ? [STAPEL] : [];
 }
 
-/** D52: Für Aktion 2 benennbar ist jede Farbkarte der Hand, wenn es eine eigene Schlange gibt, an die sie darf (Annahme, siehe oben). */
+/** D52: Für Aktion 2 benennbar ist jede Farbkarte der Hand, wenn es eine eigene Schlange gibt, an die sie darf (Antwort des Autors, siehe oben). */
 function planbareFarbkarten(spieler: Spieler): FarbkarteInfo[] {
   return spieler.schlangen.length === 0 ? [] : spieler.hand.filter(istFarbkarte);
 }
@@ -322,7 +323,11 @@ const ENTSCHEIDUNGEN: readonly EntscheidungsDefinition[] = [
     },
     loese(zustand, entscheidung, wahl) {
       const [karteId, schlangenId, seite] = wahl.split(' ');
-      const spielerId = zustand.spieler[entscheidung.entscheider].id;
+      const spieler = zustand.spieler[entscheidung.entscheider];
+      const karte = spieler.hand.find((eintrag) => eintrag.id === karteId);
+      if (karte === undefined) throw new Error(`Die Karte ${karteId} liegt nicht auf der Hand von ${spieler.id}.`);
+      zaehleKarteOhnePlatz(zustand.zug, karte);
+      const spielerId = spieler.id;
       return farbkarte.wirke(zustand, { typ: 'FarbkarteLegen', spielerId, karteId, ziel: { art: 'schlange', schlangenId, seite: seite === 'anfang' ? 'anfang' : 'ende' } }, []);
     },
   },
