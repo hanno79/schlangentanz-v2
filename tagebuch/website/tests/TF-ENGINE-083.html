@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-ENGINE-083 Der Schlangenkorb des Glücks spielt seine vier Boni nach A7.10 und D42 bis D47 und kommt danach aus dem Spiel. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-ENGINE-083 Der Schlangenkorb des Glücks spielt seine vier Boni nach A7.10 und D42 bis D47 und kommt danach aus dem Spiel.</h1><p class="etiketten"><span class="etikett">Bereich Spiel-Engine: Regeln, Zugablauf, Wertung, Speicherformat</span><span class="etikett">Regression ja</span><span class="etikett">Priorität hoch</span><span class="etikett">Art beides</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Der Korb liegt nur mit Erweiterung einmal im Spiel. Wer ihn spielt, wählt einen von vier Boni: drei Karten ziehen und bis zu zwei davon zusätzlich spielen, bis zu zwei Farbkarten der eigenen Schlange gegen Handkarten tauschen, eine Sonderkarte entfernen oder zwei zusätzliche Aktionen. Danach liegt er aus dem Spiel und auf keinem Ablagestapel. Dazu gehören die Antworten des Autors vom 24.11.2026: abgeworfen kommt er auf den Ablagestapel, getauscht wird mindestens eine Karte, nach „Ziehe 3“ dürfen alle drei gezogenen Karten gespielt werden.</p><h2>Bestanden, wenn</h2><p>Die fünf Regeltestdateien sind grün, und die eigenen Proben liefern: leerer und dreifacher Tausch abgelehnt, drei gezogene Farbkarten gespielt (<code>gespielteFarbkarten</code> 3), ein als Überzahl oder über „Zwei abwerfen, drei ziehen“ abgeworfener Korb liegt auf dem Ablagestapel, nach „aktionen“ lassen sich zwei Farbenschutz wirkungslos ablegen, mit nur dem Korb auf der Hand gibt es kein wirkungsloses Ablegen.</p><h2>Fehlgeschlagen, wenn</h2><p>Ein Regeltest ist rot, oder eine der Proben zeigt einen anderen Wert, etwa einen angenommenen leeren Tausch oder einen Korb auf einem Ablagestapel nach seiner Nutzung.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>24.11.2026</dd><dt>Änderung</dt><dd>task/X6-schlangenkorb (PR #116)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Repo auf 14eaa6cb (<code>task/X6-schlangenkorb</code>)</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Stellungen aus dem Baukasten mit zwei Spielern und Erweiterung; Spieler 1 hält den Korb, dazu je nach Probe Gelb, Grün, Violett und die Schlange Blau, Rot, Blau.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Konsole</td><td>Regeltests ausführen</td><td>`npx vitest run src/engine/__tests__/regeln/A7.10_`</td><td>5 Dateien grün</td></tr><tr><td>2</td><td>`src/engine/__tests__/regeln/`</td><td>Probendatei anlegen (Beleg nennt jede Probe)</td><td>`zz_pruefer_x6.test.ts`</td><td>Datei vorhanden</td></tr><tr><td>3</td><td>Konsole</td><td>Proben ausführen</td><td>`npx vitest run src/engine/__tests__/regeln/zz_pruefer_x6.test.ts --reporter=verbose`</td><td>Zeilen „PROBE“ mit den Werten unter „Bestanden, wenn“</td></tr><tr><td>4</td><td>Konsole</td><td>Probendatei löschen</td><td></td><td>`git status` leer</td></tr></tbody></table></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p>Zum Skript gehören die vier Dateien <code>A7.10_korb_ziehen</code>, <code>A7.10_korb_tauschen</code>, <code>A7.10_korb_entfernen</code> und <code>A7.10_korb_aktionen</code> im selben Ordner. <code>pruefeAktion</code> mit <code>bonus: { art: &#x27;tauschen&#x27;, tausch: [] }</code> liefert <code>{ erlaubt: false, grund: &#x27;Ungültige Aktion SchlangenkorbSpielen: Feld bonus ist ungültig.&#x27; }</code>.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Risiko-Karten neben dem Korb (D47 „Risiko-Karten zählen nicht dazu“) lassen sich erst nach dem Merge mit X5 prüfen. Die Bedienung durch den Menschen unter <code>/spiel</code> kommt mit O10.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-24">24.11.2026 22:05</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer X6) &middot; agent &middot; pruefung-X6 @ <span class="commit" title="14eaa6cbacd59e5ac4712ae8457b95f9ab7ea25f">14eaa6c</span></p><p>5 Regeltestdateien A7.10 grün (im vollen Lauf 180 Dateien, 3&#x27;085 Tests). Proben: leerer und dreifacher Tausch abgelehnt (Feld bonus ist ungültig); drei gezogene Farbkarten gespielt, gespielteFarbkarten 3; Korb als Überzahl und über Zwei abwerfen, drei ziehen auf dem Ablagestapel, ausDemSpiel leer; nach aktionen zwei Farbenschutz wirkungslos, gespielteSonderkarten 3; nur Korb auf der Hand: nur ziehen und aktionen. Fehlende Regeltests für die Antworten vom 24.11.2026 im Protokoll als Hinweis 2.</p><ul class="belege"><li><a href="belege/2026-11-24-2205-TF-ENGINE-083-1.txt">2026-11-24-2205-TF-ENGINE-083-1.txt</a></li><li><a href="belege/2026-11-24-2205-TF-ENGINE-083-2.txt">2026-11-24-2205-TF-ENGINE-083-2.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>
