@@ -6,7 +6,7 @@ import type { Ereignis, SpielAktion, Spielzustand } from '../../engine'
 import { findeSzenario } from '../../entwicklung/szenarien'
 import { naechsterKiSchritt } from '../schritt'
 import { entscheiderVon, sichtFuer } from '../sicht'
-import { entscheidungenVon, nachDurchlassen } from '../__tests__/stellungen'
+import { entscheidungenVon, mitZweiterKarte, nachDurchlassen } from '../__tests__/stellungen'
 import type { Entscheidung } from '../__tests__/stellungen'
 import type { Schlangenglied } from '../../engine/testing/szenario'
 import { bewerte } from './bewertung'
@@ -154,21 +154,14 @@ describe('K2 Kriterium 1: Kann sie mit einer Handkarte eine Dreiergruppe vollend
     0,
   )
 
-  /** Der Stand nach einer Karte, dazu jeder Stand nach einer zweiten Karte im selben Zug (A5, D12). */
-  function mitZweiterKarte(danach: Spielzustand): Spielzustand[] {
-    if (danach.schwebend !== null || danach.zug.spielerIndex !== 0 || danach.zug.abschnitt !== 'Ausspielen') return [danach]
-    const zweite = ermittleAktionen(danach).filter((aktion) => aktion.typ !== 'ZugBeenden' && aktion.typ !== 'UeberhandAbwerfen')
-    return [danach, ...zweite.map((aktion) => nachDurchlassen(danach, aktion, 0))]
-  }
-
   /**
-   * Der Stand, mit dem sie den (ersten Teil-)Zug beendet, vor dem Nachziehen, so wie sie ihn gewählt hat: Ein Gegner,
-   * den eine ihrer Karten fragt, lässt durch, wie bei den Vollendungen, mit denen der Zug verglichen wird (A6). Wehrt
-   * er in der Partie ab, sieht sie das bei der Wahl nicht (K2.7); gemessen wird ihre Wahl, nicht die Abwehr (Befund aus
-   * X6, Saat 7154 ohne Erweiterung: geplant 40.00, nach der Abwehr 39.50, beste Vollendung 39.60; K2b).
+   * Der Stand, mit dem sie den (ersten Teil-)Zug beendet, vor dem Nachziehen (`beendet`: Stelle von „Zug beenden“),
+   * so wie sie ihn gewählt hat: Ein Gegner, den eine ihrer Karten fragt, lässt durch, wie bei den Vollendungen, mit
+   * denen der Zug verglichen wird (A6). Wehrt er in der Partie ab, sieht sie das bei der Wahl nicht (K2.7); gemessen
+   * wird ihre Wahl, nicht die Abwehr (K2b, Befunde aus X6 und X5: geplant 40.00 und 27.80, nach der Abwehr 39.50 und
+   * 27.30, beste Vollendung 39.60 und 27.40; `solideKi_gleichstand.test.ts`).
    */
-  function geplantesEnde(zug: readonly Entscheidung[]): Spielzustand {
-    const beendet = zug.findIndex((entscheidung) => entscheidung.aktion.typ === 'ZugBeenden')
+  function geplantesEnde(zug: readonly Entscheidung[], beendet: number): Spielzustand {
     const gespielt = zug.slice(0, beendet < 0 ? zug.length - 1 : beendet)
     return gespielt.reduce((stand, { aktion }) => nachDurchlassen(stand, aktion, 0), zug[0].vorher)
   }
@@ -186,9 +179,10 @@ describe('K2 Kriterium 1: Kann sie mit einer Handkarte eine Dreiergruppe vollend
         .filter((danach) => gruppenzahl(danach, 0) > gruppen)
       if (vollendend.length === 0) continue
       geprueft += 1
-      const ende = geplantesEnde(zug)
+      const beendet = zug.findIndex((entscheidung) => entscheidung.aktion.typ === 'ZugBeenden')
+      const ende = geplantesEnde(zug, beendet)
       // Eine Vollendung, die sie gespielt hat und die ein Gegner mit Farbenschutz abwehrte, zählt als versucht (A6, A7.2).
-      const ersterTeilzug = zug.slice(0, Math.max(0, zug.findIndex((entscheidung) => entscheidung.aktion.typ === 'ZugBeenden')))
+      const ersterTeilzug = zug.slice(0, Math.max(0, beendet))
       const versucht = ersterTeilzug.some(({ aktion, vorher }) => gruppenzahl(nachDurchlassen(vorher, aktion, 0), 0) > gruppenzahl(vorher, 0))
       if (gruppenzahl(ende, 0) > gruppen || versucht) {
         vollendet += 1
@@ -196,7 +190,7 @@ describe('K2 Kriterium 1: Kann sie mit einer Handkarte eine Dreiergruppe vollend
       }
       // Eine Gruppe zu vollenden kann eine andere kosten, etwa wenn eine Fusion die Farbe wechseln müsste (A11); dann muss ihr Zug strikt besser
       // bewertet sein als die beste Vollendung samt der besten zweiten Karte desselben Zuges.
-      const besteVollendung = vollendend.flatMap(mitZweiterKarte).reduce((beste, danach) => (bewerte(sichtFuer(danach, 0)) > bewerte(sichtFuer(beste, 0)) ? danach : beste))
+      const besteVollendung = vollendend.flatMap((danach) => mitZweiterKarte(danach, 0)).reduce((beste, danach) => (bewerte(sichtFuer(danach, 0)) > bewerte(sichtFuer(beste, 0)) ? danach : beste))
       const zahlen = `Endwertung ${endpunkte(ende, 0)} gegen ${endpunkte(besteVollendung, 0)}, Bewertung ${bewerte(sichtFuer(ende, 0)).toFixed(2)} gegen ${bewerte(sichtFuer(besteVollendung, 0)).toFixed(2)}`
       expect(bewerte(sichtFuer(ende, 0)), `K2.1: Zug ab ${JSON.stringify(zug[0].aktion)}: ${zahlen}`).toBeGreaterThan(bewerte(sichtFuer(besteVollendung, 0)) + 1e-9)
     }

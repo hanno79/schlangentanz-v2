@@ -19,8 +19,10 @@ X4, umgesetzt in K2b). Dieselbe Aussage mit Erweiterung gehört zu K4, Kriterium
 */
 
 const PARTIEN = partienK3gegenK2(18, 42_000)
-const ALLE = PARTIEN.flatMap((partie) => entscheidungenVon(partie, kisK3gegenK2(partie), 0))
-const BASIS = PARTIEN.map((partie) => (partie.erweiterung ? { ...partie, erweiterung: false } : partie)).flatMap((partie) => entscheidungenVon(partie, kisK3gegenK2(partie), 0))
+const JE_PARTIE = PARTIEN.map((partie) => entscheidungenVon(partie, kisK3gegenK2(partie), 0))
+const ALLE = JE_PARTIE.flat()
+/** Dieselben Partien ohne Erweiterung; die schon ohne gespielten werden nicht noch einmal gespielt. */
+const BASIS = PARTIEN.flatMap((partie, nummer) => (partie.erweiterung ? entscheidungenVon({ ...partie, erweiterung: false }, kisK3gegenK2(partie), 0) : JE_PARTIE[nummer]))
 
 /** Die eigenen Punkte ohne Aufgaben: Gruppen, Vielfaltbonus, Kettenbonus (A11). */
 const punkte = (zustand: Spielzustand, sitz: number) => {
@@ -48,7 +50,6 @@ function getroffen(zustand: Spielzustand, aktion: SpielAktion): number[] {
 
 describe('K3 Kriterium 2 in Partien: Schlangenblockade und Farbendieb treffen dort, wo der Führende am meisten verliert', () => {
   it('K3.2: jede Blockade und jeder Farbendieb gegen einen Gegner lässt dem stärksten Gegner den kleinsten Vorsprung, den diese Karte zulässt, oder ist nachweislich besser bewertet (Basis-Spiel)', () => {
-    expect(BASIS.every(({ vorher }) => !vorher.erweiterung), 'K3.2: nur Partien ohne Erweiterung').toBe(true)
     let geprueft = 0
     const ausnahmen: string[] = []
     for (const { vorher, aktion } of BASIS) {

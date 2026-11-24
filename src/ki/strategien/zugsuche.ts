@@ -2,8 +2,8 @@ import type { SpielAktion } from '../../engine';
 import { simuliere } from '../sicht';
 import type { Sicht, Stellung } from '../sicht';
 import { wehrtAb } from './abwehr';
-import { GLEICH, bewerte, eigeneGruppen, eigenePunkte, gruppenwert, haltewert, neuerMerker } from './bewertung';
-import type { Wertungsmerker } from './bewertung';
+import { bewerte, eigeneGruppen, eigenePunkte, gruppenwert, haltewert, neuerMerker, sichtbarePunkte, vergleiche } from './bewertung';
+import type { Ergebnis, Wertungsmerker } from './bewertung';
 import { folgeschluessel } from './folgeschluessel';
 import { punkteNach, vorauswahl } from './vorauswahl';
 
@@ -35,8 +35,15 @@ Verletzt jede durchgerechnete erste Aktion eine dieser Regeln, rechnet die Suche
 die nächsten nach dem Vorwert durch, bis eine erlaubt ist (Nachlese, höchstens
 NACHLESE).
 
-Sind Spielen und Halten gleich bewertet, gewinnt der Zug, der die eigenen Punkte
-sicher hebt (Entscheidung des Orchestrators vom 21.11.2026: die KI spielt auf Sieg).
+Sind zwei Züge gleich bewertet (Abstand höchstens GLEICH), entscheidet nicht die
+Reihenfolge, sondern zuerst die Zahl der eigenen Gruppen, dann die Punkte, die die
+Sicht schon sicher zeigt (`sichtbarePunkte`, mit erfüllten Aufgaben). So vollendet
+die KI eine Gruppe, wenn kein anderer Zug nachweislich besser bewertet ist
+(Kriterium 1, K2b), und spielt eine Karte, die sicher Punkte bringt, statt den Zug
+zu beenden (Entscheidung des Orchestrators vom 21.11.2026: die KI spielt auf Sieg).
+Dieselbe Ordnung (`vergleiche`) wählt die Züge, die eine zweite Karte bekommen, und
+ordnet die Vorauswahl. Die Bewertung selbst kennt keine Aufgaben; sie zählen hier nur
+bei Gleichstand. Dass die KI Aufgaben gezielt verfolgt, ist Plan K4.
 
 Kriterium 8: Die Suche rechnet je Schritt höchstens GRENZE_SUCHE Stellungen durch
 und bewertet sie (ERSTE_AUSWAHL + NACHLESE + ZWEITE_TIEFE × ZWEITE_AUSWAHL + 1).
@@ -73,14 +80,7 @@ function ohneBewertung(): Bewertungen {
   return { suche: 0, vorauswahl: 0, angeboten: 0 };
 }
 
-/** Was beim Vergleich zweier Züge zählt: erst die Bewertung, bei Gleichstand die eigenen Punkte, dann die Zahl der Gruppen. */
-interface Ergebnis {
-  wert: number;
-  punkte: number;
-  gruppen: number;
-}
-
-/** Eine durchgerechnete Aktion; `punkte` und `gruppen` sind die eigenen nach ihr (A11). */
+/** Eine durchgerechnete Aktion; `punkte` (`sichtbarePunkte`) und `gruppen` sind die eigenen nach ihr (A9, A11). */
 interface Folge extends Ergebnis {
   aktion: SpielAktion;
   stellung: Stellung;
@@ -172,7 +172,7 @@ function erstelleSuche(sicht: Sicht, zufall: () => number) {
     const fusionSenkt = aktion.typ === 'FusionLegen' && eigenePunkte(sichtNach, merker) < eigenePunkte(vorher, merker);
     const grubeOhneZug = aktion.typ === 'SchlangengrubeSpielen' && wirkungslos;
     const wert = werte(sichtNach) - (wirkungslos ? OHNE_WIRKUNG : 0);
-    return { aktion, stellung: nach, wert, punkte: eigenePunkte(sichtNach, merker), gruppen: eigeneGruppen(sichtNach, merker), verworfen: fusionSenkt || grubeOhneZug };
+    return { aktion, stellung: nach, wert, punkte: sichtbarePunkte(sichtNach, merker), gruppen: eigeneGruppen(sichtNach, merker), verworfen: fusionSenkt || grubeOhneZug };
   };
 
   /** Die Karten, die von `stand` aus in Frage kommen, durchgerechnet; mit `nachlese` weitere, solange keine erlaubt ist. */
@@ -190,15 +190,13 @@ function erstelleSuche(sicht: Sicht, zufall: () => number) {
     return folgen;
   };
 
-  const ergebnis = (stand: Sicht): Ergebnis => ({ wert: werte(stand), punkte: eigenePunkte(stand, merker), gruppen: eigeneGruppen(stand, merker) });
+  const ergebnis = (stand: Sicht): Ergebnis => ({ wert: werte(stand), punkte: sichtbarePunkte(stand, merker), gruppen: eigeneGruppen(stand, merker) });
   return { wurzel, werte, folge, kandidaten, gezaehlt: () => ({ ...bewertungen }), ergebnis };
 }
 
-/** Ob `folge` besser ist als `bisher`: höher bewertet; bei gleicher Bewertung mehr eigene Punkte; bei gleichen Punkten mehr Gruppen (Kriterium 1). */
+/** Ob `folge` besser ist als `bisher` nach `vergleiche`. */
 function besser(folge: Ergebnis, bisher: Ergebnis): boolean {
-  if (Math.abs(folge.wert - bisher.wert) > GLEICH) return folge.wert > bisher.wert;
-  if (folge.punkte !== bisher.punkte) return folge.punkte > bisher.punkte;
-  return folge.gruppen > bisher.gruppen;
+  return vergleiche(folge, bisher) > 0;
 }
 
 /** Die beste Folge, bei Gleichstand die frühere; verworfene nur, wenn es keine andere gibt. */
@@ -214,7 +212,7 @@ function spiele(sicht: Sicht, aktionen: readonly SpielAktion[], zufall: () => nu
   const vertieft = new Map<Folge, Folge>();
   // Vertieft werden die besten drei verschiedenen Züge; gleichwertige Varianten derselben Folge belegen nur einen Platz.
   const vertiefen = verschiedene(
-    erste.filter((folge) => !folge.verworfen && folge.stellung.entscheider === sicht.ich && gleicherZug(folge.stellung.sicht, sicht)).sort((a, b) => b.wert - a.wert),
+    erste.filter((folge) => !folge.verworfen && folge.stellung.entscheider === sicht.ich && gleicherZug(folge.stellung.sicht, sicht)).sort((a, b) => vergleiche(b, a)),
     ZWEITE_TIEFE,
   );
   for (const folge of vertiefen) {
