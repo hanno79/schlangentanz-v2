@@ -905,10 +905,11 @@ Lobby schon heute die Partie mit `Math.random` anlegt.
      Bewertung steigt, und nicht im ersten Zug ohne Nutzen.
   3. Sie plant eine Schlangenhäutung, die neue Gruppen bildet.
   4. K2.7 und K2.8 gelten weiter.
-  5. K2.1 (vollenden, ausser ein anderer Zug ist nachweislich besser) und
-     K3.4 (Abwehr, in der Schlussrunde jeden Schaden) gelten auch in Partien
-     mit Erweiterung. Seit X6 prüfen die Tests dieser beiden Aussagen nur
-     Partien ohne Erweiterung (Entscheid des Orchestrators vom 24.11.2026).
+  5. K2.1 (vollenden, ausser ein anderer Zug ist nachweislich besser), K3.2
+     (Blockade und Farbendieb gegen den Führenden) und K3.4 (Abwehr, in der
+     Schlussrunde jeden Schaden) gelten auch in Partien mit Erweiterung. Seit
+     X6 und K2b prüfen die Tests dieser Aussagen nur Partien ohne Erweiterung
+     (Entscheid des Orchestrators vom 24.11.2026).
 
 ### K5 Stärkenachweis
 
