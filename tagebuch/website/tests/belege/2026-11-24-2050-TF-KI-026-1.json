@@ -1,0 +1,71 @@
+{
+ "neu gegen zufall, 2er, basis": {
+  "siege": [
+   60,
+   0
+  ],
+  "punkteMittel": [
+   61.31666666666667,
+   0.25
+  ],
+  "ausgaenge": [
+   "beendet"
+  ]
+ },
+ "alt gegen zufall, 2er, basis": {
+  "siege": [
+   60,
+   0
+  ],
+  "punkteMittel": [
+   61.31666666666667,
+   0.25
+  ],
+  "ausgaenge": [
+   "beendet"
+  ]
+ },
+ "neu gegen alt, 2er, basis": {
+  "siege": [
+   36,
+   44
+  ],
+  "punkteMittel": [
+   30.3125,
+   32.825
+  ],
+  "ausgaenge": [
+   "beendet"
+  ]
+ },
+ "neu gegen alt, 2er, erweiterung": {
+  "siege": [
+   21,
+   19
+  ],
+  "punkteMittel": [
+   51.875,
+   43.4
+  ],
+  "ausgaenge": [
+   "beendet"
+  ]
+ },
+ "neu gegen alt gegen zufall gegen zufall, 4er, basis": {
+  "siege": [
+   7,
+   17,
+   0,
+   0
+  ],
+  "punkteMittel": [
+   13.75,
+   19.833333333333332,
+   0.5833333333333334,
+   0.4166666666666667
+  ],
+  "ausgaenge": [
+   "beendet"
+  ]
+ }
+}

@@ -1,0 +1,133 @@
+[
+ {
+  "erweiterung": false,
+  "wahlen": 1401,
+  "abweichend": 0,
+  "maxSuche": 40,
+  "maxMs": 108.38000000000011,
+  "vorauswahlUeber": 0,
+  "sichtbarUngleich": 0,
+  "instrUngleich": 0,
+  "gestoert": 489,
+  "stoerAbweichung": 0,
+  "abweichungen": []
+ },
+ {
+  "erweiterung": true,
+  "wahlen": 548,
+  "abweichend": 2,
+  "maxSuche": 41,
+  "maxMs": 166.96189999999478,
+  "vorauswahlUeber": 0,
+  "sichtbarUngleich": 0,
+  "instrUngleich": 0,
+  "gestoert": 196,
+  "stoerAbweichung": 0,
+  "abweichungen": [
+   {
+    "partie": {
+     "spielerzahl": 2,
+     "erweiterung": true,
+     "saat": 31003
+    },
+    "k": 35,
+    "phase": "Laufend",
+    "alt": {
+     "typ": "RegenbogenschlangeLegen",
+     "spielerId": "spieler-1",
+     "karteId": "regenbogenschlange-03",
+     "schlangenId": "schlange-5",
+     "position": 0
+    },
+    "neu": {
+     "typ": "RegenbogenschlangeLegen",
+     "spielerId": "spieler-1",
+     "karteId": "regenbogenschlange-03",
+     "schlangenId": "schlange-5",
+     "position": 1
+    },
+    "protokoll": [
+     {
+      "dw": 0,
+      "neuWaehlt": true,
+      "a": {
+       "wert": 15.360000000000001,
+       "gruppen": 2,
+       "punkte": 24,
+       "punkteAlt": 19
+      },
+      "b": {
+       "wert": 15.360000000000001,
+       "gruppen": 2,
+       "punkte": 19,
+       "punkteAlt": 19
+      }
+     }
+    ],
+    "nachEinerKarte": {
+     "bewertungAlt": 15.360000000000001,
+     "bewertungNeu": 15.360000000000001,
+     "endwertungAlt": 19,
+     "endwertungNeu": 24
+    }
+   },
+   {
+    "partie": {
+     "spielerzahl": 2,
+     "erweiterung": true,
+     "saat": 31006
+    },
+    "k": 91,
+    "phase": "Schlussrunde",
+    "alt": {
+     "typ": "SchlangenfrassSpielen",
+     "spielerId": "spieler-1",
+     "karteId": "schlangenfrass-03",
+     "option": "eigeneKarte",
+     "ziele": [
+      {
+       "schlangenId": "schlange-1",
+       "karteId": "gelb-09"
+      }
+     ]
+    },
+    "neu": {
+     "typ": "SchlangenfrassSpielen",
+     "spielerId": "spieler-1",
+     "karteId": "schlangenfrass-03",
+     "option": "eigeneKarte",
+     "ziele": [
+      {
+       "schlangenId": "schlange-1",
+       "karteId": "farbenfusion-03"
+      }
+     ]
+    },
+    "protokoll": [
+     {
+      "dw": 0,
+      "neuWaehlt": true,
+      "a": {
+       "wert": 66.8,
+       "gruppen": 10,
+       "punkte": 134,
+       "punkteAlt": 61
+      },
+      "b": {
+       "wert": 66.8,
+       "gruppen": 10,
+       "punkte": 122,
+       "punkteAlt": 61
+      }
+     }
+    ],
+    "nachEinerKarte": {
+     "bewertungAlt": 66.8,
+     "bewertungNeu": 66.8,
+     "endwertungAlt": 122,
+     "endwertungNeu": 139
+    }
+   }
+  ]
+ }
+]
