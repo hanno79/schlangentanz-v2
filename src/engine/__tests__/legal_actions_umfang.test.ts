@@ -24,11 +24,19 @@ Danach kommt der Schlangenfrass c) mit jedem Paar gegnerischer Karten
 Regenbogenschlangen hinter der bunten Folge unterbrechen keinen Abschnitt;
 mit ihnen liegen 82 Karten beim Gegner, 3'321 Paare je Schlangenfrass. Eine
 Farbenfusion bringt nichts dazu, weil sie zwei Farbkarten aus dem Lauf nimmt,
-ein Farbendieb weniger als ein Schlangenfrass. Der ungünstigste Tisch, den
-diese Überlegung findet (bewiesen ist das Maximum nicht), hat drei Häutungen
-und zwei Schlangenfrass auf der Hand und diese Schlange beim Gegner. In
-Zufallspartien bleibt es weit darunter, höchstens bei
-`HOECHSTE_AKTIONSZAHL_IM_DAUERLAUF` (`dauerlauf_pruefer.ts`).
+ein Farbendieb weniger als ein Schlangenfrass. Ohne Schlangenkorb hat der
+ungünstigste Tisch, den diese Überlegung findet (bewiesen ist das Maximum
+nicht), drei Häutungen und zwei Schlangenfrass auf der Hand und diese Schlange
+beim Gegner: 39'377 Aktionen (unten).
+
+Mehr bringt seit X6 der Tausch des Schlangenkorbs (D44): Mit S Farbkarten in den
+eigenen Schlangen und H Farbkarten auf der Hand zählt er S · H einzelne Täusche
+und S · (S − 1) / 2 · H · (H − 1) Paare auf. Die Hand kann seit X3 und X5 mehr
+als 5 Karten halten; mit dem Korb und sieben Farbkarten auf der Hand und den
+übrigen 71 Farbkarten in eigenen Schlangen sind es rechnerisch 497 + 104'370,
+rund 105'000 Aktionen. Gemessen ist dieser Tisch nicht. In Zufallspartien
+bleibt es weit darunter, höchstens bei `HOECHSTE_AKTIONSZAHL_IM_DAUERLAUF`
+(`dauerlauf_pruefer.ts`).
 */
 
 /** A1: wie viele Farbkarten jeder Farbe es gibt, aus dem Material. */
