@@ -1,0 +1,120 @@
+Grenzfall-Datei, temporär als src/engine/__tests__/x4_pruefer_grenzfaelle.test.ts:
+import { describe, expect, it } from 'vitest'
+import { anwendeAktion, ermittleAktionen } from '../index'
+import type { SpielAktion, Spielzustand } from '../index'
+import { baukasten } from '../testing/szenario'
+import { beende, einsetzen, FUENF_FARBEN, karteVon, mitBedingung, mitWirkung, nachZugwechsel, schlangeAus, spiele, tauschAktionen, tausche, zwei } from './comeback_hilfen'
+import { pruefeSchritt } from './rahmen_hilfen'
+import { aktionen, fuehreAus, grund, typen } from './zugablauf_hilfen'
+
+// Prüfer X4, temporär: eigene Grenzfälle, nicht im Repo.
+
+describe('Prüfer X4: eigene Grenzfälle', () => {
+  it('G1 D49: nach einer normalen Karte bleibt eine Handkarte: kein Abwerfen, aber die letzte Karte geht als Zusatzaktion', () => {
+    let zustand = einsetzen(mitBedingung(zwei(['Blau', 'Rot'], 1, 6))).zustand
+    expect(tauschAktionen(zustand).length, 'zwei Handkarten: genau ein Paar').toBe(1)
+    zustand = spiele(zustand, karteVon(zustand, 'Blau')).zustand
+    expect(zustand.spieler[0].hand).toHaveLength(1)
+    expect(tauschAktionen(zustand), 'eine Handkarte: kein Abwerfen').toEqual([])
+    expect(mitWirkung(zustand, karteVon(zustand, 'Rot')), 'zweite Farbkarte als Zusatzaktion').toBe(true)
+    zustand = spiele(zustand, karteVon(zustand, 'Rot')).zustand
+    expect(zustand.zug.gespielteFarbkarten).toBe(2)
+    expect(typen(zustand)).toEqual(['ZugBeenden'])
+  })
+
+  it('G2 A5/D49: zweimal abwerfen, dann eine Karte: am Zugende 6 Karten, eine wird abgeworfen', () => {
+    let zustand = einsetzen(mitBedingung(zwei(FUENF_FARBEN, 1, 6))).zustand
+    zustand = tausche(tausche(zustand).zustand).zustand
+    expect(zustand.spieler[0].hand).toHaveLength(7)
+    const farbe = zustand.spieler[0].hand.find((karte) => karte.typ === 'Farbkarte')!
+    zustand = spiele(zustand, farbe.id).zustand
+    const ende = beende(zustand)
+    expect(ende.ereignisse.map((e) => e.typ)).toContain('AbwerfenVerlangt')
+    expect(ende.zustand.zug.abschnitt).toBe('Abwerfen')
+    expect(typen(ende.zustand)).toEqual(expect.arrayContaining(['UeberhandAbwerfen']))
+    expect(typen(ende.zustand).every((t) => t === 'UeberhandAbwerfen'), 'im Abschnitt Abwerfen nur Abwerfen').toBe(true)
+    const comebackImAbwerfen = { typ: 'ComebackEinsetzen', spielerId: 'spieler-1', comebackId: 'comeback-01' }
+    expect(grund(ende.zustand, comebackImAbwerfen)).toMatch(/Zug ist beendet/)
+  })
+
+  it('G3 D56: abgewehrte Farbenfusion verbraucht die Fusion auch mit Comeback-Zusatzaktion', () => {
+    const bau = baukasten({ spielerzahl: 2, erweiterung: true })
+      .hand(0, ['Farbenfusion', 'Farbenfusion', 'Blau'])
+      .hand(1, ['Farbenschutz', 'Rot', 'Gelb', 'Grün', 'Braun'])
+      .schlange(0, ['Blau'])
+      .schlange(1, ['Rot', 'Rot', 'Gelb', 'Gelb', 'Grün', 'Grün', 'Braun'])
+    let zustand = einsetzen(mitBedingung(bau)).zustand
+    const fusion = aktionen(zustand, 'FusionLegen').find((a) => a.typ === 'FusionLegen' && JSON.stringify(a).includes('schlange') && !JSON.stringify(a).includes(zustand.spieler[0].schlangen[0].id)) as SpielAktion
+    expect(fusion, 'Fusion in die fremde Schlange angeboten').toBeDefined()
+    zustand = pruefeSchritt(zustand, fuehreAus(zustand, fusion)).zustand
+    expect(zustand.schwebend).not.toBeNull()
+    const abwehr = ermittleAktionen(zustand).find((a) => a.typ === 'Reagieren' && a.farbenschutzId !== null)!
+    zustand = pruefeSchritt(zustand, fuehreAus(zustand, abwehr)).zustand
+    expect(zustand.schwebend).toBeNull()
+    expect(zustand.zug.spielerIndex).toBe(0)
+    const zweite = karteVon(zustand, 'Farbenfusion')
+    expect(mitWirkung(zustand, zweite), 'D56: keine zweite Fusion, auch nicht als Zusatzaktion').toBe(false)
+    expect(aktionen(zustand, 'SonderkarteWirkungslosAblegen').map((a) => 'karteId' in a && a.karteId)).toContain(zweite)
+  })
+
+  it('G4 A7.6: wer mit Rückstand vor einer Grube sitzt, setzt aus; kein Comeback-Angebot, danach neu festgestellt', () => {
+    const bau = baukasten({ spielerzahl: 3, erweiterung: true })
+      .hand(0, FUENF_FARBEN)
+      .hand(1, FUENF_FARBEN)
+      .hand(2, FUENF_FARBEN)
+      .schlange(0, schlangeAus(8))
+      .schlange(1, schlangeAus(1))
+      .schlange(2, schlangeAus(1))
+      .grube(0, 1)
+      .amZug(0)
+      .gespielt(1, 0)
+    const schritt = beende(bau.zustand())
+    expect(schritt.ereignisse.map((e) => e.typ)).toContain('Ausgesetzt')
+    expect(schritt.zustand.zug.spielerIndex, 'Spieler 2 setzt aus, Spieler 3 ist dran').toBe(2)
+    expect(schritt.zustand.zug.comebackBedingung, 'Spieler 3 liegt 7 zurück').toBe(true)
+    expect(schritt.zustand.spieler[1].comeback?.verbraucht).toBe(false)
+  })
+
+  it('G5 A8.1: eine Comeback-Aktion mit falscher spielerId oder in einer beendeten Partie wird abgelehnt', () => {
+    const zustand = mitBedingung(zwei(FUENF_FARBEN, 1, 6))
+    expect(grund(zustand, { typ: 'ComebackEinsetzen', spielerId: 'spieler-9', comebackId: 'comeback-01' })).not.toBeNull()
+    const beendet = mitBedingung(zwei(FUENF_FARBEN, 1, 6).beendet(0))
+    expect(ermittleAktionen(beendet)).toEqual([])
+    expect(grund(beendet, { typ: 'ComebackEinsetzen', spielerId: 'spieler-1', comebackId: 'comeback-01' })).not.toBeNull()
+  })
+
+  it('G6 A8.1: Spieler mit der längsten Schlange und Gleichstand: Rückstand 0 ist nie erfüllt, auch ohne jede Schlange am Tisch', () => {
+    expect(nachZugwechsel(zwei(FUENF_FARBEN, 0, 0)).zug.comebackBedingung).toBe(false)
+    expect(nachZugwechsel(zwei(FUENF_FARBEN, 9, 4)).zug.comebackBedingung).toBe(false)
+  })
+
+  it('G7 D25/D46 (Codex-Befund 1): mit Comeback lassen sich drei Farbenschutz wirkungslos ablegen', () => {
+    let zustand = einsetzen(mitBedingung(zwei(['Farbenschutz', 'Farbenschutz', 'Farbenschutz', 'Blau'], 1, 6))).zustand
+    for (let i = 0; i < 3; i += 1) {
+      const ablegen = aktionen(zustand, 'SonderkarteWirkungslosAblegen')[0]
+      zustand = pruefeSchritt(zustand, fuehreAus(zustand, ablegen)).zustand
+    }
+    expect(zustand.zug.gespielteSonderkarten).toBe(3)
+    expect(zustand.spieler[0].ablagestapel.filter((k) => k.typ === 'Sonderkarte' && k.name === 'Farbenschutz')).toHaveLength(3)
+    void anwendeAktion
+    void (zustand as Spielzustand)
+  })
+})
+
+Ausgabe:
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-ad1fcdfcbe0132e91
+
+ ✓ src/engine/__tests__/x4_pruefer_grenzfaelle.test.ts > Prüfer X4: eigene Grenzfälle > G1 D49: nach einer normalen Karte bleibt eine Handkarte: kein Abwerfen, aber die letzte Karte geht als Zusatzaktion 38ms
+ ✓ src/engine/__tests__/x4_pruefer_grenzfaelle.test.ts > Prüfer X4: eigene Grenzfälle > G2 A5/D49: zweimal abwerfen, dann eine Karte: am Zugende 6 Karten, eine wird abgeworfen 13ms
+ ✓ src/engine/__tests__/x4_pruefer_grenzfaelle.test.ts > Prüfer X4: eigene Grenzfälle > G3 D56: abgewehrte Farbenfusion verbraucht die Fusion auch mit Comeback-Zusatzaktion 6ms
+ ✓ src/engine/__tests__/x4_pruefer_grenzfaelle.test.ts > Prüfer X4: eigene Grenzfälle > G4 A7.6: wer mit Rückstand vor einer Grube sitzt, setzt aus; kein Comeback-Angebot, danach neu festgestellt 4ms
+ ✓ src/engine/__tests__/x4_pruefer_grenzfaelle.test.ts > Prüfer X4: eigene Grenzfälle > G5 A8.1: eine Comeback-Aktion mit falscher spielerId oder in einer beendeten Partie wird abgelehnt 3ms
+ ✓ src/engine/__tests__/x4_pruefer_grenzfaelle.test.ts > Prüfer X4: eigene Grenzfälle > G6 A8.1: Spieler mit der längsten Schlange und Gleichstand: Rückstand 0 ist nie erfüllt, auch ohne jede Schlange am Tisch 5ms
+ ✓ src/engine/__tests__/x4_pruefer_grenzfaelle.test.ts > Prüfer X4: eigene Grenzfälle > G7 D25/D46 (Codex-Befund 1): mit Comeback lassen sich drei Farbenschutz wirkungslos ablegen 7ms
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  08:00:46
+   Duration  3.88s (transform 798ms, setup 295ms, import 848ms, tests 78ms, environment 2.35s)
+

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-ENGINE-078 Die Comeback-Karte verhält sich in sieben Randlagen, die die Regeltests nicht nennen, so wie A5, A7.6, A8.1, D25, D49 und D56 es verlangen. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-ENGINE-078 Die Comeback-Karte verhält sich in sieben Randlagen, die die Regeltests nicht nennen, so wie A5, A7.6, A8.1, D25, D49 und D56 es verlangen.</h1><p class="etiketten"><span class="etikett">Bereich Spiel-Engine: Regeln, Zugablauf, Wertung, Speicherformat</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-ENGINE-076</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Sieben Randlagen der Comeback-Karte: nur noch eine Handkarte, mehr als 5 Karten am Zugende, eine abgewehrte erste Farbenfusion, ein Spieler mit Rückstand vor einer Schlangengrube, eine beendete Partie, gar kein Rückstand und drei Farbenschutz als Zusatzaktionen. Sie stehen nicht in den Kriterien, können in einer Partie aber vorkommen.</p><h2>Bestanden, wenn</h2><p>Alle sieben Fälle der Grenzfall-Datei sind grün: G1 mit einer Handkarte kein Abwerfen, die Karte geht als Zusatzaktion; G2 nach zweimal Abwerfen und einer Karte hält der Spieler 6 Karten und muss eine abwerfen, eine Comeback-Aktion wird dann mit „Zug ist beendet“ abgelehnt; G3 nach abgewehrter Fusion keine zweite Fusion mit Wirkung; G4 der Spieler vor der Grube setzt aus, der nächste mit 7 Karten Rückstand hat die Bedingung erfüllt; G5 fremde Spieler-Id und beendete Partie werden abgelehnt; G6 0 gegen 0 und 9 gegen 4 sind nicht erfüllt; G7 drei Farbenschutz lassen sich nach dem Einsatz wirkungslos ablegen (heutiges Verhalten, Regelfrage offen).</p><h2>Fehlgeschlagen, wenn</h2><p>Einer der sieben Fälle ist rot.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>24.11.2026</dd><dt>Änderung</dt><dd>task/X4-comeback (PR #111)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Repo auf 9e253382, <code>npm ci</code> gelaufen</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Stellungen aus dem Baukasten in der Grenzfall-Datei, zwei oder drei Spieler mit Erweiterung.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Repo</td><td>Grenzfall-Datei aus dem Beleg als `src/engine/__tests__/x4_pruefer_grenzfaelle.test.ts` ablegen</td><td></td><td>Datei liegt neben `comeback_hilfen.ts`</td></tr><tr><td>2</td><td>Konsole</td><td>ausführen</td><td>`npx vitest run src/engine/__tests__/x4_pruefer_grenzfaelle.test.ts --reporter=verbose`</td><td>7 Tests bestanden, Exit-Code 0</td></tr><tr><td>3</td><td>Repo</td><td>Datei löschen</td><td></td><td>`git status` ist leer</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-24">24.11.2026 08:20</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer X4) &middot; agent &middot; pruefung-X4 @ <span class="commit" title="9e2533823b4c864a88b3e4e1f2be7696d1fbd96f">9e25338</span></p><p>7 von 7 Grenzfällen grün: G1 eine Handkarte kein Abwerfen, Rot als Zusatzaktion; G2 nach 2x Abwerfen 7 Karten, eine gespielt, am Zugende AbwerfenVerlangt, Comeback dann abgelehnt (Zug ist beendet); G3 abgewehrte Fusion, zweite nur wirkungslos; G4 Spieler 2 setzt aus, Spieler 3 mit 7 Rückstand erfüllt; G5 fremde spielerId und beendete Partie abgelehnt; G6 0:0 und 9:4 nicht erfüllt; G7 drei Farbenschutz wirkungslos abgelegt.</p><ul class="belege"><li><a href="belege/2026-11-24-0820-TF-ENGINE-078-1.txt">2026-11-24-0820-TF-ENGINE-078-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

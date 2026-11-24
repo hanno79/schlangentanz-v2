@@ -1,0 +1,43 @@
+Gegenprobe 1: src/engine/erweiterung/comeback.ts comebackBedingungErfuellt '>= RUECKSTAND' -> '> RUECKSTAND'
+     × A8.1: Rückstand 5 zu Zugbeginn (1 gegen 6 Karten): die Comeback-Karte ist einsetzbar 15ms
+     × D48: ohne eigene Schlange ist die Länge 0; gegen 5 Karten ist die Bedingung erfüllt, gegen 4 nicht 5ms
+     × D48: jede Karte der Schlange zählt eins, auch Sonderkarten 5ms
+     × D48: eine Farbenfusion samt ihren zwei Karten zählt eins 5ms
+     × A8.1: gemessen wird die längste eigene Schlange gegen die längste auf dem Tisch, gleich wessen 6ms
+     × A8.1/D48: die Bedingung gilt den ganzen Zug: verkürzt Spieler 1 den Rückstand im Zug auf 4, bleibt sie einsetzbar 9ms
+     × A8.1: zu Beginn jedes eigenen Zuges stellt die Engine die Bedingung neu fest, für jeden Spieler selbst 5ms
+     × D48: vor der ersten Karte, nach einer Karte und nach beiden Karten des Zuges 3ms
+     × A8.1: der Einsatz zählt nicht als reguläre Aktion: danach gehen eine Farbkarte und eine Sonderkarte wie sonst, und ohne Karte lässt sich der Zug nicht beenden 4ms
+     × D48 (Rückfrage vom 23.11.2026): im zweiten Zug nach einem Verdoppler ist sie nie einsetzbar, auch wenn die Bedingung galt 5ms
+     × A7.8/D47: nach der Comeback-Karte wirkt kein Verdoppler; er lässt sich nur wirkungslos ablegen 3ms
+     × A8.1: in der Schlussrunde ist sie im letzten eigenen Zug einsetzbar 3ms
+     × A8.1: nach dem Einsatz ist sie verbraucht; das Ereignis nennt sie, und der Zug hat zwei Zusatzaktionen aus drei Möglichkeiten 3ms
+     × A8.1: ein zweites Mal im selben Zug geht nicht 3ms
+     × A8.1/X3: Speichern und Laden mitten im Comeback-Zug: Bedingung, Verbrauch und Zusatzaktionen bleiben 3ms
+⎯⎯⎯⎯⎯⎯ Failed Tests 15 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  1 failed (1)
+      Tests  15 failed | 12 passed (27)
+exit 1
+
+Gegenprobe 2: src/engine/zugablauf.ts beginneZug 'teilzug === 1 && comebackBedingungErfuellt(...)' -> 'comebackBedingungErfuellt(...)'
+ Test Files  2 passed (2)
+      Tests  33 passed (33)
+exit 0
+
+Gegenprobe 3: zusätzlich zu 2 in comeback.ts pruefeComebackEinsetzen die Zeile 'if (gesperrt !== null) return gesperrt;' auskommentiert
+     × D47: hat Spieler 1 in diesem Zug schon einen Verdoppler gespielt, geht die Comeback-Karte nicht 59ms
+     × D48 (Rückfrage vom 23.11.2026): im zweiten Zug nach einem Verdoppler ist sie nie einsetzbar, auch wenn die Bedingung galt 143ms
+     × D47: neben einem zugerweiternden Bonus des Schlangenkorbs geht die Comeback-Karte nicht 77ms
+     × D47/D48: comeback-verdoppler: nach dem Verdoppler und im zweiten Zug kein Knopf ComebackEinsetzen 204ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  2 failed (2)
+      Tests  4 failed | 29 passed (33)
+exit 1
+
+Gegenprobe 4: comeback.ts zweiAbwerfenGesperrt Schlussrunden-Sperre (D49) durch 'if (false)' ersetzt
+     × D49: in der Schlussrunde nicht wählbar, die Karten-Zusatzaktionen der Comeback-Karte gehen dort aber 21ms
+     × D49: zieht das erste Abwerfen die letzte Karte, ist das zweite nicht mehr wählbar 8ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  1 failed (1)
+      Tests  2 failed | 16 passed (18)
+exit 1
