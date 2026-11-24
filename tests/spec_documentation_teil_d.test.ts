@@ -171,13 +171,20 @@ describe('GAME_SPEC Teil D — Fragen an den Autor und Antworten', () => {
     expect(fehlende(teil('A'), zitate.map((zitat) => zitat.slice(1, -1))), 'Zitate stehen nicht wörtlich in Teil A').toEqual([])
   })
 
-  it('P0.5f, P0.5g: der Website-Nachtrag führt jede Rückfrage (D56–D65) im Abschnitt Erweiterung', () => {
+  it('P0.5f, P0.5g: der Website-Nachtrag führt jede Rückfrage ab D56 im Abschnitt Erweiterung', () => {
     expect(RUECKFRAGEN_NUMMERN, 'Rückfragen: Nummern lückenlos ab D56').toEqual(RUECKFRAGEN_NUMMERN.map((_, i) => `D${56 + i}`))
     expect(fehlende(abschnitt(websiteNachtrag, '##', 'Erweiterung'), RUECKFRAGEN_NUMMERN.map((nr) => `(${nr})`))).toEqual([])
   })
 
-  it('P0.5g: die Einleitung von Teil D nennt die Rückfragen aus den Prüfungen von X2 und X3 als D58–D65 und die Ergänzung von D48', () => {
-    expect(fehlende(teil('D'), ['D58–D65', 'Rückfragen aus den Prüfungen von X2 und X3', '23.11.2026', 'ergänzt D48'])).toEqual([])
+  it('P0.5g: jede Fragezeile im Website-Nachtrag endet mit zwei Leerzeichen (harter Umbruch vor der Antwort)', () => {
+    const fragezeilen = websiteNachtrag.split('\n').filter((zeile) => /^\*\*.+\*\* \(D\d+\)/.test(zeile))
+    expect(fragezeilen.length, 'Website-Nachtrag ohne Fragezeilen').toBeGreaterThan(0)
+    const ohneUmbruch = fragezeilen.filter((zeile) => !/\) {2}$/.test(zeile)).map((zeile) => /\((D\d+)\)/.exec(zeile)?.[1])
+    expect(ohneUmbruch, 'Fragezeilen ohne zwei Leerzeichen am Ende').toEqual([])
+  })
+
+  it('P0.5g: die Einleitung von Teil D nennt die Rückfragen aus den Prüfungen von X2 und X3 als D58–D67 und die Ergänzung von D48', () => {
+    expect(fehlende(teil('D'), ['D58–D67', 'Rückfragen aus den Prüfungen von X2 und X3', '23.11.2026', 'ergänzt D48'])).toEqual([])
   })
 
   // Den Wortlaut von D48 samt Rückfrage vom 23.11.2026 prüft tests/regelfragen_antworten.test.ts Satz für Satz (ERWARTET_G.G16).

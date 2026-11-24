@@ -72,6 +72,12 @@ describe('GAME_SPEC Teil C — Abweichungen der Engine', () => {
     expect(fehlend, 'Teil C: Fundstellen ohne Datei').toEqual([])
   })
 
+  it('P0.5g: die Einleitung von B1 nennt den Stand der Tabelle nicht mehr mit dem 12.11.2026', () => {
+    const einleitung = teil('B').slice(teil('B').indexOf('### B1 Umfang'), teil('B').indexOf('| Bestandteil'))
+    expect(einleitung, 'B1: Einleitung').not.toContain('am 12.11.2026 umgesetzt')
+    expect(fehlende(einleitung, ['Die Tabelle zeigt den Stand vom 23.11.2026'])).toEqual([])
+  })
+
   it('P0.5g: B1 nennt die Bedingungen aus X2b und X2c als umgesetzt und nur die fünf aus X2a als Platzhalter', () => {
     const aufgaben = aufgabenZeileB1()
     expect(aufgaben, 'B1: Zeile „15 Aufgabenkarten“').not.toContain('die 15 Bedingungen sind noch Platzhalter')

@@ -30,4 +30,8 @@ describe('GAME_SPEC Teil E — frühere R-Nummern und Verlauf', () => {
     // Der neueste Eintrag steht oben.
     expect(e.indexOf('Task P0.5g:'), 'P0.5g steht nicht vor P0.5f').toBeLessThan(e.indexOf('Task P0.5f:'))
   })
+
+  it('P0.5g, Iteration 2: der Eintrag nennt D66 und D67, den Nachtrag zu D63 und die Form des Website-Nachtrags', () => {
+    expect(fehlende(teil('E'), ['In Iteration 2 (24.11.2026)', 'D66 und D67', 'D63', 'zwei Leerzeichen'])).toEqual([])
+  })
 })

@@ -204,7 +204,7 @@ describe('P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026',
   })
 
   it('P0.5g: der Stand-Absatz verweist auf die Rückfragen aus den Prüfungen von X2 und X3 vom 23.11.2026 und die Ergänzung von D48', () => {
-    expect(fehlende(kopf, ['Prüfungen von X2 und X3', 'am 23.11.2026 beantwortet', 'D58–D65', 'ergänzt D48']), 'REGELFRAGEN.md: Stand-Absatz').toEqual([])
+    expect(fehlende(kopf, ['Prüfungen von X2 und X3', 'am 23.11.2026 beantwortet', 'D58–D67', 'ergänzt D48']), 'REGELFRAGEN.md: Stand-Absatz').toEqual([])
   })
 
   it('P0.5: F8a steht so da, wie die Nachfrage dem Autor gestellt wurde', () => {

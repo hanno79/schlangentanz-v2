@@ -118,9 +118,12 @@ export const RUECKFRAGEN: Rueckfragen[] = [
       D63: {
         frage: '„Schlangentanz“: Muss die Häutung mit zwei neuen Dreiergruppen in dem Zug liegen, in dem der Spieler die Aufgabe einlöst, oder genügt eine frühere Häutung?',
         wahl: '„Gilt die ganze Partie“',
-        kern: ['gilt das für „Schlangentanz“ die ganze Partie; die Häutung muss nicht im Zug des Einlösens liegen'],
-        // Gegenprobe: die verworfene Lesart, nach der nur eine Häutung im selben Zug zählt.
-        verboten: ['nur eine Häutung im selben Zug', 'braucht eine neue Häutung'],
+        kern: [
+          'gilt das für „Schlangentanz“ die ganze Partie; die Häutung muss nicht im Zug des Einlösens liegen',
+          'Die beiden Gruppen müssen beim Einlösen nicht mehr liegen; hat ein Gegner eine davon zerstört, zählt die Häutung trotzdem.',
+        ],
+        // Gegenprobe: die verworfenen Lesarten „nur eine Häutung im selben Zug“ und „Gruppen müssen liegen“.
+        verboten: ['nur eine Häutung im selben Zug', 'braucht eine neue Häutung', 'müssen beim Einlösen noch liegen'],
       },
       D64: {
         frage: '„Schlangenmeister“ („Habe min. 2 versch. Sonderkarten in deinen Schlangen und spiele min. 4 aus.“): Heisst „2 versch. Sonderkarten“ zwei verschiedene Arten, und zählt eine Schlangenblockade mit, die ein Gegner in die eigene Schlange gelegt hat?',
@@ -150,6 +153,32 @@ export const RUECKFRAGEN: Rueckfragen[] = [
         ],
         // Gegenprobe: die verworfene Lesart, nach der eine wirkungslose Fusion nicht zählt.
         verboten: ['zählt nicht als Fusion', 'eine zweite Farbenfusion ist erlaubt'],
+        anfang: 'Ja:',
+      },
+    },
+  },
+  {
+    // P0.5g, Iteration 2: zwei weitere Antworten vom selben Tag, aus der Prüfung von P0.5g.
+    task: 'P0.5g',
+    aus: 'X2',
+    datum: '23.11.2026',
+    eintraege: {
+      D66: {
+        frage: '„Farbenpracht“ nach einem Verdoppler: Wird am Ende des ersten Zuges geprüft oder erst nach dem zweiten?',
+        wahl: '„Nach jedem der zwei“',
+        kern: [
+          'Nach einem Verdoppler wird „Farbenpracht“ am Ende des ersten und am Ende des zweiten Zuges geprüft',
+          'A7.8 sagt „Damit ist dein erster Zug beendet“',
+        ],
+        // Gegenprobe: die verworfene Lesart, nach der erst das Ende des zweiten Zuges zählt.
+        verboten: ['erst am Ende des zweiten Zuges', 'nur am Ende des zweiten Zuges'],
+      },
+      D67: {
+        frage: '„Farbharmonie“ („Habe in deinen Schlangen mindestens eine Dreiergruppe jeder Farbe.“): Zählt eine Vierer- oder Fünfergruppe als „Dreiergruppe“ ihrer Farbe?',
+        wahl: '„Ja, ab drei Karten“',
+        kern: ['Für „Farbharmonie“ zählt jede Farbgruppe ab drei Karten als Dreiergruppe ihrer Farbe, auch eine Vierer- oder Fünfergruppe'],
+        // Gegenprobe: die verworfene Lesart „genau drei Karten“.
+        verboten: ['genau drei Karten', 'zählt nicht als Dreiergruppe'],
         anfang: 'Ja:',
       },
     },
