@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-SPEC-028 Wird D63, D66 oder D67 verfälscht oder fehlt im Website-Nachtrag der harte Umbruch nach einer Frage, schlagen die Spec-Tests fehl. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-SPEC-028 Wird D63, D66 oder D67 verfälscht oder fehlt im Website-Nachtrag der harte Umbruch nach einer Frage, schlagen die Spec-Tests fehl.</h1><p class="etiketten"><span class="etikett">Bereich Regelspiegel, Regelfragen an den Autor und Website-Abgleich</span><span class="etikett">Regression nein</span><span class="etikett">Priorität hoch</span><span class="etikett">Art automatisch</span><span class="etikett">Grenzfall von TF-SPEC-027</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Iteration 2 von P0.5g ergänzt D63, D66 und D67 und verlangt einen harten Umbruch nach jeder Frage im Website-Nachtrag. Ein Test hält die Antwort des Autors nur fest, wenn er bei einer verfälschten Fassung anschlägt. Geprüft wird das mit absichtlich verfälschten Fassungen.</p><h2>Bestanden, wenn</h2><p>Die Verfälschungen M1 bis M4, N1 bis N6 und B1 aus den Testdaten enden je mit Exit 1, und der rote Test nennt den verfälschten Eintrag. Nach dem Zurückholen der Dateien enden dieselben vier Testdateien mit Exit 0. M5 ist eine bekannte Lücke und kein Kriterium.</p><h2>Fehlgeschlagen, wenn</h2><p>Eine der Verfälschungen M1 bis M4, N1 bis N6 oder B1 endet mit Exit 0, oder nach dem Zurücksetzen bleibt ein Test rot.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>24.11.2026</dd><dt>Änderung</dt><dd>task/P0.5g-antworten-x2-x3 (PR #110, Iteration 2)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Arbeitskopie auf dem zu prüfenden Commit, <code>npm ci</code> gelaufen, Kopien von <code>docs/GAME_SPEC.md</code>, <code>docs/WEBSITE_NACHTRAG.md</code> und <code>docs/REGELFRAGEN.md</code> ausserhalb des Repos</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Je eine Ersetzung, genau eine Fundstelle: M1 Satz „Die beiden Gruppen müssen beim Einlösen nicht mehr liegen; …“ aus D63 entfernt; M2 im Nachtrag zu D63 derselbe Satz durch „Die beiden Gruppen müssen beim Einlösen noch liegen.“ ersetzt; M3 Fragezeile „(D60)“ ohne die zwei Leerzeichen; M4 Fragezeile „(D14)“ mit nur einem Leerzeichen; M5 Fragezeile „(D60)“ mit Tabulator statt zwei Leerzeichen; N1 D66 Wahl „Nur nach dem zweiten“; N2 D66 „erst am Ende des zweiten Zuges geprüft“; N3 D67 „Nein:“ statt „Ja:“; N4 im Nachtrag zu D67 „Es braucht genau drei Karten.“ angehängt; N5 Datum D67 24.11.2026; N6 „(D66)“ im Nachtrag umbenannt; B1 Einleitung wieder „am 12.11.2026 umgesetzt“.</p></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p>Für jede Ersetzung: anwenden, <code>npx vitest run tests/spec_documentation_teil_d.test.ts tests/spec_documentation_teil_b_c.test.ts tests/regelfragen_antworten.test.ts tests/spec_documentation_teil_e.test.ts</code>, Exit-Code und rote Tests notieren, Dateien aus den Kopien zurückholen. Erwartet: Exit 1 bei M1 bis M4, N1 bis N6 und B1, danach 141 bestandene Tests.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-24">24.11.2026 08:13</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code &middot; agent &middot; pruefung-P0.5g-i2 @ <span class="commit" title="ee42bcd0496bc6ec25a13861caf5da1433cb5567">ee42bcd</span></p><p>M1 bis M4, N1 bis N6 und B1 je Exit 1 (1 bzw. bei N6 2 failed von 141), M5 (Tabulator statt zwei Leerzeichen nach (D60)) Exit 0 als bekannte Lücke; danach 141 passed.</p><ul class="belege"><li><a href="belege/2026-11-24-0813-TF-SPEC-028-1.txt">2026-11-24-0813-TF-SPEC-028-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>
