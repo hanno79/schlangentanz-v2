@@ -730,16 +730,16 @@ beschreibt. Nichts hier ändert eine Regel aus Teil A.
 
 Der Autor hat entschieden (12.11.2026): Alle Teile der Erweiterung gehören in die
 digitale Fassung. Vor jeder Partie wählt der Spieler, ob er mit oder ohne
-Erweiterung spielt. Die Tabelle zeigt den Stand vom 23.11.2026.
+Erweiterung spielt. Die Tabelle zeigt den Stand vom 24.11.2026.
 
 | Bestandteil | Website | Digital heute |
 |---|---|---|
 | 78 Farbkarten, 30 Sonderkarten | Basis-Spiel | ja |
-| 15 Aufgabenkarten | Erweiterung | teilweise: Prüfung und Einlösen nach A9 (X1, 23.11.2026); zehn Bedingungen nach A9 (X2b, X2c, 23.11.2026); „Farbenpracht“, „Farbharmonie“, „Farbkombination“, „Gelber Schatz“ und „Lila Riese“ sind noch Platzhalter, die nie erfüllt sind (X2a) |
+| 15 Aufgabenkarten | Erweiterung | ja: Prüfung und Einlösen nach A9 (X1, 23.11.2026); alle 15 Bedingungen nach A9 (X2b, X2c, 23.11.2026; X2a, 24.11.2026) |
 | Schlangenhäutung | Erweiterung | ja |
-| Schlangenkorb des Glücks | Erweiterung | nein |
-| Comeback-Karten | Erweiterung | nein |
-| Risiko-Belohnungs-Karten | Erweiterung | nein |
+| Schlangenkorb des Glücks | Erweiterung | ja (X6, 24.11.2026) |
+| Comeback-Karten | Erweiterung | ja (X4, 24.11.2026) |
+| Risiko-Belohnungs-Karten | Erweiterung | ja (X5, 24.11.2026) |
 | Vielfaltbonus | Erweiterung | nein |
 
 ### B2 Festlegungen
@@ -760,14 +760,14 @@ Erweiterung spielt. Die Tabelle zeigt den Stand vom 23.11.2026.
 
 ## Teil C — Abweichungen der heutigen Engine von Teil A
 
-Arbeitsliste, Stand 12.11.2026. Behoben und gestrichen: C5 und C22 (E1, 13.11.2026), C11 und C13 (E10, 13.11.2026), C3, C4 und C12 (E2, 20.11.2026), C7 (E3, 20.11.2026), C6 und C18 (E4, 21.11.2026), C8 und C17 (E6, 21.11.2026), C16 (E7, 21.11.2026), C2 (E5, 21.11.2026), C9 und C19 (E9, 21.11.2026), C1 bis auf die Aufgabenkarten (E11, 21.11.2026), C1, C15 und C20 (X1, 23.11.2026), C21 und C23 (X2b, 23.11.2026); C10 teilweise (X2b, X2c, 23.11.2026). Jede Zeile ist ein Fehler im Code, nicht in der
+Arbeitsliste, Stand 12.11.2026. Behoben und gestrichen: C5 und C22 (E1, 13.11.2026), C11 und C13 (E10, 13.11.2026), C3, C4 und C12 (E2, 20.11.2026), C7 (E3, 20.11.2026), C6 und C18 (E4, 21.11.2026), C8 und C17 (E6, 21.11.2026), C16 (E7, 21.11.2026), C2 (E5, 21.11.2026), C9 und C19 (E9, 21.11.2026), C1 bis auf die Aufgabenkarten (E11, 21.11.2026), C1, C15 und C20 (X1, 23.11.2026), C21 und C23 (X2b, 23.11.2026); C10 teilweise (X2b, X2c, 23.11.2026); C10 und C14 (X2a, 24.11.2026). Jede Zeile ist ein Fehler im Code, nicht in der
 Website. Geprüft heißt: am Code gelesen, mit einem Test nachgestellt oder im
 laufenden Spiel beobachtet.
 
+Offene Abweichungen gibt es keine.
+
 | Nr. | Thema | Website (Teil A) | Engine heute | Fundstelle |
 |---|---|---|---|---|
-| C10 | Joker in Aufgaben | Regenbogenschlange und Farbenfusion zählen bei jeder Aufgabe als die Farbe, mit der die Aufgabe erfüllt ist; ihre Farbe ist nie festgelegt; eine erfüllte Aufgabe bleibt erfüllt (A7.3, A7.7, A9) | für die zehn Aufgaben aus X2b und X2c behoben (23.11.2026); „Farbenpracht“, „Farbharmonie“, „Farbkombination“, „Gelber Schatz“ und „Lila Riese“ sind noch Platzhalter, die nie erfüllt sind (X2a) | `src/engine/aufgaben/farbenpracht.ts`, `src/engine/aufgaben/farbharmonie.ts`, `src/engine/aufgaben/farbkombination.ts`, `src/engine/aufgaben/gelberSchatz.ts`, `src/engine/aufgaben/lilaRiese.ts` |
-| C14 | Lila Riese | ununterbrochene Reihe aus mindestens 5 violetten Karten (A9) | Platzhalter, der nie erfüllt ist; die Bedingung kommt mit X2a | `src/engine/aufgaben/lilaRiese.ts` |
 
 Mit Teil A übereinstimmend geprüft: höchstens zwei Karten pro Zug (eine Farbkarte,
 eine Sonderkarte), höchstens zwei Schlangen,
@@ -807,6 +807,9 @@ D58–D67 sind Rückfragen aus den Prüfungen von X2 und X3 (D66 aus der Prüfun
 dieses Nachtrags, P0.5g), die der Autor am 23.11.2026 beantwortet hat; auch
 sie haben keine Nummer in `docs/REGELFRAGEN.md`. Eine Antwort vom selben Tag
 ergänzt D48.
+D68–D79 sind Rückfragen aus X4, X5, X6 und der Prüfung von P0.5g, die der
+Autor am 24.11.2026 beantwortet hat; auch sie haben keine Nummer in
+`docs/REGELFRAGEN.md`.
 Die Nummer der Regelfrage steht vor der Frage. Die Spalte „Folge“ nennt dort
 den Task, der die Antwort umsetzt.
 
@@ -879,6 +882,18 @@ den Task, der die Antwort umsetzt.
 | D65 | Pro Zug ist nur eine Farbenfusion erlaubt: Verbraucht auch eine Farbenfusion, die wirkungslos abgelegt wird, weil sie kein mögliches Ziel hat (D25), die Fusion des Zuges? | Ja: Auch eine Farbenfusion, die wirkungslos auf den eigenen Ablagestapel kommt, weil sie kein mögliches Ziel hat (D13, D25), verbraucht die Fusion dieses Zuges, wie eine abgewehrte (D56); eine zweite Farbenfusion ist in diesem Zug nicht möglich. Das passt zu D36, nach dem eine wirkungslos abgelegte Sonderkarte als ausgespielt zählt. Antwort des Autors auf eine Rückfrage aus X3, gewählte Möglichkeit: „Ja, verbraucht“. Website folgt. | X3 | 23.11.2026 |
 | D66 | „Farbenpracht“ nach einem Verdoppler: Wird am Ende des ersten Zuges geprüft oder erst nach dem zweiten? | Am Ende jedes der zwei Züge: Nach einem Verdoppler wird „Farbenpracht“ am Ende des ersten und am Ende des zweiten Zuges geprüft, denn A7.8 sagt „Damit ist dein erster Zug beendet“. Ist die Bedingung am Ende des ersten Zuges erfüllt, bekommt der Spieler die Aufgabe dort. Das ergänzt D59. Antwort des Autors auf eine Rückfrage aus X2, gewählte Möglichkeit: „Nach jedem der zwei“. Website folgt. | X2 | 23.11.2026 |
 | D67 | „Farbharmonie“ („Habe in deinen Schlangen mindestens eine Dreiergruppe jeder Farbe.“): Zählt eine Vierer- oder Fünfergruppe als „Dreiergruppe“ ihrer Farbe? | Ja: Für „Farbharmonie“ zählt jede Farbgruppe ab drei Karten als Dreiergruppe ihrer Farbe, auch eine Vierer- oder Fünfergruppe; eine Farbgruppe besteht nach A11 aus mindestens drei nebeneinanderliegenden Karten derselben Farbe. Dass eine Vierergruppe in der Wertung nicht zusätzlich als Dreiergruppe zählt (A11), betrifft nur die Punkte. Für Gruppen nur aus Jokern gilt D31. Antwort des Autors auf eine Rückfrage aus X2, gewählte Möglichkeit: „Ja, ab drei Karten“. Website folgt. | X2 | 23.11.2026 |
+| D68 | Comeback-Karte: Darf der Spieler mit der Zusatzaktion „Eine Sonderkarte aus der Hand ausspielen“ eine Sonderkarte wirkungslos ablegen, etwa einen Farbenschutz? | Ja: Auch mit der Zusatzaktion „Eine Sonderkarte aus der Hand ausspielen“ der Comeback-Karte darf der Spieler eine Sonderkarte wirkungslos auf den eigenen Ablagestapel legen, etwa einen Farbenschutz. Wann das geht, regelt D25 wie für die Sonderkarte des Zuges; ein Farbenschutz darf immer wirkungslos abgelegt werden. Für „Schlangenmeister“ und „Schlangenrepertoire“ zählt die so abgelegte Karte als ausgespielt (D36). Antwort des Autors auf eine Rückfrage aus X4, gewählte Möglichkeit: „Ja, erlaubt“. Website folgt. | X4 | 24.11.2026 |
+| D69 | Schlangenkorb: Wohin kommt er, wenn der Spieler ihn ungenutzt abwirft, als überzählige Karte am Zugende (A5) oder über die Comeback-Aktion „Zwei Karten abwerfen, drei ziehen“? | Auf den Ablagestapel: Wirft der Spieler den Schlangenkorb ungenutzt ab, als überzählige Karte am Ende seines Zuges (A5) oder über „Zwei Karten abwerfen, drei ziehen“ (D49), kommt er wie jede abgeworfene Karte auf seinen eigenen Ablagestapel und nicht aus dem Spiel. Von dort darf ihn niemand zurückholen, auch nicht mit Risiko-Aktion 4, denn A8.2 sagt „Risiko-Belohnungs-Karte sowie Schlangenkorb des Glücks können nicht vom Ablagestapel genommen werden“. Aus dem Spiel kommt der Korb nur nach der Nutzung (A7.10, D54). Antwort des Autors auf eine Rückfrage aus X6, gewählte Möglichkeit: „Auf den Ablagestapel“. Website folgt. | X6 | 24.11.2026 |
+| D70 | Schlangenkorb „Tausche bis zu 2 Karten aus deiner Schlange mit Karten aus deiner Hand“: Muss der Spieler mindestens eine Karte tauschen, oder darf er den Bonus auch ohne Tausch nutzen? | Mindestens einen Tausch: Wer den Bonus wählt, tauscht eine oder zwei Farbkarten nach D44; ein Einsatz ohne Tausch ist nicht möglich. Ist kein Tausch möglich, ist der Bonus nicht wählbar (A7.10: „Wähle einen der verfügbaren Bonuseffekte“). Antwort des Autors auf eine Rückfrage aus X6, gewählte Möglichkeit: „Mindestens ein Tausch“. Website folgt. | X6 | 24.11.2026 |
+| D71 | Schlangenkorb „Ziehe 3 zusätzliche Karten und spiele sofort bis zu 2 davon aus“: Darf eine der gezogenen Farbkarten zugleich die reguläre Farbkarte des Zuges sein, sodass der Spieler bis zu drei der gezogenen Karten spielt? | Ja: Eine gezogene Farbkarte darf auch die reguläre Farbkarte des Zuges sein. So kann der Spieler bis zu drei der gezogenen Karten spielen: bis zu zwei zusätzlich über den Korb, in beliebiger Art (D43), und eine als Farbkarte des Zuges. Die Sonderkarte des Zuges ist der Korb selbst (D42). Antwort des Autors auf eine Rückfrage aus X6, gewählte Möglichkeit: „Ja, drei möglich“. Website folgt. | X6 | 24.11.2026 |
+| D72 | Schlangenkorb „spiele sofort bis zu 2 davon aus“: Heisst „sofort“ direkt nach dem Ziehen, vor jeder anderen Aktion, oder irgendwann im selben Zug? | Im selben Zug: „Sofort“ heisst beim Korb, dass der Spieler die bis zu zwei gezogenen Karten irgendwann in diesem Zug spielt, nicht unbedingt direkt nach dem Ziehen; dazwischen darf er andere Aktionen seines Zuges ausführen, etwa die Farbkarte des Zuges legen. Das passt zu D57. Antwort des Autors auf eine Rückfrage aus X6, gewählte Möglichkeit: „Im selben Zug“. Website folgt. | X6 | 24.11.2026 |
+| D73 | „Schlangentanz“ („Bilde durch Schlangenhäutung 2 neue Dreiergruppen.“): Zählt eine neue Vierer- oder Fünfergruppe als „Dreiergruppe“? | Ja: Für „Schlangentanz“ zählt jede neue Farbgruppe ab drei Karten als Dreiergruppe, auch eine Vierer- oder Fünfergruppe, wie für „Farbharmonie“ (D67). Wann eine Gruppe neu ist, regelt D62, wessen Häutung zählt, D37, und dass eine frühere Häutung genügt, D63. Antwort des Autors auf eine Rückfrage aus X2, gewählte Möglichkeit: „Ja, ab drei Karten“. Website folgt. | X2 | 24.11.2026 |
+| D74 | Risiko-Aktion 2 („Zusätzliche Farbkarte spielen“): Ist sie wählbar, wenn der Spieler keine eigene Schlange hat? | Nein: Ohne eigene Schlange ist Risiko-Aktion 2 nicht wählbar, denn die zusätzliche Farbkarte kommt nur an ein Ende einer eigenen Schlange (D52) und beginnt keine neue Schlange. Dasselbe gilt ohne Farbkarte auf der Hand (D52). Antwort des Autors auf eine Rückfrage aus X5, gewählte Möglichkeit: „Nicht wählbar“. Website folgt. | X5 | 24.11.2026 |
+| D75 | Risiko-Aktion 3 („Karten tauschen“), Erfolg: Muss der Spieler den Tausch ausführen, oder darf er darauf verzichten? | Freiwillig: Bei Erfolg darf der Spieler tauschen, muss aber nicht; A8.2 sagt „Du darfst den Tausch ausführen“. Verzichtet er, bleibt die Schlange unverändert; die aufgedeckte Farbkarte kommt auch dann auf die eigene Hand (D51). Welche Handkarte ersetzen darf, regelt D53. Antwort des Autors auf eine Rückfrage aus X5, gewählte Möglichkeit: „Freiwillig“. Website folgt. | X5 | 24.11.2026 |
+| D76 | Risiko-Aktion 2: Erfüllt die zusätzlich gelegte Farbkarte die Pflicht, in jedem Zug mindestens eine Karte zu spielen (A5, D12), obwohl der Einsatz der Risiko-Karte nicht als reguläre Aktion zählt? | Ja: Legt der Spieler bei Erfolg von Risiko-Aktion 2 die zusätzliche Farbkarte an, zählt sie für die Pflicht, in jedem Zug mindestens eine Karte zu spielen (A5, D12), obwohl der Einsatz der Risiko-Karte nicht als reguläre Aktion zählt (A8.2). Es zählt die gelegte Farbkarte, nicht der Einsatz der Risiko-Karte; bei Misserfolg wird keine Farbkarte gelegt. Die Karte bleibt zusätzlich und belegt nicht den Platz der Farbkarte des Zuges (A8.2: „Zusätzliche Farbkarte spielen“). Antwort des Autors auf eine Rückfrage aus X5, gewählte Möglichkeit: „Ja, zählt“. Website folgt. | X5 | 24.11.2026 |
+| D77 | Risiko-Aktion 2: Ist die Farbkarte, die der Spieler vor dem Aufdecken benennt (D52), eine Ansage, die alle Spieler sehen? | Ja: Die Farbkarte, die der Spieler vor dem Aufdecken für Risiko-Aktion 2 benennt, ist eine Ansage wie in A6 („Der Spieler benennt das Ziel seiner Aktion“) und für alle Spieler offen, auch wenn ein KI-Gegner sie benennt. Nur so kann der begünstigte Gegner bei Misserfolg zwischen ihr und der obersten Stapelkarte wählen (D52). Legt der Spieler bei Erfolg eine andere Karte an, bleibt die benannte bekannt auf seiner Hand. Für diese eine Handkarte gilt die verdeckte Information aus B2 deshalb nicht. Antwort des Autors auf eine Rückfrage aus X5, gewählte Möglichkeit: „Ja, offen für alle“. Website folgt. | X5 | 24.11.2026 |
+| D78 | Risiko-Aktion 1 („Zusätzliche Karten ziehen“), Misserfolg: Muss der gewählte Spieler die aufgedeckte Sonderkarte auf die Hand nehmen, oder darf er sie ablehnen? | Er muss sie nehmen: Bei Misserfolg von Risiko-Aktion 1 nimmt der gewählte Spieler die aufgedeckte Sonderkarte auf die Hand; das ist Pflicht, ablehnen kann er nicht. Das „darf“ in A8.2 („Der gewählte Spieler darf die Sonderkarte direkt auf die Hand nehmen“) lässt ihm also keine Wahl. Hat er danach mehr als 5 Handkarten, baut er sie am Ende seines eigenen Zuges ab (A8.2). Antwort des Autors auf eine Rückfrage aus X5, gewählte Möglichkeit: „Pflicht“. Website folgt. | X5 | 24.11.2026 |
+| D79 | Risiko-Aktion 4, Misserfolg: Was bekommt der gewählte Gegner, wenn er weder eine Karte von seinem Ablagestapel nehmen noch die oberste Karte vom Nachziehstapel ziehen kann? | Er bekommt nichts: Kann der gewählte Gegner bei Misserfolg von Risiko-Aktion 4 weder eine Karte von seinem Ablagestapel nehmen, weil dort keine liegt, die er nehmen darf (A8.2, D69), noch die oberste Karte vom Nachziehstapel ziehen, weil der Stapel leer ist, geht er leer aus. Das führt D54 weiter, nach dem bei leerem Ablagestapel nur die andere Möglichkeit bleibt. Die Schlussrunde löst der Spieler am Zug aus (D55). Antwort des Autors auf eine Rückfrage aus X5, gewählte Möglichkeit: „Er bekommt nichts“. Website folgt. | X5 | 24.11.2026 |
 
 ## Teil E — Frühere R-Nummern, Stand und Verlauf
 
@@ -908,6 +923,32 @@ Code-Kommentare und ältere Dokumente verweisen auf R-Nummern der Fassung bis
 
 ### Stand und Verlauf
 
+- **25.11.2026, Task P0.5h:** Antworten des Autors vom 24.11.2026 auf
+  Rückfragen aus X4, X5, X6 und der Prüfung von P0.5g als D68–D79
+  aufgenommen (Website folgt). Folge X4: Auch eine Comeback-Zusatzaktion darf
+  eine Sonderkarte wirkungslos ablegen, etwa einen Farbenschutz (D68). Folge
+  X6: Ein ungenutzt abgeworfener Schlangenkorb kommt auf den eigenen
+  Ablagestapel, und Risiko-Aktion 4 holt ihn nach A8.2 nicht zurück (D69);
+  „Tausche bis zu 2 Karten“ verlangt mindestens einen Tausch (D70); von den
+  gezogenen Karten des Korbs darf eine zusätzlich die Farbkarte des Zuges
+  sein (D71); „sofort“ heisst im selben Zug (D72). Folge X2: Bei
+  „Schlangentanz“ zählt jede neue Gruppe ab drei Karten als Dreiergruppe
+  (D73). Folge X5: Risiko-Aktion 2 ist ohne eigene Schlange nicht wählbar
+  (D74), ihre gelegte Farbkarte zählt für die Pflicht zur Karte im Zug (D76),
+  und die benannte Farbkarte ist eine offene Ansage (D77); der Tausch bei
+  Aktion 3 ist freiwillig (D75); bei Aktion 1 nimmt der Gegner die Sonderkarte
+  auf jeden Fall (D78), und bei Aktion 4 geht er leer aus, wenn er weder vom
+  Ablagestapel nehmen noch ziehen kann (D79). D54 sagt, Risiko-Karte und
+  Schlangenkorb lägen nie auf einem Ablagestapel, und nennt den Satz aus A8.2
+  nur eine Klarstellung. Für den genutzten Korb stimmt das; der ungenutzt
+  abgeworfene liegt nach D69 aber auf einem Ablagestapel, und dort wirkt der
+  Satz aus A8.2. D54 bleibt unverändert; der Widerspruch im Wortlaut ist dem
+  Orchestrator gemeldet. Die übrigen Einträge, auf die D68–D79 verweisen,
+  stimmen damit überein und bleiben ebenfalls unverändert. Teil C ist leer:
+  C10 und C14 sind gestrichen, weil X2a sie behoben hat. B1 nennt
+  Aufgabenkarten, Schlangenkorb, Comeback- und Risiko-Karten als umgesetzt,
+  Stand 24.11.2026. Teil A unverändert. Der Task nennt `docs/GAME_SPEC.md`
+  ausdrücklich (U13).
 - **23.11.2026, Task P0.5g:** Rückfragen aus den Prüfungen von X2 und X3, die
   der Autor am 23.11.2026 beantwortet hat, als D58–D65 aufgenommen (Website
   folgt). Folge X2: „Farbvielfalt“ verlangt jede Farbe genau einmal (D58).

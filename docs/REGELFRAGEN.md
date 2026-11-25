@@ -3,7 +3,7 @@
 Task P0.5 · Katalog aus `docs/UMSETZUNGSPLAN.md`, Abschnitt 9 · 38 Fragen:
 F1–F15 zum Basis-Spiel, G1–G23 zur Erweiterung.
 
-Stand 23.11.2026: Alle Fragen sind beantwortet, die Antworten stehen in
+Stand 24.11.2026: Alle Fragen sind beantwortet, die Antworten stehen in
 `docs/GAME_SPEC.md` Teil D. F1–F15 und die Nachfrage F8a: D14–D29. G9: D31.
 G1–G8 und G10–G23 hat der Autor am 21.11.2026 mit einer Sammelantwort
 beantwortet, es gilt je der Vorschlag: D34–D55. Zwei Rückfragen aus der
@@ -13,7 +13,9 @@ D57 (letzte Karte mitten im Zug). Ebenso stehen die Rückfragen aus den
 Prüfungen von X2 und X3, die der Autor am 23.11.2026 beantwortet hat, nur in
 Teil D: D58–D67 (Aufgabenkarten und wirkungslose Farbenfusion). Eine Antwort
 vom selben Tag ergänzt D48 (Comeback-Karte im zweiten Zug nach einem
-Verdoppler).
+Verdoppler). Auch die Rückfragen aus X4, X5, X6 und der Prüfung von P0.5g, die
+der Autor am 24.11.2026 beantwortet hat, stehen nur in Teil D: D68–D79
+(Comeback-Karte, Schlangenkorb, „Schlangentanz“ und Risiko-Karten).
 
 Die Website `https://schlangentanz.ch/rules` lässt diese Punkte offen. Jede
 Frage nennt die Stelle in `docs/GAME_SPEC.md` mit dem wörtlichen Satz der
