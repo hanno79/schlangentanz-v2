@@ -1,0 +1,47 @@
+Du bist dran
+Spiele Karten aus deiner Hand.
+
+Stapel 90
+
+Zur Lobby
+KI-Gegner 1
+5 Handkarten
+Zwischenstand ohne Kettenbonus:
+0 Punkte
+Ablage leer
+Nachziehstapel
+90
+Protokoll
+KI-Gegner 1 zieht 1 Karte.
+Du bist dran.
+KI-Gegner 1 spielt: Rot an den Anfang der Schlange 2 von KI-Gegner 1.
+Du ziehst 1 Karte.
+KI-Gegner 1 ist dran.
+Du spielst: Violett an das Ende deiner Schlange 1.
+KI-Gegner 1 zieht 1 Karte.
+Du bist dran.
+KI-Gegner 1 spielt: Violett an den Anfang der Schlange 1 von KI-Gegner 1.
+Du ziehst 1 Karte.
+KI-Gegner 1 ist dran.
+Du spielst: Rot an das Ende deiner Schlange 1.
+KI-Gegner 1 zieht 1 Karte.
+Du bist dran.
+KI-Gegner 1 spielt: Grün beginnt eine neue Schlange.
+Du ziehst 1 Karte.
+KI-Gegner 1 ist dran.
+Du spielst: Rot beginnt eine neue Schlange.
+KI-Gegner 1 zieht 1 Karte.
+Du bist dran.
+mehr ↓
+Deine Schlangen
+Zwischenstand ohne Kettenbonus:
+0 Punkte
+Deine Hand · 5 Karten
+Deine Ablage leer
+
+Wähle eine Karte aus deiner Hand.
+
+Du musst erst mindestens eine Karte spielen; beenden ohne Karte geht nur mit leerer Hand (A5, D12).
+Zug beenden
+{"sw":1280,"cw":1280}
+Konsolenfehler: 0 

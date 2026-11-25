@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-KI-034 Der Stärkenachweis K5 wird rot, wenn die gemessene KI schwächer ist, die Schwelle gesenkt wird, Instanzen ein Modul teilen oder „erste erlaubte Aktion“ eine andere Aktion wählt. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 25.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-KI-034 Der Stärkenachweis K5 wird rot, wenn die gemessene KI schwächer ist, die Schwelle gesenkt wird, Instanzen ein Modul teilen oder „erste erlaubte Aktion“ eine andere Aktion wählt.</h1><p class="etiketten"><span class="etikett">Bereich KI-Gegner</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-KI-032</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Ein grüner Stärkenachweis sagt nur etwas, wenn er bei einem Fehler rot wird. Vier Gegenproben ändern je eine Stelle und erwarten einen roten Test. Danach wird die Änderung zurückgenommen.</p><h2>Bestanden, wenn</h2><p>Alle vier Gegenproben werden rot. „Erste erlaubte Aktion“ nimmt die letzte statt der ersten Aktion: Der Test meldet <code>spielerId: &#x27;c&#x27;</code> statt <code>&#x27;a&#x27;</code>. Bei 98 % statt 99 % meldet der Schwellentest <code>[490, 490, 294, 490, 490, 286]</code> statt <code>[495, 495, 297, 495, 495, 289]</code>. Spielt die Zufalls-KI statt der soliden, holt sie zu viert nur 74 von 300 Siegen statt mindestens 297. Ohne <code>vi.resetModules()</code> bricht der Messlauf ab, weil zwei Fabriken aus demselben Modul kommen.</p><h2>Fehlgeschlagen, wenn</h2><p>Eine der vier Änderungen lässt den zugehörigen Test grün.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>25.11.2026</dd><dt>Änderung</dt><dd>task/K5-staerkenachweis (PR #122)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Ausgangslage</td><td>Worktree auf dem geprüften Stand, <code>git status</code> ohne Änderungen</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Saaten des Laufs „zu viert ohne Erweiterung“ aus <code>tests/staerke_k5.ts</code>.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>`src/ki/strategien/ersteAktionKi.ts`</td><td>`aktionen[0]` durch `aktionen[aktionen.length - 1]` ersetzen, Test ausführen</td><td>`npx vitest run src/ki/strategien/ersteAktionKi.test.ts`</td><td>1 rot, 3 grün</td></tr><tr><td>2</td><td>`tests/staerke_k5.ts`, Funktion `mindestSiege`</td><td>`* 99` durch `* 98` ersetzen, Test ausführen</td><td>`npx vitest run tests/staerke_k5_schwellen.test.ts`</td><td>3 rot, 5 grün</td></tr><tr><td>3</td><td>`tests/staerke_k5.ts`, Funktion `messe`</td><td>`frischerTeilnehmer(&#x27;solideKi&#x27;, …)` durch `&#x27;zufallsKi&#x27;` ersetzen, Lauf zu viert ausführen</td><td>`npx vitest run --mode staerke tests/staerke_k5_vier.staerke.test.ts`</td><td>rot mit 74 Siegen, mindestens 297 verlangt</td></tr><tr><td>4</td><td>`tests/registry_laden.ts`</td><td>Zeile `vi.resetModules()` auskommentieren, Lauf zu viert ausführen</td><td>wie Schritt 3</td><td>rot mit „kam zweimal aus demselben Modul“</td></tr><tr><td>5</td><td>Konsole</td><td>nach jedem Schritt die Datei zurücksetzen</td><td>`git checkout -- &lt;datei&gt;`</td><td>`git status` ohne Änderungen</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-25">25.11.2026 12:05</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer K5) &middot; agent &middot; pruefung-K5 @ <span class="commit" title="ae3881511d107a5f9d8a3aaee179cc0c71e83796">ae38815</span></p><p>Alle vier Gegenproben rot (je Exit 1), danach git status leer: erste Aktion als letzte -&gt; spielerId c statt a; 98 % -&gt; [490,490,294,490,490,286] statt [495,495,297,495,495,289]; Zufalls-KI statt solider zu viert 74/300, verlangt 297; ohne vi.resetModules Abbruch &#x27;kam zweimal aus demselben Modul&#x27;</p><ul class="belege"><li><a href="belege/2026-11-25-1205-TF-KI-034-1.txt">2026-11-25-1205-TF-KI-034-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

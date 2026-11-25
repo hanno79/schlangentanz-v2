@@ -1,0 +1,92 @@
+=== zz_pruefer_k5_erste2.staerke.test.ts
+// @vitest-environment node
+import { it } from 'vitest'
+import { probe } from './zz_pruefer_probe_k5'
+
+it('Prüferprobe K5: 200 Partien zu zweit mit Erweiterung gegen erste erlaubte Aktion, eigene Saaten', async ({ annotate }) => {
+  const { text } = await probe('ersteAktion', 2, 200, 1_202_334_455, 990_112_334, true)
+  await annotate(text)
+}, 3_600_000)
+=== zz_pruefer_k5_vier.staerke.test.ts
+// @vitest-environment node
+import { it } from 'vitest'
+import { probe } from './zz_pruefer_probe_k5'
+
+it('Prüferprobe K5: 300 Partien zu viert gegen drei Zufalls-KIs, eigene Saaten', async ({ annotate }) => {
+  const { text } = await probe('zufallsKi', 4, 300, 913_377_402, 288_501_967, false)
+  await annotate(text)
+}, 3_600_000)
+=== zz_pruefer_k5_vierErw.staerke.test.ts
+// @vitest-environment node
+import { it } from 'vitest'
+import { probe } from './zz_pruefer_probe_k5'
+
+it('Prüferprobe K5: 300 Partien zu viert mit Erweiterung gegen drei Zufalls-KIs, eigene Saaten', async ({ annotate }) => {
+  const { text } = await probe('zufallsKi', 4, 300, 1_513_640_028, 77_204_119, true)
+  await annotate(text)
+}, 3_600_000)
+=== zz_pruefer_k5_zufall2.staerke.test.ts
+// @vitest-environment node
+import { it } from 'vitest'
+import { probe } from './zz_pruefer_probe_k5'
+
+it('Prüferprobe K5: 500 Partien zu zweit gegen die Zufalls-KI, eigene Saaten', async ({ annotate }) => {
+  const { text } = await probe('zufallsKi', 2, 500, 731_904_155, 402_118_773, false)
+  await annotate(text)
+}, 3_600_000)
+=== zz_pruefer_probe_k5.ts
+import { expect } from 'vitest'
+import { turnier } from '../src/ki/turnier'
+import type { Teilnehmer } from '../src/ki/turnier'
+import type { Fabrik } from '../src/ki/strategien/strategie'
+import { STRATEGIEN_REGISTRY, ladeFrischeFabrik } from './registry_laden'
+
+// Probe des Prüfers K5 mit eigenen Saaten; nicht committen.
+async function frisch(eintrag: string, anzahl: number): Promise<Teilnehmer> {
+  const fabriken: Fabrik[] = []
+  for (let i = 0; i < anzahl; i++) {
+    const f = await ladeFrischeFabrik(STRATEGIEN_REGISTRY, eintrag)
+    if (fabriken.includes(f)) throw new Error('gleiches Modul')
+    fabriken.push(f)
+  }
+  return {
+    name: eintrag,
+    erstelle(z) {
+      const f = fabriken.shift()
+      if (!f) throw new Error('leer')
+      return f(z)
+    },
+  }
+}
+
+export async function probe(gegner: string, spielerzahl: number, partien: number, ersteSaat: number, kiSaat: number, erweiterung: boolean, block = 25) {
+  let siege = 0
+  let allein = 0
+  let geteilt = 0
+  let nicht = 0
+  let punkteKi = 0
+  let punkteGegnerMax = 0
+  for (let a = 0; a * block < partien; a++) {
+    const n = Math.min(block, partien - a * block)
+    const t = [await frisch('solideKi', n)]
+    for (let s = 1; s < spielerzahl; s++) t.push(await frisch(gegner, n))
+    const e = turnier({ teilnehmer: t, partien: n, ersteSaat: ersteSaat + a * block, kiSaat: (kiSaat * 7 + a) >>> 0, erweiterung })
+    for (const p of e.partien) {
+      if (p.ausgang !== 'beendet') {
+        nicht++
+        continue
+      }
+      if (p.sieger.includes(0)) {
+        siege++
+        if (p.sieger.length === 1) allein++
+        else geteilt++
+      }
+      punkteKi += p.punkte[0]
+      punkteGegnerMax += Math.max(...p.punkte.slice(1))
+    }
+  }
+  const text = `Probe ${gegner} zu ${spielerzahl}${erweiterung ? ' mit Erweiterung' : ''}, ${partien} Partien ab Saat ${ersteSaat}, kiSaat ${kiSaat}: Siege ${siege} (${((100 * siege) / partien).toFixed(1)} %), davon allein ${allein}, geteilt ${geteilt}; nicht beendet ${nicht}; Punkte KI im Mittel ${(punkteKi / partien).toFixed(1)}, bester Gegner im Mittel ${(punkteGegnerMax / partien).toFixed(1)}`
+  console.log(text)
+  expect(nicht).toBe(0)
+  return { siege, text }
+}
