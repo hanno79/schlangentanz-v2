@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { readdirSync, readFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 
 /*
@@ -11,6 +11,12 @@ Dateien, weil eine Testdatei höchstens 499 Zeilen hat (U7).
 Welche Abschnitte es gibt, liest der Test aus Teil A der Spec. Bekommt Teil A
 einen neuen Abschnitt, wird er rot, bis der Abschnitt eine Datei hat oder hier
 mit Grund ausgenommen ist.
+
+X7: Für die Erweiterung (A7.10, A8 mit A8.1 und A8.2, A9) gibt es zusätzlich die
+Satz-für-Satz-Tabelle `docs/abnahme/X7_satz_fuer_satz.md`. Der Test zerlegt die
+Abschnitte aus Teil A in Sätze und verlangt, dass die Tabelle jeden Satz genau
+einmal führt, entweder mit den Tests, die ihn belegen, oder mit dem Grund, warum
+er keine eigene Regel enthält. Jeder genannte Test muss in seiner Datei stehen.
 */
 
 const REGELN = 'src/engine/__tests__/regeln'
@@ -22,7 +28,7 @@ const AUSGENOMMEN: Readonly<Record<string, string>> = {
   A2: 'Spielerzahl; geprüft in A4_material.test.ts beim Aufbau',
   A3: 'Spielziel ohne eigene Regel; die Wertung steht unter A11',
   A7: 'Überschrift der Sonderkarten; die Regeln stehen in A7.1 bis A7.10',
-  A8: 'Comeback und Risiko-Belohnung, Erweiterung (X4, X5)',
+  A8: 'Überschrift der Erweiterung mit drei einleitenden Sätzen; die Regeln stehen in A8.1 und A8.2, die Sätze belegt die Tabelle zu X7',
 }
 
 /** Alle Abschnitte mit Regeltestdatei in der Reihenfolge von Teil A: die aus E11, Kriterium 2, A9 seit X1, A8.1 seit X4, A8.2 seit X5 und A7.10 seit X6 (X7 verlangt auch A8). */
@@ -109,5 +115,109 @@ describe('E11 Kriterium 2: je Abschnitt eine Regeltestdatei unter regeln/ (A4 bi
     expect(nennt('A6/A7.1 Beispiel', 'A7.1')).toBe(true)
     expect(nennt('A11: Wertung', 'A1')).toBe(false)
     expect(nennt('A7.4/A11', 'A11')).toBe(true)
+  })
+})
+
+const SATZTABELLE = 'docs/abnahme/X7_satz_fuer_satz.md'
+const ERWEITERUNG = ['A7.10', 'A8', 'A8.1', 'A8.2', 'A9']
+
+/** Der Text eines Abschnitts aus Teil A ohne seine Unterabschnitte. */
+function abschnittText(abschnitt: string): string {
+  const zeilen = readFileSync('docs/GAME_SPEC.md', 'utf8').split('\n')
+  const start = zeilen.findIndex((zeile) => new RegExp(`^#{3,4} ${abschnitt.replace('.', '\\.')} `).test(zeile))
+  const ende = zeilen.findIndex((zeile, index) => index > start && /^#{2,4} (A\d|Teil )/.test(zeile))
+  return zeilen.slice(start + 1, ende).join('\n')
+}
+
+/**
+ * Die Sätze eines Abschnitts aus Teil A, jeder einmal: Zeilen ohne Überschrift,
+ * Spiegelstrich und Fettdruck, an Satzenden getrennt (nicht nach „min.“,
+ * „versch.“), aus der Aufgabentabelle die Bedingung. Reine Kartenbilder wie
+ * „[Blau] [Blau]“ sind keine Sätze.
+ */
+function saetzeIn(text: string): string[] {
+  const saetze: string[] = []
+  for (const roh of text.split('\n')) {
+    const zeile = roh.trim()
+    if (zeile === '' || zeile.startsWith('#') || /^\|[-| ]+\|$/.test(zeile) || zeile.startsWith('| Nr.')) continue
+    const inhalt = zeile.startsWith('|') ? zeile.split('|')[4].trim() : zeile.replace(/^- /, '').replaceAll('**', '')
+    for (const satz of inhalt.split(/(?<=(?<!\b(?:min|versch|Nr|bzw))[.!?])\s+(?=[A-ZÄÖÜ„"[#])/)) {
+      if (!/^(?:\[[^\]]+\]|#+|Vorher:|Nachher:|\s)+$/.test(satz)) saetze.push(satz.trim())
+    }
+  }
+  return [...new Set(saetze)]
+}
+
+interface Tabellenzeile {
+  abschnitt: string
+  satz: string
+  /** Bei Regelaussagen die Tests, sonst der Grund. */
+  rest: string
+}
+
+/** Die Zeilen der Tabelle unter `## <ueberschrift>`; die erste Spalte beginnt mit dem Abschnitt, etwa „A9 Nr. 3“. */
+function tabelle(ueberschrift: string): Tabellenzeile[] {
+  if (!existsSync(SATZTABELLE)) throw new Error(`tabelle: ${SATZTABELLE} fehlt; X7 verlangt die Satz-für-Satz-Tabelle der Erweiterung`)
+  const text = readFileSync(SATZTABELLE, 'utf8')
+  const teil = text.split(/^## /m).find((abschnitt) => abschnitt.startsWith(`${ueberschrift}\n`)) ?? ''
+  return teil
+    .split('\n')
+    .filter((zeile) => /^\| A\d/.test(zeile))
+    .map((zeile) => {
+      const [abschnitt, satz, rest] = zeile.replace(/^\| /, '').replace(/ \|$/, '').split(' | ')
+      return { abschnitt: /^A\d+(?:\.\d+)?/.exec(abschnitt)?.[0] ?? abschnitt, satz, rest: rest ?? '' }
+    })
+}
+
+/** Die Tests einer Regelaussage: `Datei › Name`, der Name endet mit „…“, wenn nur sein Anfang zitiert ist. */
+function verweise(zelle: string): Array<{ datei: string; name: string }> {
+  return [...zelle.matchAll(/`([^`›]+?) › ([^`]+)`/g)].map((treffer) => ({ datei: treffer[1], name: treffer[2] }))
+}
+
+/** Testnamen und Einträge von Testtabellen einer Datei: jedes Zeichenkettenliteral. */
+function literale(quelltext: string): string[] {
+  return [...quelltext.matchAll(/(['"`])((?:\\.|(?!\1).)*?)\1/g)].map((treffer) => treffer[2])
+}
+
+function gefunden(name: string, kandidaten: readonly string[]): boolean {
+  const anfang = name.endsWith(' …') ? name.slice(0, -2) : null
+  return kandidaten.some((kandidat) => (anfang === null ? kandidat === name : kandidat.startsWith(anfang)))
+}
+
+describe('X7: Regeltestdateien und Satz-für-Satz-Tabelle der Erweiterung (A7.10, A8, A9)', () => {
+  it('X7: A7.10, A8 über A8.1 und A8.2, und A9 haben je eine Regeltestdatei unter regeln/', () => {
+    const unterA8 = abschnitteInTeilA().filter((abschnitt) => abschnitt.startsWith('A8.'))
+    expect(unterA8, 'abschnitteInTeilA: die Unterabschnitte von A8').toEqual(['A8.1', 'A8.2'])
+    for (const abschnitt of ['A7.10', ...unterA8, 'A9']) {
+      expect(dateien.filter((datei) => abschnittVon(datei) === abschnitt), `keine Datei regeln/${abschnitt}_*.test.ts`).not.toEqual([])
+    }
+  })
+
+  it('X7: die Zerlegung in Sätze trennt an Satzenden, nicht nach Abkürzungen, und lässt Kartenbilder weg', () => {
+    const text = ['#### Überschrift', '- **Erfolg:** Erster Satz. Zweiter Satz!', '| 5 | Name | 9 | Habe min. 4 versch. Farben. |', 'Ein Satz. [Blau] [Rot]']
+    expect(saetzeIn(text.join('\n'))).toEqual(['Erfolg: Erster Satz.', 'Zweiter Satz!', 'Habe min. 4 versch. Farben.', 'Ein Satz.'])
+  })
+
+  it.each(ERWEITERUNG)('X7: die Tabelle führt jeden Satz aus %s genau einmal, mit Tests oder mit Grund', (abschnitt) => {
+    const zeilen = [...tabelle('Regelaussagen'), ...tabelle('Sätze ohne eigene Regelaussage')].filter((zeile) => zeile.abschnitt === abschnitt)
+    const saetze = saetzeIn(abschnittText(abschnitt))
+    expect(saetze.length, `abschnittText: ${abschnitt} ohne Sätze gelesen`).toBeGreaterThan(2)
+    expect(zeilen.map((zeile) => zeile.satz).filter((satz, index, alle) => alle.indexOf(satz) !== index), `${SATZTABELLE}: doppelt geführt`).toEqual([])
+    expect(saetze.filter((satz) => !zeilen.some((zeile) => zeile.satz === satz)), `${SATZTABELLE}: Sätze aus ${abschnitt} ohne Zeile`).toEqual([])
+    expect(zeilen.filter((zeile) => !saetze.includes(zeile.satz)).map((zeile) => zeile.satz), `${SATZTABELLE}: Zeilen, die nicht wörtlich in ${abschnitt} stehen`).toEqual([])
+  })
+
+  it('X7: jede Regelaussage nennt mindestens einen Test, und jeder genannte Test steht in seiner Datei unter regeln/', () => {
+    const regelaussagen = tabelle('Regelaussagen')
+    expect(regelaussagen.length, `${SATZTABELLE}: Regelaussagen gelesen`).toBeGreaterThan(80)
+    expect(regelaussagen.filter((zeile) => verweise(zeile.rest).length === 0).map((zeile) => zeile.satz), 'Regelaussagen ohne Test').toEqual([])
+    const fehlend = regelaussagen.flatMap((zeile) =>
+      verweise(zeile.rest)
+        .filter(({ datei, name }) => !dateien.includes(`${datei}.test.ts`) || !gefunden(name, literale(readFileSync(`${REGELN}/${datei}.test.ts`, 'utf8'))))
+        .map(({ datei, name }) => `${datei} › ${name}`),
+    )
+    expect(fehlend, 'genannte Tests, die es in der Datei nicht gibt').toEqual([])
+    const ohneGrund = tabelle('Sätze ohne eigene Regelaussage').filter((zeile) => zeile.rest.trim().length < 10)
+    expect(ohneGrund.map((zeile) => zeile.satz), 'Sätze ohne Regelaussage, aber ohne Grund').toEqual([])
   })
 })

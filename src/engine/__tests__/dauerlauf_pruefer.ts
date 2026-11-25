@@ -10,8 +10,8 @@ import { belegungGueltig } from '../zuggrenzen'
 
 /*
 Die Prüfer des Dauerlaufs, gemeinsam für den Lauf in `npm test` (300 Partien,
-Plan 3.6, Punkt 7) und den langen Lauf mit 2'000 Partien (E11, Kriterium 3,
-`npm run test:dauerlauf`). Jeder Prüfer sieht jeden ausgeführten Schritt und
+Plan 3.6, Punkt 7) und den langen Lauf mit 3'000 Partien, davon 2'000 mit
+Erweiterung (E11, Kriterium 3, X7, `npm run test:dauerlauf`). Jeder Prüfer sieht jeden ausgeführten Schritt und
 meldet einen Verstoss als Text; die Zähler zeigen dem Test, dass die geprüfte
 Lage überhaupt vorkam.
 */
@@ -66,6 +66,35 @@ export function reaktionsPruefer(zaehler: Reaktionen): SchrittPruefer {
       if (abwehren !== farbenschutz) return `D33: Spieler ${gefragt} hält ${farbenschutz} Farbenschutz, angeboten sind ${abwehren} Abwehren.`
     }
     if (zustand.partiephase === 'Beendet' && zustand.ausliegendeGruben.length > 0) return 'D29: Nach Spielende liegt noch eine Grube aus.'
+    return null
+  }
+}
+
+/** X7: Wie oft ein Lauf mit Erweiterung die Teile der Erweiterung spielte (A7.10, A8.1, A8.2, A9). */
+export type Erweiterung = Record<
+  'AufgabeErfuellt' | 'GeheimeAufgabeErfuellt' | 'ComebackEingesetzt' | 'RisikoErfolg' | 'RisikoMisserfolg' | 'RisikoGegnerEntscheidet' | 'SchlangenkorbGespielt',
+  number
+>
+
+export function neueErweiterung(): Erweiterung {
+  return { AufgabeErfuellt: 0, GeheimeAufgabeErfuellt: 0, ComebackEingesetzt: 0, RisikoErfolg: 0, RisikoMisserfolg: 0, RisikoGegnerEntscheidet: 0, SchlangenkorbGespielt: 0 }
+}
+
+/**
+ * X7: zählt eingelöste offene Aufgaben, erfüllte geheime Aufgaben (die kein
+ * Ereignis melden, D35, B2), eingesetzte Comeback-Karten, Risiko-Karten mit
+ * Erfolg und Misserfolg, Risiko-Entscheidungen eines Gegners (D52, D54) und
+ * gespielte Schlangenkörbe. Er meldet nie einen Verstoss.
+ */
+export function erweiterungsPruefer(zaehler: Erweiterung): SchrittPruefer {
+  return (vorher, aktion, { zustand, ereignisse }) => {
+    for (const ereignis of ereignisse) {
+      if (ereignis.typ === 'AufgabeErfuellt' || ereignis.typ === 'ComebackEingesetzt') zaehler[ereignis.typ] += 1
+      if (ereignis.typ === 'RisikoKarteGespielt') zaehler[ereignis.erfolg ? 'RisikoErfolg' : 'RisikoMisserfolg'] += 1
+      if (ereignis.typ === 'EntscheidungVerlangt' && ereignis.art.startsWith('Risiko') && ereignis.spielerIndex !== vorher.zug.spielerIndex) zaehler.RisikoGegnerEntscheidet += 1
+    }
+    if (aktion.typ === 'SchlangenkorbSpielen') zaehler.SchlangenkorbGespielt += 1
+    zaehler.GeheimeAufgabeErfuellt += zustand.spieler.filter((spieler, index) => spieler.geheimeAufgabeErfuellt && !vorher.spieler[index].geheimeAufgabeErfuellt).length
     return null
   }
 }
@@ -141,6 +170,8 @@ export const stapelPruefer: SchrittPruefer = (_vorher, _aktion, { zustand }) => 
  * 2'000 Partien höchstens 9'560 (2 Spieler mit Erweiterung, Farbkarten und Korb),
  * im Lauf mit 300 Partien 6'118. Nach dem Merge mit X4 (24.11.2026) verlaufen die
  * Partien mit Erweiterung anders: höchstens 8'179 in den 2'000, 13'190 in den 300.
+ * Seit X7 (25.11.2026) spielt der lange Lauf 3'000 Partien, 2'000 davon mit
+ * Erweiterung: höchstens 12'630 (2 Spieler mit Erweiterung, Farbkarten und Korb).
  */
 export const HOECHSTE_AKTIONSZAHL_IM_DAUERLAUF = 20_000
 
@@ -280,6 +311,7 @@ export interface GepruefterLauf {
   reaktionen: Reaktionen
   verfaelscht: Verfaelschungen
   umfang: Umfang
+  erweiterung: Erweiterung
 }
 
 /** Spielt die Partien mit allen Prüfern dieser Datei; die Verfälschungen ziehen ihren Zufall aus `saat`. */
@@ -288,11 +320,13 @@ export function spieleGeprueft(partien: readonly DauerlaufPartie[], saat: number
   const reaktionen = neueReaktionen()
   const verfaelscht = neueVerfaelschungen()
   const umfang: Umfang = { hoechste: 0, bei: '' }
+  const erweiterung = neueErweiterung()
   const zufall = erzeugeZufall(saat)
-  const neuerPruefer = () => allePruefer(regelPruefer(zuege), reaktionsPruefer(reaktionen), stapelPruefer, verfaelschungsPruefer(zufall, verfaelscht))
+  const neuerPruefer = () =>
+    allePruefer(regelPruefer(zuege), reaktionsPruefer(reaktionen), stapelPruefer, erweiterungsPruefer(erweiterung), verfaelschungsPruefer(zufall, verfaelscht))
   const ergebnisse = dauerlauf(partien, { motor: zaehlenderMotor(umfang), neuerPruefer })
   const schritte = ergebnisse.reduce((summe, ergebnis) => summe + ergebnis.schritte, 0)
-  return { ergebnisse, schritte, zuege, reaktionen, verfaelscht, umfang }
+  return { ergebnisse, schritte, zuege, reaktionen, verfaelscht, umfang, erweiterung }
 }
 
 /** Was jeder Lauf mit allen Prüfern erfüllt: jede Partie endet, jede Verfälschung ist abgelehnt, die Aktionszahl bleibt begrenzt. */
