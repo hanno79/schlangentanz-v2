@@ -1,11 +1,9 @@
 // @vitest-environment node
-import { describe, expect, it, vi } from 'vitest'
-import { join } from 'node:path'
-import { pathToFileURL } from 'node:url'
+import { describe, expect, it } from 'vitest'
 import { erstellePartie, erzeugeZufall } from '../src/engine'
-import type { Fabrik, Ki } from '../src/ki/strategien/strategie'
+import type { Ki } from '../src/ki/strategien/strategie'
 import { spielePartie } from '../src/ki/turnier'
-import { WURZEL } from './probebaum'
+import { STRATEGIEN_REGISTRY, ladeRegistry } from './registry_laden'
 
 /*
 Isolationstest der Strategien (P0.3d, Entscheidung des Autors vom 21.11.2026,
@@ -41,15 +39,6 @@ const PARTIEN: Partie[] = [
   ...[0, 1, 2, 3].map((index) => ({ spielerzahl: 4, erweiterung: index % 2 === 0, saat: (LAUFSAAT + index) >>> 0 })),
 ]
 
-/** Eine Registry, frisch geladen: `vi.resetModules()` lässt auch alle Strategien und ihre Abhängigkeiten neu laden. */
-async function ladeRegistry(pfad: string, name: string): Promise<Readonly<Record<string, Fabrik>>> {
-  vi.resetModules()
-  const modul: Record<string, unknown> = await import(/* @vite-ignore */ pathToFileURL(join(WURZEL, pfad)).href)
-  const registry = modul[name]
-  if (typeof registry !== 'object' || registry === null) throw new Error(`Isolationstest: ${pfad} exportiert keine Registry ${name}`)
-  return registry as Readonly<Record<string, Fabrik>>
-}
-
 /** Was von einer KI nach aussen sichtbar ist, ohne Funktionen; Map und Set als Listen. */
 function sichtbarerZustand(ki: Ki): string {
   return JSON.stringify(ki, (_, wert: unknown) => {
@@ -81,8 +70,7 @@ async function vergleiche(quelle: Quelle, partien = PARTIEN) {
   return { geteilt: await spiele(quelle, false, partien), getrennt: await spiele(quelle, true, partien) }
 }
 
-const STRATEGIEN = { pfad: 'src/ki/strategien/index.ts', registry: 'STRATEGIEN' }
-const eintraege = Object.keys(await ladeRegistry(STRATEGIEN.pfad, STRATEGIEN.registry))
+const eintraege = Object.keys(await ladeRegistry(STRATEGIEN_REGISTRY.pfad, STRATEGIEN_REGISTRY.registry))
 
 describe('P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest)', () => {
   it('P0.3d: der Test prüft jede Fabrik der Registry, mindestens die Zufalls-KI', () => {
@@ -93,8 +81,12 @@ describe('P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest)',
     expect(eintraege, 'K2.9: erwartet die solide KI in STRATEGIEN').toContain('solideKi')
   })
 
+  it('K5: der Test prüft auch „erste erlaubte Aktion“, den zweiten Gegner des Stärkenachweises', () => {
+    expect(eintraege, 'K5: erwartet ersteAktion in STRATEGIEN').toContain('ersteAktion')
+  })
+
   it.each(eintraege)(`P0.3d: %s entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht (Laufsaat ${LAUFSAAT})`, async (eintrag) => {
-    const { geteilt, getrennt } = await vergleiche({ ...STRATEGIEN, eintrag })
+    const { geteilt, getrennt } = await vergleiche({ ...STRATEGIEN_REGISTRY, eintrag })
 
     expect(geteilt.map(({ ausgang }) => ausgang), 'P0.3d: erwartet, dass jede Partie endet').toEqual(PARTIEN.map(() => 'beendet'))
     expect(getrennt, `P0.3d: ${eintrag} verhält sich mit geteiltem Modul anders als mit getrennten Modulen (Laufsaat ${LAUFSAAT}); Instanzen teilen Wissen`).toEqual(geteilt)
