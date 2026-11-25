@@ -201,19 +201,19 @@ describe('GAME_SPEC Teil D — Fragen an den Autor und Antworten', () => {
     expect(fehlende(websiteNachtrag.split('\n## ')[0], ['Stand 24.11.2026.']), 'Website-Nachtrag: Einleitung').toEqual([])
   })
 
-  // Den Wortlaut von D48 samt Rückfrage vom 23.11.2026 prüft tests/regelfragen_antworten.test.ts Satz für Satz (ERWARTET_G.G16).
-  it('P0.5g: D48 bleibt Eintrag der Sammelantwort, und der Website-Nachtrag sagt schon, dass die Comeback-Karte im zweiten Zug nach einem Verdoppler nicht einsetzbar ist', () => {
-    const { datum, folge } = eintragD('D48')
-    expect(datum, 'D48: Datum der Sammelantwort').toBe(DATUM_G)
-    expect(folge, 'D48: Folge').toBe('X4')
-    pruefeKern('D48', fliesstext(nachtragEintrag('D48').antwort).toLowerCase(), ['Im zweiten Zug nach einem Verdoppler ist sie nicht einsetzbar, weil sich Verdoppler und Comeback-Karte ausschliessen'], ['Website folgt'])
-  })
-
-  // Den Wortlaut von D54 samt Präzisierung durch D69 prüft tests/regelfragen_antworten.test.ts Satz für Satz (ERWARTET_G.G22).
-  it('P0.5h: D54 bleibt Eintrag der Sammelantwort, und der Website-Nachtrag führt die Präzisierung durch D69', () => {
-    const { datum, folge } = eintragD('D54')
-    expect(datum, 'D54: Datum der Sammelantwort').toBe(DATUM_G)
-    expect(folge, 'D54: Folge').toBe('X5')
-    pruefeKern('D54', fliesstext(nachtragEintrag('D54').antwort).toLowerCase(), ['Ein ungenutzt abgeworfener Schlangenkorb liegt dagegen auf dem Ablagestapel; dort greift der Satz, dass er nicht vom Ablagestapel genommen werden kann.'], ['Website folgt'])
-  })
+  // Einträge der Sammelantwort, die eine spätere Antwort ergänzt. Den Wortlaut in Teil D prüft
+  // tests/regelfragen_antworten.test.ts Satz für Satz (ERWARTET_G.G16 und G22); hier geht es um
+  // Datum, Folge und den Satz im Website-Nachtrag.
+  const ERGAENZT = [
+    { task: 'P0.5g', nummer: 'D48', folge: 'X4', durch: 'die Rückfrage vom 23.11.2026', satz: 'Im zweiten Zug nach einem Verdoppler ist sie nicht einsetzbar, weil sich Verdoppler und Comeback-Karte ausschliessen' },
+    { task: 'P0.5h', nummer: 'D54', folge: 'X5', durch: 'die Präzisierung durch D69', satz: 'Ein ungenutzt abgeworfener Schlangenkorb liegt dagegen auf dem Ablagestapel; dort greift der Satz, dass er nicht vom Ablagestapel genommen werden kann.' },
+  ]
+  for (const { task, nummer, folge: erwarteteFolge, durch, satz } of ERGAENZT) {
+    it(`${task}: ${nummer} bleibt Eintrag der Sammelantwort, und der Website-Nachtrag führt ${durch}`, () => {
+      const { datum, folge } = eintragD(nummer)
+      expect(datum, `${nummer}: Datum der Sammelantwort`).toBe(DATUM_G)
+      expect(folge, `${nummer}: Folge`).toBe(erwarteteFolge)
+      pruefeKern(nummer, fliesstext(nachtragEintrag(nummer).antwort).toLowerCase(), [satz], ['Website folgt'])
+    })
+  }
 })

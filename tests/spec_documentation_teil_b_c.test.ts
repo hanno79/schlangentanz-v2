@@ -23,9 +23,12 @@ function abweichungenTeilC(): string[][] {
   return spalten(tabelleMitSpalte(teil('C'), 'Fundstelle'), 'Nr.', 'Fundstelle')
 }
 
+/** Ein Pfad unter `src/` in Backticks, wie Teil C seine Fundstellen nennt. */
+const SRC_PFAD = /`(src\/[^`]+)`/g
+
 /** Die Pfade unter `src/` in `text`, die es nicht gibt. */
 function pfadeOhneDatei(text: string): string[] {
-  return [...text.matchAll(/`(src\/[^`]+)`/g)].map(([, pfad]) => pfad).filter((pfad) => !existsSync(pfad))
+  return [...text.matchAll(SRC_PFAD)].map(([, pfad]) => pfad).filter((pfad) => !existsSync(pfad))
 }
 
 /** Die Nummern C1 bis C`bis`, die unter „Behoben und gestrichen“ fehlen und nicht in `ausser` stehen. */
@@ -55,7 +58,7 @@ describe('GAME_SPEC Teil C — Abweichungen der Engine', () => {
     // Die Liste darf leer werden: Das ist ihr Ziel. Jede Zeile, die dasteht,
     // muss aber eine Nummer und eine Datei nennen.
     const unvollstaendig = abweichungenTeilC().filter(
-      ([nummer, fundstelle]) => !/^C\d+$/.test(nummer) || !/`src\/[^`]+`/.test(fundstelle),
+      ([nummer, fundstelle]) => !/^C\d+$/.test(nummer) || !fundstelle.match(SRC_PFAD),
     )
     expect(unvollstaendig).toEqual([])
   })
