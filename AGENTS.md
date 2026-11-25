@@ -106,6 +106,10 @@ unter die Marker, nicht hinein.
   Beide Server laufen mit `reuseExistingServer: false`: antwortet unter der URL
   schon ein Server, bricht Playwright ab, statt ihn weiterzubenutzen und still
   einen alten Build zu messen.
+- `npm run test:dauerlauf` — langer Dauerlauf (3'000 Zufallspartien, davon 2'000
+  mit Erweiterung), rund 4 Minuten. Gehört zu den Gates jedes Engine-Tasks.
+- `npm run test:staerke` — Stärkenachweis der soliden KI (K5), sechs Turniere,
+  rund 22 Minuten. Pflicht bei jeder Änderung unter `src/ki/strategien/`.
 - `npm run typecheck`
 - `npm run build`
 - `npm run check:test-lines`
