@@ -1,0 +1,1276 @@
+Partie aus Saat 39, 3 Spieler, mit Erweiterung
+Gewählt wird gleichverteilt unter den aufgezählten Aktionen (nach ihrer JSON-Form sortiert).
+Aufbau (A4): je 5 Handkarten, 97 Karten im Nachziehstapel.
+
+Zug von Spieler 1
+    Spieler 1: Hand Violett (violett-11), Farbenschutz (farbenschutz-01), Gelb (gelb-14), Verdoppler (verdoppler-03), Farbenfusion (farbenfusion-04)
+      Schlangen: keine; Ablagestapel: 0 Karten
+      Aufgaben erfüllt: keine; geheime Aufgabe: Vielfaltskönig (aufgabe-05), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 2
+    KI-Gegner 1: Hand Grün (gruen-03), Grün (gruen-06), Rot (rot-03), Gelb (gelb-07), Verdoppler (verdoppler-04)
+      Schlangen: keine; Ablagestapel: 0 Karten
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 2
+    KI-Gegner 2: Hand Blau (blau-07), Farbendieb (farbendieb-03), Violett (violett-07), Grün (gruen-01), Verdoppler (verdoppler-01)
+      Schlangen: keine; Ablagestapel: 0 Karten
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 2
+    Nachziehstapel: 97 Karten
+    Offene Aufgaben: Farbenpracht (aufgabe-01), Schlangenmeister (aufgabe-09), Gelber Schatz (aufgabe-14); Aufgabenstapel: 9 Karten; aufgedeckt: keine; aus dem Spiel: keine
+  1. Spieler 1 beginnt mit Violett (violett-11) eine neue Schlange.
+     Violett (violett-11) liegt jetzt: schlange-1 von Spieler 1, Stelle 0.
+  2. Spieler 1 beendet den Zug.
+     Spieler 1 zieht 1 Karte.
+
+Zug von KI-Gegner 1
+    Spieler 1: Hand Farbenschutz (farbenschutz-01), Gelb (gelb-14), Verdoppler (verdoppler-03), Farbenfusion (farbenfusion-04), Rot (rot-04)
+      Schlangen: schlange-1: Violett; Ablagestapel: 0 Karten
+      Aufgaben erfüllt: keine; geheime Aufgabe: Vielfaltskönig (aufgabe-05), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 2
+    KI-Gegner 1: Hand Grün (gruen-03), Grün (gruen-06), Rot (rot-03), Gelb (gelb-07), Verdoppler (verdoppler-04)
+      Schlangen: keine; Ablagestapel: 0 Karten
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 2
+    KI-Gegner 2: Hand Blau (blau-07), Farbendieb (farbendieb-03), Violett (violett-07), Grün (gruen-01), Verdoppler (verdoppler-01)
+      Schlangen: keine; Ablagestapel: 0 Karten
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 2
+    Nachziehstapel: 96 Karten
+    Offene Aufgaben: Farbenpracht (aufgabe-01), Schlangenmeister (aufgabe-09), Gelber Schatz (aufgabe-14); Aufgabenstapel: 9 Karten; aufgedeckt: keine; aus dem Spiel: keine
+  3. KI-Gegner 1 beginnt mit Rot (rot-03) eine neue Schlange.
+     Rot (rot-03) liegt jetzt: schlange-2 von KI-Gegner 1, Stelle 0.
+  4. KI-Gegner 1 spielt die Risiko-Belohnungs-Karte risiko-belohnung-03, Aktion 4 (Karten aus dem Ablagestapel oder Nachziehstapel nehmen).
+     Versetzt: Grün (gruen-08) von Nachziehstapel nach aufgedeckt, Stelle 0.
+     Risikoprüfung: Grün (gruen-08) aufgedeckt, Erfolg; risiko-belohnung-03 ist aus dem Spiel.
+     Versetzt: eine verdeckte Karte von aufgedeckt, Stelle 0 nach Hand von KI-Gegner 1.
+     KI-Gegner 1 entscheidet über „Risiko: Karte vom eigenen Ablagestapel oder oberste Stapelkarte“ zu risiko-belohnung-03: stapel.
+  5. KI-Gegner 1 wählt „stapel“.
+     KI-Gegner 1 hat bei „Risiko: Karte vom eigenen Ablagestapel oder oberste Stapelkarte“ „stapel“ gewählt.
+     Versetzt: eine verdeckte Karte von Nachziehstapel nach Hand von KI-Gegner 1.
+  6. KI-Gegner 1 frisst mit Schlangenfrass (schlangenfrass-03), Option a), Rot (rot-03) aus schlange-2 von KI-Gegner 1.
+     Versetzt: Rot (rot-03) von schlange-2, Stelle 0 nach Ablagestapel von KI-Gegner 1; aufgelöst: schlange-2.
+     Schlangenfrass (schlangenfrass-03) liegt jetzt: Ablagestapel von KI-Gegner 1.
+  7. KI-Gegner 1 beendet den Zug.
+
+Zug von KI-Gegner 2
+    Spieler 1: Hand Farbenschutz (farbenschutz-01), Gelb (gelb-14), Verdoppler (verdoppler-03), Farbenfusion (farbenfusion-04), Rot (rot-04)
+      Schlangen: schlange-1: Violett; Ablagestapel: 0 Karten
+      Aufgaben erfüllt: keine; geheime Aufgabe: Vielfaltskönig (aufgabe-05), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 2
+    KI-Gegner 1: Hand Grün (gruen-03), Grün (gruen-06), Gelb (gelb-07), Verdoppler (verdoppler-04), Grün (gruen-08)
+      Schlangen: keine; Ablagestapel: 2 Karten, oben Rot
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 1
+    KI-Gegner 2: Hand Blau (blau-07), Farbendieb (farbendieb-03), Violett (violett-07), Grün (gruen-01), Verdoppler (verdoppler-01)
+      Schlangen: keine; Ablagestapel: 0 Karten
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 2
+    Nachziehstapel: 94 Karten
+    Offene Aufgaben: Farbenpracht (aufgabe-01), Schlangenmeister (aufgabe-09), Gelber Schatz (aufgabe-14); Aufgabenstapel: 9 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03
+  8. KI-Gegner 2 legt Grün (gruen-01) an den Anfang von schlange-1 von Spieler 1.
+     Grün (gruen-01) liegt jetzt: schlange-1 von Spieler 1, Stelle 0.
+  9. KI-Gegner 2 spielt die Risiko-Belohnungs-Karte risiko-belohnung-05, Aktion 4 (Karten aus dem Ablagestapel oder Nachziehstapel nehmen).
+     Versetzt: Schlangenfrass (schlangenfrass-04) von Nachziehstapel nach aufgedeckt, Stelle 0.
+     Risikoprüfung: Schlangenfrass (schlangenfrass-04) aufgedeckt, Misserfolg; risiko-belohnung-05 ist aus dem Spiel.
+     Versetzt: Schlangenfrass (schlangenfrass-04) von aufgedeckt, Stelle 0 nach Ablagestapel von KI-Gegner 2.
+     KI-Gegner 2 entscheidet über „Risiko: begünstigten Gegner wählen“ zu risiko-belohnung-05: spieler-1, spieler-2.
+  10. KI-Gegner 2 wählt „spieler-1“.
+     KI-Gegner 2 hat bei „Risiko: begünstigten Gegner wählen“ „spieler-1“ gewählt.
+     Spieler 1 entscheidet über „Risiko: Karte vom eigenen Ablagestapel oder oberste Stapelkarte“ zu risiko-belohnung-05: stapel.
+  11. Spieler 1 wählt „stapel“.
+     Spieler 1 hat bei „Risiko: Karte vom eigenen Ablagestapel oder oberste Stapelkarte“ „stapel“ gewählt.
+     Versetzt: eine verdeckte Karte von Nachziehstapel nach Hand von Spieler 1.
+  12. KI-Gegner 2 spielt Verdoppler (verdoppler-01).
+     Verdoppler (verdoppler-01) liegt jetzt: Ablagestapel von KI-Gegner 2.
+  13. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 2 Karten.
+
+Zug von KI-Gegner 2, zweiter Zug nach dem Verdoppler
+    Spieler 1: Hand Farbenschutz (farbenschutz-01), Gelb (gelb-14), Verdoppler (verdoppler-03), Farbenfusion (farbenfusion-04), Rot (rot-04), Braun (braun-06)
+      Schlangen: schlange-1: Grün - Violett; Ablagestapel: 0 Karten
+      Aufgaben erfüllt: keine; geheime Aufgabe: Vielfaltskönig (aufgabe-05), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 2
+    KI-Gegner 1: Hand Grün (gruen-03), Grün (gruen-06), Gelb (gelb-07), Verdoppler (verdoppler-04), Grün (gruen-08)
+      Schlangen: keine; Ablagestapel: 2 Karten, oben Rot
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 1
+    KI-Gegner 2: Hand Blau (blau-07), Farbendieb (farbendieb-03), Violett (violett-07), Gelb (gelb-04), Blau (blau-14)
+      Schlangen: keine; Ablagestapel: 2 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 1
+    Nachziehstapel: 90 Karten
+    Offene Aufgaben: Farbenpracht (aufgabe-01), Schlangenmeister (aufgabe-09), Gelber Schatz (aufgabe-14); Aufgabenstapel: 9 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05
+  14. KI-Gegner 2 legt Violett (violett-07) an das Ende von schlange-1 von Spieler 1.
+     Violett (violett-07) liegt jetzt: schlange-1 von Spieler 1, Stelle 2.
+  15. KI-Gegner 2 stiehlt mit Farbendieb (farbendieb-03) Violett (violett-11) aus schlange-1 von Spieler 1 und legt sie als neue eigene Schlange.
+     Farbendieb (farbendieb-03) ist angesagt; betroffen: Spieler 1.
+     Spieler 1 entscheidet, ob er abwehrt.
+  16. Spieler 1 wehrt mit Farbenschutz (farbenschutz-01) ab.
+     Spieler 1 wehrt Farbendieb (farbendieb-03) mit Farbenschutz (farbenschutz-01) ab.
+     Entschieden, abgewehrt von Spieler 1, ohne Wirkung; Farbendieb (farbendieb-03) liegt jetzt: Ablagestapel von KI-Gegner 2.
+  17. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 2 Karten.
+
+Zug von Spieler 1
+    Spieler 1: Hand Gelb (gelb-14), Verdoppler (verdoppler-03), Farbenfusion (farbenfusion-04), Rot (rot-04), Braun (braun-06)
+      Schlangen: schlange-1: Grün - Violett - Violett; Ablagestapel: 1 Karte, oben Farbenschutz
+      Aufgaben erfüllt: keine; geheime Aufgabe: Vielfaltskönig (aufgabe-05), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 2
+    KI-Gegner 1: Hand Grün (gruen-03), Grün (gruen-06), Gelb (gelb-07), Verdoppler (verdoppler-04), Grün (gruen-08)
+      Schlangen: keine; Ablagestapel: 2 Karten, oben Rot
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 1
+    KI-Gegner 2: Hand Blau (blau-07), Gelb (gelb-04), Blau (blau-14), Rot (rot-08), Rot (rot-01)
+      Schlangen: keine; Ablagestapel: 3 Karten, oben Farbendieb
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 1
+    Nachziehstapel: 88 Karten
+    Offene Aufgaben: Farbenpracht (aufgabe-01), Schlangenmeister (aufgabe-09), Gelber Schatz (aufgabe-14); Aufgabenstapel: 9 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05
+  18. Spieler 1 legt Gelb (gelb-14) an das Ende von schlange-1 von Spieler 1.
+     Gelb (gelb-14) liegt jetzt: schlange-1 von Spieler 1, Stelle 3.
+  19. Spieler 1 spielt die Risiko-Belohnungs-Karte risiko-belohnung-01, Aktion 3 (Karten tauschen), benannt: Gelb (gelb-14).
+     Versetzt: Farbendieb (farbendieb-04) von Nachziehstapel nach aufgedeckt, Stelle 0.
+     Risikoprüfung: Farbendieb (farbendieb-04) aufgedeckt, Misserfolg; risiko-belohnung-01 ist aus dem Spiel.
+     Versetzt: Farbendieb (farbendieb-04) von aufgedeckt, Stelle 0 nach Ablagestapel von Spieler 1.
+  20. Spieler 1 legt Farbenfusion (farbenfusion-04) auf Violett (violett-11) und Violett (violett-07) in schlange-1 von Spieler 1.
+     Versetzt: Violett (violett-11) von schlange-1 von Spieler 1, Stelle 1 nach unter Farbenfusion (farbenfusion-04) in schlange-1 von Spieler 1, Stelle 0; Violett (violett-07) von schlange-1 von Spieler 1, Stelle 2 nach unter Farbenfusion (farbenfusion-04) in schlange-1 von Spieler 1, Stelle 1.
+     Farbenfusion (farbenfusion-04) liegt jetzt: schlange-1 von Spieler 1, Stelle 1.
+  21. Spieler 1 beendet den Zug.
+     Spieler 1 zieht 2 Karten.
+
+Zug von KI-Gegner 1
+    Spieler 1: Hand Verdoppler (verdoppler-03), Rot (rot-04), Braun (braun-06), Braun (braun-07), Schlangenhäutung (schlangenhaeutung-02)
+      Schlangen: schlange-1: Grün - Farbenfusion[Violett+Violett] - Gelb; Ablagestapel: 2 Karten, oben Farbendieb
+      Aufgaben erfüllt: keine; geheime Aufgabe: Vielfaltskönig (aufgabe-05), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 1
+    KI-Gegner 1: Hand Grün (gruen-03), Grün (gruen-06), Gelb (gelb-07), Verdoppler (verdoppler-04), Grün (gruen-08)
+      Schlangen: keine; Ablagestapel: 2 Karten, oben Rot
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 1
+    KI-Gegner 2: Hand Blau (blau-07), Gelb (gelb-04), Blau (blau-14), Rot (rot-08), Rot (rot-01)
+      Schlangen: keine; Ablagestapel: 3 Karten, oben Farbendieb
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 1
+    Nachziehstapel: 85 Karten
+    Offene Aufgaben: Farbenpracht (aufgabe-01), Schlangenmeister (aufgabe-09), Gelber Schatz (aufgabe-14); Aufgabenstapel: 9 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01
+  22. KI-Gegner 1 spielt die Risiko-Belohnungs-Karte risiko-belohnung-04, Aktion 4 (Karten aus dem Ablagestapel oder Nachziehstapel nehmen).
+     Versetzt: Schlangengrube (schlangengrube-03) von Nachziehstapel nach aufgedeckt, Stelle 0.
+     Risikoprüfung: Schlangengrube (schlangengrube-03) aufgedeckt, Misserfolg; risiko-belohnung-04 ist aus dem Spiel.
+     Versetzt: Schlangengrube (schlangengrube-03) von aufgedeckt, Stelle 0 nach Ablagestapel von KI-Gegner 1.
+     KI-Gegner 1 entscheidet über „Risiko: begünstigten Gegner wählen“ zu risiko-belohnung-04: spieler-3, spieler-1.
+  23. KI-Gegner 1 wählt „spieler-3“.
+     KI-Gegner 1 hat bei „Risiko: begünstigten Gegner wählen“ „spieler-3“ gewählt.
+     KI-Gegner 2 entscheidet über „Risiko: Karte vom eigenen Ablagestapel oder oberste Stapelkarte“ zu risiko-belohnung-04: ablagestapel-0, ablagestapel-1, ablagestapel-2, stapel.
+  24. KI-Gegner 2 wählt „ablagestapel-1“.
+     KI-Gegner 2 hat bei „Risiko: Karte vom eigenen Ablagestapel oder oberste Stapelkarte“ „ablagestapel-1“ gewählt.
+     Versetzt: eine verdeckte Karte von Ablagestapel von KI-Gegner 2 nach Hand von KI-Gegner 2.
+  25. KI-Gegner 1 legt Gelb (gelb-07) an das Ende von schlange-1 von Spieler 1.
+     Gelb (gelb-07) liegt jetzt: schlange-1 von Spieler 1, Stelle 3.
+  26. KI-Gegner 1 spielt Verdoppler (verdoppler-04).
+     Verdoppler (verdoppler-04) liegt jetzt: Ablagestapel von KI-Gegner 1.
+  27. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 2 Karten.
+
+Zug von KI-Gegner 1, zweiter Zug nach dem Verdoppler
+    Spieler 1: Hand Verdoppler (verdoppler-03), Rot (rot-04), Braun (braun-06), Braun (braun-07), Schlangenhäutung (schlangenhaeutung-02)
+      Schlangen: schlange-1: Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb; Ablagestapel: 2 Karten, oben Farbendieb
+      Aufgaben erfüllt: keine; geheime Aufgabe: Vielfaltskönig (aufgabe-05), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 1
+    KI-Gegner 1: Hand Grün (gruen-03), Grün (gruen-06), Grün (gruen-08), Grün (gruen-04), Gelb (gelb-12)
+      Schlangen: keine; Ablagestapel: 4 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 2: Hand Blau (blau-07), Gelb (gelb-04), Blau (blau-14), Rot (rot-08), Rot (rot-01), Verdoppler (verdoppler-01)
+      Schlangen: keine; Ablagestapel: 2 Karten, oben Farbendieb
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 1
+    Nachziehstapel: 82 Karten
+    Offene Aufgaben: Farbenpracht (aufgabe-01), Schlangenmeister (aufgabe-09), Gelber Schatz (aufgabe-14); Aufgabenstapel: 9 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04
+  28. KI-Gegner 1 legt Grün (gruen-08) an den Anfang von schlange-1 von Spieler 1.
+     Grün (gruen-08) liegt jetzt: schlange-1 von Spieler 1, Stelle 0.
+  29. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 1 Karte.
+
+Zug von KI-Gegner 2, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Verdoppler (verdoppler-03), Rot (rot-04), Braun (braun-06), Braun (braun-07), Schlangenhäutung (schlangenhaeutung-02)
+      Schlangen: schlange-1: Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb; Ablagestapel: 2 Karten, oben Farbendieb
+      Aufgaben erfüllt: keine; geheime Aufgabe: Vielfaltskönig (aufgabe-05), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 1
+    KI-Gegner 1: Hand Grün (gruen-03), Grün (gruen-06), Grün (gruen-04), Gelb (gelb-12), Blau (blau-04)
+      Schlangen: keine; Ablagestapel: 4 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 2: Hand Blau (blau-07), Gelb (gelb-04), Blau (blau-14), Rot (rot-08), Rot (rot-01), Verdoppler (verdoppler-01)
+      Schlangen: keine; Ablagestapel: 2 Karten, oben Farbendieb
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 1
+    Nachziehstapel: 81 Karten
+    Offene Aufgaben: Farbenpracht (aufgabe-01), Schlangenmeister (aufgabe-09), Gelber Schatz (aufgabe-14); Aufgabenstapel: 9 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04
+  30. KI-Gegner 2 setzt die Comeback-Karte comeback-03 ein.
+     KI-Gegner 2 dreht die Comeback-Karte comeback-03 um und hat zwei zusätzliche Aktionen.
+  31. KI-Gegner 2 wirft zwei Karten ab und zieht drei: Blau (blau-07), Rot (rot-08).
+     Abgeworfen auf den eigenen Ablagestapel: Blau (blau-07), Rot (rot-08).
+     KI-Gegner 2 zieht 3 Karten.
+  32. KI-Gegner 2 legt Verdoppler (verdoppler-01) ohne Wirkung ab.
+     Verdoppler (verdoppler-01) liegt jetzt: Ablagestapel von KI-Gegner 2.
+  33. KI-Gegner 2 wirft zwei Karten ab und zieht drei: Gelb (gelb-04), Blau (blau-15).
+     Abgeworfen auf den eigenen Ablagestapel: Gelb (gelb-04), Blau (blau-15).
+     KI-Gegner 2 zieht 3 Karten.
+  34. KI-Gegner 2 legt Blau (blau-14) an das Ende von schlange-1 von Spieler 1.
+     Blau (blau-14) liegt jetzt: schlange-1 von Spieler 1, Stelle 5.
+  35. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 hält mehr als 5 Karten und wirft 1 ab.
+  36. KI-Gegner 2 wirft ab: Grün (gruen-05).
+     Abgeworfen auf den eigenen Ablagestapel: Grün (gruen-05).
+
+Zug von Spieler 1
+    Spieler 1: Hand Verdoppler (verdoppler-03), Rot (rot-04), Braun (braun-06), Braun (braun-07), Schlangenhäutung (schlangenhaeutung-02)
+      Schlangen: schlange-1: Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau; Ablagestapel: 2 Karten, oben Farbendieb
+      Aufgaben erfüllt: keine; geheime Aufgabe: Vielfaltskönig (aufgabe-05), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 1
+    KI-Gegner 1: Hand Grün (gruen-03), Grün (gruen-06), Grün (gruen-04), Gelb (gelb-12), Blau (blau-04)
+      Schlangen: keine; Ablagestapel: 4 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 2: Hand Rot (rot-01), Braun (braun-10), Farbenfusion (farbenfusion-01), Verdoppler (verdoppler-02), Gelb (gelb-03)
+      Schlangen: keine; Ablagestapel: 8 Karten, oben Grün
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 1
+    Nachziehstapel: 75 Karten
+    Offene Aufgaben: Farbenpracht (aufgabe-01), Schlangenmeister (aufgabe-09), Gelber Schatz (aufgabe-14); Aufgabenstapel: 9 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04
+  37. Spieler 1 spielt die Risiko-Belohnungs-Karte risiko-belohnung-02, Aktion 4 (Karten aus dem Ablagestapel oder Nachziehstapel nehmen).
+     Versetzt: Blau (blau-10) von Nachziehstapel nach aufgedeckt, Stelle 0.
+     Risikoprüfung: Blau (blau-10) aufgedeckt, Erfolg; risiko-belohnung-02 ist aus dem Spiel.
+     Versetzt: eine verdeckte Karte von aufgedeckt, Stelle 0 nach Hand von Spieler 1.
+     Spieler 1 entscheidet über „Risiko: Karte vom eigenen Ablagestapel oder oberste Stapelkarte“ zu risiko-belohnung-02: ablagestapel-0, ablagestapel-1, stapel.
+  38. Spieler 1 wählt „stapel“.
+     Spieler 1 hat bei „Risiko: Karte vom eigenen Ablagestapel oder oberste Stapelkarte“ „stapel“ gewählt.
+     Versetzt: eine verdeckte Karte von Nachziehstapel nach Hand von Spieler 1.
+  39. Spieler 1 spielt Verdoppler (verdoppler-03).
+     Verdoppler (verdoppler-03) liegt jetzt: Ablagestapel von Spieler 1.
+  40. Spieler 1 beginnt mit Rot (rot-04) eine neue Schlange.
+     Rot (rot-04) liegt jetzt: schlange-3 von Spieler 1, Stelle 0.
+  41. Spieler 1 beendet den Zug.
+
+Zug von Spieler 1, zweiter Zug nach dem Verdoppler
+    Spieler 1: Hand Braun (braun-06), Braun (braun-07), Schlangenhäutung (schlangenhaeutung-02), Blau (blau-10), Rot (rot-05)
+      Schlangen: schlange-1: Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau | schlange-3: Rot; Ablagestapel: 3 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Vielfaltskönig (aufgabe-05), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Grün (gruen-03), Grün (gruen-06), Grün (gruen-04), Gelb (gelb-12), Blau (blau-04)
+      Schlangen: keine; Ablagestapel: 4 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 2: Hand Rot (rot-01), Braun (braun-10), Farbenfusion (farbenfusion-01), Verdoppler (verdoppler-02), Gelb (gelb-03)
+      Schlangen: keine; Ablagestapel: 8 Karten, oben Grün
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 1
+    Nachziehstapel: 73 Karten
+    Offene Aufgaben: Farbenpracht (aufgabe-01), Schlangenmeister (aufgabe-09), Gelber Schatz (aufgabe-14); Aufgabenstapel: 9 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02
+  42. Spieler 1 legt Rot (rot-05) an das Ende von schlange-3 von Spieler 1.
+     Rot (rot-05) liegt jetzt: schlange-3 von Spieler 1, Stelle 1.
+  43. Spieler 1 beendet den Zug.
+     Spieler 1 zieht 1 Karte.
+
+Zug von KI-Gegner 1, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Braun (braun-06), Braun (braun-07), Schlangenhäutung (schlangenhaeutung-02), Blau (blau-10), Gelb (gelb-15)
+      Schlangen: schlange-1: Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau | schlange-3: Rot - Rot; Ablagestapel: 3 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Vielfaltskönig (aufgabe-05), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Grün (gruen-03), Grün (gruen-06), Grün (gruen-04), Gelb (gelb-12), Blau (blau-04)
+      Schlangen: keine; Ablagestapel: 4 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 2: Hand Rot (rot-01), Braun (braun-10), Farbenfusion (farbenfusion-01), Verdoppler (verdoppler-02), Gelb (gelb-03)
+      Schlangen: keine; Ablagestapel: 8 Karten, oben Grün
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 1
+    Nachziehstapel: 72 Karten
+    Offene Aufgaben: Farbenpracht (aufgabe-01), Schlangenmeister (aufgabe-09), Gelber Schatz (aufgabe-14); Aufgabenstapel: 9 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02
+  44. KI-Gegner 1 legt Grün (gruen-04) an den Anfang von schlange-1 von Spieler 1.
+     Grün (gruen-04) liegt jetzt: schlange-1 von Spieler 1, Stelle 0.
+  45. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 1 Karte.
+
+Zug von KI-Gegner 2, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Braun (braun-06), Braun (braun-07), Schlangenhäutung (schlangenhaeutung-02), Blau (blau-10), Gelb (gelb-15)
+      Schlangen: schlange-1: Grün - Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau | schlange-3: Rot - Rot; Ablagestapel: 3 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Vielfaltskönig (aufgabe-05), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Grün (gruen-03), Grün (gruen-06), Gelb (gelb-12), Blau (blau-04), Blau (blau-06)
+      Schlangen: keine; Ablagestapel: 4 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 2: Hand Rot (rot-01), Braun (braun-10), Farbenfusion (farbenfusion-01), Verdoppler (verdoppler-02), Gelb (gelb-03)
+      Schlangen: keine; Ablagestapel: 8 Karten, oben Grün
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 1
+    Nachziehstapel: 71 Karten
+    Offene Aufgaben: Farbenpracht (aufgabe-01), Schlangenmeister (aufgabe-09), Gelber Schatz (aufgabe-14); Aufgabenstapel: 9 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02
+  46. KI-Gegner 2 legt Gelb (gelb-03) an das Ende von schlange-3 von Spieler 1.
+     Gelb (gelb-03) liegt jetzt: schlange-3 von Spieler 1, Stelle 2.
+  47. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 1 Karte.
+
+Zug von Spieler 1
+    Spieler 1: Hand Braun (braun-06), Braun (braun-07), Schlangenhäutung (schlangenhaeutung-02), Blau (blau-10), Gelb (gelb-15)
+      Schlangen: schlange-1: Grün - Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau | schlange-3: Rot - Rot - Gelb; Ablagestapel: 3 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Vielfaltskönig (aufgabe-05), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Grün (gruen-03), Grün (gruen-06), Gelb (gelb-12), Blau (blau-04), Blau (blau-06)
+      Schlangen: keine; Ablagestapel: 4 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 2: Hand Rot (rot-01), Braun (braun-10), Farbenfusion (farbenfusion-01), Verdoppler (verdoppler-02), Violett (violett-02)
+      Schlangen: keine; Ablagestapel: 8 Karten, oben Grün
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 1
+    Nachziehstapel: 70 Karten
+    Offene Aufgaben: Farbenpracht (aufgabe-01), Schlangenmeister (aufgabe-09), Gelber Schatz (aufgabe-14); Aufgabenstapel: 9 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02
+  48. Spieler 1 legt Gelb (gelb-15) an das Ende von schlange-3 von Spieler 1.
+     Gelb (gelb-15) liegt jetzt: schlange-3 von Spieler 1, Stelle 3.
+  49. Spieler 1 beendet den Zug.
+     Spieler 1 zieht 1 Karte.
+
+Zug von KI-Gegner 1, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Braun (braun-06), Braun (braun-07), Schlangenhäutung (schlangenhaeutung-02), Blau (blau-10), Grün (gruen-02)
+      Schlangen: schlange-1: Grün - Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau | schlange-3: Rot - Rot - Gelb - Gelb; Ablagestapel: 3 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Vielfaltskönig (aufgabe-05), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Grün (gruen-03), Grün (gruen-06), Gelb (gelb-12), Blau (blau-04), Blau (blau-06)
+      Schlangen: keine; Ablagestapel: 4 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 2: Hand Rot (rot-01), Braun (braun-10), Farbenfusion (farbenfusion-01), Verdoppler (verdoppler-02), Violett (violett-02)
+      Schlangen: keine; Ablagestapel: 8 Karten, oben Grün
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 1
+    Nachziehstapel: 69 Karten
+    Offene Aufgaben: Farbenpracht (aufgabe-01), Schlangenmeister (aufgabe-09), Gelber Schatz (aufgabe-14); Aufgabenstapel: 9 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02
+  50. KI-Gegner 1 legt Blau (blau-04) an das Ende von schlange-3 von Spieler 1.
+     Blau (blau-04) liegt jetzt: schlange-3 von Spieler 1, Stelle 4.
+  51. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 1 Karte.
+
+Zug von KI-Gegner 2, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Braun (braun-06), Braun (braun-07), Schlangenhäutung (schlangenhaeutung-02), Blau (blau-10), Grün (gruen-02)
+      Schlangen: schlange-1: Grün - Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau | schlange-3: Rot - Rot - Gelb - Gelb - Blau; Ablagestapel: 3 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Vielfaltskönig (aufgabe-05), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Grün (gruen-03), Grün (gruen-06), Gelb (gelb-12), Blau (blau-06), Schlangenfrass (schlangenfrass-02)
+      Schlangen: keine; Ablagestapel: 4 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 2: Hand Rot (rot-01), Braun (braun-10), Farbenfusion (farbenfusion-01), Verdoppler (verdoppler-02), Violett (violett-02)
+      Schlangen: keine; Ablagestapel: 8 Karten, oben Grün
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 1
+    Nachziehstapel: 68 Karten
+    Offene Aufgaben: Farbenpracht (aufgabe-01), Schlangenmeister (aufgabe-09), Gelber Schatz (aufgabe-14); Aufgabenstapel: 9 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02
+  52. KI-Gegner 2 legt Farbenfusion (farbenfusion-01) auf Gelb (gelb-03) und Gelb (gelb-15) in schlange-3 von Spieler 1.
+     Farbenfusion (farbenfusion-01) ist angesagt; betroffen: Spieler 1.
+     Spieler 1 entscheidet, ob er abwehrt.
+  53. Spieler 1 lässt durch.
+     Versetzt: Gelb (gelb-03) von schlange-3 von Spieler 1, Stelle 2 nach unter Farbenfusion (farbenfusion-01) in schlange-3 von Spieler 1, Stelle 0; Gelb (gelb-15) von schlange-3 von Spieler 1, Stelle 3 nach unter Farbenfusion (farbenfusion-01) in schlange-3 von Spieler 1, Stelle 1.
+     Entschieden, niemand hat abgewehrt; Farbenfusion (farbenfusion-01) liegt jetzt: schlange-3 von Spieler 1, Stelle 2.
+  54. KI-Gegner 2 legt Violett (violett-02) an den Anfang von schlange-1 von Spieler 1.
+     Violett (violett-02) liegt jetzt: schlange-1 von Spieler 1, Stelle 0.
+  55. KI-Gegner 2 spielt die Risiko-Belohnungs-Karte risiko-belohnung-06, Aktion 1 (Zusätzliche Karten ziehen).
+     Versetzt: Schlangengrube (schlangengrube-01) von Nachziehstapel nach aufgedeckt, Stelle 0.
+     Risikoprüfung: Schlangengrube (schlangengrube-01) aufgedeckt, Misserfolg; risiko-belohnung-06 ist aus dem Spiel.
+     KI-Gegner 2 entscheidet über „Risiko: begünstigten Gegner wählen“ zu risiko-belohnung-06: spieler-1, spieler-2.
+  56. KI-Gegner 2 wählt „spieler-2“.
+     KI-Gegner 2 hat bei „Risiko: begünstigten Gegner wählen“ „spieler-2“ gewählt.
+     Versetzt: eine verdeckte Karte von aufgedeckt, Stelle 0 nach Hand von KI-Gegner 1.
+  57. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 2 Karten.
+
+Zug von Spieler 1
+    Spieler 1: Hand Braun (braun-06), Braun (braun-07), Schlangenhäutung (schlangenhaeutung-02), Blau (blau-10), Grün (gruen-02)
+      Schlangen: schlange-1: Violett - Grün - Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau | schlange-3: Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau; Ablagestapel: 3 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Vielfaltskönig (aufgabe-05), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Grün (gruen-03), Grün (gruen-06), Gelb (gelb-12), Blau (blau-06), Schlangenfrass (schlangenfrass-02), Schlangengrube (schlangengrube-01)
+      Schlangen: keine; Ablagestapel: 4 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 2: Hand Rot (rot-01), Braun (braun-10), Verdoppler (verdoppler-02), Violett (violett-05), Rot (rot-06)
+      Schlangen: keine; Ablagestapel: 8 Karten, oben Grün
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 65 Karten
+    Offene Aufgaben: Farbenpracht (aufgabe-01), Schlangenmeister (aufgabe-09), Gelber Schatz (aufgabe-14); Aufgabenstapel: 9 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  58. Spieler 1 legt Grün (gruen-02) an den Anfang von schlange-1 von Spieler 1.
+     Grün (gruen-02) liegt jetzt: schlange-1 von Spieler 1, Stelle 0.
+  59. Spieler 1 ordnet mit Schlangenhäutung (schlangenhaeutung-02) in schlange-1 von Spieler 1 neu: Grün (gruen-02), Grün (gruen-04), Violett (violett-02), Grün (gruen-08).
+     Versetzt: Grün (gruen-04) von schlange-1 von Spieler 1, Stelle 2 nach schlange-1 von Spieler 1, Stelle 1; Violett (violett-02) von schlange-1 von Spieler 1, Stelle 1 nach schlange-1 von Spieler 1, Stelle 2.
+     Schlangenhäutung (schlangenhaeutung-02) liegt jetzt: Ablagestapel von Spieler 1.
+  60. Spieler 1 beendet den Zug.
+     Spieler 1 zieht 2 Karten.
+
+Zug von KI-Gegner 1, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Braun (braun-06), Braun (braun-07), Blau (blau-10), Violett (violett-10), Regenbogenschlange (regenbogenschlange-04)
+      Schlangen: schlange-1: Grün - Grün - Violett - Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau | schlange-3: Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: keine; geheime Aufgabe: Vielfaltskönig (aufgabe-05), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Grün (gruen-03), Grün (gruen-06), Gelb (gelb-12), Blau (blau-06), Schlangenfrass (schlangenfrass-02), Schlangengrube (schlangengrube-01)
+      Schlangen: keine; Ablagestapel: 4 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 2: Hand Rot (rot-01), Braun (braun-10), Verdoppler (verdoppler-02), Violett (violett-05), Rot (rot-06)
+      Schlangen: keine; Ablagestapel: 8 Karten, oben Grün
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 63 Karten
+    Offene Aufgaben: Farbenpracht (aufgabe-01), Schlangenmeister (aufgabe-09), Gelber Schatz (aufgabe-14); Aufgabenstapel: 9 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  61. KI-Gegner 1 legt Blau (blau-06) an den Anfang von schlange-1 von Spieler 1.
+     Blau (blau-06) liegt jetzt: schlange-1 von Spieler 1, Stelle 0.
+  62. KI-Gegner 1 frisst mit Schlangenfrass (schlangenfrass-02), Option c), Violett (violett-02) aus schlange-1 von Spieler 1 und Grün (gruen-08) aus schlange-1 von Spieler 1.
+     Schlangenfrass (schlangenfrass-02) ist angesagt; betroffen: Spieler 1.
+     Spieler 1 entscheidet, ob er abwehrt.
+  63. Spieler 1 lässt durch.
+     Versetzt: Violett (violett-02) von schlange-1 von Spieler 1, Stelle 3 nach Ablagestapel von KI-Gegner 1; Grün (gruen-08) von schlange-1 von Spieler 1, Stelle 4 nach Ablagestapel von KI-Gegner 1.
+     Entschieden, niemand hat abgewehrt; Schlangenfrass (schlangenfrass-02) liegt jetzt: Ablagestapel von KI-Gegner 1.
+  64. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 1 Karte.
+
+Zug von KI-Gegner 2, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Braun (braun-06), Braun (braun-07), Blau (blau-10), Violett (violett-10), Regenbogenschlange (regenbogenschlange-04)
+      Schlangen: schlange-1: Blau - Grün - Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau | schlange-3: Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: keine; geheime Aufgabe: Vielfaltskönig (aufgabe-05), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Grün (gruen-03), Grün (gruen-06), Gelb (gelb-12), Schlangengrube (schlangengrube-01), Braun (braun-09)
+      Schlangen: keine; Ablagestapel: 7 Karten, oben Grün
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 2: Hand Rot (rot-01), Braun (braun-10), Verdoppler (verdoppler-02), Violett (violett-05), Rot (rot-06)
+      Schlangen: keine; Ablagestapel: 8 Karten, oben Grün
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 62 Karten
+    Offene Aufgaben: Farbenpracht (aufgabe-01), Schlangenmeister (aufgabe-09), Gelber Schatz (aufgabe-14); Aufgabenstapel: 9 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  65. KI-Gegner 2 legt Rot (rot-06) an das Ende von schlange-3 von Spieler 1.
+     Rot (rot-06) liegt jetzt: schlange-3 von Spieler 1, Stelle 4.
+  66. KI-Gegner 2 spielt Verdoppler (verdoppler-02).
+     Verdoppler (verdoppler-02) liegt jetzt: Ablagestapel von KI-Gegner 2.
+  67. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 2 Karten.
+
+Zug von KI-Gegner 2, zweiter Zug nach dem Verdoppler
+    Spieler 1: Hand Braun (braun-06), Braun (braun-07), Blau (blau-10), Violett (violett-10), Regenbogenschlange (regenbogenschlange-04)
+      Schlangen: schlange-1: Blau - Grün - Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau | schlange-3: Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Rot; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: keine; geheime Aufgabe: Vielfaltskönig (aufgabe-05), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Grün (gruen-03), Grün (gruen-06), Gelb (gelb-12), Schlangengrube (schlangengrube-01), Braun (braun-09)
+      Schlangen: keine; Ablagestapel: 7 Karten, oben Grün
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 2: Hand Rot (rot-01), Braun (braun-10), Violett (violett-05), Gelb (gelb-06), Braun (braun-05)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 60 Karten
+    Offene Aufgaben: Farbenpracht (aufgabe-01), Schlangenmeister (aufgabe-09), Gelber Schatz (aufgabe-14); Aufgabenstapel: 9 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  68. KI-Gegner 2 legt Rot (rot-01) an den Anfang von schlange-3 von Spieler 1.
+     Rot (rot-01) liegt jetzt: schlange-3 von Spieler 1, Stelle 0.
+  69. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 1 Karte.
+
+Zug von Spieler 1
+    Spieler 1: Hand Braun (braun-06), Braun (braun-07), Blau (blau-10), Violett (violett-10), Regenbogenschlange (regenbogenschlange-04)
+      Schlangen: schlange-1: Blau - Grün - Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau | schlange-3: Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Rot; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: keine; geheime Aufgabe: Vielfaltskönig (aufgabe-05), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Grün (gruen-03), Grün (gruen-06), Gelb (gelb-12), Schlangengrube (schlangengrube-01), Braun (braun-09)
+      Schlangen: keine; Ablagestapel: 7 Karten, oben Grün
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 2: Hand Braun (braun-10), Violett (violett-05), Gelb (gelb-06), Braun (braun-05), Blau (blau-03)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 59 Karten
+    Offene Aufgaben: Farbenpracht (aufgabe-01), Schlangenmeister (aufgabe-09), Gelber Schatz (aufgabe-14); Aufgabenstapel: 9 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  70. Spieler 1 legt Blau (blau-10) an das Ende von schlange-3 von Spieler 1.
+     Blau (blau-10) liegt jetzt: schlange-3 von Spieler 1, Stelle 6.
+  71. Spieler 1 legt Regenbogenschlange (regenbogenschlange-04) in schlange-1 von Spieler 1 an Stelle 2.
+     Regenbogenschlange (regenbogenschlange-04) liegt jetzt: schlange-1 von Spieler 1, Stelle 2.
+     Spieler 1 erfüllt die Aufgabe Schlangenmeister (aufgabe-09) und nimmt sie zu sich.
+     Vom Aufgabenstapel aufgedeckt: Farbvielfalt (aufgabe-04), an der Stelle von Schlangenmeister (aufgabe-09).
+  72. Spieler 1 beendet den Zug.
+     Spieler 1 zieht 2 Karten.
+
+Zug von KI-Gegner 1, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Braun (braun-06), Braun (braun-07), Violett (violett-10), Rot (rot-09), Gelb (gelb-08)
+      Schlangen: schlange-1: Blau - Grün - Regenbogenschlange - Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau | schlange-3: Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Rot - Blau; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09); geheime Aufgabe: Vielfaltskönig (aufgabe-05), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Grün (gruen-03), Grün (gruen-06), Gelb (gelb-12), Schlangengrube (schlangengrube-01), Braun (braun-09)
+      Schlangen: keine; Ablagestapel: 7 Karten, oben Grün
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 2: Hand Braun (braun-10), Violett (violett-05), Gelb (gelb-06), Braun (braun-05), Blau (blau-03)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 57 Karten
+    Offene Aufgaben: Farbenpracht (aufgabe-01), Farbvielfalt (aufgabe-04), Gelber Schatz (aufgabe-14); Aufgabenstapel: 8 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  73. KI-Gegner 1 beginnt mit Grün (gruen-03) eine neue Schlange.
+     Grün (gruen-03) liegt jetzt: schlange-4 von KI-Gegner 1, Stelle 0.
+  74. KI-Gegner 1 spielt Schlangengrube (schlangengrube-01) auf Spieler 1.
+     Schlangengrube (schlangengrube-01) ist angesagt; betroffen: Spieler 1.
+     Spieler 1 entscheidet, ob er abwehrt.
+  75. Spieler 1 lässt durch.
+     Entschieden, niemand hat abgewehrt; Schlangengrube (schlangengrube-01) liegt jetzt: vor Spieler 1.
+  76. KI-Gegner 1 setzt die Comeback-Karte comeback-02 ein.
+     KI-Gegner 1 dreht die Comeback-Karte comeback-02 um und hat zwei zusätzliche Aktionen.
+  77. KI-Gegner 1 legt Braun (braun-09) an den Anfang von schlange-3 von Spieler 1.
+     Braun (braun-09) liegt jetzt: schlange-3 von Spieler 1, Stelle 0.
+  78. KI-Gegner 1 legt Gelb (gelb-12) an das Ende von schlange-1 von Spieler 1.
+     Gelb (gelb-12) liegt jetzt: schlange-1 von Spieler 1, Stelle 9.
+  79. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 4 Karten.
+
+Zug von KI-Gegner 2, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Braun (braun-06), Braun (braun-07), Violett (violett-10), Rot (rot-09), Gelb (gelb-08)
+      Schlangen: schlange-1: Blau - Grün - Regenbogenschlange - Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Gelb | schlange-3: Braun - Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Rot - Blau; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09); geheime Aufgabe: Vielfaltskönig (aufgabe-05), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Grün (gruen-06), Schlangenfrass (schlangenfrass-01), Violett (violett-12), Gelb (gelb-11), Gelb (gelb-01)
+      Schlangen: schlange-4: Grün; Ablagestapel: 7 Karten, oben Grün
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Braun (braun-10), Violett (violett-05), Gelb (gelb-06), Braun (braun-05), Blau (blau-03)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 53 Karten; liegt aus: Schlangengrube (schlangengrube-01) vor Spieler 1
+    Offene Aufgaben: Farbenpracht (aufgabe-01), Farbvielfalt (aufgabe-04), Gelber Schatz (aufgabe-14); Aufgabenstapel: 8 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  80. KI-Gegner 2 legt Gelb (gelb-06) an das Ende von schlange-1 von Spieler 1.
+     Gelb (gelb-06) liegt jetzt: schlange-1 von Spieler 1, Stelle 10.
+  81. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 1 Karte.
+     Spieler 1 setzt aus; Schlangengrube (schlangengrube-01) kommt auf den Ablagestapel von KI-Gegner 1.
+
+Zug von KI-Gegner 1, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Braun (braun-06), Braun (braun-07), Violett (violett-10), Rot (rot-09), Gelb (gelb-08)
+      Schlangen: schlange-1: Blau - Grün - Regenbogenschlange - Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Gelb - Gelb | schlange-3: Braun - Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Rot - Blau; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09); geheime Aufgabe: Vielfaltskönig (aufgabe-05), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Grün (gruen-06), Schlangenfrass (schlangenfrass-01), Violett (violett-12), Gelb (gelb-11), Gelb (gelb-01)
+      Schlangen: schlange-4: Grün; Ablagestapel: 8 Karten, oben Schlangengrube
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Braun (braun-10), Violett (violett-05), Braun (braun-05), Blau (blau-03), Violett (violett-03)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 52 Karten
+    Offene Aufgaben: Farbenpracht (aufgabe-01), Farbvielfalt (aufgabe-04), Gelber Schatz (aufgabe-14); Aufgabenstapel: 8 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  82. KI-Gegner 1 frisst mit Schlangenfrass (schlangenfrass-01), Option c), Farbenfusion (farbenfusion-01) aus schlange-3 von Spieler 1 und Rot (rot-06) aus schlange-3 von Spieler 1.
+     Schlangenfrass (schlangenfrass-01) ist angesagt; betroffen: Spieler 1.
+     Spieler 1 entscheidet, ob er abwehrt.
+  83. Spieler 1 lässt durch.
+     Versetzt: Gelb (gelb-03) von unter Farbenfusion (farbenfusion-01) in schlange-3 von Spieler 1, Stelle 0 nach schlange-3 von Spieler 1, Stelle 4; Gelb (gelb-15) von unter Farbenfusion (farbenfusion-01) in schlange-3 von Spieler 1, Stelle 1 nach schlange-3 von Spieler 1, Stelle 5; Farbenfusion (farbenfusion-01) von schlange-3 von Spieler 1, Stelle 4 nach Ablagestapel von KI-Gegner 1; Rot (rot-06) von schlange-3 von Spieler 1, Stelle 6 nach Ablagestapel von KI-Gegner 1.
+     Entschieden, niemand hat abgewehrt; Schlangenfrass (schlangenfrass-01) liegt jetzt: Ablagestapel von KI-Gegner 1.
+  84. KI-Gegner 1 legt Violett (violett-12) an den Anfang von schlange-4 von KI-Gegner 1.
+     Violett (violett-12) liegt jetzt: schlange-4 von KI-Gegner 1, Stelle 0.
+  85. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 2 Karten.
+
+Zug von KI-Gegner 2, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Braun (braun-06), Braun (braun-07), Violett (violett-10), Rot (rot-09), Gelb (gelb-08)
+      Schlangen: schlange-1: Blau - Grün - Regenbogenschlange - Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Gelb - Gelb | schlange-3: Braun - Rot - Rot - Rot - Gelb - Gelb - Blau - Blau; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09); geheime Aufgabe: Vielfaltskönig (aufgabe-05), nicht erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Grün (gruen-06), Gelb (gelb-11), Gelb (gelb-01), Rot (rot-02), Gelb (gelb-02)
+      Schlangen: schlange-4: Violett - Grün; Ablagestapel: 11 Karten, oben Rot
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Braun (braun-10), Violett (violett-05), Braun (braun-05), Blau (blau-03), Violett (violett-03)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 50 Karten
+    Offene Aufgaben: Farbenpracht (aufgabe-01), Farbvielfalt (aufgabe-04), Gelber Schatz (aufgabe-14); Aufgabenstapel: 8 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  86. KI-Gegner 2 legt Violett (violett-05) an den Anfang von schlange-4 von KI-Gegner 1.
+     Violett (violett-05) liegt jetzt: schlange-4 von KI-Gegner 1, Stelle 0.
+  87. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 1 Karte.
+     (verdeckt, D35) Spieler 1 hat die geheime Aufgabe Vielfaltskönig (aufgabe-05) erfüllt.
+
+Zug von Spieler 1
+    Spieler 1: Hand Braun (braun-06), Braun (braun-07), Violett (violett-10), Rot (rot-09), Gelb (gelb-08)
+      Schlangen: schlange-1: Blau - Grün - Regenbogenschlange - Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Gelb - Gelb | schlange-3: Braun - Rot - Rot - Rot - Gelb - Gelb - Blau - Blau; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Grün (gruen-06), Gelb (gelb-11), Gelb (gelb-01), Rot (rot-02), Gelb (gelb-02)
+      Schlangen: schlange-4: Violett - Violett - Grün; Ablagestapel: 11 Karten, oben Rot
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Braun (braun-10), Braun (braun-05), Blau (blau-03), Violett (violett-03), Braun (braun-04)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 49 Karten
+    Offene Aufgaben: Farbenpracht (aufgabe-01), Farbvielfalt (aufgabe-04), Gelber Schatz (aufgabe-14); Aufgabenstapel: 8 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  88. Spieler 1 legt Violett (violett-10) an den Anfang von schlange-4 von KI-Gegner 1.
+     Violett (violett-10) liegt jetzt: schlange-4 von KI-Gegner 1, Stelle 0.
+  89. Spieler 1 beendet den Zug.
+     Spieler 1 zieht 1 Karte.
+
+Zug von KI-Gegner 1, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Braun (braun-06), Braun (braun-07), Rot (rot-09), Gelb (gelb-08), Rot (rot-14)
+      Schlangen: schlange-1: Blau - Grün - Regenbogenschlange - Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Gelb - Gelb | schlange-3: Braun - Rot - Rot - Rot - Gelb - Gelb - Blau - Blau; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Grün (gruen-06), Gelb (gelb-11), Gelb (gelb-01), Rot (rot-02), Gelb (gelb-02)
+      Schlangen: schlange-4: Violett - Violett - Violett - Grün; Ablagestapel: 11 Karten, oben Rot
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Braun (braun-10), Braun (braun-05), Blau (blau-03), Violett (violett-03), Braun (braun-04)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 48 Karten
+    Offene Aufgaben: Farbenpracht (aufgabe-01), Farbvielfalt (aufgabe-04), Gelber Schatz (aufgabe-14); Aufgabenstapel: 8 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  90. KI-Gegner 1 legt Gelb (gelb-01) an das Ende von schlange-3 von Spieler 1.
+     Gelb (gelb-01) liegt jetzt: schlange-3 von Spieler 1, Stelle 8.
+  91. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 1 Karte.
+
+Zug von KI-Gegner 2, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Braun (braun-06), Braun (braun-07), Rot (rot-09), Gelb (gelb-08), Rot (rot-14)
+      Schlangen: schlange-1: Blau - Grün - Regenbogenschlange - Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Gelb - Gelb | schlange-3: Braun - Rot - Rot - Rot - Gelb - Gelb - Blau - Blau - Gelb; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Grün (gruen-06), Gelb (gelb-11), Rot (rot-02), Gelb (gelb-02), Rot (rot-11)
+      Schlangen: schlange-4: Violett - Violett - Violett - Grün; Ablagestapel: 11 Karten, oben Rot
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Braun (braun-10), Braun (braun-05), Blau (blau-03), Violett (violett-03), Braun (braun-04)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 47 Karten
+    Offene Aufgaben: Farbenpracht (aufgabe-01), Farbvielfalt (aufgabe-04), Gelber Schatz (aufgabe-14); Aufgabenstapel: 8 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  92. KI-Gegner 2 legt Blau (blau-03) an das Ende von schlange-3 von Spieler 1.
+     Blau (blau-03) liegt jetzt: schlange-3 von Spieler 1, Stelle 9.
+  93. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 1 Karte.
+
+Zug von Spieler 1
+    Spieler 1: Hand Braun (braun-06), Braun (braun-07), Rot (rot-09), Gelb (gelb-08), Rot (rot-14)
+      Schlangen: schlange-1: Blau - Grün - Regenbogenschlange - Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Gelb - Gelb | schlange-3: Braun - Rot - Rot - Rot - Gelb - Gelb - Blau - Blau - Gelb - Blau; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Grün (gruen-06), Gelb (gelb-11), Rot (rot-02), Gelb (gelb-02), Rot (rot-11)
+      Schlangen: schlange-4: Violett - Violett - Violett - Grün; Ablagestapel: 11 Karten, oben Rot
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Braun (braun-10), Braun (braun-05), Violett (violett-03), Braun (braun-04), Rot (rot-12)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 46 Karten
+    Offene Aufgaben: Farbenpracht (aufgabe-01), Farbvielfalt (aufgabe-04), Gelber Schatz (aufgabe-14); Aufgabenstapel: 8 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  94. Spieler 1 legt Rot (rot-09) an den Anfang von schlange-3 von Spieler 1.
+     Rot (rot-09) liegt jetzt: schlange-3 von Spieler 1, Stelle 0.
+  95. Spieler 1 beendet den Zug.
+     Spieler 1 zieht 1 Karte.
+
+Zug von KI-Gegner 1, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Braun (braun-06), Braun (braun-07), Gelb (gelb-08), Rot (rot-14), Grün (gruen-07)
+      Schlangen: schlange-1: Blau - Grün - Regenbogenschlange - Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Gelb - Gelb | schlange-3: Rot - Braun - Rot - Rot - Rot - Gelb - Gelb - Blau - Blau - Gelb - Blau; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Grün (gruen-06), Gelb (gelb-11), Rot (rot-02), Gelb (gelb-02), Rot (rot-11)
+      Schlangen: schlange-4: Violett - Violett - Violett - Grün; Ablagestapel: 11 Karten, oben Rot
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Braun (braun-10), Braun (braun-05), Violett (violett-03), Braun (braun-04), Rot (rot-12)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 45 Karten
+    Offene Aufgaben: Farbenpracht (aufgabe-01), Farbvielfalt (aufgabe-04), Gelber Schatz (aufgabe-14); Aufgabenstapel: 8 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  96. KI-Gegner 1 legt Rot (rot-11) an den Anfang von schlange-1 von Spieler 1.
+     Rot (rot-11) liegt jetzt: schlange-1 von Spieler 1, Stelle 0.
+  97. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 1 Karte.
+
+Zug von KI-Gegner 2, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Braun (braun-06), Braun (braun-07), Gelb (gelb-08), Rot (rot-14), Grün (gruen-07)
+      Schlangen: schlange-1: Rot - Blau - Grün - Regenbogenschlange - Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Gelb - Gelb | schlange-3: Rot - Braun - Rot - Rot - Rot - Gelb - Gelb - Blau - Blau - Gelb - Blau; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Grün (gruen-06), Gelb (gelb-11), Rot (rot-02), Gelb (gelb-02), Farbenfusion (farbenfusion-02)
+      Schlangen: schlange-4: Violett - Violett - Violett - Grün; Ablagestapel: 11 Karten, oben Rot
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Braun (braun-10), Braun (braun-05), Violett (violett-03), Braun (braun-04), Rot (rot-12)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 44 Karten
+    Offene Aufgaben: Farbenpracht (aufgabe-01), Farbvielfalt (aufgabe-04), Gelber Schatz (aufgabe-14); Aufgabenstapel: 8 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  98. KI-Gegner 2 legt Braun (braun-10) an das Ende von schlange-3 von Spieler 1.
+     Braun (braun-10) liegt jetzt: schlange-3 von Spieler 1, Stelle 11.
+  99. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 1 Karte.
+
+Zug von Spieler 1
+    Spieler 1: Hand Braun (braun-06), Braun (braun-07), Gelb (gelb-08), Rot (rot-14), Grün (gruen-07)
+      Schlangen: schlange-1: Rot - Blau - Grün - Regenbogenschlange - Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Gelb - Gelb | schlange-3: Rot - Braun - Rot - Rot - Rot - Gelb - Gelb - Blau - Blau - Gelb - Blau - Braun; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Grün (gruen-06), Gelb (gelb-11), Rot (rot-02), Gelb (gelb-02), Farbenfusion (farbenfusion-02)
+      Schlangen: schlange-4: Violett - Violett - Violett - Grün; Ablagestapel: 11 Karten, oben Rot
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Braun (braun-05), Violett (violett-03), Braun (braun-04), Rot (rot-12), Grün (gruen-09)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 43 Karten
+    Offene Aufgaben: Farbenpracht (aufgabe-01), Farbvielfalt (aufgabe-04), Gelber Schatz (aufgabe-14); Aufgabenstapel: 8 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  100. Spieler 1 legt Grün (gruen-07) an den Anfang von schlange-1 von Spieler 1.
+     Grün (gruen-07) liegt jetzt: schlange-1 von Spieler 1, Stelle 0.
+  101. Spieler 1 beendet den Zug.
+     Spieler 1 zieht 1 Karte.
+     Spieler 1 erfüllt die Aufgabe Farbenpracht (aufgabe-01) und nimmt sie zu sich.
+     Vom Aufgabenstapel aufgedeckt: Farbkombination (aufgabe-03), an der Stelle von Farbenpracht (aufgabe-01).
+     Spieler 1 erfüllt die Aufgabe Farbkombination (aufgabe-03) und nimmt sie zu sich.
+     Vom Aufgabenstapel aufgedeckt: Schlangenbändiger (aufgabe-11), an der Stelle von Farbkombination (aufgabe-03).
+
+Zug von KI-Gegner 1, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Braun (braun-06), Braun (braun-07), Gelb (gelb-08), Rot (rot-14), Violett (violett-06)
+      Schlangen: schlange-1: Grün - Rot - Blau - Grün - Regenbogenschlange - Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Gelb - Gelb | schlange-3: Rot - Braun - Rot - Rot - Rot - Gelb - Gelb - Blau - Blau - Gelb - Blau - Braun; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09), Farbenpracht (aufgabe-01), Farbkombination (aufgabe-03); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Grün (gruen-06), Gelb (gelb-11), Rot (rot-02), Gelb (gelb-02), Farbenfusion (farbenfusion-02)
+      Schlangen: schlange-4: Violett - Violett - Violett - Grün; Ablagestapel: 11 Karten, oben Rot
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Braun (braun-05), Violett (violett-03), Braun (braun-04), Rot (rot-12), Grün (gruen-09)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 42 Karten
+    Offene Aufgaben: Schlangenbändiger (aufgabe-11), Farbvielfalt (aufgabe-04), Gelber Schatz (aufgabe-14); Aufgabenstapel: 6 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  102. KI-Gegner 1 legt Farbenfusion (farbenfusion-02) auf Gelb (gelb-03) und Gelb (gelb-15) in schlange-3 von Spieler 1.
+     Farbenfusion (farbenfusion-02) ist angesagt; betroffen: Spieler 1.
+     Spieler 1 entscheidet, ob er abwehrt.
+  103. Spieler 1 lässt durch.
+     Versetzt: Gelb (gelb-03) von schlange-3 von Spieler 1, Stelle 5 nach unter Farbenfusion (farbenfusion-02) in schlange-3 von Spieler 1, Stelle 0; Gelb (gelb-15) von schlange-3 von Spieler 1, Stelle 6 nach unter Farbenfusion (farbenfusion-02) in schlange-3 von Spieler 1, Stelle 1.
+     Entschieden, niemand hat abgewehrt; Farbenfusion (farbenfusion-02) liegt jetzt: schlange-3 von Spieler 1, Stelle 5.
+  104. KI-Gegner 1 legt Gelb (gelb-02) an das Ende von schlange-3 von Spieler 1.
+     Gelb (gelb-02) liegt jetzt: schlange-3 von Spieler 1, Stelle 11.
+  105. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 2 Karten.
+
+Zug von KI-Gegner 2, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Braun (braun-06), Braun (braun-07), Gelb (gelb-08), Rot (rot-14), Violett (violett-06)
+      Schlangen: schlange-1: Grün - Rot - Blau - Grün - Regenbogenschlange - Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Gelb - Gelb | schlange-3: Rot - Braun - Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Blau - Gelb - Blau - Braun - Gelb; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09), Farbenpracht (aufgabe-01), Farbkombination (aufgabe-03); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Grün (gruen-06), Gelb (gelb-11), Rot (rot-02), Rot (rot-10), Farbendieb (farbendieb-01)
+      Schlangen: schlange-4: Violett - Violett - Violett - Grün; Ablagestapel: 11 Karten, oben Rot
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Braun (braun-05), Violett (violett-03), Braun (braun-04), Rot (rot-12), Grün (gruen-09)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 40 Karten
+    Offene Aufgaben: Schlangenbändiger (aufgabe-11), Farbvielfalt (aufgabe-04), Gelber Schatz (aufgabe-14); Aufgabenstapel: 6 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  106. KI-Gegner 2 legt Braun (braun-04) an das Ende von schlange-3 von Spieler 1.
+     Braun (braun-04) liegt jetzt: schlange-3 von Spieler 1, Stelle 12.
+  107. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 1 Karte.
+
+Zug von Spieler 1
+    Spieler 1: Hand Braun (braun-06), Braun (braun-07), Gelb (gelb-08), Rot (rot-14), Violett (violett-06)
+      Schlangen: schlange-1: Grün - Rot - Blau - Grün - Regenbogenschlange - Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Gelb - Gelb | schlange-3: Rot - Braun - Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Blau - Gelb - Blau - Braun - Gelb - Braun; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09), Farbenpracht (aufgabe-01), Farbkombination (aufgabe-03); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Grün (gruen-06), Gelb (gelb-11), Rot (rot-02), Rot (rot-10), Farbendieb (farbendieb-01)
+      Schlangen: schlange-4: Violett - Violett - Violett - Grün; Ablagestapel: 11 Karten, oben Rot
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Braun (braun-05), Violett (violett-03), Rot (rot-12), Grün (gruen-09), Blau (blau-12)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 39 Karten
+    Offene Aufgaben: Schlangenbändiger (aufgabe-11), Farbvielfalt (aufgabe-04), Gelber Schatz (aufgabe-14); Aufgabenstapel: 6 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  108. Spieler 1 legt Rot (rot-14) an den Anfang von schlange-3 von Spieler 1.
+     Rot (rot-14) liegt jetzt: schlange-3 von Spieler 1, Stelle 0.
+  109. Spieler 1 beendet den Zug.
+     Spieler 1 zieht 1 Karte.
+
+Zug von KI-Gegner 1, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Braun (braun-06), Braun (braun-07), Gelb (gelb-08), Violett (violett-06), Blau (blau-02)
+      Schlangen: schlange-1: Grün - Rot - Blau - Grün - Regenbogenschlange - Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Gelb - Gelb | schlange-3: Rot - Rot - Braun - Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Blau - Gelb - Blau - Braun - Gelb - Braun; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09), Farbenpracht (aufgabe-01), Farbkombination (aufgabe-03); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Grün (gruen-06), Gelb (gelb-11), Rot (rot-02), Rot (rot-10), Farbendieb (farbendieb-01)
+      Schlangen: schlange-4: Violett - Violett - Violett - Grün; Ablagestapel: 11 Karten, oben Rot
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Braun (braun-05), Violett (violett-03), Rot (rot-12), Grün (gruen-09), Blau (blau-12)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 38 Karten
+    Offene Aufgaben: Schlangenbändiger (aufgabe-11), Farbvielfalt (aufgabe-04), Gelber Schatz (aufgabe-14); Aufgabenstapel: 6 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  110. KI-Gegner 1 stiehlt mit Farbendieb (farbendieb-01) Rot (rot-09) aus schlange-3 von Spieler 1 und legt sie in schlange-4 von KI-Gegner 1 an Stelle 4.
+     Farbendieb (farbendieb-01) ist angesagt; betroffen: Spieler 1.
+     Spieler 1 entscheidet, ob er abwehrt.
+  111. Spieler 1 lässt durch.
+     Versetzt: Rot (rot-09) von schlange-3 von Spieler 1, Stelle 1 nach schlange-4 von KI-Gegner 1, Stelle 4.
+     Entschieden, niemand hat abgewehrt; Farbendieb (farbendieb-01) liegt jetzt: Ablagestapel von KI-Gegner 1.
+     (verdeckt, D35) KI-Gegner 1 hat die geheime Aufgabe Schlangenrepertoire (aufgabe-10) erfüllt.
+  112. KI-Gegner 1 legt Gelb (gelb-11) an den Anfang von schlange-1 von Spieler 1.
+     Gelb (gelb-11) liegt jetzt: schlange-1 von Spieler 1, Stelle 0.
+  113. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 2 Karten.
+
+Zug von KI-Gegner 2, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Braun (braun-06), Braun (braun-07), Gelb (gelb-08), Violett (violett-06), Blau (blau-02)
+      Schlangen: schlange-1: Gelb - Grün - Rot - Blau - Grün - Regenbogenschlange - Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Gelb - Gelb | schlange-3: Rot - Braun - Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Blau - Gelb - Blau - Braun - Gelb - Braun; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09), Farbenpracht (aufgabe-01), Farbkombination (aufgabe-03); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Grün (gruen-06), Rot (rot-02), Rot (rot-10), Rot (rot-07), Braun (braun-11)
+      Schlangen: schlange-4: Violett - Violett - Violett - Grün - Rot; Ablagestapel: 12 Karten, oben Farbendieb
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Braun (braun-05), Violett (violett-03), Rot (rot-12), Grün (gruen-09), Blau (blau-12)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 36 Karten
+    Offene Aufgaben: Schlangenbändiger (aufgabe-11), Farbvielfalt (aufgabe-04), Gelber Schatz (aufgabe-14); Aufgabenstapel: 6 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  114. KI-Gegner 2 legt Rot (rot-12) an das Ende von schlange-3 von Spieler 1.
+     Rot (rot-12) liegt jetzt: schlange-3 von Spieler 1, Stelle 13.
+  115. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 1 Karte.
+
+Zug von Spieler 1
+    Spieler 1: Hand Braun (braun-06), Braun (braun-07), Gelb (gelb-08), Violett (violett-06), Blau (blau-02)
+      Schlangen: schlange-1: Gelb - Grün - Rot - Blau - Grün - Regenbogenschlange - Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Gelb - Gelb | schlange-3: Rot - Braun - Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Blau - Gelb - Blau - Braun - Gelb - Braun - Rot; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09), Farbenpracht (aufgabe-01), Farbkombination (aufgabe-03); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Grün (gruen-06), Rot (rot-02), Rot (rot-10), Rot (rot-07), Braun (braun-11)
+      Schlangen: schlange-4: Violett - Violett - Violett - Grün - Rot; Ablagestapel: 12 Karten, oben Farbendieb
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Braun (braun-05), Violett (violett-03), Grün (gruen-09), Blau (blau-12), Gelb (gelb-09)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 35 Karten
+    Offene Aufgaben: Schlangenbändiger (aufgabe-11), Farbvielfalt (aufgabe-04), Gelber Schatz (aufgabe-14); Aufgabenstapel: 6 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  116. Spieler 1 legt Braun (braun-06) an den Anfang von schlange-1 von Spieler 1.
+     Braun (braun-06) liegt jetzt: schlange-1 von Spieler 1, Stelle 0.
+  117. Spieler 1 beendet den Zug.
+     Spieler 1 zieht 1 Karte.
+
+Zug von KI-Gegner 1, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Braun (braun-07), Gelb (gelb-08), Violett (violett-06), Blau (blau-02), Violett (violett-01)
+      Schlangen: schlange-1: Braun - Gelb - Grün - Rot - Blau - Grün - Regenbogenschlange - Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Gelb - Gelb | schlange-3: Rot - Braun - Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Blau - Gelb - Blau - Braun - Gelb - Braun - Rot; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09), Farbenpracht (aufgabe-01), Farbkombination (aufgabe-03); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Grün (gruen-06), Rot (rot-02), Rot (rot-10), Rot (rot-07), Braun (braun-11)
+      Schlangen: schlange-4: Violett - Violett - Violett - Grün - Rot; Ablagestapel: 12 Karten, oben Farbendieb
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Braun (braun-05), Violett (violett-03), Grün (gruen-09), Blau (blau-12), Gelb (gelb-09)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 34 Karten
+    Offene Aufgaben: Schlangenbändiger (aufgabe-11), Farbvielfalt (aufgabe-04), Gelber Schatz (aufgabe-14); Aufgabenstapel: 6 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  118. KI-Gegner 1 legt Grün (gruen-06) an das Ende von schlange-3 von Spieler 1.
+     Grün (gruen-06) liegt jetzt: schlange-3 von Spieler 1, Stelle 14.
+  119. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 1 Karte.
+
+Zug von KI-Gegner 2, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Braun (braun-07), Gelb (gelb-08), Violett (violett-06), Blau (blau-02), Violett (violett-01)
+      Schlangen: schlange-1: Braun - Gelb - Grün - Rot - Blau - Grün - Regenbogenschlange - Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Gelb - Gelb | schlange-3: Rot - Braun - Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Blau - Gelb - Blau - Braun - Gelb - Braun - Rot - Grün; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09), Farbenpracht (aufgabe-01), Farbkombination (aufgabe-03); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Rot (rot-02), Rot (rot-10), Rot (rot-07), Braun (braun-11), Farbendieb (farbendieb-02)
+      Schlangen: schlange-4: Violett - Violett - Violett - Grün - Rot; Ablagestapel: 12 Karten, oben Farbendieb
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Braun (braun-05), Violett (violett-03), Grün (gruen-09), Blau (blau-12), Gelb (gelb-09)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 33 Karten
+    Offene Aufgaben: Schlangenbändiger (aufgabe-11), Farbvielfalt (aufgabe-04), Gelber Schatz (aufgabe-14); Aufgabenstapel: 6 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  120. KI-Gegner 2 legt Braun (braun-05) an den Anfang von schlange-4 von KI-Gegner 1.
+     Braun (braun-05) liegt jetzt: schlange-4 von KI-Gegner 1, Stelle 0.
+  121. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 1 Karte.
+
+Zug von Spieler 1
+    Spieler 1: Hand Braun (braun-07), Gelb (gelb-08), Violett (violett-06), Blau (blau-02), Violett (violett-01)
+      Schlangen: schlange-1: Braun - Gelb - Grün - Rot - Blau - Grün - Regenbogenschlange - Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Gelb - Gelb | schlange-3: Rot - Braun - Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Blau - Gelb - Blau - Braun - Gelb - Braun - Rot - Grün; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09), Farbenpracht (aufgabe-01), Farbkombination (aufgabe-03); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Rot (rot-02), Rot (rot-10), Rot (rot-07), Braun (braun-11), Farbendieb (farbendieb-02)
+      Schlangen: schlange-4: Braun - Violett - Violett - Violett - Grün - Rot; Ablagestapel: 12 Karten, oben Farbendieb
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Violett (violett-03), Grün (gruen-09), Blau (blau-12), Gelb (gelb-09), Blau (blau-08)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 32 Karten
+    Offene Aufgaben: Schlangenbändiger (aufgabe-11), Farbvielfalt (aufgabe-04), Gelber Schatz (aufgabe-14); Aufgabenstapel: 6 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  122. Spieler 1 legt Gelb (gelb-08) an das Ende von schlange-3 von Spieler 1.
+     Gelb (gelb-08) liegt jetzt: schlange-3 von Spieler 1, Stelle 15.
+  123. Spieler 1 beendet den Zug.
+     Spieler 1 zieht 1 Karte.
+
+Zug von KI-Gegner 1, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Braun (braun-07), Violett (violett-06), Blau (blau-02), Violett (violett-01), Regenbogenschlange (regenbogenschlange-01)
+      Schlangen: schlange-1: Braun - Gelb - Grün - Rot - Blau - Grün - Regenbogenschlange - Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Gelb - Gelb | schlange-3: Rot - Braun - Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Blau - Gelb - Blau - Braun - Gelb - Braun - Rot - Grün - Gelb; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09), Farbenpracht (aufgabe-01), Farbkombination (aufgabe-03); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Rot (rot-02), Rot (rot-10), Rot (rot-07), Braun (braun-11), Farbendieb (farbendieb-02)
+      Schlangen: schlange-4: Braun - Violett - Violett - Violett - Grün - Rot; Ablagestapel: 12 Karten, oben Farbendieb
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Violett (violett-03), Grün (gruen-09), Blau (blau-12), Gelb (gelb-09), Blau (blau-08)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 31 Karten
+    Offene Aufgaben: Schlangenbändiger (aufgabe-11), Farbvielfalt (aufgabe-04), Gelber Schatz (aufgabe-14); Aufgabenstapel: 6 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  124. KI-Gegner 1 stiehlt mit Farbendieb (farbendieb-02) Blau (blau-03) aus schlange-3 von Spieler 1 und legt sie in schlange-4 von KI-Gegner 1 an Stelle 3.
+     Farbendieb (farbendieb-02) ist angesagt; betroffen: Spieler 1.
+     Spieler 1 entscheidet, ob er abwehrt.
+  125. Spieler 1 lässt durch.
+     Versetzt: Blau (blau-03) von schlange-3 von Spieler 1, Stelle 9 nach schlange-4 von KI-Gegner 1, Stelle 3.
+     Entschieden, niemand hat abgewehrt; Farbendieb (farbendieb-02) liegt jetzt: Ablagestapel von KI-Gegner 1.
+  126. KI-Gegner 1 legt Braun (braun-11) an den Anfang von schlange-3 von Spieler 1.
+     Braun (braun-11) liegt jetzt: schlange-3 von Spieler 1, Stelle 0.
+  127. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 2 Karten.
+
+Zug von KI-Gegner 2, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Braun (braun-07), Violett (violett-06), Blau (blau-02), Violett (violett-01), Regenbogenschlange (regenbogenschlange-01)
+      Schlangen: schlange-1: Braun - Gelb - Grün - Rot - Blau - Grün - Regenbogenschlange - Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Gelb - Gelb | schlange-3: Braun - Rot - Braun - Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Blau - Gelb - Braun - Gelb - Braun - Rot - Grün - Gelb; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09), Farbenpracht (aufgabe-01), Farbkombination (aufgabe-03); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Rot (rot-02), Rot (rot-10), Rot (rot-07), Schlangenhäutung (schlangenhaeutung-01), Gelb (gelb-10)
+      Schlangen: schlange-4: Braun - Violett - Violett - Blau - Violett - Grün - Rot; Ablagestapel: 13 Karten, oben Farbendieb
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Violett (violett-03), Grün (gruen-09), Blau (blau-12), Gelb (gelb-09), Blau (blau-08)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 29 Karten
+    Offene Aufgaben: Schlangenbändiger (aufgabe-11), Farbvielfalt (aufgabe-04), Gelber Schatz (aufgabe-14); Aufgabenstapel: 6 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  128. KI-Gegner 2 legt Violett (violett-03) an das Ende von schlange-3 von Spieler 1.
+     Violett (violett-03) liegt jetzt: schlange-3 von Spieler 1, Stelle 16.
+  129. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 1 Karte.
+
+Zug von Spieler 1
+    Spieler 1: Hand Braun (braun-07), Violett (violett-06), Blau (blau-02), Violett (violett-01), Regenbogenschlange (regenbogenschlange-01)
+      Schlangen: schlange-1: Braun - Gelb - Grün - Rot - Blau - Grün - Regenbogenschlange - Grün - Grün - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Gelb - Gelb | schlange-3: Braun - Rot - Braun - Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Blau - Gelb - Braun - Gelb - Braun - Rot - Grün - Gelb - Violett; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09), Farbenpracht (aufgabe-01), Farbkombination (aufgabe-03); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Rot (rot-02), Rot (rot-10), Rot (rot-07), Schlangenhäutung (schlangenhaeutung-01), Gelb (gelb-10)
+      Schlangen: schlange-4: Braun - Violett - Violett - Blau - Violett - Grün - Rot; Ablagestapel: 13 Karten, oben Farbendieb
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Grün (gruen-09), Blau (blau-12), Gelb (gelb-09), Blau (blau-08), Braun (braun-02)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 28 Karten
+    Offene Aufgaben: Schlangenbändiger (aufgabe-11), Farbvielfalt (aufgabe-04), Gelber Schatz (aufgabe-14); Aufgabenstapel: 6 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  130. Spieler 1 legt Regenbogenschlange (regenbogenschlange-01) in schlange-1 von Spieler 1 an Stelle 9.
+     Regenbogenschlange (regenbogenschlange-01) liegt jetzt: schlange-1 von Spieler 1, Stelle 9.
+  131. Spieler 1 legt Violett (violett-01) an den Anfang von schlange-1 von Spieler 1.
+     Violett (violett-01) liegt jetzt: schlange-1 von Spieler 1, Stelle 0.
+     Spieler 1 erfüllt die Aufgabe Farbvielfalt (aufgabe-04) und nimmt sie zu sich.
+     Vom Aufgabenstapel aufgedeckt: Schlangenbeschwörer (aufgabe-08), an der Stelle von Farbvielfalt (aufgabe-04).
+     Spieler 1 erfüllt die Aufgabe Schlangenbeschwörer (aufgabe-08) und nimmt sie zu sich.
+     Vom Aufgabenstapel aufgedeckt: Farbharmonie (aufgabe-02), an der Stelle von Schlangenbeschwörer (aufgabe-08).
+  132. Spieler 1 beendet den Zug.
+     Spieler 1 zieht 2 Karten.
+
+Zug von KI-Gegner 1, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Braun (braun-07), Violett (violett-06), Blau (blau-02), Blau (blau-13), Violett (violett-09)
+      Schlangen: schlange-1: Violett - Braun - Gelb - Grün - Rot - Blau - Grün - Regenbogenschlange - Grün - Grün - Regenbogenschlange - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Gelb - Gelb | schlange-3: Braun - Rot - Braun - Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Blau - Gelb - Braun - Gelb - Braun - Rot - Grün - Gelb - Violett; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09), Farbenpracht (aufgabe-01), Farbkombination (aufgabe-03), Farbvielfalt (aufgabe-04), Schlangenbeschwörer (aufgabe-08); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Rot (rot-02), Rot (rot-10), Rot (rot-07), Schlangenhäutung (schlangenhaeutung-01), Gelb (gelb-10)
+      Schlangen: schlange-4: Braun - Violett - Violett - Blau - Violett - Grün - Rot; Ablagestapel: 13 Karten, oben Farbendieb
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Grün (gruen-09), Blau (blau-12), Gelb (gelb-09), Blau (blau-08), Braun (braun-02)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 26 Karten
+    Offene Aufgaben: Schlangenbändiger (aufgabe-11), Farbharmonie (aufgabe-02), Gelber Schatz (aufgabe-14); Aufgabenstapel: 4 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  133. KI-Gegner 1 ordnet mit Schlangenhäutung (schlangenhaeutung-01) in schlange-1 von Spieler 1 neu: Gelb (gelb-11), Blau (blau-06), Grün (gruen-07), Braun (braun-06), Rot (rot-11).
+     Schlangenhäutung (schlangenhaeutung-01) ist angesagt; betroffen: Spieler 1.
+     Spieler 1 entscheidet, ob er abwehrt.
+  134. Spieler 1 lässt durch.
+     Versetzt: Gelb (gelb-11) von schlange-1 von Spieler 1, Stelle 2 nach schlange-1 von Spieler 1, Stelle 1; Blau (blau-06) von schlange-1 von Spieler 1, Stelle 5 nach schlange-1 von Spieler 1, Stelle 2; Braun (braun-06) von schlange-1 von Spieler 1, Stelle 1 nach schlange-1 von Spieler 1, Stelle 4; Rot (rot-11) von schlange-1 von Spieler 1, Stelle 4 nach schlange-1 von Spieler 1, Stelle 5.
+     Entschieden, niemand hat abgewehrt; Schlangenhäutung (schlangenhaeutung-01) liegt jetzt: Ablagestapel von KI-Gegner 1.
+  135. KI-Gegner 1 legt Gelb (gelb-10) an das Ende von schlange-4 von KI-Gegner 1.
+     Gelb (gelb-10) liegt jetzt: schlange-4 von KI-Gegner 1, Stelle 7.
+  136. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 2 Karten.
+
+Zug von KI-Gegner 2, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Braun (braun-07), Violett (violett-06), Blau (blau-02), Blau (blau-13), Violett (violett-09)
+      Schlangen: schlange-1: Violett - Gelb - Blau - Grün - Braun - Rot - Grün - Regenbogenschlange - Grün - Grün - Regenbogenschlange - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Gelb - Gelb | schlange-3: Braun - Rot - Braun - Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Blau - Gelb - Braun - Gelb - Braun - Rot - Grün - Gelb - Violett; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09), Farbenpracht (aufgabe-01), Farbkombination (aufgabe-03), Farbvielfalt (aufgabe-04), Schlangenbeschwörer (aufgabe-08); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Rot (rot-02), Rot (rot-10), Rot (rot-07), Schlangenhäutung (schlangenhaeutung-03), Braun (braun-12)
+      Schlangen: schlange-4: Braun - Violett - Violett - Blau - Violett - Grün - Rot - Gelb; Ablagestapel: 14 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Grün (gruen-09), Blau (blau-12), Gelb (gelb-09), Blau (blau-08), Braun (braun-02)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 24 Karten
+    Offene Aufgaben: Schlangenbändiger (aufgabe-11), Farbharmonie (aufgabe-02), Gelber Schatz (aufgabe-14); Aufgabenstapel: 4 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  137. KI-Gegner 2 legt Grün (gruen-09) an das Ende von schlange-3 von Spieler 1.
+     Grün (gruen-09) liegt jetzt: schlange-3 von Spieler 1, Stelle 17.
+  138. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 1 Karte.
+
+Zug von Spieler 1
+    Spieler 1: Hand Braun (braun-07), Violett (violett-06), Blau (blau-02), Blau (blau-13), Violett (violett-09)
+      Schlangen: schlange-1: Violett - Gelb - Blau - Grün - Braun - Rot - Grün - Regenbogenschlange - Grün - Grün - Regenbogenschlange - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Gelb - Gelb | schlange-3: Braun - Rot - Braun - Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Blau - Gelb - Braun - Gelb - Braun - Rot - Grün - Gelb - Violett - Grün; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09), Farbenpracht (aufgabe-01), Farbkombination (aufgabe-03), Farbvielfalt (aufgabe-04), Schlangenbeschwörer (aufgabe-08); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Rot (rot-02), Rot (rot-10), Rot (rot-07), Schlangenhäutung (schlangenhaeutung-03), Braun (braun-12)
+      Schlangen: schlange-4: Braun - Violett - Violett - Blau - Violett - Grün - Rot - Gelb; Ablagestapel: 14 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Blau (blau-12), Gelb (gelb-09), Blau (blau-08), Braun (braun-02), Gelb (gelb-13)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 23 Karten
+    Offene Aufgaben: Schlangenbändiger (aufgabe-11), Farbharmonie (aufgabe-02), Gelber Schatz (aufgabe-14); Aufgabenstapel: 4 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  139. Spieler 1 legt Violett (violett-09) an den Anfang von schlange-4 von KI-Gegner 1.
+     Violett (violett-09) liegt jetzt: schlange-4 von KI-Gegner 1, Stelle 0.
+  140. Spieler 1 beendet den Zug.
+     Spieler 1 zieht 1 Karte.
+
+Zug von KI-Gegner 1, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Braun (braun-07), Violett (violett-06), Blau (blau-02), Blau (blau-13), Schlangenblockade (schlangenblockade-01)
+      Schlangen: schlange-1: Violett - Gelb - Blau - Grün - Braun - Rot - Grün - Regenbogenschlange - Grün - Grün - Regenbogenschlange - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Gelb - Gelb | schlange-3: Braun - Rot - Braun - Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Blau - Gelb - Braun - Gelb - Braun - Rot - Grün - Gelb - Violett - Grün; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09), Farbenpracht (aufgabe-01), Farbkombination (aufgabe-03), Farbvielfalt (aufgabe-04), Schlangenbeschwörer (aufgabe-08); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Rot (rot-02), Rot (rot-10), Rot (rot-07), Schlangenhäutung (schlangenhaeutung-03), Braun (braun-12)
+      Schlangen: schlange-4: Violett - Braun - Violett - Violett - Blau - Violett - Grün - Rot - Gelb; Ablagestapel: 14 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Blau (blau-12), Gelb (gelb-09), Blau (blau-08), Braun (braun-02), Gelb (gelb-13)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 22 Karten
+    Offene Aufgaben: Schlangenbändiger (aufgabe-11), Farbharmonie (aufgabe-02), Gelber Schatz (aufgabe-14); Aufgabenstapel: 4 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  141. KI-Gegner 1 ordnet mit Schlangenhäutung (schlangenhaeutung-03) in schlange-3 von Spieler 1 neu: Braun (braun-04), Grün (gruen-06), Rot (rot-12), Violett (violett-03), Gelb (gelb-08).
+     Schlangenhäutung (schlangenhaeutung-03) ist angesagt; betroffen: Spieler 1.
+     Spieler 1 entscheidet, ob er abwehrt.
+  142. Spieler 1 lässt durch.
+     Versetzt: Grün (gruen-06) von schlange-3 von Spieler 1, Stelle 14 nach schlange-3 von Spieler 1, Stelle 13; Rot (rot-12) von schlange-3 von Spieler 1, Stelle 13 nach schlange-3 von Spieler 1, Stelle 14; Violett (violett-03) von schlange-3 von Spieler 1, Stelle 16 nach schlange-3 von Spieler 1, Stelle 15; Gelb (gelb-08) von schlange-3 von Spieler 1, Stelle 15 nach schlange-3 von Spieler 1, Stelle 16.
+     Entschieden, niemand hat abgewehrt; Schlangenhäutung (schlangenhaeutung-03) liegt jetzt: Ablagestapel von KI-Gegner 1.
+  143. KI-Gegner 1 legt Braun (braun-12) an den Anfang von schlange-1 von Spieler 1.
+     Braun (braun-12) liegt jetzt: schlange-1 von Spieler 1, Stelle 0.
+  144. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 2 Karten.
+
+Zug von KI-Gegner 2, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Braun (braun-07), Violett (violett-06), Blau (blau-02), Blau (blau-13), Schlangenblockade (schlangenblockade-01)
+      Schlangen: schlange-1: Braun - Violett - Gelb - Blau - Grün - Braun - Rot - Grün - Regenbogenschlange - Grün - Grün - Regenbogenschlange - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Gelb - Gelb | schlange-3: Braun - Rot - Braun - Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Blau - Gelb - Braun - Gelb - Braun - Grün - Rot - Violett - Gelb - Grün; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09), Farbenpracht (aufgabe-01), Farbkombination (aufgabe-03), Farbvielfalt (aufgabe-04), Schlangenbeschwörer (aufgabe-08); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Rot (rot-02), Rot (rot-10), Rot (rot-07), Farbenschutz (farbenschutz-04), Farbenfusion (farbenfusion-03)
+      Schlangen: schlange-4: Violett - Braun - Violett - Violett - Blau - Violett - Grün - Rot - Gelb; Ablagestapel: 15 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Blau (blau-12), Gelb (gelb-09), Blau (blau-08), Braun (braun-02), Gelb (gelb-13)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 20 Karten
+    Offene Aufgaben: Schlangenbändiger (aufgabe-11), Farbharmonie (aufgabe-02), Gelber Schatz (aufgabe-14); Aufgabenstapel: 4 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  145. KI-Gegner 2 legt Gelb (gelb-09) an das Ende von schlange-1 von Spieler 1.
+     Gelb (gelb-09) liegt jetzt: schlange-1 von Spieler 1, Stelle 18.
+  146. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 1 Karte.
+
+Zug von Spieler 1
+    Spieler 1: Hand Braun (braun-07), Violett (violett-06), Blau (blau-02), Blau (blau-13), Schlangenblockade (schlangenblockade-01)
+      Schlangen: schlange-1: Braun - Violett - Gelb - Blau - Grün - Braun - Rot - Grün - Regenbogenschlange - Grün - Grün - Regenbogenschlange - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Gelb - Gelb - Gelb | schlange-3: Braun - Rot - Braun - Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Blau - Gelb - Braun - Gelb - Braun - Grün - Rot - Violett - Gelb - Grün; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09), Farbenpracht (aufgabe-01), Farbkombination (aufgabe-03), Farbvielfalt (aufgabe-04), Schlangenbeschwörer (aufgabe-08); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Rot (rot-02), Rot (rot-10), Rot (rot-07), Farbenschutz (farbenschutz-04), Farbenfusion (farbenfusion-03)
+      Schlangen: schlange-4: Violett - Braun - Violett - Violett - Blau - Violett - Grün - Rot - Gelb; Ablagestapel: 15 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Blau (blau-12), Blau (blau-08), Braun (braun-02), Gelb (gelb-13), Blau (blau-11)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 19 Karten
+    Offene Aufgaben: Schlangenbändiger (aufgabe-11), Farbharmonie (aufgabe-02), Gelber Schatz (aufgabe-14); Aufgabenstapel: 4 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  147. Spieler 1 legt Schlangenblockade (schlangenblockade-01) in schlange-3 von Spieler 1 an Stelle 11.
+     Schlangenblockade (schlangenblockade-01) liegt jetzt: schlange-3 von Spieler 1, Stelle 11.
+  148. Spieler 1 legt Braun (braun-07) an das Ende von schlange-4 von KI-Gegner 1.
+     Braun (braun-07) liegt jetzt: schlange-4 von KI-Gegner 1, Stelle 9.
+  149. Spieler 1 beendet den Zug.
+     Spieler 1 zieht 2 Karten.
+
+Zug von KI-Gegner 1, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Violett (violett-06), Blau (blau-02), Blau (blau-13), Schlangenkorb des Glücks (schlangenkorb-des-gluecks-01), Braun (braun-01)
+      Schlangen: schlange-1: Braun - Violett - Gelb - Blau - Grün - Braun - Rot - Grün - Regenbogenschlange - Grün - Grün - Regenbogenschlange - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Gelb - Gelb - Gelb | schlange-3: Braun - Rot - Braun - Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Blau - Gelb - Braun - Schlangenblockade - Gelb - Braun - Grün - Rot - Violett - Gelb - Grün; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09), Farbenpracht (aufgabe-01), Farbkombination (aufgabe-03), Farbvielfalt (aufgabe-04), Schlangenbeschwörer (aufgabe-08); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Rot (rot-02), Rot (rot-10), Rot (rot-07), Farbenschutz (farbenschutz-04), Farbenfusion (farbenfusion-03)
+      Schlangen: schlange-4: Violett - Braun - Violett - Violett - Blau - Violett - Grün - Rot - Gelb - Braun; Ablagestapel: 15 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Blau (blau-12), Blau (blau-08), Braun (braun-02), Gelb (gelb-13), Blau (blau-11)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 17 Karten
+    Offene Aufgaben: Schlangenbändiger (aufgabe-11), Farbharmonie (aufgabe-02), Gelber Schatz (aufgabe-14); Aufgabenstapel: 4 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  150. KI-Gegner 1 legt Rot (rot-02) an den Anfang von schlange-4 von KI-Gegner 1.
+     Rot (rot-02) liegt jetzt: schlange-4 von KI-Gegner 1, Stelle 0.
+  151. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 1 Karte.
+
+Zug von KI-Gegner 2, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Violett (violett-06), Blau (blau-02), Blau (blau-13), Schlangenkorb des Glücks (schlangenkorb-des-gluecks-01), Braun (braun-01)
+      Schlangen: schlange-1: Braun - Violett - Gelb - Blau - Grün - Braun - Rot - Grün - Regenbogenschlange - Grün - Grün - Regenbogenschlange - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Gelb - Gelb - Gelb | schlange-3: Braun - Rot - Braun - Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Blau - Gelb - Braun - Schlangenblockade - Gelb - Braun - Grün - Rot - Violett - Gelb - Grün; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09), Farbenpracht (aufgabe-01), Farbkombination (aufgabe-03), Farbvielfalt (aufgabe-04), Schlangenbeschwörer (aufgabe-08); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Rot (rot-10), Rot (rot-07), Farbenschutz (farbenschutz-04), Farbenfusion (farbenfusion-03), Violett (violett-04)
+      Schlangen: schlange-4: Rot - Violett - Braun - Violett - Violett - Blau - Violett - Grün - Rot - Gelb - Braun; Ablagestapel: 15 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Blau (blau-12), Blau (blau-08), Braun (braun-02), Gelb (gelb-13), Blau (blau-11)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 16 Karten
+    Offene Aufgaben: Schlangenbändiger (aufgabe-11), Farbharmonie (aufgabe-02), Gelber Schatz (aufgabe-14); Aufgabenstapel: 4 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  152. KI-Gegner 2 legt Gelb (gelb-13) an das Ende von schlange-4 von KI-Gegner 1.
+     Gelb (gelb-13) liegt jetzt: schlange-4 von KI-Gegner 1, Stelle 11.
+  153. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 1 Karte.
+
+Zug von Spieler 1
+    Spieler 1: Hand Violett (violett-06), Blau (blau-02), Blau (blau-13), Schlangenkorb des Glücks (schlangenkorb-des-gluecks-01), Braun (braun-01)
+      Schlangen: schlange-1: Braun - Violett - Gelb - Blau - Grün - Braun - Rot - Grün - Regenbogenschlange - Grün - Grün - Regenbogenschlange - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Gelb - Gelb - Gelb | schlange-3: Braun - Rot - Braun - Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Blau - Gelb - Braun - Schlangenblockade - Gelb - Braun - Grün - Rot - Violett - Gelb - Grün; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09), Farbenpracht (aufgabe-01), Farbkombination (aufgabe-03), Farbvielfalt (aufgabe-04), Schlangenbeschwörer (aufgabe-08); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Rot (rot-10), Rot (rot-07), Farbenschutz (farbenschutz-04), Farbenfusion (farbenfusion-03), Violett (violett-04)
+      Schlangen: schlange-4: Rot - Violett - Braun - Violett - Violett - Blau - Violett - Grün - Rot - Gelb - Braun - Gelb; Ablagestapel: 15 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Blau (blau-12), Blau (blau-08), Braun (braun-02), Blau (blau-11), Gelb (gelb-05)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 15 Karten
+    Offene Aufgaben: Schlangenbändiger (aufgabe-11), Farbharmonie (aufgabe-02), Gelber Schatz (aufgabe-14); Aufgabenstapel: 4 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06
+  154. Spieler 1 spielt Schlangenkorb des Glücks (schlangenkorb-des-gluecks-01): tauscht Braun (braun-09) aus schlange-3 von Spieler 1 gegen Braun (braun-01) und Gelb (gelb-08) aus schlange-3 von Spieler 1 gegen Blau (blau-13).
+     Versetzt: Braun (braun-01) von Hand von Spieler 1 nach schlange-3 von Spieler 1, Stelle 2; Blau (blau-13) von Hand von Spieler 1 nach schlange-3 von Spieler 1, Stelle 17; eine verdeckte Karte von schlange-3 von Spieler 1, Stelle 2 nach Hand von Spieler 1; eine verdeckte Karte von schlange-3 von Spieler 1, Stelle 17 nach Hand von Spieler 1.
+     Schlangenkorb des Glücks (schlangenkorb-des-gluecks-01) liegt jetzt: aus dem Spiel.
+  155. Spieler 1 legt Braun (braun-09) an den Anfang von schlange-4 von KI-Gegner 1.
+     Braun (braun-09) liegt jetzt: schlange-4 von KI-Gegner 1, Stelle 0.
+  156. Spieler 1 beendet den Zug.
+     Spieler 1 zieht 2 Karten.
+
+Zug von KI-Gegner 1, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Violett (violett-06), Blau (blau-02), Gelb (gelb-08), Rot (rot-13), Violett (violett-08)
+      Schlangen: schlange-1: Braun - Violett - Gelb - Blau - Grün - Braun - Rot - Grün - Regenbogenschlange - Grün - Grün - Regenbogenschlange - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Gelb - Gelb - Gelb | schlange-3: Braun - Rot - Braun - Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Blau - Gelb - Braun - Schlangenblockade - Gelb - Braun - Grün - Rot - Violett - Blau - Grün; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09), Farbenpracht (aufgabe-01), Farbkombination (aufgabe-03), Farbvielfalt (aufgabe-04), Schlangenbeschwörer (aufgabe-08); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Rot (rot-10), Rot (rot-07), Farbenschutz (farbenschutz-04), Farbenfusion (farbenfusion-03), Violett (violett-04)
+      Schlangen: schlange-4: Braun - Rot - Violett - Braun - Violett - Violett - Blau - Violett - Grün - Rot - Gelb - Braun - Gelb; Ablagestapel: 15 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Blau (blau-12), Blau (blau-08), Braun (braun-02), Blau (blau-11), Gelb (gelb-05)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 13 Karten
+    Offene Aufgaben: Schlangenbändiger (aufgabe-11), Farbharmonie (aufgabe-02), Gelber Schatz (aufgabe-14); Aufgabenstapel: 4 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06, Schlangenkorb des Glücks (schlangenkorb-des-gluecks-01)
+  157. KI-Gegner 1 legt Rot (rot-07) an den Anfang von schlange-3 von Spieler 1.
+     Rot (rot-07) liegt jetzt: schlange-3 von Spieler 1, Stelle 0.
+  158. KI-Gegner 1 legt Farbenfusion (farbenfusion-03) auf Gelb (gelb-12) und Gelb (gelb-06) in schlange-1 von Spieler 1.
+     Farbenfusion (farbenfusion-03) ist angesagt; betroffen: Spieler 1.
+     Spieler 1 entscheidet, ob er abwehrt.
+  159. Spieler 1 lässt durch.
+     Versetzt: Gelb (gelb-12) von schlange-1 von Spieler 1, Stelle 16 nach unter Farbenfusion (farbenfusion-03) in schlange-1 von Spieler 1, Stelle 0; Gelb (gelb-06) von schlange-1 von Spieler 1, Stelle 17 nach unter Farbenfusion (farbenfusion-03) in schlange-1 von Spieler 1, Stelle 1.
+     Entschieden, niemand hat abgewehrt; Farbenfusion (farbenfusion-03) liegt jetzt: schlange-1 von Spieler 1, Stelle 16.
+  160. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 2 Karten.
+
+Zug von KI-Gegner 2, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Violett (violett-06), Blau (blau-02), Gelb (gelb-08), Rot (rot-13), Violett (violett-08)
+      Schlangen: schlange-1: Braun - Violett - Gelb - Blau - Grün - Braun - Rot - Grün - Regenbogenschlange - Grün - Grün - Regenbogenschlange - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Farbenfusion[Gelb+Gelb] - Gelb | schlange-3: Rot - Braun - Rot - Braun - Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Blau - Gelb - Braun - Schlangenblockade - Gelb - Braun - Grün - Rot - Violett - Blau - Grün; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09), Farbenpracht (aufgabe-01), Farbkombination (aufgabe-03), Farbvielfalt (aufgabe-04), Schlangenbeschwörer (aufgabe-08); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Rot (rot-10), Farbenschutz (farbenschutz-04), Violett (violett-04), Regenbogenschlange (regenbogenschlange-03), Farbenschutz (farbenschutz-02)
+      Schlangen: schlange-4: Braun - Rot - Violett - Braun - Violett - Violett - Blau - Violett - Grün - Rot - Gelb - Braun - Gelb; Ablagestapel: 15 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Blau (blau-12), Blau (blau-08), Braun (braun-02), Blau (blau-11), Gelb (gelb-05)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 11 Karten
+    Offene Aufgaben: Schlangenbändiger (aufgabe-11), Farbharmonie (aufgabe-02), Gelber Schatz (aufgabe-14); Aufgabenstapel: 4 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06, Schlangenkorb des Glücks (schlangenkorb-des-gluecks-01)
+  161. KI-Gegner 2 legt Blau (blau-08) an das Ende von schlange-1 von Spieler 1.
+     Blau (blau-08) liegt jetzt: schlange-1 von Spieler 1, Stelle 18.
+  162. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 1 Karte.
+
+Zug von Spieler 1
+    Spieler 1: Hand Violett (violett-06), Blau (blau-02), Gelb (gelb-08), Rot (rot-13), Violett (violett-08)
+      Schlangen: schlange-1: Braun - Violett - Gelb - Blau - Grün - Braun - Rot - Grün - Regenbogenschlange - Grün - Grün - Regenbogenschlange - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Farbenfusion[Gelb+Gelb] - Gelb - Blau | schlange-3: Rot - Braun - Rot - Braun - Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Blau - Gelb - Braun - Schlangenblockade - Gelb - Braun - Grün - Rot - Violett - Blau - Grün; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09), Farbenpracht (aufgabe-01), Farbkombination (aufgabe-03), Farbvielfalt (aufgabe-04), Schlangenbeschwörer (aufgabe-08); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Rot (rot-10), Farbenschutz (farbenschutz-04), Violett (violett-04), Regenbogenschlange (regenbogenschlange-03), Farbenschutz (farbenschutz-02)
+      Schlangen: schlange-4: Braun - Rot - Violett - Braun - Violett - Violett - Blau - Violett - Grün - Rot - Gelb - Braun - Gelb; Ablagestapel: 15 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Blau (blau-12), Braun (braun-02), Blau (blau-11), Gelb (gelb-05), Schlangenblockade (schlangenblockade-03)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 10 Karten
+    Offene Aufgaben: Schlangenbändiger (aufgabe-11), Farbharmonie (aufgabe-02), Gelber Schatz (aufgabe-14); Aufgabenstapel: 4 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06, Schlangenkorb des Glücks (schlangenkorb-des-gluecks-01)
+  163. Spieler 1 legt Violett (violett-06) an den Anfang von schlange-1 von Spieler 1.
+     Violett (violett-06) liegt jetzt: schlange-1 von Spieler 1, Stelle 0.
+  164. Spieler 1 beendet den Zug.
+     Spieler 1 zieht 1 Karte.
+
+Zug von KI-Gegner 1, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Blau (blau-02), Gelb (gelb-08), Rot (rot-13), Violett (violett-08), Farbenschutz (farbenschutz-03)
+      Schlangen: schlange-1: Violett - Braun - Violett - Gelb - Blau - Grün - Braun - Rot - Grün - Regenbogenschlange - Grün - Grün - Regenbogenschlange - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Farbenfusion[Gelb+Gelb] - Gelb - Blau | schlange-3: Rot - Braun - Rot - Braun - Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Blau - Gelb - Braun - Schlangenblockade - Gelb - Braun - Grün - Rot - Violett - Blau - Grün; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09), Farbenpracht (aufgabe-01), Farbkombination (aufgabe-03), Farbvielfalt (aufgabe-04), Schlangenbeschwörer (aufgabe-08); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Rot (rot-10), Farbenschutz (farbenschutz-04), Violett (violett-04), Regenbogenschlange (regenbogenschlange-03), Farbenschutz (farbenschutz-02)
+      Schlangen: schlange-4: Braun - Rot - Violett - Braun - Violett - Violett - Blau - Violett - Grün - Rot - Gelb - Braun - Gelb; Ablagestapel: 15 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Blau (blau-12), Braun (braun-02), Blau (blau-11), Gelb (gelb-05), Schlangenblockade (schlangenblockade-03)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 9 Karten
+    Offene Aufgaben: Schlangenbändiger (aufgabe-11), Farbharmonie (aufgabe-02), Gelber Schatz (aufgabe-14); Aufgabenstapel: 4 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06, Schlangenkorb des Glücks (schlangenkorb-des-gluecks-01)
+  165. KI-Gegner 1 legt Regenbogenschlange (regenbogenschlange-03) in schlange-1 von Spieler 1 an Stelle 2.
+     Regenbogenschlange (regenbogenschlange-03) ist angesagt; betroffen: Spieler 1.
+     Spieler 1 entscheidet, ob er abwehrt.
+  166. Spieler 1 lässt durch.
+     Entschieden, niemand hat abgewehrt; Regenbogenschlange (regenbogenschlange-03) liegt jetzt: schlange-1 von Spieler 1, Stelle 2.
+  167. KI-Gegner 1 legt Violett (violett-04) an den Anfang von schlange-3 von Spieler 1.
+     Violett (violett-04) liegt jetzt: schlange-3 von Spieler 1, Stelle 0.
+  168. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 2 Karten.
+
+Zug von KI-Gegner 2, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Blau (blau-02), Gelb (gelb-08), Rot (rot-13), Violett (violett-08), Farbenschutz (farbenschutz-03)
+      Schlangen: schlange-1: Violett - Braun - Regenbogenschlange - Violett - Gelb - Blau - Grün - Braun - Rot - Grün - Regenbogenschlange - Grün - Grün - Regenbogenschlange - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Farbenfusion[Gelb+Gelb] - Gelb - Blau | schlange-3: Violett - Rot - Braun - Rot - Braun - Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Blau - Gelb - Braun - Schlangenblockade - Gelb - Braun - Grün - Rot - Violett - Blau - Grün; Ablagestapel: 4 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09), Farbenpracht (aufgabe-01), Farbkombination (aufgabe-03), Farbvielfalt (aufgabe-04), Schlangenbeschwörer (aufgabe-08); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Rot (rot-10), Farbenschutz (farbenschutz-04), Farbenschutz (farbenschutz-02), Schlangengrube (schlangengrube-02), Rot (rot-15)
+      Schlangen: schlange-4: Braun - Rot - Violett - Braun - Violett - Violett - Blau - Violett - Grün - Rot - Gelb - Braun - Gelb; Ablagestapel: 15 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Blau (blau-12), Braun (braun-02), Blau (blau-11), Gelb (gelb-05), Schlangenblockade (schlangenblockade-03)
+      Schlangen: keine; Ablagestapel: 9 Karten, oben Verdoppler
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 7 Karten
+    Offene Aufgaben: Schlangenbändiger (aufgabe-11), Farbharmonie (aufgabe-02), Gelber Schatz (aufgabe-14); Aufgabenstapel: 4 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06, Schlangenkorb des Glücks (schlangenkorb-des-gluecks-01)
+  169. KI-Gegner 2 legt Schlangenblockade (schlangenblockade-03) in schlange-1 von Spieler 1 an Stelle 18.
+     Schlangenblockade (schlangenblockade-03) ist angesagt; betroffen: Spieler 1.
+     Spieler 1 entscheidet, ob er abwehrt.
+  170. Spieler 1 wehrt mit Farbenschutz (farbenschutz-03) ab.
+     Spieler 1 wehrt Schlangenblockade (schlangenblockade-03) mit Farbenschutz (farbenschutz-03) ab.
+     Entschieden, abgewehrt von Spieler 1, ohne Wirkung; Schlangenblockade (schlangenblockade-03) liegt jetzt: Ablagestapel von KI-Gegner 2.
+  171. KI-Gegner 2 legt Blau (blau-11) an das Ende von schlange-4 von KI-Gegner 1.
+     Blau (blau-11) liegt jetzt: schlange-4 von KI-Gegner 1, Stelle 13.
+  172. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 2 Karten.
+     Spieler 1 zieht 1 Karte.
+
+Zug von Spieler 1
+    Spieler 1: Hand Blau (blau-02), Gelb (gelb-08), Rot (rot-13), Violett (violett-08), Schlangenblockade (schlangenblockade-02)
+      Schlangen: schlange-1: Violett - Braun - Regenbogenschlange - Violett - Gelb - Blau - Grün - Braun - Rot - Grün - Regenbogenschlange - Grün - Grün - Regenbogenschlange - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Farbenfusion[Gelb+Gelb] - Gelb - Blau | schlange-3: Violett - Rot - Braun - Rot - Braun - Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Blau - Gelb - Braun - Schlangenblockade - Gelb - Braun - Grün - Rot - Violett - Blau - Grün; Ablagestapel: 5 Karten, oben Farbenschutz
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09), Farbenpracht (aufgabe-01), Farbkombination (aufgabe-03), Farbvielfalt (aufgabe-04), Schlangenbeschwörer (aufgabe-08); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Rot (rot-10), Farbenschutz (farbenschutz-04), Farbenschutz (farbenschutz-02), Schlangengrube (schlangengrube-02), Rot (rot-15)
+      Schlangen: schlange-4: Braun - Rot - Violett - Braun - Violett - Violett - Blau - Violett - Grün - Rot - Gelb - Braun - Gelb - Blau; Ablagestapel: 15 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Blau (blau-12), Braun (braun-02), Gelb (gelb-05), Blau (blau-01), Braun (braun-08)
+      Schlangen: keine; Ablagestapel: 10 Karten, oben Schlangenblockade
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 4 Karten
+    Offene Aufgaben: Schlangenbändiger (aufgabe-11), Farbharmonie (aufgabe-02), Gelber Schatz (aufgabe-14); Aufgabenstapel: 4 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06, Schlangenkorb des Glücks (schlangenkorb-des-gluecks-01)
+  173. Spieler 1 legt Schlangenblockade (schlangenblockade-02) in schlange-4 von KI-Gegner 1 an Stelle 12.
+     Schlangenblockade (schlangenblockade-02) ist angesagt; betroffen: KI-Gegner 1.
+     KI-Gegner 1 entscheidet, ob er abwehrt.
+  174. KI-Gegner 1 lässt durch.
+     Entschieden, niemand hat abgewehrt; Schlangenblockade (schlangenblockade-02) liegt jetzt: schlange-4 von KI-Gegner 1, Stelle 12.
+  175. Spieler 1 legt Gelb (gelb-08) an den Anfang von schlange-1 von Spieler 1.
+     Gelb (gelb-08) liegt jetzt: schlange-1 von Spieler 1, Stelle 0.
+  176. Spieler 1 beendet den Zug.
+     Spieler 1 zieht 2 Karten.
+
+Zug von KI-Gegner 1, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Blau (blau-02), Rot (rot-13), Violett (violett-08), Blau (blau-05), Braun (braun-03)
+      Schlangen: schlange-1: Gelb - Violett - Braun - Regenbogenschlange - Violett - Gelb - Blau - Grün - Braun - Rot - Grün - Regenbogenschlange - Grün - Grün - Regenbogenschlange - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Farbenfusion[Gelb+Gelb] - Gelb - Blau | schlange-3: Violett - Rot - Braun - Rot - Braun - Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Blau - Gelb - Braun - Schlangenblockade - Gelb - Braun - Grün - Rot - Violett - Blau - Grün; Ablagestapel: 5 Karten, oben Farbenschutz
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09), Farbenpracht (aufgabe-01), Farbkombination (aufgabe-03), Farbvielfalt (aufgabe-04), Schlangenbeschwörer (aufgabe-08); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Rot (rot-10), Farbenschutz (farbenschutz-04), Farbenschutz (farbenschutz-02), Schlangengrube (schlangengrube-02), Rot (rot-15)
+      Schlangen: schlange-4: Braun - Rot - Violett - Braun - Violett - Violett - Blau - Violett - Grün - Rot - Gelb - Braun - Schlangenblockade - Gelb - Blau; Ablagestapel: 15 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Blau (blau-12), Braun (braun-02), Gelb (gelb-05), Blau (blau-01), Braun (braun-08)
+      Schlangen: keine; Ablagestapel: 10 Karten, oben Schlangenblockade
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 2 Karten
+    Offene Aufgaben: Schlangenbändiger (aufgabe-11), Farbharmonie (aufgabe-02), Gelber Schatz (aufgabe-14); Aufgabenstapel: 4 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06, Schlangenkorb des Glücks (schlangenkorb-des-gluecks-01)
+  177. KI-Gegner 1 legt Rot (rot-10) an den Anfang von schlange-3 von Spieler 1.
+     Rot (rot-10) liegt jetzt: schlange-3 von Spieler 1, Stelle 0.
+  178. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 1 Karte.
+
+Zug von KI-Gegner 2, Comeback-Bedingung erfüllt
+    Spieler 1: Hand Blau (blau-02), Rot (rot-13), Violett (violett-08), Blau (blau-05), Braun (braun-03)
+      Schlangen: schlange-1: Gelb - Violett - Braun - Regenbogenschlange - Violett - Gelb - Blau - Grün - Braun - Rot - Grün - Regenbogenschlange - Grün - Grün - Regenbogenschlange - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Farbenfusion[Gelb+Gelb] - Gelb - Blau | schlange-3: Rot - Violett - Rot - Braun - Rot - Braun - Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Blau - Gelb - Braun - Schlangenblockade - Gelb - Braun - Grün - Rot - Violett - Blau - Grün; Ablagestapel: 5 Karten, oben Farbenschutz
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09), Farbenpracht (aufgabe-01), Farbkombination (aufgabe-03), Farbvielfalt (aufgabe-04), Schlangenbeschwörer (aufgabe-08); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Farbenschutz (farbenschutz-04), Farbenschutz (farbenschutz-02), Schlangengrube (schlangengrube-02), Rot (rot-15), Regenbogenschlange (regenbogenschlange-02)
+      Schlangen: schlange-4: Braun - Rot - Violett - Braun - Violett - Violett - Blau - Violett - Grün - Rot - Gelb - Braun - Schlangenblockade - Gelb - Blau; Ablagestapel: 15 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Blau (blau-12), Braun (braun-02), Gelb (gelb-05), Blau (blau-01), Braun (braun-08)
+      Schlangen: keine; Ablagestapel: 10 Karten, oben Schlangenblockade
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 1 Karte
+    Offene Aufgaben: Schlangenbändiger (aufgabe-11), Farbharmonie (aufgabe-02), Gelber Schatz (aufgabe-14); Aufgabenstapel: 4 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06, Schlangenkorb des Glücks (schlangenkorb-des-gluecks-01)
+  179. KI-Gegner 2 legt Blau (blau-01) an das Ende von schlange-1 von Spieler 1.
+     Blau (blau-01) liegt jetzt: schlange-1 von Spieler 1, Stelle 22.
+  180. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 1 Karte.
+     Der Nachziehstapel ist leer: Die Schlussrunde beginnt, ausgelöst von KI-Gegner 2.
+
+Zug von Spieler 1 (Schlussrunde)
+    Spieler 1: Hand Blau (blau-02), Rot (rot-13), Violett (violett-08), Blau (blau-05), Braun (braun-03)
+      Schlangen: schlange-1: Gelb - Violett - Braun - Regenbogenschlange - Violett - Gelb - Blau - Grün - Braun - Rot - Grün - Regenbogenschlange - Grün - Grün - Regenbogenschlange - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Farbenfusion[Gelb+Gelb] - Gelb - Blau - Blau | schlange-3: Rot - Violett - Rot - Braun - Rot - Braun - Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Blau - Gelb - Braun - Schlangenblockade - Gelb - Braun - Grün - Rot - Violett - Blau - Grün; Ablagestapel: 5 Karten, oben Farbenschutz
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09), Farbenpracht (aufgabe-01), Farbkombination (aufgabe-03), Farbvielfalt (aufgabe-04), Schlangenbeschwörer (aufgabe-08); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Farbenschutz (farbenschutz-04), Farbenschutz (farbenschutz-02), Schlangengrube (schlangengrube-02), Rot (rot-15), Regenbogenschlange (regenbogenschlange-02)
+      Schlangen: schlange-4: Braun - Rot - Violett - Braun - Violett - Violett - Blau - Violett - Grün - Rot - Gelb - Braun - Schlangenblockade - Gelb - Blau; Ablagestapel: 15 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Blau (blau-12), Braun (braun-02), Gelb (gelb-05), Braun (braun-08), Blau (blau-09)
+      Schlangen: keine; Ablagestapel: 10 Karten, oben Schlangenblockade
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 0 Karten
+    Offene Aufgaben: Schlangenbändiger (aufgabe-11), Farbharmonie (aufgabe-02), Gelber Schatz (aufgabe-14); Aufgabenstapel: 4 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06, Schlangenkorb des Glücks (schlangenkorb-des-gluecks-01)
+  181. Spieler 1 legt Blau (blau-02) an das Ende von schlange-3 von Spieler 1.
+     Blau (blau-02) liegt jetzt: schlange-3 von Spieler 1, Stelle 22.
+  182. Spieler 1 beendet den Zug.
+
+Zug von KI-Gegner 1 (Schlussrunde), Comeback-Bedingung erfüllt
+    Spieler 1: Hand Rot (rot-13), Violett (violett-08), Blau (blau-05), Braun (braun-03)
+      Schlangen: schlange-1: Gelb - Violett - Braun - Regenbogenschlange - Violett - Gelb - Blau - Grün - Braun - Rot - Grün - Regenbogenschlange - Grün - Grün - Regenbogenschlange - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Farbenfusion[Gelb+Gelb] - Gelb - Blau - Blau | schlange-3: Rot - Violett - Rot - Braun - Rot - Braun - Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Blau - Gelb - Braun - Schlangenblockade - Gelb - Braun - Grün - Rot - Violett - Blau - Grün - Blau; Ablagestapel: 5 Karten, oben Farbenschutz
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09), Farbenpracht (aufgabe-01), Farbkombination (aufgabe-03), Farbvielfalt (aufgabe-04), Schlangenbeschwörer (aufgabe-08); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Farbenschutz (farbenschutz-04), Farbenschutz (farbenschutz-02), Schlangengrube (schlangengrube-02), Rot (rot-15), Regenbogenschlange (regenbogenschlange-02)
+      Schlangen: schlange-4: Braun - Rot - Violett - Braun - Violett - Violett - Blau - Violett - Grün - Rot - Gelb - Braun - Schlangenblockade - Gelb - Blau; Ablagestapel: 15 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Blau (blau-12), Braun (braun-02), Gelb (gelb-05), Braun (braun-08), Blau (blau-09)
+      Schlangen: keine; Ablagestapel: 10 Karten, oben Schlangenblockade
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 0 Karten
+    Offene Aufgaben: Schlangenbändiger (aufgabe-11), Farbharmonie (aufgabe-02), Gelber Schatz (aufgabe-14); Aufgabenstapel: 4 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06, Schlangenkorb des Glücks (schlangenkorb-des-gluecks-01)
+  183. KI-Gegner 1 legt Regenbogenschlange (regenbogenschlange-02) in schlange-3 von Spieler 1 an Stelle 22.
+     Regenbogenschlange (regenbogenschlange-02) ist angesagt; betroffen: Spieler 1.
+     Spieler 1 entscheidet, ob er abwehrt.
+  184. Spieler 1 lässt durch.
+     Entschieden, niemand hat abgewehrt; Regenbogenschlange (regenbogenschlange-02) liegt jetzt: schlange-3 von Spieler 1, Stelle 22.
+  185. KI-Gegner 1 legt Rot (rot-15) an das Ende von schlange-4 von KI-Gegner 1.
+     Rot (rot-15) liegt jetzt: schlange-4 von KI-Gegner 1, Stelle 15.
+  186. KI-Gegner 1 beendet den Zug.
+     Die Partie ist beendet.
+
+Lage am Ende
+    Spieler 1: Hand Rot (rot-13), Violett (violett-08), Blau (blau-05), Braun (braun-03)
+      Schlangen: schlange-1: Gelb - Violett - Braun - Regenbogenschlange - Violett - Gelb - Blau - Grün - Braun - Rot - Grün - Regenbogenschlange - Grün - Grün - Regenbogenschlange - Farbenfusion[Violett+Violett] - Gelb - Gelb - Blau - Farbenfusion[Gelb+Gelb] - Gelb - Blau - Blau | schlange-3: Rot - Violett - Rot - Braun - Rot - Braun - Rot - Rot - Rot - Farbenfusion[Gelb+Gelb] - Blau - Blau - Gelb - Braun - Schlangenblockade - Gelb - Braun - Grün - Rot - Violett - Blau - Grün - Regenbogenschlange - Blau; Ablagestapel: 5 Karten, oben Farbenschutz
+      Aufgaben erfüllt: Schlangenmeister (aufgabe-09), Farbenpracht (aufgabe-01), Farbkombination (aufgabe-03), Farbvielfalt (aufgabe-04), Schlangenbeschwörer (aufgabe-08); geheime Aufgabe: Vielfaltskönig (aufgabe-05), erfüllt; Comeback-Karte bereit; Risiko-Karten: 0
+    KI-Gegner 1: Hand Farbenschutz (farbenschutz-04), Farbenschutz (farbenschutz-02), Schlangengrube (schlangengrube-02)
+      Schlangen: schlange-4: Braun - Rot - Violett - Braun - Violett - Violett - Blau - Violett - Grün - Rot - Gelb - Braun - Schlangenblockade - Gelb - Blau - Rot; Ablagestapel: 15 Karten, oben Schlangenhäutung
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangenrepertoire (aufgabe-10), erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    KI-Gegner 2: Hand Blau (blau-12), Braun (braun-02), Gelb (gelb-05), Braun (braun-08), Blau (blau-09)
+      Schlangen: keine; Ablagestapel: 10 Karten, oben Schlangenblockade
+      Aufgaben erfüllt: keine; geheime Aufgabe: Schlangentanz (aufgabe-12), nicht erfüllt; Comeback-Karte verbraucht; Risiko-Karten: 0
+    Nachziehstapel: 0 Karten
+    Offene Aufgaben: Schlangenbändiger (aufgabe-11), Farbharmonie (aufgabe-02), Gelber Schatz (aufgabe-14); Aufgabenstapel: 4 Karten; aufgedeckt: keine; aus dem Spiel: risiko-belohnung-03, risiko-belohnung-05, risiko-belohnung-01, risiko-belohnung-04, risiko-belohnung-02, risiko-belohnung-06, Schlangenkorb des Glücks (schlangenkorb-des-gluecks-01)
+
+Endwertung (A11)
+  Spieler 1: Summe 70
+    schlange-1: Gruppen Grün ×4 = 9, Gelb ×4 = 6, zusammen 15; Joker: Regenbogenschlange (regenbogenschlange-03) als keine Farbe, Regenbogenschlange (regenbogenschlange-04) als Grün, Regenbogenschlange (regenbogenschlange-01) als Gelb, Farbenfusion (farbenfusion-04) als Gelb, Farbenfusion (farbenfusion-03) als keine Farbe; Vielfalt: Gelb, Grün, Bonus 1
+    schlange-3: Gruppen Rot ×3 = 3, Blau ×3 = 4, zusammen 7; Joker: Farbenfusion (farbenfusion-02) als Blau, Regenbogenschlange (regenbogenschlange-02) als keine Farbe; Vielfalt: Blau, Rot, Bonus 1
+    Gruppenpunkte 22; Kette 3, Bonus 5
+    Vielfaltbonus 1; Aufgaben Schlangenmeister (aufgabe-09) offen 4, Farbenpracht (aufgabe-01) offen 8, Farbkombination (aufgabe-03) offen 5, Farbvielfalt (aufgabe-04) offen 9, Schlangenbeschwörer (aufgabe-08) offen 7, Vielfaltskönig (aufgabe-05) geheim 9, zusammen 42
+  KI-Gegner 1: Summe 4
+    schlange-4: Gruppen keine, zusammen 0; Vielfalt: keine Farbe, Bonus 0
+    Gruppenpunkte 0; keine Kette ab 3 Farbkarten
+    Vielfaltbonus 0; Aufgaben Schlangenrepertoire (aufgabe-10) geheim 4, zusammen 4
+  KI-Gegner 2: Summe 0
+    Gruppenpunkte 0; keine Kette ab 3 Farbkarten
+    Vielfaltbonus 0; Aufgaben keine, zusammen 0
+  Gewonnen: Spieler 1 mit 70 Punkten.

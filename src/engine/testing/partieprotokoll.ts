@@ -5,7 +5,7 @@ import { risikoaktionText } from '../erweiterung/risiko';
 import { alleSpielkarten } from '../invarianten';
 import { findeSchlange } from '../schlangen';
 import { berechneEndwertung } from '../scoring';
-import type { Schlange, Spielkarte, Spielzustand } from '../types';
+import type { Schlange, Spieler, Spielkarte, Spielzustand } from '../types';
 import { spielerIndexVon } from '../zugablauf';
 import { ENGINE_MOTOR, spieleDauerlaufPartie } from './dauerlauf';
 import type { DauerlaufPartie, Motor, SchrittPruefer } from './dauerlauf';
@@ -23,6 +23,13 @@ Aufzählung die Partie nicht, eine neue Regel aber schon.
 
 Der Tisch steht offen da, auch die Hände: Das Protokoll ist für Prüfer, nicht
 für Spieler (B2 gilt für die Oberfläche).
+
+Mit Erweiterung (X7, Golden Master der Erweiterung) zeigt es zusätzlich je
+Spieler die erfüllten und die geheime Aufgabe, Comeback- und Risiko-Karten, auf
+dem Tisch die offenen Aufgaben, offen aufgedeckte und aus dem Spiel genommene
+Karten, vermerkt verdeckt, wann eine geheime Aufgabe erfüllt war (D35), und
+schlüsselt in der Endwertung Vielfaltbonus und Aufgaben auf. Partien ohne
+Erweiterung schreibt es wie zuvor.
 */
 
 export interface Partieprotokoll {
@@ -245,16 +252,42 @@ class Schreiber {
       const ablage = oben === undefined ? karten(0) : `${karten(spieler.ablagestapel.length)}, oben ${kartenname(oben)}`;
       this.zeile(`    ${spieler.name}: Hand ${hand}`);
       this.zeile(`      Schlangen: ${schlangen}; Ablagestapel: ${ablage}`);
+      if (this.zustand.erweiterung) this.zeile(`      ${this.auslage(spieler)}`);
     }
     const gruben = this.zustand.ausliegendeGruben.map((grube) => `${this.karte(grube.karte.id)} vor ${this.spieler(grube.vor)}`);
     this.zeile(`    Nachziehstapel: ${karten(this.zustand.nachziehstapel.length)}${gruben.length === 0 ? '' : `; liegt aus: ${gruben.join(', ')}`}`);
+    if (this.zustand.erweiterung) this.zeile(`    ${this.tischDerErweiterung()}`);
+  }
+
+  /** X7: was ein Spieler mit Erweiterung vor sich hat, auch die verdeckte geheime Aufgabe (A4, A8.1, A8.2, A9, D35). */
+  auslage(spieler: Spieler): string {
+    const erfuellt = spieler.erfuellteAufgaben.length === 0 ? 'keine' : spieler.erfuellteAufgaben.map((eintrag) => aufgabe(eintrag.id)).join(', ');
+    const geheim = spieler.geheimeAufgabe === null ? 'keine' : `${aufgabe(spieler.geheimeAufgabe.id)}, ${spieler.geheimeAufgabeErfuellt ? 'erfüllt' : 'nicht erfüllt'}`;
+    const comeback = spieler.comeback === null ? 'keine' : spieler.comeback.verbraucht ? 'verbraucht' : 'bereit';
+    return `Aufgaben erfüllt: ${erfuellt}; geheime Aufgabe: ${geheim}; Comeback-Karte ${comeback}; Risiko-Karten: ${spieler.risikoKarten.length}`;
+  }
+
+  /** X7: offene Aufgaben, Aufgabenstapel, offen aufgedeckte und aus dem Spiel genommene Karten (A7.10, A8.2, A9, D54). */
+  tischDerErweiterung(): string {
+    const { offeneAufgaben, aufgabenStapel, aufgedeckt, ausDemSpiel } = this.zustand;
+    const offen = offeneAufgaben.length === 0 ? 'keine' : offeneAufgaben.map((eintrag) => aufgabe(eintrag.id)).join(', ');
+    const liste = (eintraege: ReadonlyArray<{ id: string }>) => (eintraege.length === 0 ? 'keine' : eintraege.map((karte) => this.karte(karte.id)).join(', '));
+    return `Offene Aufgaben: ${offen}; Aufgabenstapel: ${karten(aufgabenStapel.length)}; aufgedeckt: ${liste(aufgedeckt)}; aus dem Spiel: ${liste(ausDemSpiel)}`;
+  }
+
+  /** X7, D35: Eine geheime Aufgabe meldet kein Ereignis; das Protokoll vermerkt verdeckt, in welchem Schritt sie erfüllt war. */
+  geheimeErfuellt(vorher: Spielzustand): string[] {
+    return this.zustand.spieler
+      .filter((spieler, index) => spieler.geheimeAufgabeErfuellt && !vorher.spieler[index].geheimeAufgabeErfuellt)
+      .map((spieler) => `(verdeckt, D35) ${spieler.name} hat die geheime Aufgabe ${aufgabe(spieler.geheimeAufgabe!.id)} erfüllt.`);
   }
 
   zugkopf(): void {
     const { zug, partiephase } = this.zustand;
     const teil = zug.teilzug === 2 ? ', zweiter Zug nach dem Verdoppler' : '';
+    const comeback = this.zustand.erweiterung && zug.comebackBedingung ? ', Comeback-Bedingung erfüllt' : '';
     this.zeile('');
-    this.zeile(`Zug von ${this.spieler(zug.spielerIndex)}${teil}${partiephase === 'Schlussrunde' ? ' (Schlussrunde)' : ''}`);
+    this.zeile(`Zug von ${this.spieler(zug.spielerIndex)}${teil}${partiephase === 'Schlussrunde' ? ' (Schlussrunde)' : ''}${comeback}`);
     this.lage();
   }
 
@@ -267,10 +300,15 @@ class Schreiber {
       for (const schlange of wertung.schlangen) {
         const gruppen = schlange.gruppen.map((gruppe) => `${gruppe.farbe} ×${gruppe.laenge} = ${gruppe.punkte}`).join(', ');
         const joker = schlange.joker.map((eintrag) => `${this.karte(eintrag.karteId)} als ${eintrag.farbe ?? 'keine Farbe'}`).join(', ');
-        this.zeile(`    ${schlange.schlangenId}: Gruppen ${gruppen === '' ? 'keine' : gruppen}, zusammen ${schlange.gruppenPunkte}${joker === '' ? '' : `; Joker: ${joker}`}`);
+        const vielfalt = schlange.vielfaltBonus === null ? '' : `; Vielfalt: ${schlange.vielfaltFarben.length === 0 ? 'keine Farbe' : schlange.vielfaltFarben.join(', ')}, Bonus ${schlange.vielfaltBonus}`;
+        this.zeile(`    ${schlange.schlangenId}: Gruppen ${gruppen === '' ? 'keine' : gruppen}, zusammen ${schlange.gruppenPunkte}${joker === '' ? '' : `; Joker: ${joker}`}${vielfalt}`);
       }
       const kette = wertung.kette === null || wertung.kette.laenge === 0 ? 'keine Kette ab 3 Farbkarten' : `Kette ${wertung.kette.laenge}, Bonus ${wertung.kette.bonus}`;
       this.zeile(`    Gruppenpunkte ${wertung.gruppenPunkte}; ${kette}`);
+      if (wertung.aufgaben !== null) {
+        const aufgaben = wertung.aufgaben.map((eintrag) => `${aufgabe(eintrag.aufgabeId)} ${eintrag.geheim ? 'geheim' : 'offen'} ${eintrag.punkte}`).join(', ');
+        this.zeile(`    Vielfaltbonus ${wertung.vielfaltBonus ?? 0}; Aufgaben ${aufgaben === '' ? 'keine' : aufgaben}, zusammen ${wertung.aufgabenPunkte}`);
+      }
     }
     const gewinner = endwertung.spieler.filter((wertung) => endwertung.gewinner.includes(wertung.spielerId)).map((wertung) => wertung.name);
     this.zeile(`  Gewonnen: ${gewinner.join(', ')} mit ${endwertung.hoechstePunktzahl} Punkten.`);
@@ -302,6 +340,7 @@ export function protokolliere(partie: DauerlaufPartie, pruefer: SchrittPruefer =
       const text = schreiber.ereignis(ereignis);
       if (text !== null) schreiber.zeile(`     ${text}`);
     }
+    for (const text of schreiber.geheimeErfuellt(vorher)) schreiber.zeile(`     ${text}`);
     if (ergebnis.ereignisse.some((ereignis) => ereignis.typ === 'ZugBegonnen')) schreiber.zugkopf();
     return pruefer(vorher, aktion, ergebnis);
   };

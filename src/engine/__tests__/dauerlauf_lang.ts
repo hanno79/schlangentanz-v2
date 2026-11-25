@@ -23,12 +23,12 @@ Teile der Erweiterung gespielt werden (`erweiterungsPruefer`).
 */
 
 export const TEILE = 4
-const JE_TEIL_UND_ART = 250
+const OHNE_JE_TEIL = 250
+const MIT_JE_TEIL = 500
 
-/** Teil 1 bis 4: je 250 Partien ohne Erweiterung (Saaten ab 1) und 250 mit (Saaten ab 1001), reihum 2, 3 und 4 Spieler. */
+/** Teil 1 bis 4: je 250 Partien ohne Erweiterung (Saaten 1 bis 1000) und 500 mit (Saaten 1001 bis 3000), reihum 2, 3 und 4 Spieler. */
 export function partienDesTeils(teil: number) {
-  const versatz = (teil - 1) * JE_TEIL_UND_ART
-  return [...dauerlaufPartien(JE_TEIL_UND_ART, false, 1 + versatz), ...dauerlaufPartien(JE_TEIL_UND_ART, true, 1001 + versatz)]
+  return [...dauerlaufPartien(OHNE_JE_TEIL, false, 1 + (teil - 1) * OHNE_JE_TEIL), ...dauerlaufPartien(MIT_JE_TEIL, true, 1001 + (teil - 1) * MIT_JE_TEIL)]
 }
 
 /**
