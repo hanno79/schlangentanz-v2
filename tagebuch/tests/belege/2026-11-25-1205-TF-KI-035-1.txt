@@ -1,0 +1,11 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a8c70568827fde563
+
+PRUEFER Späte Stellung (1500 Aktionen): 63.3 ms, suche 40; 35.4 ms, suche 40; 34.8 ms, suche 40
+PRUEFER Vier Partien solide KI gegen sich, 701 Schritte: höchstens 96.1 ms, höchstens 41 durchgerechnete Stellungen
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  11:50:51
+   Duration  7.87s (transform 671ms, setup 283ms, import 706ms, tests 6.61s, environment 0ms)
+

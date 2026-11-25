@@ -19,6 +19,7 @@
     "test": "vitest",
     "test:layout": "playwright test",
     "test:dauerlauf": "vitest run --mode dauerlauf",
+    "test:staerke": "vitest run --mode staerke --reporter=verbose",
     "typecheck": "tsc -b",
     "smoke:production": "node scripts/run_smokes.mjs production",
     "smoke:preview": "node scripts/run_smokes.mjs preview",

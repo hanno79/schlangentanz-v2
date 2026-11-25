@@ -107,6 +107,11 @@ Testhook-Build nutzt den Vite-Modus `testhooks`; warum, steht in
    npm run test:layout
    ```
 
+   Engine-Tasks führen zusätzlich `npm run test:dauerlauf` aus (3'000
+   Zufallspartien, rund 4 Minuten), KI-Tasks zusätzlich `npm run test:staerke`
+   (Turniere aus K5, rund 22 Minuten). Beide laufen in eigenen Vitest-Modi
+   (`--mode dauerlauf`, `--mode staerke`) und sind nicht Teil von `npm test`.
+
    `npm run check:regeln` prüft die Umsetzungsregeln U1, U6 und U7 (Plan 3.7);
    den Altbestand duldet `scripts/check_regeln_ausnahmen.json`, die nur
    schrumpfen darf. Umsetzer und Prüfer folgen `docs/abnahme/UMSETZER_ANLEITUNG.md`

@@ -1,6 +1,12 @@
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 
+/** Je Modus die Testdateien eines langen Laufs; sie fehlen in jedem anderen Modus. */
+const LANGE_LAEUFE = new Map([
+  ['dauerlauf', ['src/**/*.dauerlauf.test.ts']],
+  ['staerke', ['tests/**/*.staerke.test.ts']],
+])
+
 // `npm run build:testhooks` baut mit `--mode testhooks`. Dieser Modus schaltet den
 // Entwicklertisch unter `/dev` ein (Schalter in `src/App.tsx`). Hier
 // statt in einer `.env.testhooks`, weil `scripts/regelcheck.py` jede eingecheckte
@@ -30,12 +36,14 @@ export default defineConfig(({ mode }) => ({
     // Ausschluss würde Vitest sie wegen des `.spec.ts`-Suffixes einsammeln und in
     // jsdom ausführen, wo `@playwright/test` nicht funktioniert.
     // Lauf über `npm run test:layout`.
-    // Der lange Dauerlauf (`*.dauerlauf.test.ts`, E11) braucht mehrere Minuten und läuft
-    // nur mit `npm run test:dauerlauf` (`--mode dauerlauf`), nicht im Gate `npm test`.
-    exclude: ['**/node_modules/**', '**/dist/**', 'tests/layout/**', ...(mode === 'dauerlauf' ? [] : ['**/*.dauerlauf.test.ts'])],
+    // Die langen Läufe brauchen mehrere Minuten und laufen nur in ihrem eigenen Modus, nicht
+    // im Gate `npm test`: der Dauerlauf (`*.dauerlauf.test.ts`, E11) mit `npm run test:dauerlauf`
+    // (`--mode dauerlauf`), der Stärkenachweis der KI (`*.staerke.test.ts`, K5) mit
+    // `npm run test:staerke` (`--mode staerke`).
+    exclude: ['**/node_modules/**', '**/dist/**', 'tests/layout/**', ...(LANGE_LAEUFE.has(mode) ? [] : [...LANGE_LAEUFE.values()].flat())],
     // Gesucht wird nur unter src/ und tests/, wie bei den anderen Gates. Ohne diese
     // Angabe sucht Vitest im ganzen Baum und sammelt im Hauptordner auch die
     // vollständigen Repo-Kopien unter .claude/worktrees/ (Worktrees der Agenten) ein.
-    include: mode === 'dauerlauf' ? ['src/**/*.dauerlauf.test.ts'] : ['src/**/*.test.{ts,tsx}', 'tests/**/*.test.{ts,tsx}'],
+    include: LANGE_LAEUFE.get(mode) ?? ['src/**/*.test.{ts,tsx}', 'tests/**/*.test.{ts,tsx}'],
   },
 }))
