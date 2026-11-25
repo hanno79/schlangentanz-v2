@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { anwendeAktion, ermittleAktionen, erstellePartie, pruefeAktion } from '../../engine'
+import { anwendeAktion, ermittleAktionen, erstellePartie, offeneHandkarteDer, pruefeAktion } from '../../engine'
 import type { SpielAktion, Spielzustand } from '../../engine'
 import { baukasten } from '../../engine/testing/szenario'
 import { erzeugeZufall } from '../../engine/testing/zufall'
@@ -88,16 +88,26 @@ describe('O6 K1: Einträge mit Karte und Ziel', () => {
   })
 })
 
-/** Tauscht jede verdeckte Handkarte der Gegner, die die Aktion nicht nennt, gegen eine Karte vom Nachziehstapel. */
+/** So viele Karten oben auf dem Nachziehstapel bleiben liegen: Eine Risiko-Karte deckt die oberste offen auf (A8.2), der Korb zieht drei (A7.10). */
+const OBEN_BLEIBEN = 3
+
+/**
+ * Tauscht jede verdeckte Handkarte der Gegner, die die Aktion nicht nennt,
+ * gegen eine Karte von unten aus dem Nachziehstapel. Die angesagte Karte einer
+ * offenen Entscheidung (D52) und die obersten Stapelkarten bleiben, weil der
+ * Schritt sie offen aufdecken darf.
+ */
 function tauscheVerdeckte(zustand: Spielzustand, aktion: SpielAktion): Spielzustand {
   const genannt = new Set<string>(JSON.stringify(aktion).match(/[a-zäöü]+-\d{2}/g) ?? [])
+  const angesagt = offeneHandkarteDer(zustand.entscheidung)
+  if (angesagt !== null) genannt.add(angesagt.karteId)
   const getauscht = structuredClone(zustand)
   getauscht.spieler.forEach((spieler, index) => {
     if (index === 0) return
     spieler.hand = spieler.hand.map((karte) => {
-      if (genannt.has(karte.id) || getauscht.nachziehstapel.length === 0) return karte
-      const ersatz = getauscht.nachziehstapel.shift()!
-      getauscht.nachziehstapel.push(karte)
+      if (genannt.has(karte.id) || getauscht.nachziehstapel.length <= OBEN_BLEIBEN) return karte
+      const ersatz = getauscht.nachziehstapel.pop()!
+      getauscht.nachziehstapel.splice(OBEN_BLEIBEN, 0, karte)
       return ersatz
     })
   })

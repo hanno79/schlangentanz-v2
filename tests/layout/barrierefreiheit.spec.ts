@@ -2,6 +2,8 @@ import { expect, test, type Page } from '@playwright/test'
 import { readFileSync } from 'node:fs'
 import { deserialisiere } from '../../src/engine'
 import type { Spielzustand } from '../../src/engine'
+import { baukasten } from '../../src/engine/testing/szenario'
+import { erzeugeZufall } from '../../src/engine/testing/zufall'
 import { langeSchlange, mittelspiel, neuePartie, volltisch, zehnHandkarten } from '../../src/ui/tisch/__tests__/szenarien'
 import { bewegungen, erwarteGrundlagen, erwarteSichtbarenFokus, merkmaleOhneFarbe, tabBis, unterschiedOhneFarbe } from './barrierefreiheit_messung'
 import { halteUhrAn, legeSpielstand, oeffne } from './oeffnen'
@@ -71,6 +73,35 @@ test.describe('O11 K1 (TF-TISCH-044): Fokus an langen Gegnerschlangen', () => {
     await page.keyboard.press('Enter')
     await expect(page.getByRole('region', { name: 'Deine Hand' }).getByRole('button', { name: 'Farbkarte Rot, 1 Punkt' })).toHaveAttribute('aria-pressed', 'true')
     await tabBis(page, 'Farbkarte Rot, 1 Punkt', { hoechstens: 120 })
+  })
+
+  /**
+   * Hinweis 1 der Prüfung O11, Iteration 2: In einer Gegnerschlange mit über
+   * 20 Karten trägt das Zeichen am Rand eine Zahl („Ziel +19 ›“) und ist
+   * breiter als ohne. Auch dann liegt kein Tab-Halt unter ihm. Die Lücken der
+   * langen Schlange sind die Ziele einer Schlangenblockade.
+   */
+  const sehrLangeGegnerschlange = (): Spielzustand =>
+    baukasten({ spielerzahl: 2, erweiterung: false, zufall: erzeugeZufall(44) })
+      .hand(0, ['Schlangenblockade', 'Rot', 'Blau', 'Gelb', 'Grün'])
+      .schlange(1, [
+        'Rot', 'Blau', 'Gelb', 'Grün', 'Braun', 'Violett', 'Rot', 'Blau', 'Gelb', 'Grün', 'Braun', 'Violett',
+        'Rot', 'Blau', 'Gelb', 'Grün', 'Braun', 'Violett', 'Rot', 'Blau', 'Gelb', 'Grün', 'Braun',
+      ])
+      .haendeAuffuellen()
+      .amZug(0)
+      .zustand()
+
+  test('O11 K1 (Hinweis O11 Iteration 2): Zeichen mit Zahl verdecken keinen Tab-Halt in einer Gegnerschlange mit 23 Karten', async ({ page }) => {
+    await legeSpielstand(page, sehrLangeGegnerschlange())
+    await oeffne(page, '/spiel')
+    await tabBis(page, 'Sonderkarte Schlangenblockade')
+    await page.keyboard.press('Enter')
+    await tabBis(page, 'KI-Gegner 1, Schlange 1 wählen', { rueckwaerts: true })
+    await page.keyboard.press('Enter')
+    // Eine ganze Runde durch die 24 Lücken und zurück zur Karte, vorwärts und rückwärts.
+    await tabBis(page, 'Sonderkarte Schlangenblockade', { hoechstens: 120 })
+    await tabBis(page, 'Sonderkarte Schlangenblockade', { rueckwaerts: true, hoechstens: 120 })
   })
 })
 
