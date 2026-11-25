@@ -1,5 +1,5 @@
 import { OFFENE_AUFGABEN } from '../constants';
-import type { AufgabenkarteInfo, Spielzustand } from '../types';
+import type { AufgabenkarteInfo, Spieler, Spielzustand } from '../types';
 
 /*
 Aufgaben für Tests und Szenarien. Erfüllte Aufgaben setzen die Hilfen von E10
@@ -98,4 +98,9 @@ export function stapelBis(anzahl: number, spieler = 1): (zustand: Spielzustand) 
   return (zustand) => {
     zustand.spieler[spieler].erfuellteAufgaben.push(...zustand.aufgabenStapel.splice(anzahl));
   };
+}
+
+/** D35: Wer seine geheime Aufgabe in diesem Schritt erfüllt hat. Die Engine meldet das mit keinem Ereignis (B2); Prüfer und Protokoll vergleichen deshalb die Zustände. */
+export function neuErfuellteGeheimeAufgaben(vorher: Spielzustand, nachher: Spielzustand): Spieler[] {
+  return nachher.spieler.filter((spieler, index) => spieler.geheimeAufgabeErfuellt && !vorher.spieler[index].geheimeAufgabeErfuellt);
 }

@@ -1,0 +1,37 @@
+each-Aufrufe 45 erkannt 42
+verpasst: A5_ausspielen.test.ts:122, A6_ablehnung_spieler.test.ts:174, A7.1_farbendieb.test.ts:159
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a4f56b6e57e6de6c6
+
+ ❯ src/engine/__tests__/regeln_abdeckung.test.ts (32 tests | 1 failed) 40ms
+     × X7: jede Regelaussage nennt mindestens einen Test, und jeder genannte Test steht in seiner Datei unter regeln/ 15ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/engine/__tests__/regeln_abdeckung.test.ts > X7: Regeltestdateien und Satz-für-Satz-Tabelle der Erweiterung (A7.10, A8, A9) > X7: jede Regelaussage nennt mindestens einen Test, und jeder genannte Test steht in seiner Datei unter regeln/
+AssertionError: genannte Tests, die es in der Datei nicht gibt: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "A7.1_farbendieb › A7.1: die Stelle %i gibt es in einer eigenen Schlange mit zwei Karten nicht; abgelehnt, mit Grund",
++ ]
+
+ ❯ src/engine/__tests__/regeln_abdeckung.test.ts:218:71
+    216|         .map(({ datei, name }) => `${datei} › ${name}`),
+    217|     )
+    218|     expect(fehlend, 'genannte Tests, die es in der Datei nicht gibt').…
+       |                                                                       ^
+    219|     const ohneGrund = ohneRegel.filter((zeile) => zeile.rest.trim().le…
+    220|     expect(ohneGrund.map((zeile) => zeile.satz), 'Sätze ohne Regelauss…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 31 passed (32)
+   Start at  09:20:11
+   Duration  679ms (transform 74ms, setup 285ms, import 54ms, tests 40ms, environment 0ms)
+

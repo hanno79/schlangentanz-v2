@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-ENGINE-090 Fehlt eine Datei des Golden Master mit Erweiterung, wird der Test rot und schreibt sie nicht selbst. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 25.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-ENGINE-090 Fehlt eine Datei des Golden Master mit Erweiterung, wird der Test rot und schreibt sie nicht selbst.</h1><p class="etiketten"><span class="etikett">Bereich Spiel-Engine: Regeln, Zugablauf, Wertung, Speicherformat</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art automatisch</span><span class="etikett">Grenzfall von TF-ENGINE-087</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Vitest legt eine fehlende Vergleichsdatei normalerweise selbst an. Damit würde ein Protokoll eingefroren, das niemand gelesen hat. Der Golden Master prüft deshalb zuerst, ob die Datei da ist. Der Grenzfall ist der Stand, an dem die drei Protokolle noch fehlen: der erste Commit von X7.</p><h2>Bestanden, wenn</h2><p>Auf dem ersten Commit <code>9d10b49e</code> endet <code>npx vitest run src/engine/__tests__/golden_master.test.ts</code> mit Exit 1, die drei Partien mit Erweiterung melden „golden/erweiterung-…txt fehlt; eingefroren wird erst nach der Lektüre gegen Teil A“, und <code>git status</code> zeigt danach keine neue Datei unter <code>golden/</code>.</p><h2>Fehlgeschlagen, wenn</h2><p>Der Test wird grün oder legt eine der drei Dateien an.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>25.11.2026</dd><dt>Änderung</dt><dd>task/X7-abnahme-erweiterung (PR #120)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Repo mit <code>git switch --detach 9d10b49e</code>, danach zurück auf den geprüften Stand</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Erster Commit von X7, <code>9d10b49e</code>, ohne die Dateien <code>golden/erweiterung-*.txt</code>.</p></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p><code>git switch --detach 9d10b49e</code>, <code>npx vitest run src/engine/__tests__/golden_master.test.ts src/engine/__tests__/regeln_abdeckung.test.ts src/engine/__tests__/dauerlauf.test.ts</code>, erwartet Exit 1 mit 10 roten Tests, <code>git status --short</code> leer, danach zurück auf den Prüfbranch.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Eine Datei, die da ist, aber leer: dann vergleicht der Test gegen leeren Text und wird ebenfalls rot; ausgeführt ist das nicht.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-25">25.11.2026 09:23</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer X7) &middot; agent &middot; pruefung-X7 @ <span class="commit" title="d5c31df6ca1e48d801dd0bff4b8d0fa63b355332">d5c31df</span></p><p>Auf dem ersten Commit 9d10b49e: Exit 1, 10 von 65 Tests rot; die drei Partien mit Erweiterung melden &#x27;golden/erweiterung-…txt fehlt; eingefroren wird erst nach der Lektüre gegen Teil A&#x27;; danach keine neue Datei im Arbeitsbaum.</p><ul class="belege"><li><a href="belege/2026-11-25-0923-TF-ENGINE-090-1.txt">2026-11-25-0923-TF-ENGINE-090-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>
