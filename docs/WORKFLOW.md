@@ -111,8 +111,8 @@ Testhook-Build nutzt den Vite-Modus `testhooks`; warum, steht in
    Zufallspartien, rund 4 Minuten), KI-Tasks zusätzlich `npm run test:staerke`
    (Turniere aus K5, rund 22 Minuten). Beide laufen in eigenen Vitest-Modi
    (`--mode dauerlauf`, `--mode staerke`) und sind nicht Teil von `npm test`.
-   `npm run test:vollpartien` spielt ganze Partien im Browser (Z1, rund 35
-   Sekunden samt Bau); er ist nicht Teil von `npm run test:layout` (Abschnitt
+   `npm run test:vollpartien` spielt ganze Partien im Browser (Z1, samt Bau
+   35 bis 55 Sekunden, je nach Last); er ist nicht Teil von `npm run test:layout` (Abschnitt
    „Vollpartien im Browser“).
 
    `npm run check:regeln` prüft die Umsetzungsregeln U1, U6 und U7 (Plan 3.7);
