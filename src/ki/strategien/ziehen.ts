@@ -1,7 +1,7 @@
 import type { SpielAktion, Spielkarte } from '../../engine';
 import type { Sicht } from '../sicht';
 import { haltewert } from './bewertung';
-import { besteAnlage, hoechster, kartensaetze, mitHand, mittel, schaetzwert } from './schaetzung';
+import { besteAnlage, hoechster, kartensaetze, mitGezogenen, mitHand, mittel, schaetzwert } from './schaetzung';
 import type { Schaetzrechnung } from './schaetzung';
 
 /*
@@ -54,7 +54,7 @@ export function schaetzeZiehen(sicht: Sicht, aktionen: readonly SpielAktion[], r
   if (korb?.typ === 'SchlangenkorbSpielen') {
     const ohneKorb = mitHand(sicht, [], new Set([korb.karteId]));
     const werte = saetze.map((karten) => {
-      const stand = mitHand(ohneKorb, karten);
+      const stand = mitGezogenen(ohneKorb, karten);
       return legeBeste(wert, stand, wert(stand), karten, KORB_SPIELEN);
     });
     geschaetzt.push({ aktion: korb, wert: mittel(werte) });
@@ -65,7 +65,7 @@ export function schaetzeZiehen(sicht: Sicht, aktionen: readonly SpielAktion[], r
     (aktion) => -aktion.karteIds.reduce((summe, id) => summe + (haltewerte.get(id) ?? 0), 0),
   );
   if (abwerfen !== undefined) {
-    geschaetzt.push({ aktion: abwerfen, wert: mittel(saetze.map((karten) => wert(mitHand(sicht, karten, new Set(abwerfen.karteIds))))) });
+    geschaetzt.push({ aktion: abwerfen, wert: mittel(saetze.map((karten) => wert(mitGezogenen(sicht, karten, new Set(abwerfen.karteIds))))) });
   }
   return hoechster(geschaetzt, (eintrag) => eintrag.wert) ?? null;
 }

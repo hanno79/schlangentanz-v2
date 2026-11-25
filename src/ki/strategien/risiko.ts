@@ -1,7 +1,7 @@
 import type { FarbkarteInfo, RisikoKarteSpielenAktion, Schlange, SpielAktion, Spielkarte } from '../../engine';
 import type { Sicht } from '../sicht';
 import { GLEICH, haltewert } from './bewertung';
-import { STICHPROBE, besteAnlage, hoechster, mitHand, mittel, schaetzwert, verteilt } from './schaetzung';
+import { STICHPROBE, besteAnlage, hoechster, mitGezogenen, mitHand, mittel, nachZiehen, schaetzwert, verteilt } from './schaetzung';
 import type { Schaetzrechnung } from './schaetzung';
 import { einfuegen, ersetze } from './vorauswahl';
 
@@ -56,13 +56,19 @@ function mitSchlange(sicht: Sicht, schlangenId: string, aendere: (schlange: Schl
 function rechner(sicht: Sicht, rechnung: Schaetzrechnung) {
   const wert = schaetzwert(rechnung);
   const eigen = sicht.spieler[sicht.ich];
-  const ohne: Sicht = { ...sicht, spieler: sicht.spieler.map((spieler, index) => (index === sicht.ich ? { ...spieler, risikoKarten: eigen.risikoKarten.slice(1) } : spieler)) };
+  // A8.2: Die Risiko-Karte ist aus dem Spiel, die oberste Karte aufgedeckt, gleich wie es ausgeht.
+  const ohne = nachZiehen({ ...sicht, spieler: sicht.spieler.map((spieler, index) => (index === sicht.ich ? { ...spieler, risikoKarten: eigen.risikoKarten.slice(1) } : spieler)) }, 1);
   const ungesehen = rechnung.stellung.ungesehen();
   const farbkarten = ungesehen.flatMap((karte) => (karte.typ === 'Farbkarte' ? [karte] : []));
   const anteil = (zahl: number) => zahl / ungesehen.length;
   const stichprobe = <T>(karten: readonly T[], werte: (karte: T, nummer: number) => number) => verteilt(karten, STICHPROBE).map(werte);
-  /** Weitere `anzahl` Karten vom Stapel nach `karte`, je Stichprobe an anderen Stellen. */
-  const weitere = (karte: Spielkarte, nummer: number, anzahl: number) => verteilt(ungesehen.filter((eintrag) => eintrag !== karte), anzahl, (nummer + 1) / (STICHPROBE + 1));
+  /** Weitere `anzahl` Karten vom Stapel nach `karte`, je Stichprobe an anderen Stellen; nur so viele, wie der Stapel nach dem Aufdecken noch hat (D54). */
+  const weitere = (karte: Spielkarte, nummer: number, anzahl: number) =>
+    verteilt(
+      ungesehen.filter((eintrag) => eintrag !== karte),
+      Math.min(anzahl, ohne.nachziehstapelGroesse),
+      (nummer + 1) / (STICHPROBE + 1),
+    );
   /** Ein Gegner bekommt eine Karte auf die Hand; die KI wählt den, dem es am wenigsten nützt. */
   const beguenstigt = (stand: Sicht) =>
     Math.max(
@@ -98,7 +104,7 @@ type Rechner = ReturnType<typeof rechner>;
 
 /** A8.2 Aktion 1. */
 function zusaetzlicheKarten(r: Rechner): number {
-  return r.farbeOderGegner(r.stichprobe(r.farbkarten, (farbkarte, nummer) => r.wert(mitHand(r.ohne, [farbkarte, ...r.weitere(farbkarte, nummer, 2)]))));
+  return r.farbeOderGegner(r.stichprobe(r.farbkarten, (farbkarte, nummer) => r.wert(mitGezogenen(mitHand(r.ohne, [farbkarte]), r.weitere(farbkarte, nummer, 2)))));
 }
 
 /** Die beste Farbkarte der Hand an einem Ende einer eigenen Schlange (A8.2 Aktion 2, D52: nicht als neue Schlange). */
@@ -112,10 +118,10 @@ function zusaetzlicheFarbkarte(r: Rechner, benannt: FarbkarteInfo): number {
   return r.farbeOderGegner(erfolg, mitHand(r.ohne, [], new Set([benannt.id])));
 }
 
-/** Der Tausch der Schlangenkarte gegen die beste Farbkarte der Hand, oder kein Tausch (D53, D75); `dazu` kommt auf die Hand. */
+/** Der Tausch der Schlangenkarte gegen die beste Farbkarte der Hand, auch die eben aufgedeckte `dazu`, oder kein Tausch (D51, D53, D75). */
 function besterTausch(r: Rechner, schlangenId: string, karte: FarbkarteInfo, dazu: readonly Spielkarte[]): number {
-  const getauscht = r.ohne.hand.flatMap((handkarte) =>
-    handkarte.typ !== 'Farbkarte' ? [] : [r.wert(mitHand(mitSchlange(r.ohne, schlangenId, ersetze(karte.id, handkarte)), [...dazu, karte], new Set([handkarte.id])))],
+  const getauscht = [...r.ohne.hand, ...dazu].flatMap((handkarte) =>
+    handkarte.typ !== 'Farbkarte' ? [] : [r.wert(mitHand(mitSchlange(r.ohne, schlangenId, ersetze(karte.id, handkarte)), [...dazu.filter((eintrag) => eintrag !== handkarte), karte], new Set([handkarte.id])))],
   );
   return Math.max(dazu.length === 0 ? r.ohneWert() : r.wert(mitHand(r.ohne, dazu)), ...getauscht);
 }
@@ -142,7 +148,7 @@ function ablageOderStapel(r: Rechner): number {
     .slice(0, ABLAGE_KANDIDATEN)
     .map(({ karte }) => karte);
   const erfolg = r.stichprobe(r.farbkarten, (farbkarte, nummer) =>
-    Math.max(...[...beste.map((karte) => [karte]), r.weitere(farbkarte, nummer, 1)].map((dazu) => r.wert(mitHand(r.ohne, [farbkarte, ...dazu])))),
+    Math.max(r.wert(mitGezogenen(mitHand(r.ohne, [farbkarte]), r.weitere(farbkarte, nummer, 1))), ...beste.map((karte) => r.wert(mitHand(r.ohne, [farbkarte, karte])))),
   );
   return r.farbeOderGegner(erfolg);
 }

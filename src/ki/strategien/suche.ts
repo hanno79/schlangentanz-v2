@@ -3,7 +3,8 @@ import { offeneAufgabenIds, simuliere } from '../sicht';
 import type { Sicht, SpielerSicht, Stellung } from '../sicht';
 import { GLEICH, bewerte, eigeneGruppen, eigenePunkte, neuerMerker, sichtbarePunkte } from './bewertung';
 import type { Wertungsmerker } from './bewertung';
-import { aufgabenkorrektur } from './erweiterungswert';
+import { aufgabenkorrektur, geratenePunkte } from './erweiterungswert';
+import { kartensaetze, mitHand, mittel, schaetzwert } from './schaetzung';
 import { punkteNach, vorauswahl } from './vorauswahl';
 import { ziehtVerdeckt } from './ziehen';
 
@@ -18,7 +19,12 @@ Aufgaben, die der Spieler dort erfüllt, aber noch nicht eingelöst hat (Plan K4
 „Farbenpracht“, die erst am Zugende zählt (D59), oder eine Aufgabe, die eine Karte
 ausserhalb seines Zuges erfüllt hat und die er zu Beginn seines Zuges einlöst (A9).
 Was er schon eingelöst hat, zählt `bewerte` selbst, ausser was die Simulation nur
-geraten aufgedeckt hat (`aufgabenkorrektur`).
+geraten aufgedeckt hat (`aufgabenkorrektur`), auch nicht unter den sicheren Punkten.
+
+Zieht eine Wahl über eine Risiko-Karte verdeckt vom Stapel (D52, D54: „oberste
+Stapelkarte“), läge in der Simulation die eine erratene Karte auf der Hand. Statt
+ihrer mittelt die Suche dann über Karten aus den ungesehenen (`schaetzung.ts`), damit
+die Wahl nicht am Zufall der KI hängt.
 */
 
 /** Abzug für eine Karte, die nichts bewirkt (K2, Kriterium 5). */
@@ -121,6 +127,25 @@ export function erstelleSuche(sicht: Sicht, zufall: () => number) {
     const stand = stellung.sicht;
     return bewerte(stand, merker) + aufgaben(stellung)(stand.spieler[ich]);
   };
+  /** Die sicheren Punkte, ohne geraten aufgedeckte Aufgaben. */
+  const sicher = (stand: Sicht) => sichtbarePunkte(stand, merker) - geratenePunkte(stand.spieler[ich], bekannt);
+  const schaetzrechnung = {
+    stellung: wurzel,
+    merker,
+    aufgaben: aufgaben(wurzel),
+    zaehle: () => {
+      bewertungen.schaetzung += 1;
+    },
+  };
+  /** Die Bewertung nach einer Wahl, die verdeckt Karten auf die eigene Hand zieht: über Karten aus den ungesehenen gemittelt (siehe oben). */
+  const ohneErratene = (vorher: Sicht, nach: Stellung): number | null => {
+    const ungesehen = wurzel.ungesehen();
+    const ids = new Set(ungesehen.map((karte) => karte.id));
+    const erraten = nach.sicht.hand.filter((karte) => ids.has(karte.id) && !vorher.hand.some((eintrag) => eintrag.id === karte.id));
+    if (erraten.length === 0) return null;
+    const weg = new Set(erraten.map((karte) => karte.id));
+    return mittel(kartensaetze(ungesehen, erraten.length).map((karten) => schaetzwert(schaetzrechnung)(mitHand(nach.sicht, karten, weg))));
+  };
 
   /** Spielt `aktion` von `stellung` aus durch und bewertet die Sicht danach. */
   const folge = (stellung: Stellung, vorher: Sicht, aktion: SpielAktion): Folge => {
@@ -129,8 +154,9 @@ export function erstelleSuche(sicht: Sicht, zufall: () => number) {
     const wirkungslos = ohneWirkung(aktion, sichtNach);
     const fusionSenkt = aktion.typ === 'FusionLegen' && eigenePunkte(sichtNach, merker) < eigenePunkte(vorher, merker);
     const grubeOhneZug = aktion.typ === 'SchlangengrubeSpielen' && wirkungslos;
-    const wert = werte(nach) - (wirkungslos ? OHNE_WIRKUNG : 0);
-    return { aktion, stellung: nach, wert, punkte: sichtbarePunkte(sichtNach, merker), gruppen: eigeneGruppen(sichtNach, merker), verworfen: fusionSenkt || grubeOhneZug };
+    const geschaetzt = aktion.typ === 'Entscheiden' ? ohneErratene(vorher, nach) : null;
+    const wert = (geschaetzt ?? werte(nach)) - (wirkungslos ? OHNE_WIRKUNG : 0);
+    return { aktion, stellung: nach, wert, punkte: sicher(sichtNach), gruppen: eigeneGruppen(sichtNach, merker), verworfen: fusionSenkt || grubeOhneZug };
   };
 
   /**
@@ -151,15 +177,7 @@ export function erstelleSuche(sicht: Sicht, zufall: () => number) {
     return folgen;
   };
 
-  const ergebnis = (stellung: Stellung): Ergebnis => ({ wert: werte(stellung), punkte: sichtbarePunkte(stellung.sicht, merker), gruppen: eigeneGruppen(stellung.sicht, merker) });
-  const schaetzrechnung = {
-    stellung: wurzel,
-    merker,
-    aufgaben: aufgaben(wurzel),
-    zaehle: () => {
-      bewertungen.schaetzung += 1;
-    },
-  };
+  const ergebnis = (stellung: Stellung): Ergebnis => ({ wert: werte(stellung), punkte: sicher(stellung.sicht), gruppen: eigeneGruppen(stellung.sicht, merker) });
   return { wurzel, schaetzrechnung, folge, kandidaten, ergebnis, gezaehlt: () => ({ ...bewertungen }) };
 }
 

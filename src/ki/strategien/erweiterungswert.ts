@@ -74,5 +74,10 @@ function punkte(aufgaben: readonly AufgabenkarteInfo[]): number {
  * Simulation erst vom erratenen Aufgabenstapel aufgedeckt hat.
  */
 export function aufgabenkorrektur(eigen: SpielerSicht, erfuellbar: readonly AufgabenkarteInfo[], bekannt: ReadonlySet<string>): number {
-  return punkte(erfuellbar.filter((aufgabe) => bekannt.has(aufgabe.id))) - punkte(eigen.erfuellteAufgaben.filter((aufgabe) => !bekannt.has(aufgabe.id)));
+  return punkte(erfuellbar.filter((aufgabe) => bekannt.has(aufgabe.id))) - geratenePunkte(eigen, bekannt);
+}
+
+/** Die Punkte eingelöster Aufgaben, die die Simulation erst vom erratenen Aufgabenstapel aufgedeckt hat; sie zählen nirgends. */
+export function geratenePunkte(eigen: SpielerSicht, bekannt: ReadonlySet<string>): number {
+  return punkte(eigen.erfuellteAufgaben.filter((aufgabe) => !bekannt.has(aufgabe.id)));
 }

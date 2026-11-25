@@ -14,8 +14,9 @@ erratenen Zustand der Suche, dessen Karten zufällig gut oder schlecht sein kön
 sondern mittelt über STICHPROBE Karten, gleichmässig über die nach Id geordneten
 ungesehenen Karten verteilt (`Stellung.ungesehen`). Die Auswahl hängt so nur von der
 Sicht ab und verbraucht keinen Zufall der KI, der sonst das Erraten der übrigen
-Schritte verschöbe. Bewertet wird jede geschätzte Sicht wie in der Zugsuche, ohne
-Simulation; jede Bewertung zählt (Kriterium 8).
+Schritte verschöbe. Jede gezogene Karte fehlt danach im Stapel; wer die letzte zieht,
+löst die Schlussrunde aus (`nachZiehen`). Bewertet wird jede geschätzte Sicht wie in
+der Zugsuche, ohne Simulation; jede Bewertung zählt (Kriterium 8).
 */
 
 /** Über wie viele Karten oder Kartensätze je Ausgang gemittelt wird. */
@@ -81,4 +82,20 @@ export function besteAnlage(wert: (stand: Sicht) => number, stand: Sicht, karte:
     return { stand: nachher, wert: wert(nachher) };
   });
   return hoechster(anlagen, (anlage) => anlage.wert);
+}
+
+/**
+ * Die Sicht, nachdem der Spieler `anzahl` Karten vom Stapel gezogen oder aufgedeckt hat.
+ * Zieht er die letzte, spielt er seinen Zug zu Ende, dann beginnt die Schlussrunde, in
+ * der er keinen Zug mehr hat (A10, D55, D57); das Auffüllen fällt dann weg.
+ */
+export function nachZiehen(sicht: Sicht, anzahl: number): Sicht {
+  const rest = Math.max(0, sicht.nachziehstapelGroesse - anzahl);
+  if (rest > 0 || sicht.partiephase !== 'Laufend') return { ...sicht, nachziehstapelGroesse: rest };
+  return { ...sicht, nachziehstapelGroesse: 0, partiephase: 'Schlussrunde', schlussrundeAusloeser: sicht.ich };
+}
+
+/** Die Sicht mit `karten` vom Stapel auf der Hand (`mitHand`, `nachZiehen`). */
+export function mitGezogenen(sicht: Sicht, karten: readonly Spielkarte[], weg: ReadonlySet<string> = new Set()): Sicht {
+  return nachZiehen(mitHand(sicht, karten, weg), karten.length);
 }
