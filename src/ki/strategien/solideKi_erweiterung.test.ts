@@ -4,7 +4,7 @@ import { anwendeAktion, ermittleAktionen, erzeugeZufall, pruefeInvarianten } fro
 import type { SpielAktion, Spielkarte, Spielzustand } from '../../engine'
 import { legeAufgabenAus } from '../../engine/testing/aufgaben'
 import type { Aufgabenauslage } from '../../engine/testing/aufgaben'
-import { findeSzenario } from '../../entwicklung/szenarien'
+import { erzeugeSzenario as szenario } from '../../entwicklung/szenarien'
 import { naechsterKiSchritt } from '../schritt'
 import { entscheiderVon } from '../sicht'
 import { gruppenzahl } from '../__tests__/stellungen'
@@ -19,12 +19,6 @@ erste. Die Eigenschaften in Partien stehen in `solideKi_erweiterung_partien.test
 */
 
 const KI = 1
-
-function szenario(name: string): Spielzustand {
-  const gefunden = findeSzenario(name)
-  if (gefunden === undefined) throw new Error(`Testaufbau: Szenario ${name} fehlt`)
-  return gefunden.erzeuge()
-}
 
 interface Zug {
   /** Was KI-Gegner 1 in diesem Zug gewählt hat, auch über Risiko-Entscheidungen. */

@@ -253,7 +253,7 @@ function spielerwert(sicht: Sicht, index: number, merker: Wertungsmerker): numbe
   const ausblick = zukunft(sicht, index);
   // In der Schlussrunde kostet eine Grube den letzten Zug; das steckt schon in `zukunft`.
   const gruben = sicht.partiephase === 'Laufend' ? grubenVor(sicht, index) : 0;
-  const hand = index === sicht.ich ? handsumme(sicht.hand.map((karte) => haltewert(karte, sicht))) : HANDKARTE_GEGNER * spieler.handgroesse * ausblick;
+  const hand = index === sicht.ich ? handsumme(sicht.hand, (karte) => haltewert(karte, sicht)) : HANDKARTE_GEGNER * spieler.handgroesse * ausblick;
   const zug = sicht.zug;
   const zweiterZug = zug.spielerIndex === index && zug.teilzug === 1 && zug.verdopplerGespielt ? ZWEITER_ZUG : 0;
   const basis = wertDerSchlangen(schlangenwert(spieler.schlangen, sicht.erweiterung, merker), ausblick) + hand - AUSGESETZTER_ZUG * gruben + zweiterZug;

@@ -49,7 +49,7 @@ function legeNeu(sicht: Sicht, aenderung: Aenderung, karte: Spielkarte): void {
 }
 
 /** Die Karte an die Lücke `position` (0 vor der ersten Karte). */
-function einfuegen(karte: Spielkarte, position: number): (schlange: Schlange) => Schlange {
+export function einfuegen(karte: Spielkarte, position: number): (schlange: Schlange) => Schlange {
   return (schlange) => ({ ...schlange, karten: [...schlange.karten.slice(0, position), karte, ...schlange.karten.slice(position)] });
 }
 
@@ -244,12 +244,14 @@ export function vorauswahl(
     const danach = folgeSicht(sicht, aktion);
     return { aktion, stelle, wert: bewerte(danach, merker) + aufgaben(danach.spieler[sicht.ich]) };
   };
-  const paar = (aktion: SpielAktion) => tauschschluessel(aktion).length > 1;
-  const einzeln = aktionen.flatMap((aktion, stelle) => (paar(aktion) ? [] : [schaetze(aktion, stelle)]));
-  const besteTausche = einzeln.filter(({ aktion }) => tauschschluessel(aktion).length === 1).sort(nachWert).slice(0, BESTE_TAUSCHE);
-  const beste = new Set(besteTausche.flatMap(({ aktion }) => tauschschluessel(aktion)));
-  const allePaare = aktionen.filter(paar).length <= TAUSCHPAARE_ALLE;
-  const paare = aktionen.flatMap((aktion, stelle) => (paar(aktion) && (allePaare || tauschschluessel(aktion).every((schluessel) => beste.has(schluessel))) ? [schaetze(aktion, stelle)] : []));
+  const schluessel = aktionen.map(tauschschluessel);
+  const paar = (stelle: number) => schluessel[stelle].length > 1;
+  const einzeln = aktionen.flatMap((aktion, stelle) => (paar(stelle) ? [] : [schaetze(aktion, stelle)]));
+  const besteTausche = einzeln.filter(({ stelle }) => schluessel[stelle].length === 1).sort(nachWert).slice(0, BESTE_TAUSCHE);
+  const beste = new Set(besteTausche.flatMap(({ stelle }) => schluessel[stelle]));
+  const allePaare = schluessel.filter((tausch) => tausch.length > 1).length <= TAUSCHPAARE_ALLE;
+  const bewerten = (stelle: number) => allePaare || schluessel[stelle].every((eintrag) => beste.has(eintrag));
+  const paare = aktionen.flatMap((aktion, stelle) => (paar(stelle) && bewerten(stelle) ? [schaetze(aktion, stelle)] : []));
   const geordnet = [...einzeln, ...paare].sort(nachWert);
   const gewaehlt = new Set<number>();
   const karten = new Set<string | null>();

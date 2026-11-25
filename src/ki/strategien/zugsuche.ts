@@ -4,7 +4,7 @@ import { wehrtAb } from './abwehr';
 import { GLEICH, eigeneGruppen, gruppenwert, haltewert } from './bewertung';
 import { folgeschluessel } from './folgeschluessel';
 import { waehleRisiko } from './risiko';
-import { besser, beste, erstelleSuche, istDurchlassen } from './suche';
+import { besser, beste, erstelleSuche, istDurchlassen, ohneBewertung } from './suche';
 import type { Bewertungen, Folge } from './suche';
 import { erweitertZug } from './vorauswahl';
 import { schaetzeZiehen } from './ziehen';
@@ -73,16 +73,9 @@ const NACHLESE = 8;
 /** Kriterium 8: mehr Stellungen rechnet die Zugsuche in einem Schritt nie durch. */
 export const GRENZE_SUCHE = ERSTE_AUSWAHL + NACHLESE + (ZWEITE_TIEFE + 1) * ZWEITE_AUSWAHL + DRITTE_AUSWAHL + 1;
 
-export type { Bewertungen } from './suche';
-
 export interface Zugplan {
   aktion: SpielAktion;
   bewertungen: Bewertungen;
-}
-
-/** Ein Schritt ohne jede Bewertung; je Aufruf ein neues Objekt, weil eine Strategie auf der Modulebene nichts Veränderliches hält (U5). */
-function ohneBewertung(): Bewertungen {
-  return { suche: 0, vorauswahl: 0, angeboten: 0, schaetzung: 0 };
 }
 
 /** Die ersten `anzahl` Folgen mit verschiedenem Folgeschlüssel, in der gegebenen Reihenfolge. */
@@ -133,8 +126,11 @@ function spiele(sicht: Sicht, aktionen: readonly SpielAktion[], zufall: () => nu
     }),
   );
   const beenden = aktionen.find((aktion) => aktion.typ === 'ZugBeenden');
-  const halten = beenden === undefined ? undefined : suche.ergebnis(suche.wurzel);
-  const plan = halten !== undefined && beenden !== undefined && (gewaehlt === undefined || gewaehlt.verworfen || !besser(gewaehlt, halten)) ? { aktion: beenden, wert: halten.wert } : gewaehlt;
+  let plan: { aktion: SpielAktion; wert: number } | undefined = gewaehlt;
+  if (beenden !== undefined) {
+    const halten = suche.ergebnis(suche.wurzel);
+    if (gewaehlt === undefined || gewaehlt.verworfen || !besser(gewaehlt, halten)) plan = { aktion: beenden, wert: halten.wert };
+  }
   // Verdecktes Ziehen nur, wenn es nach der Schätzung mehr bringt als der beste Plan (`ziehen.ts`).
   const ziehen = schaetzeZiehen(sicht, aktionen, suche.schaetzrechnung);
   if (ziehen !== null && (plan === undefined || ziehen.wert > plan.wert + GLEICH)) return { aktion: ziehen.aktion, bewertungen: suche.gezaehlt() };

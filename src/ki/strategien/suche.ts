@@ -1,9 +1,9 @@
 import type { SpielAktion } from '../../engine';
-import { simuliere } from '../sicht';
+import { offeneAufgabenIds, simuliere } from '../sicht';
 import type { Sicht, SpielerSicht, Stellung } from '../sicht';
 import { GLEICH, bewerte, eigeneGruppen, eigenePunkte, neuerMerker, sichtbarePunkte } from './bewertung';
 import type { Wertungsmerker } from './bewertung';
-import { aufgabenkorrektur, bekannteAufgaben } from './erweiterungswert';
+import { aufgabenkorrektur } from './erweiterungswert';
 import { punkteNach, vorauswahl } from './vorauswahl';
 import { ziehtVerdeckt } from './ziehen';
 
@@ -34,6 +34,11 @@ export interface Bewertungen {
   angeboten: number;
   /** Für geschätzte Ausgänge verdeckter Karten, ohne Simulation (`schaetzung.ts`: Risiko-Karten, verdecktes Ziehen). */
   schaetzung: number;
+}
+
+/** Ein Schritt ohne jede Bewertung; je Aufruf ein neues Objekt, weil eine Strategie auf der Modulebene nichts Veränderliches hält (U5). */
+export function ohneBewertung(): Bewertungen {
+  return { suche: 0, vorauswahl: 0, angeboten: 0, schaetzung: 0 };
 }
 
 /** Was beim Vergleich zweier Züge zählt: erst die Bewertung, bei Gleichstand die Zahl der eigenen Gruppen, dann die sicheren Punkte. */
@@ -102,11 +107,11 @@ function folgeVon(stellung: Stellung, aktion: SpielAktion, ich: number): Stellun
 
 /** Die Suche eines Schritts; sie zählt ihre Bewertungen und merkt sich die Wertung gleicher Schlangen. */
 export function erstelleSuche(sicht: Sicht, zufall: () => number) {
-  const bewertungen: Bewertungen = { suche: 0, vorauswahl: 0, angeboten: 0, schaetzung: 0 };
+  const bewertungen = ohneBewertung();
   const ich = sicht.ich;
   const wurzel = simuliere(sicht, zufall);
   const merker: Wertungsmerker = neuerMerker();
-  const bekannt = bekannteAufgaben(sicht);
+  const bekannt = offeneAufgabenIds(sicht);
   /** Was die Aufgaben einer Stellung oder einer geschätzten Sicht von ihr aus zu `bewerte` beitragen (siehe oben). */
   const aufgaben = (stellung: Stellung) => (eigen: SpielerSicht) => aufgabenkorrektur(eigen, stellung.erfuellbar(eigen), bekannt);
 

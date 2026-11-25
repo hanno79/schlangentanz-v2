@@ -35,7 +35,7 @@ const RISIKOKARTE_HALTEN = 0.6;
 
 /** Die Punkte der erfüllten Aufgaben, die die Sicht von diesem Spieler zeigt (A9, D35). */
 export function aufgabenpunkteVon(sicht: Sicht, index: number): number {
-  const offene = sicht.spieler[index].erfuellteAufgaben.reduce((summe, aufgabe) => summe + aufgabe.punkte, 0);
+  const offene = punkte(sicht.spieler[index].erfuellteAufgaben);
   const geheime = index === sicht.ich && sicht.geheimeAufgabeErfuellt && sicht.geheimeAufgabe !== null ? sicht.geheimeAufgabe.punkte : 0;
   return offene + geheime;
 }
@@ -55,15 +55,13 @@ export function auffuellwert(sicht: Sicht, ausblick: number, kartenwert: number)
 }
 
 /** Die Summe der Haltewerte einer Hand; von mehr als 5 Karten zählen die fünf wertvollsten (A5). */
-export function handsumme(werte: readonly number[]): number {
-  const zaehlen = werte.length > HANDKARTEN ? [...werte].sort((a, b) => b - a).slice(0, HANDKARTEN) : werte;
-  return zaehlen.reduce((summe, wert) => summe + wert, 0);
-}
-
-/** Die Ids der Aufgaben, die die Sicht zeigt: offene, erfüllte und die eigene geheime (A9). */
-export function bekannteAufgaben(sicht: Sicht): Set<string> {
-  const geheim = sicht.geheimeAufgabe === null ? [] : [sicht.geheimeAufgabe];
-  return new Set([...sicht.offeneAufgaben, ...sicht.spieler.flatMap((spieler) => spieler.erfuellteAufgaben), ...geheim].map((aufgabe) => aufgabe.id));
+export function handsumme<T>(hand: readonly T[], wertVon: (karte: T) => number): number {
+  if (hand.length <= HANDKARTEN) return hand.reduce((summe, karte) => summe + wertVon(karte), 0);
+  return hand
+    .map(wertVon)
+    .sort((a, b) => b - a)
+    .slice(0, HANDKARTEN)
+    .reduce((summe, wert) => summe + wert, 0);
 }
 
 function punkte(aufgaben: readonly AufgabenkarteInfo[]): number {

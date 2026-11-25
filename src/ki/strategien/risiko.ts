@@ -1,9 +1,9 @@
 import type { FarbkarteInfo, RisikoKarteSpielenAktion, Schlange, SpielAktion, Spielkarte } from '../../engine';
 import type { Sicht } from '../sicht';
 import { GLEICH, haltewert } from './bewertung';
-import { STICHPROBE, mitHand, mittel, schaetzwert, verteilt } from './schaetzung';
+import { STICHPROBE, besteAnlage, hoechster, mitHand, mittel, schaetzwert, verteilt } from './schaetzung';
 import type { Schaetzrechnung } from './schaetzung';
-import { ersetze, folgeSicht } from './vorauswahl';
+import { einfuegen, ersetze } from './vorauswahl';
 
 /*
 Risiko-Belohnungs-Karten für die solide KI (A8.2, D51 bis D55, Plan K4 Kriterium 2).
@@ -63,47 +63,53 @@ function rechner(sicht: Sicht, rechnung: Schaetzrechnung) {
   const stichprobe = <T>(karten: readonly T[], werte: (karte: T, nummer: number) => number) => verteilt(karten, STICHPROBE).map(werte);
   /** Weitere `anzahl` Karten vom Stapel nach `karte`, je Stichprobe an anderen Stellen. */
   const weitere = (karte: Spielkarte, nummer: number, anzahl: number) => verteilt(ungesehen.filter((eintrag) => eintrag !== karte), anzahl, (nummer + 1) / (STICHPROBE + 1));
-  /** Ein Gegner bekommt `anzahl` Karten auf die Hand; die KI wählt den, dem es am wenigsten nützt. */
-  const beguenstigt = (stand: Sicht, anzahl = 1) =>
+  /** Ein Gegner bekommt eine Karte auf die Hand; die KI wählt den, dem es am wenigsten nützt. */
+  const beguenstigt = (stand: Sicht) =>
     Math.max(
       ...stand.spieler.flatMap((_, index) =>
-        index === stand.ich ? [] : [wert({ ...stand, spieler: stand.spieler.map((spieler, platz) => (platz === index ? { ...spieler, handgroesse: spieler.handgroesse + anzahl } : spieler)) })],
+        index === stand.ich ? [] : [wert({ ...stand, spieler: stand.spieler.map((spieler, platz) => (platz === index ? { ...spieler, handgroesse: spieler.handgroesse + 1 } : spieler)) })],
       ),
     );
-  return { wert, ohne, eigen, farbkarten, anteil, stichprobe, weitere, beguenstigt };
+  let ohneWert: number | null = null;
+  let ohneBeguenstigt: number | null = null;
+  return {
+    wert,
+    ohne,
+    eigen,
+    stichprobe,
+    weitere,
+    farbkarten,
+    anteil,
+    /** Der Wert ohne die Risiko-Karte, wenn sonst nichts geschieht; einmal je Schritt gerechnet. */
+    ohneWert: () => (ohneWert ??= wert(ohne)),
+    /**
+     * Erwartungswert, wenn eine Farbkarte gelingt (`erfolg` über die Stichprobe) und eine
+     * Sonderkarte einem Gegner nützt, ausgehend von `misserfolg` (ohne Angabe die Sicht ohne die Risiko-Karte).
+     */
+    farbeOderGegner: (erfolg: number[], misserfolg?: Sicht) =>
+      erwartung([
+        [anteil(farbkarten.length), erfolg],
+        [1 - anteil(farbkarten.length), [misserfolg === undefined ? (ohneBeguenstigt ??= beguenstigt(ohne)) : beguenstigt(misserfolg)]],
+      ]),
+  };
 }
 
 type Rechner = ReturnType<typeof rechner>;
 
 /** A8.2 Aktion 1. */
 function zusaetzlicheKarten(r: Rechner): number {
-  const erfolg = r.stichprobe(r.farbkarten, (farbkarte, nummer) => r.wert(mitHand(r.ohne, [farbkarte, ...r.weitere(farbkarte, nummer, 2)])));
-  return erwartung([
-    [r.anteil(r.farbkarten.length), erfolg],
-    [1 - r.anteil(r.farbkarten.length), [r.beguenstigt(r.ohne)]],
-  ]);
+  return r.farbeOderGegner(r.stichprobe(r.farbkarten, (farbkarte, nummer) => r.wert(mitHand(r.ohne, [farbkarte, ...r.weitere(farbkarte, nummer, 2)]))));
 }
 
-/** Die beste Stelle für eine Farbkarte der Hand an einem Ende einer eigenen Schlange (A8.2 Aktion 2, D52). */
-function besteAnlage(r: Rechner, stand: Sicht): number {
-  const spielerId = r.eigen.id;
-  const werte = stand.hand.flatMap((karte) =>
-    karte.typ !== 'Farbkarte'
-      ? []
-      : r.eigen.schlangen.flatMap((schlange) =>
-          (['anfang', 'ende'] as const).map((seite) => r.wert(folgeSicht(stand, { typ: 'FarbkarteLegen', spielerId, karteId: karte.id, ziel: { art: 'schlange', schlangenId: schlange.id, seite } }))),
-        ),
-  );
-  return Math.max(...werte);
+/** Die beste Farbkarte der Hand an einem Ende einer eigenen Schlange (A8.2 Aktion 2, D52: nicht als neue Schlange). */
+function besteFarbkarteAnlegen(r: Rechner, stand: Sicht): number {
+  return Math.max(...stand.hand.map((karte) => besteAnlage(r.wert, stand, karte, false)?.wert ?? -Infinity));
 }
 
 /** A8.2 Aktion 2 mit der benannten Farbkarte. */
 function zusaetzlicheFarbkarte(r: Rechner, benannt: FarbkarteInfo): number {
-  const erfolg = r.stichprobe(r.farbkarten, (farbkarte) => besteAnlage(r, mitHand(r.ohne, [farbkarte])));
-  return erwartung([
-    [r.anteil(r.farbkarten.length), erfolg],
-    [1 - r.anteil(r.farbkarten.length), [r.beguenstigt(mitHand(r.ohne, [], new Set([benannt.id])))]],
-  ]);
+  const erfolg = r.stichprobe(r.farbkarten, (farbkarte) => besteFarbkarteAnlegen(r, mitHand(r.ohne, [farbkarte])));
+  return r.farbeOderGegner(erfolg, mitHand(r.ohne, [], new Set([benannt.id])));
 }
 
 /** Der Tausch der Schlangenkarte gegen die beste Farbkarte der Hand, oder kein Tausch (D53, D75); `dazu` kommt auf die Hand. */
@@ -111,42 +117,34 @@ function besterTausch(r: Rechner, schlangenId: string, karte: FarbkarteInfo, daz
   const getauscht = r.ohne.hand.flatMap((handkarte) =>
     handkarte.typ !== 'Farbkarte' ? [] : [r.wert(mitHand(mitSchlange(r.ohne, schlangenId, ersetze(karte.id, handkarte)), [...dazu, karte], new Set([handkarte.id])))],
   );
-  return Math.max(r.wert(mitHand(r.ohne, dazu)), ...getauscht);
+  return Math.max(dazu.length === 0 ? r.ohneWert() : r.wert(mitHand(r.ohne, dazu)), ...getauscht);
 }
 
 /** A8.2 Aktion 3 mit der benannten Schlangenkarte. */
 function kartenTauschen(r: Rechner, schlangenId: string, karte: FarbkarteInfo): number {
   const gleich = r.farbkarten.filter((farbkarte) => farbkarte.punkte === karte.punkte);
   const andere = r.farbkarten.filter((farbkarte) => farbkarte.punkte !== karte.punkte);
+  // D53: davor oder dahinter, je nachdem, was mehr bringt.
   const daneben = (farbkarte: FarbkarteInfo) =>
-    Math.max(
-      ...[0, 1].map((versatz) =>
-        r.wert(
-          mitSchlange(r.ohne, schlangenId, (schlange) => {
-            const stelle = schlange.karten.findIndex((eintrag) => eintrag.id === karte.id) + versatz;
-            return { ...schlange, karten: [...schlange.karten.slice(0, stelle), farbkarte, ...schlange.karten.slice(stelle)] };
-          }),
-        ),
-      ),
-    );
+    Math.max(...[0, 1].map((versatz) => r.wert(mitSchlange(r.ohne, schlangenId, (schlange) => einfuegen(farbkarte, schlange.karten.findIndex((eintrag) => eintrag.id === karte.id) + versatz)(schlange)))));
   return erwartung([
     [r.anteil(gleich.length), r.stichprobe(gleich, (farbkarte) => besterTausch(r, schlangenId, karte, [farbkarte]))],
     [r.anteil(andere.length), r.stichprobe(andere, daneben)],
-    [1 - r.anteil(r.farbkarten.length), [r.wert(r.ohne)]],
+    [1 - r.anteil(r.farbkarten.length), [r.ohneWert()]],
   ]);
 }
 
 /** A8.2 Aktion 4. */
 function ablageOderStapel(r: Rechner): number {
-  const ablage = r.eigen.ablagestapel.filter((karte) => karte.typ === 'Farbkarte' || karte.name !== 'Schlangenkorb des Glücks');
-  const beste = [...ablage].sort((a, b) => haltewert(b, r.ohne) - haltewert(a, r.ohne)).slice(0, ABLAGE_KANDIDATEN);
+  const ablage = r.eigen.ablagestapel.flatMap((karte) => (karte.typ === 'Sonderkarte' && karte.name === 'Schlangenkorb des Glücks' ? [] : [{ karte, wert: haltewert(karte, r.ohne) }]));
+  const beste = ablage
+    .sort((a, b) => b.wert - a.wert)
+    .slice(0, ABLAGE_KANDIDATEN)
+    .map(({ karte }) => karte);
   const erfolg = r.stichprobe(r.farbkarten, (farbkarte, nummer) =>
     Math.max(...[...beste.map((karte) => [karte]), r.weitere(farbkarte, nummer, 1)].map((dazu) => r.wert(mitHand(r.ohne, [farbkarte, ...dazu])))),
   );
-  return erwartung([
-    [r.anteil(r.farbkarten.length), erfolg],
-    [1 - r.anteil(r.farbkarten.length), [r.beguenstigt(r.ohne)]],
-  ]);
+  return r.farbeOderGegner(erfolg);
 }
 
 /** Die Farbkarte einer eigenen Schlange mit ihrer Schlange. */
@@ -188,6 +186,6 @@ export function waehleRisiko(sicht: Sicht, aktionen: readonly SpielAktion[], rec
     ...angeboten.flatMap((aktion) => (aktion.risikoAktion === 4 ? [{ aktion, wert: ablageOderStapel(r) }] : [])),
   ];
   const jetzt = r.wert(sicht);
-  const beste = werte.reduce<{ aktion: RisikoKarteSpielenAktion; wert: number } | null>((bisher, eintrag) => (bisher === null || eintrag.wert > bisher.wert ? eintrag : bisher), null);
-  return beste !== null && beste.wert > jetzt + GLEICH ? beste.aktion : null;
+  const beste = hoechster(werte, (eintrag) => eintrag.wert);
+  return beste !== undefined && beste.wert > jetzt + GLEICH ? beste.aktion : null;
 }

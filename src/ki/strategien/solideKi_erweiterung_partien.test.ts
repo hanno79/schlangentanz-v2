@@ -7,6 +7,7 @@ import { aufgabenwert, entscheidungenVon, gruppenzahl, mitZweiterKarte, nachDurc
 import type { Entscheidung } from '../__tests__/stellungen'
 import { bewerte } from './bewertung'
 import { erstelleSolideKi } from './solideKi'
+import { ziehtVerdeckt } from './ziehen'
 import { erstelleZufallsKi } from './zufallsKi'
 
 /*
@@ -40,9 +41,9 @@ function zuege(entscheidungen: readonly Entscheidung[]): Entscheidung[][] {
 
 const ZUEGE = ENTSCHEIDUNGEN.flatMap(zuege)
 
-/** Ob eine verdeckte Karte über die Aktion entscheidet: Risiko-Prüfung (A8.2), Korb „ziehen“ (D43), „Zwei abwerfen, drei ziehen“ (D49). */
+/** Ob eine verdeckte Karte über die Aktion entscheidet: Risiko-Prüfung (A8.2) oder verdecktes Ziehen (D43, D49), wie die Zugsuche es sieht. */
 function verdeckt(aktion: SpielAktion): boolean {
-  return aktion.typ === 'RisikoKarteSpielen' || aktion.typ === 'ZweiAbwerfenDreiZiehen' || (aktion.typ === 'SchlangenkorbSpielen' && aktion.bonus.art === 'ziehen')
+  return aktion.typ === 'RisikoKarteSpielen' || ziehtVerdeckt(aktion)
 }
 
 /** Die Bewertung der Zugsuche ab `start`, auf dem echten Zustand. */

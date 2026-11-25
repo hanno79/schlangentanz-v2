@@ -1,10 +1,8 @@
-import { MAX_SCHLANGEN_PRO_SPIELER } from '../../engine';
-import type { Farbkartenziel, SpielAktion, Spielkarte } from '../../engine';
+import type { SpielAktion, Spielkarte } from '../../engine';
 import type { Sicht } from '../sicht';
 import { haltewert } from './bewertung';
-import { kartensaetze, mitHand, mittel, schaetzwert } from './schaetzung';
+import { besteAnlage, hoechster, kartensaetze, mitHand, mittel, schaetzwert } from './schaetzung';
 import type { Schaetzrechnung } from './schaetzung';
-import { folgeSicht } from './vorauswahl';
 
 /*
 Verdeckt ziehen (Plan K4, Kriterium 2): der Schlangenkorb mit „ziehen“ (A7.10, D43)
@@ -33,31 +31,16 @@ export function ziehtVerdeckt(aktion: SpielAktion): boolean {
   return aktion.typ === 'ZweiAbwerfenDreiZiehen' || (aktion.typ === 'SchlangenkorbSpielen' && aktion.bonus.art === 'ziehen');
 }
 
-/** Die geschätzte Sicht, nachdem die Farbkarte `karte` der Hand an ihrer besten Stelle liegt: an einem Ende einer eigenen Schlange oder als neue Schlange. */
-function besteAnlage(wert: (stand: Sicht) => number, stand: Sicht, karte: Spielkarte): { stand: Sicht; wert: number } | null {
-  if (karte.typ !== 'Farbkarte') return null;
-  const eigen = stand.spieler[stand.ich];
-  const ziele: Farbkartenziel[] = [
-    ...eigen.schlangen.flatMap((schlange) => (['anfang', 'ende'] as const).map((seite): Farbkartenziel => ({ art: 'schlange', schlangenId: schlange.id, seite }))),
-    ...(eigen.schlangen.length < MAX_SCHLANGEN_PRO_SPIELER ? [{ art: 'neueSchlange' } as const] : []),
-  ];
-  return ziele
-    .map((ziel) => folgeSicht(stand, { typ: 'FarbkarteLegen', spielerId: eigen.id, karteId: karte.id, ziel }))
-    .reduce<{ stand: Sicht; wert: number } | null>((beste, nachher) => {
-      const geschaetzt = wert(nachher);
-      return beste === null || geschaetzt > beste.wert ? { stand: nachher, wert: geschaetzt } : beste;
-    }, null);
-}
-
-/** Legt nacheinander bis zu `anzahl` der `karten` dorthin, wo es am meisten bringt, solange es etwas bringt; der Wert der geschätzten Sicht danach. */
-function legeBeste(wert: (stand: Sicht) => number, stand: Sicht, karten: readonly Spielkarte[], anzahl: number): number {
-  const jetzt = wert(stand);
+/** Legt nacheinander bis zu `anzahl` der `karten` dorthin, wo es am meisten bringt, solange es etwas bringt; der Wert `jetzt` der geschätzten Sicht danach. */
+function legeBeste(wert: (stand: Sicht) => number, stand: Sicht, jetzt: number, karten: readonly Spielkarte[], anzahl: number): number {
   if (anzahl === 0) return jetzt;
-  const beste = karten
-    .map((karte) => ({ karte, anlage: besteAnlage(wert, stand, karte) }))
-    .reduce<{ karte: Spielkarte; stand: Sicht; wert: number } | null>((bisher, { karte, anlage }) => (anlage !== null && (bisher === null || anlage.wert > bisher.wert) ? { karte, ...anlage } : bisher), null);
-  if (beste === null || beste.wert <= jetzt) return jetzt;
-  return legeBeste(wert, beste.stand, karten.filter((karte) => karte !== beste.karte), anzahl - 1);
+  const anlagen = karten.flatMap((karte) => {
+    const anlage = besteAnlage(wert, stand, karte, true);
+    return anlage === undefined ? [] : [{ karte, ...anlage }];
+  });
+  const beste = hoechster(anlagen, (anlage) => anlage.wert);
+  if (beste === undefined || beste.wert <= jetzt) return jetzt;
+  return legeBeste(wert, beste.stand, beste.wert, karten.filter((karte) => karte !== beste.karte), anzahl - 1);
 }
 
 /** Die Aktion, die verdeckt zieht, mit ihrem geschätzten Wert; `null`, wenn keine angeboten ist. */
@@ -70,13 +53,19 @@ export function schaetzeZiehen(sicht: Sicht, aktionen: readonly SpielAktion[], r
   const geschaetzt: Array<{ aktion: SpielAktion; wert: number }> = [];
   if (korb?.typ === 'SchlangenkorbSpielen') {
     const ohneKorb = mitHand(sicht, [], new Set([korb.karteId]));
-    const werte = saetze.map((karten) => legeBeste(wert, mitHand(ohneKorb, karten), karten, KORB_SPIELEN));
+    const werte = saetze.map((karten) => {
+      const stand = mitHand(ohneKorb, karten);
+      return legeBeste(wert, stand, wert(stand), karten, KORB_SPIELEN);
+    });
     geschaetzt.push({ aktion: korb, wert: mittel(werte) });
   }
-  const verlust = (aktion: SpielAktion) => (aktion.typ !== 'ZweiAbwerfenDreiZiehen' ? Infinity : sicht.hand.filter((karte) => aktion.karteIds.includes(karte.id)).reduce((summe, karte) => summe + haltewert(karte, sicht), 0));
-  const abwerfen = aktionen.filter((aktion) => aktion.typ === 'ZweiAbwerfenDreiZiehen').reduce<SpielAktion | undefined>((beste, aktion) => (beste === undefined || verlust(aktion) < verlust(beste) ? aktion : beste), undefined);
-  if (abwerfen?.typ === 'ZweiAbwerfenDreiZiehen') {
+  const haltewerte = new Map(sicht.hand.map((karte) => [karte.id, haltewert(karte, sicht)]));
+  const abwerfen = hoechster(
+    aktionen.flatMap((aktion) => (aktion.typ === 'ZweiAbwerfenDreiZiehen' ? [aktion] : [])),
+    (aktion) => -aktion.karteIds.reduce((summe, id) => summe + (haltewerte.get(id) ?? 0), 0),
+  );
+  if (abwerfen !== undefined) {
     geschaetzt.push({ aktion: abwerfen, wert: mittel(saetze.map((karten) => wert(mitHand(sicht, karten, new Set(abwerfen.karteIds))))) });
   }
-  return geschaetzt.reduce<{ aktion: SpielAktion; wert: number } | null>((beste, eintrag) => (beste === null || eintrag.wert > beste.wert ? eintrag : beste), null);
+  return hoechster(geschaetzt, (eintrag) => eintrag.wert) ?? null;
 }

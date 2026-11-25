@@ -193,7 +193,7 @@ function offeneKarten(sicht: Sicht): Set<string> {
 }
 
 /** Die Ids aller Aufgabenkarten, die der Spieler sieht: offene, erfüllte und die eigene geheime (A9). */
-function offeneAufgabenIds(sicht: Sicht): Set<string> {
+export function offeneAufgabenIds(sicht: Sicht): Set<string> {
   const geheim = sicht.geheimeAufgabe === null ? [] : [sicht.geheimeAufgabe];
   return new Set([...sicht.offeneAufgaben, ...sicht.spieler.flatMap((spieler) => spieler.erfuellteAufgaben), ...geheim].map((aufgabe) => aufgabe.id));
 }
@@ -260,9 +260,7 @@ function stellung(zustand: Spielzustand, ich: number): Stellung {
   let sicht: Sicht | null = null;
   let aktionen: SpielAktion[] | null = null;
   let ungesehen: Spielkarte[] | null = null;
-  const selbst = zustand.spieler[ich];
-  // Nur Aufgaben, die noch frei sind: die offenen und die eigene geheime, solange sie nicht erfüllt ist (A9, D35).
-  const freie = !zustand.erweiterung ? [] : [...zustand.offeneAufgaben, ...(selbst.geheimeAufgabeErfuellt || selbst.geheimeAufgabe === null ? [] : [selbst.geheimeAufgabe])];
+  let freie: AufgabenkarteInfo[] | null = null;
   return {
     get sicht() {
       sicht ??= sichtAus(zustand, ich);
@@ -278,11 +276,13 @@ function stellung(zustand: Spielzustand, ich: number): Stellung {
     },
     ungesehen() {
       const genannt = offeneHandkarteDer(zustand.entscheidung)?.karteId;
-      const verdeckt = [...zustand.spieler.flatMap((spieler, index) => (index === ich ? [] : spieler.hand)), ...zustand.nachziehstapel];
-      ungesehen ??= verdeckt.filter((karte) => karte.id !== genannt).sort((a, b) => (a.id < b.id ? -1 : 1));
+      ungesehen ??= [...zustand.spieler.flatMap((spieler, index) => (index === ich ? [] : spieler.hand)), ...zustand.nachziehstapel].filter((karte) => karte.id !== genannt).sort((a, b) => (a.id < b.id ? -1 : 1));
       return ungesehen;
     },
     erfuellbar(eigen) {
+      // Nur Aufgaben, die noch frei sind: die offenen und die eigene geheime, solange sie nicht erfüllt ist (A9, D35).
+      const { geheimeAufgabe, geheimeAufgabeErfuellt } = zustand.spieler[ich];
+      freie ??= !zustand.erweiterung ? [] : [...zustand.offeneAufgaben, ...(geheimeAufgabeErfuellt || geheimeAufgabe === null ? [] : [geheimeAufgabe])];
       if (freie.length === 0) return [];
       // Die Bedingungen lesen nur den Spieler selbst (A9); geprüft wird auf einer Abschrift mit seinen geänderten Schlangen.
       const probe = { ...zustand, spieler: zustand.spieler.map((spieler, index) => (index === ich ? { ...spieler, schlangen: eigen.schlangen, ausgespielteSonderkarten: eigen.ausgespielteSonderkarten } : spieler)) };
