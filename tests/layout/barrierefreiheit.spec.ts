@@ -127,6 +127,18 @@ test.describe('O11 K3/K4: der Tisch in festen Ständen', () => {
     await erwarteGrundlagen(page, 'Dialog Zu viele Handkarten')
   })
 
+  test('O10: im Volltisch mit drei Gegnern und Erweiterung lässt sich die Seite nicht über das Fenster hinaus scrollen', async ({ page }) => {
+    await oeffneTisch(page, volltisch(), true)
+    // Gemessen am Dokument, nicht am Body: Ein unsichtbarer Vorlesetext, der aus der Tischfläche ragt, vergrössert nur das Dokument.
+    const { dokument, fenster } = await page.evaluate(() => ({ dokument: document.documentElement.scrollHeight, fenster: window.innerHeight }))
+    expect(dokument, 'das Dokument ist höher als das Fenster').toBeLessThanOrEqual(fenster)
+    const gescrollt = await page.evaluate(() => {
+      window.scrollTo(0, 10_000)
+      return window.scrollY
+    })
+    expect(gescrollt, 'die Seite scrollt').toBe(0)
+  })
+
   test('O11 K1: im Volltisch zeigt jeder Tab-Halt den Fokus, auch in scrollenden Bereichen', async ({ page }) => {
     await oeffneTisch(page, volltisch(), true)
     await tabBis(page, 'Zur Lobby')

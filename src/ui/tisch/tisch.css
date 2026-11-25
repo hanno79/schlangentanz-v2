@@ -188,6 +188,10 @@ Tischfläche.
   padding: var(--rand);
   overflow: hidden auto;
   overscroll-behavior: contain;
+  /* Bezugsrahmen für unsichtbare Vorlesetexte (`.nur-vorlesen`) in der Fläche: Sonst hängen sie am Rahmen
+     ausserhalb des Scrollbereichs, und ein weit unten liegender Text, etwa die Punkte des dritten Gegners,
+     macht in Handy quer die ganze Seite höher als das Fenster. */
+  position: relative;
 }
 
 @media (min-width: 700px) and (min-height: 501px) {
