@@ -50,14 +50,12 @@ export interface Messlauf {
   erweiterung: boolean
   /** Der Mindestanteil an Siegen, den der Plan K5 verlangt; ein geteilter Sieg zählt (D22). */
   planAnteil: number
-  /**
-   * So viele Siege muss die solide KI mindestens holen: nach der ersten Messung vom
-   * 25.11.2026 auf das gemessene Ergebnis festgeschrieben, nie unter `planAnteil`.
-   */
-  mindestSiege: number
+  /** Die Siege der soliden KI in der ersten Messung vom 25.11.2026; daraus folgt `mindestSiege`. */
+  gemessen: number
 }
 
-interface Messung {
+/** Was die Messung festhält; mehr braucht die Auswertung nicht. */
+export interface Messung {
   siege: number
   /** Die Partien, die nicht regulär geendet haben (Kriterium 4), mit Saat und Grund. */
   nichtBeendet: string[]
@@ -104,35 +102,52 @@ type Lauf = 'zufall' | 'erste' | 'vier'
  * Die Messläufe des Plans K5. Kriterium 4 (alle Partien enden, keine verletzt eine
  * Invariante) gilt in jedem Lauf. Die erste Messung (25.11.2026) ergab ohne
  * Erweiterung 500, 500 und 300 Siege, also jede Partie.
+ *
+ * „Erste erlaubte Aktion“ ist ein sehr schwacher Gegner: In einer Probe von sechs
+ * Partien ohne Erweiterung blieb sie bei 0 Punkten, mit Erweiterung bei 0 bis 46.
+ * Die Engine zählt zuerst die Karten mit Wirkung in der Reihenfolge der Hand auf und
+ * „Zug beenden“ zuletzt. Kriterium 2 bleibt, wie der Plan es verlangt (Entscheid des
+ * Orchestrators vom 25.11.2026), sagt aber wenig über die Stärke der KI.
  */
 export const MESSLAEUFE: Readonly<Record<Lauf, Messlauf>> = {
-  zufall: { kriterium: 1, gegner: 'zufallsKi', spielerzahl: 2, partien: 500, ersteSaat: 1_735_562_631, kiSaat: 2_047_972_006, erweiterung: false, planAnteil: 0.8, mindestSiege: 500 },
-  erste: { kriterium: 2, gegner: 'ersteAktion', spielerzahl: 2, partien: 500, ersteSaat: 1_734_506_067, kiSaat: 1_842_618_865, erweiterung: false, planAnteil: 0.8, mindestSiege: 500 },
-  vier: { kriterium: 3, gegner: 'zufallsKi', spielerzahl: 4, partien: 300, ersteSaat: 1_328_338_692, kiSaat: 1_885_811_723, erweiterung: false, planAnteil: 0.5, mindestSiege: 300 },
+  zufall: { kriterium: 1, gegner: 'zufallsKi', spielerzahl: 2, partien: 500, ersteSaat: 1_735_562_631, kiSaat: 2_047_972_006, erweiterung: false, planAnteil: 0.8, gemessen: 500 },
+  erste: { kriterium: 2, gegner: 'ersteAktion', spielerzahl: 2, partien: 500, ersteSaat: 1_734_506_067, kiSaat: 1_842_618_865, erweiterung: false, planAnteil: 0.8, gemessen: 500 },
+  vier: { kriterium: 3, gegner: 'zufallsKi', spielerzahl: 4, partien: 300, ersteSaat: 1_328_338_692, kiSaat: 1_885_811_723, erweiterung: false, planAnteil: 0.5, gemessen: 300 },
 }
 
 /**
  * Kriterium 5 (M3): dieselben Läufe mit Erweiterung, eigene Saaten. Die erste Messung
  * (25.11.2026, Stand vor K4) ergab 500, 500 und 292 Siege; alle über den Schwellen
- * des Plans, deshalb hier schon festgeschrieben. Zu zweit gilt wie ohne Erweiterung
- * jede Partie.
+ * des Plans, deshalb hier schon festgeschrieben.
  */
 export const MESSLAEUFE_ERWEITERUNG: Readonly<Record<Lauf, Messlauf>> = {
   zufall: { ...MESSLAEUFE.zufall, kriterium: 5, ersteSaat: 1_742_726_465, kiSaat: 1_762_180_639, erweiterung: true },
   erste: { ...MESSLAEUFE.erste, kriterium: 5, ersteSaat: 1_943_143_123, kiSaat: 1_139_605_235, erweiterung: true },
-  vier: { ...MESSLAEUFE.vier, kriterium: 5, ersteSaat: 1_164_999_137, kiSaat: 2_048_025_225, erweiterung: true, mindestSiege: 292 },
+  vier: { ...MESSLAEUFE.vier, kriterium: 5, ersteSaat: 1_164_999_137, kiSaat: 2_048_025_225, erweiterung: true, gemessen: 292 },
+}
+
+/**
+ * So viele Siege muss die solide KI mindestens holen (Entscheid des Orchestrators vom
+ * 25.11.2026): das Grössere aus der Schwelle des Plans und 99 % der ersten Messung,
+ * abgerundet. Genau die gemessenen Siege wären zu brüchig; schon ein anderer
+ * KI-Zufall kostet bei 100 % ein oder zwei Partien (siehe oben, Abschnitte). Die
+ * Werte sind 495, 495, 297 ohne und 495, 495, 289 mit Erweiterung, weit über 80 %
+ * bzw. 50 % des Plans. Künftig wird nie unter sie gesenkt.
+ */
+export function mindestSiege(lauf: Messlauf): number {
+  return Math.max(Math.ceil(lauf.planAnteil * lauf.partien), Math.floor((lauf.gemessen * 99) / 100))
 }
 
 /** Der Testname eines Messlaufs, aus seinen eigenen Angaben. */
 export function titel(lauf: Messlauf): string {
   const gegner = lauf.spielerzahl === 2 ? GEGNER_NAME[lauf.gegner] : `${lauf.spielerzahl - 1} Gegner der Art ${GEGNER_NAME[lauf.gegner]}`
-  return `K5 Kriterium ${lauf.kriterium} und 4: ${lauf.erweiterung ? 'mit Erweiterung ' : ''}${lauf.partien} Partien gegen ${gegner}, mindestens ${lauf.mindestSiege} Siege; alle enden ohne Invariantenverletzung`
+  return `K5 Kriterium ${lauf.kriterium} und 4: ${lauf.erweiterung ? 'mit Erweiterung ' : ''}${lauf.partien} Partien gegen ${gegner}, mindestens ${mindestSiege(lauf)} Siege; alle enden ohne Invariantenverletzung`
 }
 
 /** Für Meldungen: was gemessen wurde und mit welchem Ergebnis. */
 function beschreibe(lauf: Messlauf, siege: number): string {
   const anteil = (100 * siege) / lauf.partien
-  return `K5 Kriterium ${lauf.kriterium}${lauf.erweiterung ? ' mit Erweiterung' : ''}: ${lauf.partien} Partien zu ${lauf.spielerzahl} gegen ${GEGNER_NAME[lauf.gegner]}, Saaten ab ${lauf.ersteSaat}, KI-Saat ${lauf.kiSaat}: ${siege} Siege (${anteil.toFixed(1)} %), festgeschrieben mindestens ${lauf.mindestSiege}, Plan mindestens ${(100 * lauf.planAnteil).toFixed(0)} %`
+  return `K5 Kriterium ${lauf.kriterium}${lauf.erweiterung ? ' mit Erweiterung' : ''}: ${lauf.partien} Partien zu ${lauf.spielerzahl} gegen ${GEGNER_NAME[lauf.gegner]}, Saaten ab ${lauf.ersteSaat}, KI-Saat ${lauf.kiSaat}: ${siege} Siege (${anteil.toFixed(1)} %), festgeschrieben mindestens ${mindestSiege(lauf)}, Plan mindestens ${(100 * lauf.planAnteil).toFixed(0)} %`
 }
 
 /**
@@ -141,11 +156,14 @@ function beschreibe(lauf: Messlauf, siege: number): string {
  * mit dem Reporter `verbose` auch, wenn der Test besteht.
  */
 export async function pruefeMesslauf(lauf: Messlauf, annotate: (meldung: string) => Promise<unknown>): Promise<void> {
-  expect(lauf.mindestSiege, `K5: die festgeschriebene Schwelle ${lauf.mindestSiege} liegt nie unter der des Plans`).toBeGreaterThanOrEqual(Math.ceil(lauf.planAnteil * lauf.partien))
-  const { siege, nichtBeendet } = await messe(lauf)
-  const zahlen = beschreibe(lauf, siege)
-  await annotate(zahlen)
+  const messung = await messe(lauf)
+  await annotate(beschreibe(lauf, messung.siege))
+  pruefeErgebnis(lauf, messung)
+}
 
+/** Kriterium 4 und die festgeschriebene Schwelle; jede Meldung nennt die Zahlen. */
+export function pruefeErgebnis(lauf: Messlauf, { siege, nichtBeendet }: Messung): void {
+  const zahlen = beschreibe(lauf, siege)
   expect(nichtBeendet, `K5 Kriterium 4: erwartet, dass jede Partie endet und keine eine Invariante verletzt; ${zahlen}`).toEqual([])
-  expect(siege, `K5 Kriterium ${lauf.kriterium}: zu wenige Siege der soliden KI; ${zahlen}`).toBeGreaterThanOrEqual(lauf.mindestSiege)
+  expect(siege, `K5 Kriterium ${lauf.kriterium}: zu wenige Siege der soliden KI; ${zahlen}`).toBeGreaterThanOrEqual(mindestSiege(lauf))
 }
