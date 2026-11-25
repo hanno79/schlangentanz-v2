@@ -1,6 +1,7 @@
 import { expect, test, type Page } from '@playwright/test'
 import { neuePartie, volltisch } from '../../src/ui/tisch/__tests__/szenarien'
-import { befundListe, brichtImWort, findeAbgeschnittenes, findeAusserhalbDesBildes, kasten, waagrechterUeberstand } from './messung'
+import { brichtImWort } from './barrierefreiheit_messung'
+import { befundListe, findeAbgeschnittenes, findeAusserhalbDesBildes, kasten, waagrechterUeberstand } from './messung'
 import { halteUhrAn, legeSpielstand, oeffne } from './oeffnen'
 
 /*

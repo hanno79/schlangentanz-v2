@@ -189,3 +189,24 @@ export async function bewegungen(page: Page): Promise<Befund[]> {
     return befunde
   })
 }
+
+/**
+ * Ob der Text des Elements mitten in einem Wort umbricht (O11, TF-APP-018):
+ * Je Wort ein Bereich; liegen seine Zeilenkästen auf mehr als einer Höhe, ist
+ * das Wort getrennt. Gemessen wie die Kartennamen in `regeln.spec.ts`.
+ */
+export async function brichtImWort(locator: Locator): Promise<boolean> {
+  return locator.evaluate((element) => {
+    const laeufer = document.createTreeWalker(element, NodeFilter.SHOW_TEXT)
+    while (laeufer.nextNode()) {
+      const text = laeufer.currentNode as Text
+      for (const wort of text.data.matchAll(/\S+/g)) {
+        const bereich = document.createRange()
+        bereich.setStart(text, wort.index)
+        bereich.setEnd(text, wort.index + wort[0].length)
+        if (new Set(Array.from(bereich.getClientRects(), (kasten) => Math.round(kasten.top))).size > 1) return true
+      }
+    }
+    return false
+  })
+}
