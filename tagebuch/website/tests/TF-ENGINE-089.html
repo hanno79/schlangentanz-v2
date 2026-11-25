@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-ENGINE-089 Drei Verfälschungen, die X7 absichern soll, machen je mindestens einen Test rot. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 25.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-ENGINE-089 Drei Verfälschungen, die X7 absichern soll, machen je mindestens einen Test rot.</h1><p class="etiketten"><span class="etikett">Bereich Spiel-Engine: Regeln, Zugablauf, Wertung, Speicherformat</span><span class="etikett">Regression nein</span><span class="etikett">Priorität hoch</span><span class="etikett">Art automatisch</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Die Abnahme der Erweiterung stützt sich auf den Golden Master, seinen Abgleich der geheimen Aufgaben mit der Endwertung und den Meta-Test der Satz-für-Satz-Tabelle. Je eine absichtliche Verfälschung zeigt, dass diese Prüfungen den Fehler bemerken. Nach jeder Verfälschung wird die Datei zurückgesetzt.</p><h2>Bestanden, wenn</h2><p>Jede der drei Verfälschungen endet mit Exit 1 und mindestens einem roten Test, der zur Verfälschung passt: (1) Rückstand für die Comeback-Karte 6 statt 5 macht die drei Golden-Master-Partien mit Erweiterung und 15 Tests in <code>A8.1_comeback.test.ts</code> rot; (2) eine geheime Aufgabe, die immer zählt, macht die drei Protokolle und die Prüfung „so viele geheime Aufgaben erfüllt, wie die Endwertung zählt“ rot; (3) ein verfälschter Testname und ein gelöschter Satz in der Tabelle machen zwei Tests in <code>regeln_abdeckung.test.ts</code> rot. Danach zeigt <code>git status</code> keine Änderung.</p><h2>Fehlgeschlagen, wenn</h2><p>Eine Verfälschung lässt alle Tests grün, oder nach dem Zurücksetzen bleibt eine Änderung im Arbeitsbaum.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>25.11.2026</dd><dt>Änderung</dt><dd>task/X7-abnahme-erweiterung (PR #120)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Repo auf dem geprüften Stand, <code>npm ci</code> gelaufen</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p><code>src/engine/erweiterung/comeback.ts</code> (<code>RUECKSTAND</code>), <code>src/engine/scoring.ts</code> (<code>aufgabenVon</code>), <code>docs/abnahme/X7_satz_fuer_satz.md</code>.</p></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><ol><li><code>RUECKSTAND = 5</code> durch <code>6</code> ersetzen, <code>npx vitest run src/engine/__tests__/golden_master.test.ts src/engine/__tests__/regeln/A8.1_comeback.test.ts</code>, erwartet Exit 1; <code>git checkout -- src/engine/erweiterung/comeback.ts</code>.</li><li>In <code>aufgabenVon</code> die Bedingung <code>&amp;&amp; spieler.geheimeAufgabeErfuellt</code> streichen, <code>npx vitest run src/engine/__tests__/golden_master.test.ts</code>, erwartet Exit 1 mit „D35: so viele geheime Aufgaben erfüllt, wie die Endwertung zählt“; <code>git checkout -- src/engine/scoring.ts</code>.</li><li>In der Tabelle „geht nicht“ zu „geht doch“ ändern und die Zeile „Es gelten auch Reihen.“ löschen, <code>npx vitest run src/engine/__tests__/regeln_abdeckung.test.ts</code>, erwartet Exit 1; <code>git checkout -- docs/abnahme/X7_satz_fuer_satz.md</code>.</li></ol></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Verfälscht sind drei Stellen, nicht jede Regel der Erweiterung; die übrigen sichern die Regeltests und Prüfprotokolle von X1 bis X6.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-25">25.11.2026 09:23</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer X7) &middot; agent &middot; pruefung-X7 @ <span class="commit" title="d5c31df6ca1e48d801dd0bff4b8d0fa63b355332">d5c31df</span></p><p>RUECKSTAND 6: Exit 1, 18 rot (3 Golden-Master-Partien mit Erweiterung, 15 in A8.1_comeback). Geheime Aufgabe immer gewertet: Exit 1, 6 rot (3 Protokolle, 3x &#x27;D35: so viele geheime Aufgaben erfüllt, wie die Endwertung zählt: expected 1 to be 2&#x27;). Tabelle verfälscht: Exit 1, 2 rot (&#x27;Sätze aus A9 ohne Zeile: Es gelten auch Reihen.&#x27; und der verfälschte Testname). Jeweils zurückgesetzt, Arbeitsbaum danach sauber.</p><ul class="belege"><li><a href="belege/2026-11-25-0923-TF-ENGINE-089-1.txt">2026-11-25-0923-TF-ENGINE-089-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

@@ -160,6 +160,34 @@ describe('A8.2/D55: Prüfung über den Nachziehstapel und das Spielende (X5, Kri
     const gegner = waehle(spieleRisiko(start, 2, idVon(start, 0, 'Blau')).zustand, 'spieler-3').zustand
     expect(ermittleAktionen(gegner).map((aktion) => (aktion.typ === 'Entscheiden' ? aktion.wahl : aktion.typ))).toEqual(['geplante'])
   })
+
+  it.each([
+    ['einem leeren Ablagestapel', []],
+    ['nur einem ungenutzt abgeworfenen Schlangenkorb auf dem Ablagestapel, D69', ['Schlangenkorb des Glücks']],
+  ] as const)('D79: Aktion 4, Misserfolg: mit %s und leerem Stapel nach dem Aufdecken bekommt der gewählte Gegner nichts; die Partie läuft regelgerecht weiter', (_fall, ablageDesGegners) => {
+    const start = risikoTisch({
+      hand: ['Blau', 'Rot'],
+      oben: ['Farbendieb'],
+      weiter: (bau) => bau.ablage(2, [...ablageDesGegners]).stapelBehalten(1),
+    })
+    // stapelBehalten legt den Rest des Stapels reihum auf die Ablagestapel; beim Gegner bleibt nur, was der Fall verlangt.
+    const gegnerablage = start.spieler[2].ablagestapel
+    start.spieler[1].ablagestapel.push(...gegnerablage.splice(ablageDesGegners.length))
+    const farbendieb = start.nachziehstapel[0].id
+    const gewaehlt = waehle(spieleRisiko(start, 4).zustand, 'spieler-3')
+    const { zustand } = gewaehlt
+    expect(zustand.entscheidung, 'D79: keine Entscheidung für den Gegner, er hat keine Wahl').toBeNull()
+    expect(ereignisseVom(gewaehlt.ereignisse, 'EntscheidungVerlangt'), 'D79: niemand wird mehr gefragt').toEqual([])
+    expect(hand(zustand, 2), 'D79: die Hand des Gegners bleibt, wie sie war').toEqual(hand(start, 2))
+    expect(zustand.spieler[2].ablagestapel.map((karte) => karte.id), 'D69: ein Korb bleibt auf dem Ablagestapel liegen').toEqual(start.spieler[2].ablagestapel.map((karte) => karte.id))
+    expect(zustand.spieler[0].ablagestapel.map((karte) => karte.id), 'D51: die aufgedeckte Sonderkarte liegt auf dem eigenen Ablagestapel').toContain(farbendieb)
+    expect(zustand.ausDemSpiel.map((karte) => karte.id), 'D54: die Risiko-Karte ist aus dem Spiel').toContain('risiko-belohnung-01')
+    // D55: Der Spieler am Zug hat die Schlussrunde ausgelöst und spielt weiter; er darf noch eine Farbkarte legen.
+    expect(zustand.partiephase).toBe('Schlussrunde')
+    expect(zustand.schlussrundeAusloeser).toBe(0)
+    expect(ermittleEntscheider(zustand)).toBe(0)
+    expect(ermittleAktionen(zustand).map((aktion) => aktion.typ)).toContain('FarbkarteLegen')
+  })
 })
 
 describe('A8.2: wann und von wem eine Risiko-Karte gespielt wird', () => {
