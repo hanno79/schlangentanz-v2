@@ -57,6 +57,8 @@ export { anwendeAktion } from './aktionen/anwenden';
 export { ablagestapelStelle, risikoaktionText } from './erweiterung/risiko';
 /** D52: die Handkarte, die eine offene Entscheidung offen nennt, für die Sicht der KI (X5). */
 export { offeneHandkarteDer } from './entscheidungsregister';
+/** A9: ob ein Spieler die Bedingung einer Aufgabe jetzt erfüllt, für die Zugsuche der KI (Plan K4). */
+export { erfuelltAufgabe } from './aufgabenKarten';
 /** Reproduzierbarer Zufall aus einer Saat, für Partie und KI (U4: Zufall kommt als Parameter). */
 export { erzeugeZufall } from './testing/zufall';
 

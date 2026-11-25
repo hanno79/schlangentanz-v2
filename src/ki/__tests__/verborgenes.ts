@@ -15,16 +15,27 @@ function benannt(zustand: Spielzustand): Set<string> {
 }
 
 /**
+ * Was offen auf eine Hand kam und deshalb nicht neu gemischt wird: die benannte Karte
+ * (D52) und eine in diesem Zug gelegte Karte, die Risiko-Aktion 3 oder der Korb offen
+ * zurück auf die Hand getauscht hat (D44, D51). Wohin sie ging, hat jeder gesehen; die
+ * Sicht nennt sie trotzdem „verdeckte Karte“ (`zugInSicht`), solange sie auf der Hand
+ * liegt. Mischte man sie weg, änderte sich die Sicht, ohne dass etwas verraten wäre.
+ */
+function ortBekannt(zustand: Spielzustand): Set<string> {
+  return new Set([...benannt(zustand), ...zustand.zug.verwendet.flatMap((eintrag) => (eintrag.karteId === null ? [] : [eintrag.karteId]))])
+}
+
+/**
  * Mischt alles neu, was Spieler `fuer` nicht sehen darf (B2): fremde Handkarten
  * und Nachziehstapel zusammen, die Handgrössen bleiben; fremde geheime Aufgaben
  * und Aufgabenstapel zusammen; und ob eine fremde geheime Aufgabe erfüllt ist.
- * Jede Karte bleibt im Spiel, nur ihr verdeckter Ort wechselt. Eine offen
- * benannte Handkarte (D52) bleibt auf ihrer Hand.
+ * Jede Karte bleibt im Spiel, nur ihr verdeckter Ort wechselt. Eine Handkarte,
+ * deren Ort jeder kennt (`ortBekannt`), bleibt auf ihrer Hand.
  */
 export function mischeVerborgenes(zustand: Spielzustand, fuer: number, zufall: () => number): Spielzustand {
   const neu = structuredClone(zustand)
   const fremde = neu.spieler.filter((_, index) => index !== fuer)
-  const offen = benannt(neu)
+  const offen = ortBekannt(neu)
 
   const verdeckt = (spieler: Spieler) => spieler.hand.filter((karte) => !offen.has(karte.id))
   const karten = mischeDeck([...fremde.flatMap(verdeckt), ...neu.nachziehstapel], zufall)

@@ -1,5 +1,5 @@
 import type { Schlange, SpielAktion, Spielkarte } from '../../engine';
-import type { Sicht } from '../sicht';
+import type { Sicht, SpielerSicht } from '../sicht';
 import { bewerte, eigenePunkte } from './bewertung';
 import type { Wertungsmerker } from './bewertung';
 
@@ -126,10 +126,32 @@ function folgeSchlangen(sicht: Sicht, aktion: SpielAktion, karte: Spielkarte | u
     case 'SchlangenhaeutungSpielen':
       aendereSchlange(sicht, aenderung, aktion.schlangenId, haeute(aktion.neueReihenfolge));
       break;
+    case 'SchlangenkorbSpielen':
+      if (aktion.bonus.art === 'entfernen') aendereSchlange(sicht, aenderung, aktion.bonus.ziel.schlangenId, entfernen(aktion.bonus.ziel.karteId));
+      if (aktion.bonus.art === 'tauschen') {
+        for (const { schlangenId, karteId, handkarteId } of aktion.bonus.tausch) {
+          const handkarte = sicht.hand.find((eintrag) => eintrag.id === handkarteId);
+          if (handkarte !== undefined) aendereSchlange(sicht, aenderung, schlangenId, ersetze(karteId, handkarte));
+        }
+      }
+      break;
     default:
       break;
   }
   return aenderung;
+}
+
+/** Legt `karte` an den Platz der Karte `karteId` (D44, A8.2 Aktion 3). */
+export function ersetze(karteId: string, karte: Spielkarte): (schlange: Schlange) => Schlange {
+  return (schlange) => ({ ...schlange, karten: schlange.karten.map((eintrag) => (eintrag.id === karteId ? karte : eintrag)) });
+}
+
+/** Was der Korb beim Tauschen von der Hand nimmt und dafür auf die Hand legt (D44); sonst nichts. */
+function handNachTausch(sicht: Sicht, aktion: SpielAktion): { weg: Set<string>; dazu: Spielkarte[] } {
+  if (aktion.typ !== 'SchlangenkorbSpielen' || aktion.bonus.art !== 'tauschen') return { weg: new Set(), dazu: [] };
+  const tausch = aktion.bonus.tausch;
+  const dazu = tausch.flatMap(({ schlangenId, karteId }) => karteInSchlange(sicht, schlangenId, karteId) ?? []);
+  return { weg: new Set(tausch.map((eintrag) => eintrag.handkarteId)), dazu };
 }
 
 /** Die Karte, die eine Aktion von der Hand spielt; `null`, wenn sie keine spielt. */
@@ -143,15 +165,23 @@ function gespielteKarte(aktion: SpielAktion): string | null {
  * Ziel (A7.6), nach einem Verdoppler folgt der zweite Zug (A7.8). Gegner lassen eine
  * angesagte Karte durch, wie in der Zugsuche.
  */
-function folgeSicht(sicht: Sicht, aktion: SpielAktion): Sicht {
+export function folgeSicht(sicht: Sicht, aktion: SpielAktion): Sicht {
   const id = gespielteKarte(aktion);
   const karte = id === null ? undefined : sicht.hand.find((eintrag) => eintrag.id === id);
   const aenderung = folgeSchlangen(sicht, aktion, karte);
   const ziel = aktion.typ === 'SchlangengrubeSpielen' ? sicht.spieler.findIndex((spieler) => spieler.id === aktion.zielSpielerId) : -1;
+  const getauscht = handNachTausch(sicht, aktion);
+  // D36: Jede Sonderkarte aus der Hand zählt als ausgespielt, für „Schlangenmeister“ und „Schlangenrepertoire“ (A9).
+  const sonderkarte = karte?.typ === 'Sonderkarte' && sicht.erweiterung ? karte.name : null;
+  const spieler = sicht.spieler.map((eintrag, index) => {
+    const schlangen = aenderung.get(index) ?? eintrag.schlangen;
+    if (index !== sicht.ich || sonderkarte === null) return schlangen === eintrag.schlangen ? eintrag : { ...eintrag, schlangen };
+    return { ...eintrag, schlangen, ausgespielteSonderkarten: [...eintrag.ausgespielteSonderkarten, sonderkarte] };
+  });
   return {
     ...sicht,
-    hand: karte === undefined ? sicht.hand : sicht.hand.filter((eintrag) => eintrag !== karte),
-    spieler: aenderung.size === 0 ? sicht.spieler : sicht.spieler.map((spieler, index) => ({ ...spieler, schlangen: aenderung.get(index) ?? spieler.schlangen })),
+    hand: karte === undefined ? sicht.hand : [...sicht.hand.filter((eintrag) => eintrag !== karte && !getauscht.weg.has(eintrag.id)), ...getauscht.dazu],
+    spieler: aenderung.size === 0 && sonderkarte === null ? sicht.spieler : spieler,
     ausliegendeGruben: karte?.typ === 'Sonderkarte' && ziel >= 0 ? [...sicht.ausliegendeGruben, { karte, gespieltVon: sicht.ich, vor: ziel }] : sicht.ausliegendeGruben,
     zug: aktion.typ === 'VerdopplerSpielen' ? { ...sicht.zug, verdopplerGespielt: true } : sicht.zug,
   };
@@ -162,22 +192,70 @@ export function punkteNach(sicht: Sicht, aktion: SpielAktion, merker: Wertungsme
   return eigenePunkte(folgeSicht(sicht, aktion), merker);
 }
 
+/** Was die Aufgaben einer geschätzten Sicht zur Bewertung beitragen (`aufgabenkorrektur`, Plan K4). */
+export type Aufgabenpruefung = (eigen: SpielerSicht) => number;
+
+/** Aktionen, die nur den Zug um bekannte Karten erweitern und selbst nichts legen: Comeback-Karte und Korb „aktionen“ (A8.1, A7.10, D46). */
+export function erweitertZug(aktion: SpielAktion): boolean {
+  return aktion.typ === 'ComebackEinsetzen' || (aktion.typ === 'SchlangenkorbSpielen' && aktion.bonus.art === 'aktionen');
+}
+
+/** Die Tausche eines Korbs als Text, je Tausch Schlangenkarte und Handkarte (D44); leer für jede andere Aktion. */
+function tauschschluessel(aktion: SpielAktion): string[] {
+  return aktion.typ === 'SchlangenkorbSpielen' && aktion.bonus.art === 'tauschen' ? aktion.bonus.tausch.map((eintrag) => `${eintrag.karteId}>${eintrag.handkarteId}`) : [];
+}
+
+/** Bis zu so vielen Korb-Tauschen zweier Karten schätzt die Vorauswahl jeden (K2, Kriterium 8, mit Korb). */
+const TAUSCHPAARE_ALLE = 400;
+/** Sind es mehr, bildet sie Paare nur aus so vielen der besten einzelnen Tausche. */
+const BESTE_TAUSCHE = 6;
+
+interface Geschaetzt {
+  aktion: SpielAktion;
+  stelle: number;
+  wert: number;
+}
+
+/** Höherer Vorwert zuerst, bei Gleichstand die Reihenfolge der Engine. */
+function nachWert(a: Geschaetzt, b: Geschaetzt): number {
+  return b.wert - a.wert || a.stelle - b.stelle;
+}
+
 /**
  * Die Aktionen in der Reihenfolge, in der sie durchgerechnet werden: vorn höchstens
- * `anzahl`, die mit dem höchsten Vorwert, von jeder Handkarte mindestens ihre beste;
- * dahinter die übrigen nach Vorwert, für eine Nachlese. Bei gleichem Vorwert gilt die
- * Reihenfolge der Engine, damit die Wahl nur von der Sicht abhängt. `bewertet` sagt,
- * wie oft dafür `bewerte` lief: einmal je Aktion, oder gar nicht, wenn alle in die
- * Auswahl passen (Kriterium 8).
+ * `anzahl`, die mit dem höchsten Vorwert, von jeder Handkarte mindestens ihre beste und
+ * jede Aktion, die nur den Zug erweitert (`erweitertZug`); dahinter die übrigen nach
+ * Vorwert, für eine Nachlese. Bei gleichem Vorwert gilt die Reihenfolge der Engine,
+ * damit die Wahl nur von der Sicht abhängt. Zum Vorwert zählen die Aufgaben, die die
+ * geschätzte Sicht erfüllte (`aufgaben`). Korb-Tausche zweier Karten schätzt sie alle,
+ * solange es höchstens TAUSCHPAARE_ALLE sind; mit langen Schlangen sind es Tausende,
+ * dann nur Paare aus den BESTE_TAUSCHE besten einzelnen, und die übrigen fallen weg. `bewertet` sagt, wie oft dafür `bewerte` lief: einmal je
+ * geschätzter Aktion, oder gar nicht, wenn alle in die Auswahl passen (Kriterium 8).
  */
-export function vorauswahl(sicht: Sicht, aktionen: readonly SpielAktion[], anzahl: number, merker: Wertungsmerker): { geordnet: SpielAktion[]; bewertet: number } {
+export function vorauswahl(
+  sicht: Sicht,
+  aktionen: readonly SpielAktion[],
+  anzahl: number,
+  merker: Wertungsmerker,
+  aufgaben: Aufgabenpruefung,
+): { geordnet: SpielAktion[]; bewertet: number } {
   if (aktionen.length <= anzahl) return { geordnet: [...aktionen], bewertet: 0 };
-  const geordnet = aktionen.map((aktion, stelle) => ({ aktion, stelle, wert: bewerte(folgeSicht(sicht, aktion), merker) })).sort((a, b) => b.wert - a.wert || a.stelle - b.stelle);
+  const schaetze = (aktion: SpielAktion, stelle: number): Geschaetzt => {
+    const danach = folgeSicht(sicht, aktion);
+    return { aktion, stelle, wert: bewerte(danach, merker) + aufgaben(danach.spieler[sicht.ich]) };
+  };
+  const paar = (aktion: SpielAktion) => tauschschluessel(aktion).length > 1;
+  const einzeln = aktionen.flatMap((aktion, stelle) => (paar(aktion) ? [] : [schaetze(aktion, stelle)]));
+  const besteTausche = einzeln.filter(({ aktion }) => tauschschluessel(aktion).length === 1).sort(nachWert).slice(0, BESTE_TAUSCHE);
+  const beste = new Set(besteTausche.flatMap(({ aktion }) => tauschschluessel(aktion)));
+  const allePaare = aktionen.filter(paar).length <= TAUSCHPAARE_ALLE;
+  const paare = aktionen.flatMap((aktion, stelle) => (paar(aktion) && (allePaare || tauschschluessel(aktion).every((schluessel) => beste.has(schluessel))) ? [schaetze(aktion, stelle)] : []));
+  const geordnet = [...einzeln, ...paare].sort(nachWert);
   const gewaehlt = new Set<number>();
   const karten = new Set<string | null>();
   for (const eintrag of geordnet) {
     const karte = gespielteKarte(eintrag.aktion);
-    if (!karten.has(karte)) gewaehlt.add(eintrag.stelle);
+    if (!karten.has(karte) || erweitertZug(eintrag.aktion)) gewaehlt.add(eintrag.stelle);
     karten.add(karte);
   }
   for (const eintrag of geordnet) if (gewaehlt.size < anzahl) gewaehlt.add(eintrag.stelle);

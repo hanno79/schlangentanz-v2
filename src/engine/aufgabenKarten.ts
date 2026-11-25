@@ -14,7 +14,7 @@ import { schlangenrepertoire } from './aufgaben/schlangenrepertoire';
 import { schlangentanz } from './aufgaben/schlangentanz';
 import { symmetriemeister } from './aufgaben/symmetriemeister';
 import { vielfaltskoenig } from './aufgaben/vielfaltskoenig';
-import type { AufgabenkarteInfo } from './types';
+import type { AufgabenkarteInfo, Spielzustand } from './types';
 
 /**
  * A9, Tabelle „Verfügbare Aufgabenkarten“: Nummer, Name, Punkte und Kartentext
@@ -65,4 +65,13 @@ export function definitionFuerAufgabe(aufgabe: AufgabenkarteInfo): AufgabenDefin
   const definition = AUFGABENREGISTER.get(aufgabe.name);
   if (definition === undefined) throw new Error(`Die Aufgabe „${aufgabe.name}“ (${aufgabe.id}) steht nicht in A9; zu ihr gibt es keine Bedingung.`);
   return definition;
+}
+
+/**
+ * Erfüllt der Spieler an Stelle `spielerIndex` die Bedingung dieser Aufgabe jetzt (A9)?
+ * Ob er am Zug ist, ob die Aufgabe noch frei ist und wann der Rahmen prüft, sagt das
+ * nicht. Für die Zugsuche der KI, die so eine Aufgabe gezielt verfolgt (Plan K4).
+ */
+export function erfuelltAufgabe(zustand: Readonly<Spielzustand>, spielerIndex: number, aufgabe: AufgabenkarteInfo): boolean {
+  return definitionFuerAufgabe(aufgabe).istErfuellt(zustand, spielerIndex);
 }
