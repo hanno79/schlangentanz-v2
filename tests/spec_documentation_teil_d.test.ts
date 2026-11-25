@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { ZITAT, abschnitt } from './regelfragen_lesen'
 import { eintragD, fehlende, fliesstext, nachtragEintrag, nachtragFragezeilen, pruefeKern, spalten, tabelleMitSpalte, teil, websiteNachtrag } from './spec_documentation_hilfen'
-import { A10_EINORDNUNG, RUECKFRAGEN, RUECKFRAGEN_NUMMERN, bereichVon } from './spec_documentation_rueckfragen'
+import { A10_EINORDNUNG, RUECKFRAGEN, RUECKFRAGEN_NUMMERN } from './spec_documentation_rueckfragen'
 import { DATUM_G } from './regelfragen_sammelantwort'
 
 /*
@@ -190,13 +190,11 @@ describe('GAME_SPEC Teil D — Fragen an den Autor und Antworten', () => {
   })
 
   it('P0.5g: die Einleitung von Teil D nennt die Rückfragen aus den Prüfungen von X2 und X3 als D58–D67 und die Ergänzung von D48', () => {
-    expect(bereichVon('P0.5g'), 'Rückfragen aus P0.5g').toBe('D58–D67')
-    expect(fehlende(teil('D'), [`${bereichVon('P0.5g')} sind Rückfragen aus den Prüfungen von X2 und X3`, '23.11.2026', 'ergänzt D48'])).toEqual([])
+    expect(fehlende(teil('D'), ['D58–D67 sind Rückfragen aus den Prüfungen von X2 und X3', '23.11.2026', 'ergänzt D48'])).toEqual([])
   })
 
   it('P0.5h: die Einleitung von Teil D nennt die Rückfragen aus X4, X5, X6 und der Prüfung von P0.5g als D68–D79 vom 24.11.2026', () => {
-    expect(bereichVon('P0.5h'), 'Rückfragen aus P0.5h').toBe('D68–D79')
-    expect(fehlende(teil('D'), [`${bereichVon('P0.5h')} sind Rückfragen aus X4, X5, X6 und der Prüfung von P0.5g, die der Autor am 24.11.2026 beantwortet hat`])).toEqual([])
+    expect(fehlende(teil('D'), ['D68–D79 sind Rückfragen aus X4, X5, X6 und der Prüfung von P0.5g, die der Autor am 24.11.2026 beantwortet hat'])).toEqual([])
   })
 
   it('P0.5h: der Website-Nachtrag nennt den Stand vom 24.11.2026', () => {

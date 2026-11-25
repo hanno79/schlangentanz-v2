@@ -1,6 +1,6 @@
 import { existsSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-import { abschnitt } from './regelfragen_lesen'
+import { abschnitt, alsWort } from './regelfragen_lesen'
 import { fehlende, spalten, tabelleMitSpalte, teil } from './spec_documentation_hilfen'
 
 /*
@@ -18,10 +18,6 @@ function zeileB1(bestandteil: string): string {
   return zeile?.[1] ?? ''
 }
 
-function aufgabenZeileB1(): string {
-  return zeileB1('15 Aufgabenkarten')
-}
-
 /** Die Zeilen der Tabelle in Teil C, je Nummer und Fundstelle. */
 function abweichungenTeilC(): string[][] {
   return spalten(tabelleMitSpalte(teil('C'), 'Fundstelle'), 'Nr.', 'Fundstelle')
@@ -35,10 +31,10 @@ function fundstellenOhneDatei(zeilen: string[][]): string[] {
 }
 
 /** Die Nummern C1 bis C`bis`, die unter „Behoben und gestrichen“ fehlen und nicht in `ausser` stehen. */
-function nichtGestrichen(bis: number, ausser: number[] = []): string[] {
+function nichtGestrichen(bis: number, ausser: number[]): string[] {
   const gestrichen = /Behoben und gestrichen:[^\n]*/.exec(teil('C'))?.[0] ?? ''
   return Array.from({ length: bis }, (_, i) => i + 1)
-    .filter((nr) => !ausser.includes(nr) && !new RegExp(`\\bC${nr}\\b`).test(gestrichen))
+    .filter((nr) => !ausser.includes(nr) && !alsWort(`C${nr}`).test(gestrichen))
     .map((nr) => `C${nr}`)
 }
 
@@ -60,8 +56,7 @@ describe('GAME_SPEC Teil C — Abweichungen der Engine', () => {
   it('führt jede Abweichung der Engine mit Nummer und Fundstelle im Code', () => {
     // Die Liste darf leer werden: Das ist ihr Ziel. Jede Zeile, die dasteht,
     // muss aber eine Nummer und eine Datei nennen.
-    const abweichungen = spalten(tabelleMitSpalte(teil('C'), 'Fundstelle'), 'Nr.', 'Fundstelle')
-    const unvollstaendig = abweichungen.filter(
+    const unvollstaendig = abweichungenTeilC().filter(
       ([nummer, fundstelle]) => !/^C\d+$/.test(nummer) || !/`src\/[^`]+`/.test(fundstelle),
     )
     expect(unvollstaendig).toEqual([])
@@ -73,22 +68,22 @@ describe('GAME_SPEC Teil C — Abweichungen der Engine', () => {
     expect(nichtGestrichen(Math.max(HOECHSTE_C_NUMMER, ...nummern), nummern), 'Teil C: Nummern weder in der Tabelle noch unter „Behoben und gestrichen“').toEqual([])
   })
   it('P0.5f: C1, C15 und C20 sind nach X1 gestrichen; B1 nennt nicht mehr „14 von 15“', () => {
-    const nummern = spalten(tabelleMitSpalte(teil('C'), 'Fundstelle'), 'Nr.').map(([nr]) => nr)
+    const nummern = abweichungenTeilC().map(([nr]) => nr)
     expect(nummern.filter((nr) => ['C1', 'C15', 'C20'].includes(nr)), 'Teil C führt noch').toEqual([])
     expect(fehlende(teil('C'), ['C1, C15 und C20 (X1, 23.11.2026)'])).toEqual([])
-    expect(aufgabenZeileB1(), 'B1: Zeile „15 Aufgabenkarten“').not.toContain('14 von 15')
+    expect(zeileB1('15 Aufgabenkarten'), 'B1: Zeile „15 Aufgabenkarten“').not.toContain('14 von 15')
   })
 
-  it('P0.5h: Teil C ist leer; C10 und C14 sind nach X2a gestrichen, und C1–C23 stehen alle unter „Behoben und gestrichen“ (X7)', () => {
+  // Dass dabei alle Nummern C1–C23 unter „Behoben und gestrichen“ stehen, prüft der Test oben.
+  it('P0.5h: Teil C ist leer; C10 und C14 sind nach X2a gestrichen (X7)', () => {
     expect(abweichungenTeilC().map(([nr]) => nr), 'Teil C führt noch Abweichungen').toEqual([])
     expect(fehlende(teil('C'), ['Offene Abweichungen gibt es keine.', 'C21 und C23 (X2b, 23.11.2026)', 'C10 teilweise (X2b, X2c, 23.11.2026)', 'C10 und C14 (X2a, 24.11.2026)'])).toEqual([])
-    expect(nichtGestrichen(HOECHSTE_C_NUMMER), 'Teil C: Nummern nicht unter „Behoben und gestrichen“').toEqual([])
   })
 
   it('P0.5g: jede Fundstelle in Teil C nennt eine Datei, die es gibt', () => {
     expect(fundstellenOhneDatei(abweichungenTeilC()), 'Teil C: Fundstellen ohne Datei').toEqual([])
     // Gegenprobe, damit der Test auch bei leerer Tabelle etwas prüft: Ein fehlender Pfad wird gemeldet, ein vorhandener nicht.
-    const probe = [['C98', '`src/engine/gibt_es_nicht.ts`'], ['C99', '`src/engine/aufgaben/lilaRiese.ts`']]
+    const probe = [['C98', '`src/engine/gibt_es_nicht.ts`'], ['C99', '`src/engine/index.ts`']]
     expect(fundstellenOhneDatei(probe), 'Gegenprobe zu den Fundstellen').toEqual(['C98: src/engine/gibt_es_nicht.ts'])
   })
 
@@ -99,7 +94,7 @@ describe('GAME_SPEC Teil C — Abweichungen der Engine', () => {
   })
 
   it('P0.5h: B1 nennt alle 15 Bedingungen der Aufgabenkarten als umgesetzt, ohne Platzhalter', () => {
-    const aufgaben = aufgabenZeileB1()
+    const aufgaben = zeileB1('15 Aufgabenkarten')
     expect(aufgaben.startsWith('ja:'), `B1: Zeile „15 Aufgabenkarten“ beginnt nicht mit „ja:“, erhalten: ${aufgaben}`).toBe(true)
     for (const alt of ['teilweise', 'Platzhalter']) expect(aufgaben, 'B1: Zeile „15 Aufgabenkarten“').not.toContain(alt)
     expect(fehlende(aufgaben, ['Prüfung und Einlösen nach A9 (X1, 23.11.2026)', 'alle 15 Bedingungen nach A9 (X2b, X2c, 23.11.2026; X2a, 24.11.2026)'])).toEqual([])

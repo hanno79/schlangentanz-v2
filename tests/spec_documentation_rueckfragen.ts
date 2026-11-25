@@ -339,9 +339,3 @@ export const RUECKFRAGEN: Rueckfragen[] = [
 
 /** Alle Nummern aus `RUECKFRAGEN`, in der Reihenfolge von Teil D. */
 export const RUECKFRAGEN_NUMMERN = RUECKFRAGEN.flatMap(({ eintraege }) => Object.keys(eintraege))
-
-/** Die Nummern, die `task` aufgenommen hat, als Bereich „Dnn–Dmm“ in der Reihenfolge von Teil D. */
-export function bereichVon(task: string): string {
-  const nummern = RUECKFRAGEN.filter((gruppe) => gruppe.task === task).flatMap(({ eintraege }) => Object.keys(eintraege))
-  return `${nummern[0]}–${nummern.at(-1)}`
-}
