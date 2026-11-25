@@ -222,7 +222,11 @@ Dein Platz ist 26rem breit, höchstens aber 55 % des Fensters. Unter den
 Geräteklassen (568 × 320) bleibt der Tischfläche so genug Breite; die
 Kopfleiste stellt dort die Statuszeile in eine eigene Zeile, statt sie Wort für
 Wort umzubrechen, und ab 340 px Höhe abwärts werden deine Karten und
-Handkarten noch etwas kleiner.
+Handkarten noch etwas kleiner. Passen Kopfleiste, Tischfläche und Zugleiste
+nicht übereinander ins Fenster (568 × 320 im eigenen Zug), wird der Tisch höher
+als das Fenster und die Seite scrollt; die Tischfläche behält 8rem. Ab 340 px
+Höhe abwärts steht der Grund neben einem gesperrten Knopf über ihm statt
+daneben (TF-TISCH-049).
 Alle Karten haben Handygrösse. **Hand:** Die Handkarten teilen sich die Breite
 der Hand (höchstens so gross wie in der Tabelle, mindestens 44 px), damit bei
 fünf und mehr Karten keine angeschnitten ist.
@@ -238,7 +242,9 @@ Weiss und Tinte, `--fokus-ring`) und, wo es sie gibt, Gewählt und Gesperrt.
 - **Zweitknopf** (`knopf--zweit`): weisse Fläche, Akzent-Rand und -Schrift.
 - **Leiser Knopf** (`knopf--leise`): nur Text, Tischfarbe beim Hover.
 - Alle Knöpfe mindestens 44 × 44 px. Gesperrt: halbe Deckkraft, kein Hover,
-  und daneben steht, warum.
+  und daneben steht, warum. Gesperrt liegt ihr Text deshalb unter 4,5 : 1
+  (etwa 2,4 : 1); WCAG 1.4.3 nimmt inaktive Bedienelemente vom
+  Kontrastverhältnis aus, der Grund daneben erreicht es.
 - **Segmente** (Gegnerzahl): Knöpfe mit `aria-pressed`, der gewählte in
   Akzentfarbe und mit Haken (✓). In sehr flachen Fenstern im Querformat
   (bis 22rem hoch, etwa 568 × 320) steht der Kopf der Lobby als eine Zeile über
@@ -344,15 +350,23 @@ Rechenzeit der KI, ob sie einen Farbenschutz hält.
   (`src/ui/tisch/Ansager.tsx`, nicht zu sehen): der jüngste Schritt aus dem
   Protokoll (Gegnerzug, Angriff, Abwehr, erfüllte Aufgabe, auch deine eigene
   Aktion) und, wenn du entscheidest, was jetzt zu tun ist, bei einer
-  Abwehrfrage mit dem Hinweis auf den Farbenschutz. Statuszeile, Satz der
+  Abwehrfrage mit dem Hinweis auf den Farbenschutz; fehlt die Ansage im
+  Protokoll (nach dem Neuladen), nennt er auch sie. Statuszeile, Satz der
   Zugleiste und Protokoll lesen nicht selbst vor, sonst hörte man alles doppelt.
+  Nach dem Spielende liest die Wertung vor, wer gewinnt und mit wie vielen
+  Punkten, und der Fokus steht auf ihrem Titel.
 - **Fokus:** Verschwindet der Knopf mit dem Fokus („Ausführen“, deine
   Handkarten, wenn ein Gegner dran ist), springt der Fokus auf den ersten
   bedienbaren Knopf der Zugleiste, sonst auf deine erste spielbare Handkarte,
   sonst auf die Zugleiste selbst (`src/ui/tisch/fokus.ts`). Ein Bereich, der
   gerade scrollt (Tischfläche, Schlangen als Zeile, Hand, Rangliste), nimmt den
   Fokus an; sein Ring liegt innen, ebenso eine Linie innen an Knöpfen in einer
-  scrollenden Zeile, deren äusseren Ring die Zeile abschneidet.
+  scrollenden Zeile, deren äusseren Ring die Zeile abschneidet. Holt die
+  Tastatur ein Element in einem scrollenden Bereich, scrollt es ganz ins Bild,
+  mit so viel Rand (`scroll-padding`), dass kein Zeichen „geht weiter“ darauf
+  liegt. In Tablet und Desktop steht die Zugleiste rechts neben deinem Platz,
+  kommt in der Tab-Reihe aber vor ihm: Eine Reihenfolge im Quelltext kann nicht
+  allen Anordnungen folgen, und der Satz, was zu tun ist, gehört vor die Karten.
 - **Nicht nur Farbe:** Gewählte Gegnerzahl in der Lobby und ein
   eingeschaltetes „Schneller“ tragen zusätzlich einen Haken (✓), der nicht
   vorgelesen wird; den Zustand sagen Auswahlfeld und `aria-pressed`.

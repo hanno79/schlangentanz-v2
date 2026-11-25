@@ -10,7 +10,14 @@ und der nächste Tab beginnt wieder oben. Der Tisch fängt das ab: Nach jedem
 Zeichnen prüft er, ob der Fokus aus einem seiner Elemente auf die leere Seite
 gefallen ist, und setzt ihn auf den nächsten sinnvollen Knopf.
 
-Er greift nur, wenn das Element mit dem Fokus verschwunden oder gesperrt ist.
+Holt die Tastatur den Fokus auf ein Element, scrollt der Tisch es ganz ins
+Bild. Der Browser tut das von selbst nur, wenn das Element gar nicht zu sehen
+ist; ragt es zwei Pixel in eine seitlich scrollende Zeile, bleibt es dahinter
+(TF-TISCH-044). Wie viel Rand dabei frei bleibt, damit kein Zeichen „geht
+weiter“ darauf liegt, sagt `scroll-padding` der Bereiche (karten.css). Mit
+Maus oder Finger scrollt nichts nach: Was man antippt, ist schon zu sehen.
+
+Der Fokus springt nur, wenn das Element mit dem Fokus verschwunden oder gesperrt ist.
 Hat jemand den Fokus selbst weggenommen (neben den Tisch geklickt) oder steht
 er noch nie im Tisch (Seite eben geöffnet), bleibt er, wo er ist.
 */
@@ -37,7 +44,9 @@ export function useFokusHalten(): RefObject<HTMLDivElement | null> {
     const tisch = wurzel.current
     if (tisch === null) return
     const merke = (ereignis: FocusEvent) => {
-      zuletzt.current = ereignis.target instanceof Element ? ereignis.target : null
+      const ziel = ereignis.target instanceof Element ? ereignis.target : null
+      zuletzt.current = ziel
+      if (ziel?.matches(':focus-visible') === true) ziel.scrollIntoView({ block: 'nearest', inline: 'nearest' })
     }
     tisch.addEventListener('focusin', merke)
     return () => tisch.removeEventListener('focusin', merke)

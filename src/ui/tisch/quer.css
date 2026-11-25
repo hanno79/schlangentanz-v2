@@ -8,7 +8,14 @@ nach ihr geladen.
    Handygrösse, weil die Breitenstufen oben erst ab 501 px Höhe gelten. */
 @media (orientation: landscape) and (max-height: 500px) {
   .spieltisch {
-    grid-template-rows: auto minmax(0, 1fr) auto;
+    /* Passen Kopfleiste, Tischfläche und Zugleiste nicht übereinander in die Höhe
+       (568 × 320, TF-TISCH-049), ragt der Tisch über das Fenster, und die Seite scrollt,
+       statt die Tischfläche auf ein paar Pixel zu drücken: Sie behält 8rem, und jede
+       Aktion bleibt erreichbar. Passt alles, bleibt der Tisch so hoch wie das Fenster,
+       und die Tischfläche scrollt in sich. Absolut statt fest: Was über ein festes
+       Element hinausragt, lässt die Seite nicht scrollen. */
+    position: absolute;
+    grid-template-rows: auto minmax(8rem, 1fr) auto;
     /* Höchstens 55 % der Breite: Auf sehr kleinen Schirmen (568 × 320) bliebe der
        Tischfläche sonst kaum Breite (TF-TISCH-004). Ab 757 px Breite gilt 26rem. */
     grid-template-columns: minmax(0, 1fr) minmax(0, min(26rem, 55%));
@@ -79,5 +86,16 @@ nach ihr geladen.
      zweiten: So braucht die Kopfleiste zwei Zeilen statt drei. */
   .st-statuszeile {
     flex-basis: 100%;
+  }
+
+  /* Der Grund neben einem gesperrten Knopf steht in der schmalen Leiste über dem Knopf,
+     statt Wort für Wort daneben umzubrechen. */
+  .st-zugleiste .st-mitgrund--gesperrt {
+    flex-wrap: wrap;
+  }
+
+  .st-zugleiste .st-mitgrund--gesperrt > .st-grund {
+    flex-basis: 100%;
+    text-align: left;
   }
 }

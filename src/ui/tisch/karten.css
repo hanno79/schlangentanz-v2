@@ -278,6 +278,11 @@ Höhe übrig (Plan O4).
   box-shadow: none;
 }
 
+/* Rand beim Scrollen per Tastatur, damit kein Zeichen „geht weiter“ darauf liegt (fokus.ts). */
+.st-scrollt {
+  scroll-padding: 2.5rem 5rem;
+}
+
 .st-scrollt button:focus-visible {
   outline: var(--fokus-linie-innen);
   outline-offset: -3px;

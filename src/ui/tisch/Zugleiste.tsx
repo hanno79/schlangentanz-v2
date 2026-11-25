@@ -11,7 +11,7 @@ import type { Bedienung } from './bedienung'
 import { useLaufendeHaeutung } from './haeutung'
 import type { Haeutung } from './haeutung'
 import { KnopfMitGrund } from './KnopfMitGrund'
-import { ABWEHRFRAGE, PROTOKOLL } from './protokolltexte'
+import { ABWEHRFRAGE, PROTOKOLL, ansageSatz } from './protokolltexte'
 import { ReaktionsDialog } from './ReaktionsDialog'
 import { statusText } from './texte'
 import { ZielKnopf } from './Ziele'
@@ -108,8 +108,12 @@ export function Zugleiste({ ansicht, bedienung, fuehreAus, ablehnung, verlauf, z
   const text = satz(ansicht, bedienung, karte, fertig, haeutung, schritt)
   // Was du jetzt entscheidest, liest der Ansager vor; spielt ein Gegner, ist der Satz sein Schritt, und den liest er schon.
   let jetzt: string | null = null
-  // Die Ansage selbst liest er schon als Schritt vor; dazu, ob du abwehren kannst.
-  if (frage) jetzt = `${ABWEHRFRAGE.titel}: ${schutzHinweis(reaktionenVon(ansicht).abwehren)}`
+  const ansage = frage ? ansageSatz(ansicht) : null
+  if (ansage !== null) {
+    const hinweis = `${ABWEHRFRAGE.titel}: ${schutzHinweis(reaktionenVon(ansicht).abwehren)}`
+    // Nach dem Neuladen beginnt das Protokoll leer; dann nennt er die Ansage selbst.
+    jetzt = schritt === null ? `${ansage} ${hinweis}` : hinweis
+  }
   else if (bedienung.aktionen.length > 0) jetzt = text
 
   return (
@@ -126,7 +130,7 @@ export function Zugleiste({ ansicht, bedienung, fuehreAus, ablehnung, verlauf, z
       <div className="st-zugleiste-inhalt">
         {verlauf?.ausgesetzt === true && <p className="st-zugleiste-hinweis">{PROTOKOLL.ausgesetzt}</p>}
         {frage ? (
-          <ReaktionsDialog ansicht={ansicht} fuehreAus={fuehreAus} />
+          <ReaktionsDialog ansicht={ansicht} frage={ansage ?? ''} fuehreAus={fuehreAus} />
         ) : (
           <p id={satzId} className="st-zugleiste-text">
             {text}

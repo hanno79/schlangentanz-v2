@@ -7,7 +7,7 @@ import { erzeugeSzenario } from '../../entwicklung/szenarien'
 import { STRATEGIEN } from '../../ki/strategien'
 import { warte } from '../spiel/__tests__/steuerung'
 import { GEGNER_STRATEGIE, KI_PAUSE } from '../spiel/useSpiel'
-import { ausfuehren, handkarte, kiMit, spieleAm, tippe, tippeZiel } from './__tests__/bedienen'
+import { ausfuehren, handkarte, kiMit, spieleAm, tippe, tippeZiel, vorlesendeBereiche } from './__tests__/bedienen'
 
 /*
 O11, Kriterium 2: Was am Tisch geschieht, wird vorgelesen: der Schritt eines
@@ -26,14 +26,6 @@ afterEach(() => {
 })
 
 const ansager = () => screen.getByTestId('ansager')
-
-/** Alle Bereiche, die ein Bildschirmleser bei einer Änderung von selbst vorliest. */
-function vorlesendeBereiche(): Element[] {
-  return Array.from(document.querySelectorAll('[aria-live], [role="status"], [role="alert"], [role="log"]')).filter((bereich) => {
-    const live = bereich.getAttribute('aria-live')
-    return live !== 'off' && bereich.closest('[aria-hidden="true"]') === null
-  })
-}
 
 /** Wie viele vorlesende Bereiche diesen Satz enthalten. */
 const vorgelesen = (satz: string) => vorlesendeBereiche().filter((bereich) => (bereich.textContent ?? '').includes(satz)).length

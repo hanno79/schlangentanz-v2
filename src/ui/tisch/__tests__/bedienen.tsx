@@ -54,6 +54,14 @@ export function handkarte(karte: Spielkarte | string, nummer = 0): HTMLButtonEle
 
 export const tippe = (element: HTMLElement) => fireEvent.click(element)
 
+/** Alle Bereiche, die ein Bildschirmleser bei einer Änderung von selbst vorliest (O11 K2). */
+export function vorlesendeBereiche(): Element[] {
+  return Array.from(document.querySelectorAll('[aria-live], [role="status"], [role="alert"], [role="log"]')).filter((bereich) => {
+    const live = bereich.getAttribute('aria-live')
+    return live !== 'off' && bereich.closest('[aria-hidden="true"]') === null
+  })
+}
+
 /** Eine Test-KI, die die erste Aktion wählt, auf die eine der Bedingungen in dieser Reihenfolge passt, sonst die erste. */
 export function kiMit(...vorrang: ((aktion: SpielAktion) => boolean)[]): Ki {
   return {

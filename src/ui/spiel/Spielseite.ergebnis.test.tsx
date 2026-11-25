@@ -4,6 +4,7 @@ import App from '../../App'
 import { berechneEndwertung } from '../../engine'
 import { erzeugeSzenario } from '../../entwicklung/szenarien'
 import { speichereSpielstand } from '../../spielstand'
+import { vorlesendeBereiche as vorlesend } from '../tisch/__tests__/bedienen'
 import { gespeichert, warte } from './__tests__/steuerung'
 
 /*
@@ -52,10 +53,6 @@ describe('O8: Nach Spielende steht die Wertung da', () => {
     expect(gespeichert()!.partiephase).toBe('Beendet')
   })
 })
-
-/** Bereiche, die ein Bildschirmleser bei einer Änderung von selbst vorliest. */
-const vorlesend = () =>
-  Array.from(document.querySelectorAll('[aria-live], [role="status"], [role="alert"]')).filter((bereich) => bereich.getAttribute('aria-live') !== 'off')
 
 describe('O11 K1/K2: Spielende mit Tastatur und Bildschirmleser (TF-TISCH-045)', () => {
   it('O11 K1/K2: endet die Partie am Tisch, steht der Fokus auf der Überschrift der Wertung, und das Ergebnis wird vorgelesen', () => {

@@ -92,46 +92,62 @@ export async function erwarteSichtbarenFokus(page: Page, lage: string): Promise<
 }
 
 /**
- * Ob das Element mit dem Fokus ganz zu sehen ist (TF-TISCH-044): ganz im
- * Fenster und im sichtbaren Teil jedes Vorfahren, der Überstehendes nicht
- * zeigt, und kein Zeichen „geht weiter“ liegt darauf. Ein Element, das grösser
- * ist als sein sichtbarer Rahmen (ein scrollender Bereich selbst), gilt als
- * ganz zu sehen, wenn es den Rahmen füllt. `null`: Fokus auf der leeren Seite.
+ * Was ein Element verbirgt, oder `null`, wenn es ganz zu sehen ist
+ * (TF-TISCH-044, TF-TISCH-049): ganz im Fenster und im sichtbaren Teil jedes
+ * Vorfahren, der Überstehendes nicht zeigt, und kein Zeichen „geht weiter“
+ * liegt auf ihm. Ein Element, das grösser ist als sein sichtbarer Rahmen (ein
+ * scrollender Bereich selbst), gilt als ganz zu sehen, wenn es den Rahmen füllt.
+ * Läuft im Browser, mit `locator.evaluate(sichtbarImBild)`.
  */
-export async function fokusGanzImBild(page: Page): Promise<{ name: string; detail: string | null } | null> {
-  return page.evaluate(() => {
-    const element = document.activeElement
-    if (element === null || element === document.body) return null
-    const name = element.getAttribute('aria-label') ?? (element.textContent ?? '').trim().slice(0, 60)
-    const box = element.getBoundingClientRect()
-    let [links, oben, rechts, unten] = [0, 0, window.innerWidth, window.innerHeight]
-    for (let vorfahr = element.parentElement; vorfahr !== null; vorfahr = vorfahr.parentElement) {
+export function sichtbarImBild(element: Element): string | null {
+  const box = element.getBoundingClientRect()
+  /** Der sichtbare Rahmen eines Elements: Fenster und jeder Vorfahr, der Überstehendes nicht zeigt. */
+  const rahmen = (kind: Element): [number, number, number, number] => {
+    let [l, o, r, u] = [0, 0, window.innerWidth, window.innerHeight]
+    for (let vorfahr = kind.parentElement; vorfahr !== null; vorfahr = vorfahr.parentElement) {
       const stil = getComputedStyle(vorfahr)
       if (stil.overflowX === 'visible' && stil.overflowY === 'visible') continue
       const k = vorfahr.getBoundingClientRect()
-      links = Math.max(links, k.left + vorfahr.clientLeft)
-      oben = Math.max(oben, k.top + vorfahr.clientTop)
-      rechts = Math.min(rechts, k.left + vorfahr.clientLeft + vorfahr.clientWidth)
-      unten = Math.min(unten, k.top + vorfahr.clientTop + vorfahr.clientHeight)
+      l = Math.max(l, k.left + vorfahr.clientLeft)
+      o = Math.max(o, k.top + vorfahr.clientTop)
+      r = Math.min(r, k.left + vorfahr.clientLeft + vorfahr.clientWidth)
+      u = Math.min(u, k.top + vorfahr.clientTop + vorfahr.clientHeight)
     }
-    const breitGenug = box.width <= rechts - links + 1
-    const hochGenug = box.height <= unten - oben + 1
-    const waagrecht = breitGenug ? box.left >= links - 1 && box.right <= rechts + 1 : box.left <= links + 1 && box.right >= rechts - 1
-    const senkrecht = hochGenug ? box.top >= oben - 1 && box.bottom <= unten + 1 : box.top <= oben + 1 && box.bottom >= unten - 1
-    if (!waagrecht || !senkrecht) {
-      return { name, detail: `liegt bei ${Math.round(box.left)}..${Math.round(box.right)} × ${Math.round(box.top)}..${Math.round(box.bottom)}, sichtbar ist ${Math.round(links)}..${Math.round(rechts)} × ${Math.round(oben)}..${Math.round(unten)}` }
+    return [l, o, r, u]
+  }
+  const [links, oben, rechts, unten] = rahmen(element)
+  const breitGenug = box.width <= rechts - links + 1
+  const hochGenug = box.height <= unten - oben + 1
+  const waagrecht = breitGenug ? box.left >= links - 1 && box.right <= rechts + 1 : box.left <= links + 1 && box.right >= rechts - 1
+  const senkrecht = hochGenug ? box.top >= oben - 1 && box.bottom <= unten + 1 : box.top <= oben + 1 && box.bottom >= unten - 1
+  if (!waagrecht || !senkrecht) {
+    return `liegt bei ${Math.round(box.left)}..${Math.round(box.right)} × ${Math.round(box.top)}..${Math.round(box.bottom)}, sichtbar ist ${Math.round(links)}..${Math.round(rechts)} × ${Math.round(oben)}..${Math.round(unten)}`
+  }
+  // Ein scrollender Bereich mit Fokus trägt seine Zeichen selbst am Rand.
+  if (element.classList.contains('st-scrollt')) return null
+  for (const zeichen of Array.from(document.querySelectorAll('.st-weiter-zeichen'))) {
+    if (element.contains(zeichen)) continue
+    // Gezählt wird nur der Teil des Zeichens, den sein eigener Bereich nicht abschneidet.
+    const k = zeichen.getBoundingClientRect()
+    const [zl, zo, zr, zu] = rahmen(zeichen)
+    const z = { left: Math.max(k.left, zl), top: Math.max(k.top, zo), right: Math.min(k.right, zr), bottom: Math.min(k.bottom, zu) }
+    if (z.left < box.right - 1 && box.left < z.right - 1 && z.top < box.bottom - 1 && box.top < z.bottom - 1) {
+      return `unter dem Zeichen „${(zeichen.textContent ?? '').trim()}“`
     }
-    // Ein scrollender Bereich mit Fokus trägt seine Zeichen selbst am Rand.
-    if (element.classList.contains('st-scrollt')) return { name, detail: null }
-    for (const zeichen of Array.from(document.querySelectorAll('.st-weiter-zeichen'))) {
-      if (element.contains(zeichen)) continue
-      const z = zeichen.getBoundingClientRect()
-      if (z.left < box.right - 1 && box.left < z.right - 1 && z.top < box.bottom - 1 && box.top < z.bottom - 1) {
-        return { name, detail: `unter dem Zeichen „${(zeichen.textContent ?? '').trim()}“` }
-      }
-    }
-    return { name, detail: null }
-  })
+  }
+  return null
+}
+
+/** Ob das Element mit dem Fokus ganz zu sehen ist (`sichtbarImBild`); `null`: Fokus auf der leeren Seite. */
+export async function fokusGanzImBild(page: Page): Promise<{ name: string; detail: string | null } | null> {
+  const aktiv = await page.evaluateHandle(() => document.activeElement)
+  const element = aktiv.asElement()
+  const ergebnis =
+    element === null || (await element.evaluate((el) => el === document.body))
+      ? null
+      : { name: await element.evaluate((el) => el.getAttribute('aria-label') ?? (el.textContent ?? '').trim().slice(0, 60)), detail: await element.evaluate(sichtbarImBild) }
+  await aktiv.dispose()
+  return ergebnis
 }
 
 /**

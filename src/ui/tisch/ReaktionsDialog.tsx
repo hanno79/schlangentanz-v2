@@ -1,8 +1,7 @@
 import type { SpielAktion } from '../../engine'
 import type { TischAnsicht } from '../spiel/tischAnsicht'
 import { reaktionenVon, schutzHinweis } from './bedienung'
-import { ABWEHRFRAGE, SCHRITT, kartenSatz } from './protokolltexte'
-import { tischnamen } from './zugtexte'
+import { ABWEHRFRAGE } from './protokolltexte'
 
 /*
 Die Abwehrfrage (Plan O6, Kriterien 2 und 3; A6, A7.2, D33): Hat ein Gegner
@@ -17,11 +16,9 @@ ersten. Ohne Farbenschutz zählt die Engine nur das Durchlassen auf.
 Vorgelesen wird die Frage vom Ansager in der Zugleiste (O11 K2).
 */
 
-export function ReaktionsDialog({ ansicht, fuehreAus }: { ansicht: TischAnsicht; fuehreAus: (aktion: SpielAktion) => void }) {
-  const { schwebend } = ansicht.status
-  if (schwebend === null) throw new Error('Abwehrfrage: Es schwebt keine Karte, über die du entscheidest (A6).')
+/** `frage`: die Ansage als Satz (`ansageSatz`), die die Zugleiste schon für den Ansager bildet. */
+export function ReaktionsDialog({ ansicht, frage, fuehreAus }: { ansicht: TischAnsicht; frage: string; fuehreAus: (aktion: SpielAktion) => void }) {
   const { abwehren, durchlassen } = reaktionenVon(ansicht)
-  const frage = SCHRITT.sagtAn(schwebend.von, kartenSatz(schwebend.ansage, tischnamen(ansicht), schwebend.von))
 
   return (
     <div className="st-reaktion" role="group" aria-label={ABWEHRFRAGE.titel}>

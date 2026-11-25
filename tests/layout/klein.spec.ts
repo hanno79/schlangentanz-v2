@@ -1,8 +1,10 @@
 import { expect, test, type Page } from '@playwright/test'
 import { erzeugeSzenario } from '../../src/entwicklung/szenarien'
+import { SPIELSTAND_SCHLUESSEL } from '../../src/spielstand'
 import { neuePartie, volltisch } from '../../src/ui/tisch/__tests__/szenarien'
-import { brichtImWort } from './barrierefreiheit_messung'
-import { befundListe, findeAbgeschnittenes, findeAusserhalbDesBildes, kasten, waagrechterUeberstand } from './messung'
+import { brichtImWort, sichtbarImBild } from './barrierefreiheit_messung'
+import { befundListe, findeAbgeschnittenes, findeAusserhalbDesBildes, hoeheVon, kasten, waagrechterUeberstand } from './messung'
+import type { Befund } from './messung'
 import { halteUhrAn, legeSpielstand, oeffne } from './oeffnen'
 
 /*
@@ -63,37 +65,21 @@ test.describe('O11 (TF-TISCH-004): der Tisch bei 568 × 320', () => {
 
 /**
  * Jedes Bedienelement am Tisch ist erreichbar, notfalls indem die Seite oder
- * sein Bereich scrollt: danach ganz im Fenster und an seiner Mitte frei. Kein
- * Zeichen „geht weiter“ liegt auf einem Bedienelement, und die Tischfläche
- * bleibt mindestens 100 px hoch.
+ * sein Bereich scrollt: danach ganz zu sehen und unter keinem Zeichen „geht
+ * weiter“ (`sichtbarImBild`). Die Tischfläche bleibt mindestens 100 px hoch.
  */
 async function erwarteImEigenenZugBedienbar(page: Page, lage: string): Promise<void> {
-  const knoepfe = page.locator('[data-testid="spiel"]').locator('button:visible, a[href]:visible')
-  const anzahl = await knoepfe.count()
-  expect(anzahl, `${lage}: Testaufbau, Bedienelemente am Tisch`).toBeGreaterThan(3)
-  const befunde: string[] = []
-  for (let stelle = 0; stelle < anzahl; stelle += 1) {
-    const knopf = knoepfe.nth(stelle)
+  const knoepfe = await page.locator('[data-testid="spiel"]').locator('button:visible, a[href]:visible').all()
+  expect(knoepfe.length, `${lage}: Testaufbau, Bedienelemente am Tisch`).toBeGreaterThan(3)
+  const befunde: Befund[] = []
+  for (const knopf of knoepfe) {
     await knopf.scrollIntoViewIfNeeded()
-    const befund = await knopf.evaluate((element) => {
-      const box = element.getBoundingClientRect()
-      const name = element.getAttribute('aria-label') ?? (element.textContent ?? '').trim().slice(0, 40)
-      if (box.top < -1 || box.bottom > window.innerHeight + 1 || box.left < -1 || box.right > window.innerWidth + 1) {
-        return `${name}: nach dem Scrollen bei ${Math.round(box.top)}..${Math.round(box.bottom)}, Fenster ${window.innerHeight} px hoch`
-      }
-      const mitte = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2)
-      if (mitte === null || !(mitte === element || element.contains(mitte))) return `${name}: an der Mitte verdeckt von ${mitte?.className ?? 'nichts'}`
-      for (const zeichen of Array.from(document.querySelectorAll('.st-weiter-zeichen'))) {
-        const z = zeichen.getBoundingClientRect()
-        if (z.left < box.right - 1 && box.left < z.right - 1 && z.top < box.bottom - 1 && box.top < z.bottom - 1) return `${name}: unter dem Zeichen „${(zeichen.textContent ?? '').trim()}“`
-      }
-      return null
-    })
-    if (befund !== null) befunde.push(befund)
+    const detail = await knopf.evaluate(sichtbarImBild)
+    if (detail !== null) befunde.push({ element: (await knopf.getAttribute('aria-label')) ?? (await knopf.innerText()), detail })
   }
-  expect(befunde, `${lage}: ${befunde.join(' · ')}`).toEqual([])
-  const flaeche = await page.locator('.st-flaeche').evaluate((element) => element.getBoundingClientRect().height)
-  expect(flaeche, `${lage}: Tischfläche ${Math.round(flaeche)} px hoch`).toBeGreaterThanOrEqual(100)
+  expect(befunde, `${lage}:${befundListe(befunde)}`).toEqual([])
+  const flaeche = await hoeheVon(page.locator('.st-flaeche'))
+  expect(flaeche, `${lage}: Tischfläche ${flaeche} px hoch`).toBeGreaterThanOrEqual(100)
   expect(await waagrechterUeberstand(page), `${lage}: Seite breiter als das Fenster`).toBe(0)
 }
 
@@ -125,10 +111,10 @@ test.describe('O11 (TF-TISCH-049): der eigene Zug bei 568 × 320', () => {
     const ausfuehren = page.getByRole('region', { name: 'Zugleiste' }).getByRole('button', { name: 'Ausführen' })
     await expect(ausfuehren).toBeEnabled()
     await erwarteImEigenenZugBedienbar(page, 'Häutung ordnen')
-    const vorher = await page.evaluate(() => window.localStorage.getItem('schlangentanz-v2:partie'))
+    const vorher = await page.evaluate((schluessel) => window.localStorage.getItem(schluessel), SPIELSTAND_SCHLUESSEL)
     await ausfuehren.scrollIntoViewIfNeeded()
     await ausfuehren.tap()
-    await expect.poll(() => page.evaluate(() => window.localStorage.getItem('schlangentanz-v2:partie'))).not.toBe(vorher)
+    await expect.poll(() => page.evaluate((schluessel) => window.localStorage.getItem(schluessel), SPIELSTAND_SCHLUESSEL)).not.toBe(vorher)
   })
 })
 
