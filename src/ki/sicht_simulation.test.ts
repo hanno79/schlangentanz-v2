@@ -160,10 +160,10 @@ describe('K2 Vorgabe: die Folgefunktion liefert der Strategie die Sicht danach',
     expect(() => stellung.nach({ typ: 'ZugBeenden', spielerId: 'spieler-1' })).toThrow(/muss erst mindestens eine Karte spielen/)
   })
 
-  it('K2.7: eine Stellung bietet nur Sicht, Entscheider, Aktionen und Folge an und verrät nichts Verdecktes', () => {
+  it('K2.7, K4: eine Stellung bietet nur Sicht, Entscheider, Aktionen, Folge, die ungesehenen Karten und die erfüllbaren Aufgaben an und verrät nichts Verdecktes', () => {
     for (const [nummer, { zustand, ich }] of BLICKE.entries()) {
       const stellung = simuliere(sichtFuer(zustand, ich), erzeugeZufall(nummer))
-      expect(Object.keys(stellung).sort()).toEqual(['aktionen', 'entscheider', 'nach', 'sicht'])
+      expect(Object.keys(stellung).sort()).toEqual(['aktionen', 'entscheider', 'erfuellbar', 'nach', 'sicht', 'ungesehen'])
       const texte = alleTexte(JSON.parse(JSON.stringify(stellung)))
       const verraten = verborgeneIds(zustand, ich).filter((id) => texte.has(id))
       expect(verraten, `K2.7: Blick ${nummer} verrät Verdecktes`).toEqual([])

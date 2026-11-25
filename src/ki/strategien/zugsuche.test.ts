@@ -8,7 +8,7 @@ import { kiWahl } from '../schritt'
 import { sichtFuer } from '../sicht'
 import type { Ki } from './strategie'
 import { mischeVerborgenes } from '../__tests__/verborgenes'
-import { jederNte, nachDurchlassen, partieZustaende, zufallszustaende } from '../__tests__/stellungen'
+import { aufgabenwert, jederNte, nachDurchlassen, partieZustaende, zufallszustaende } from '../__tests__/stellungen'
 import { bewerte } from './bewertung'
 import { erstelleSolideKi } from './solideKi'
 import { erstelleZufallsKi } from './zufallsKi'
@@ -147,17 +147,21 @@ describe('K2 Kriterium 7: keine verdeckte Information', () => {
 })
 
 describe('K2, Codex-Review Iteration 2: die Vorauswahl wirft keinen höher bewerteten Zug heraus', () => {
-  /** Die Bewertung nach jeder angebotenen Aktion, wenn Gegner durchlassen, wie die Zugsuche rechnet; „Zug beenden“ behält den Stand. */
+  /** Die Bewertung nach jeder angebotenen Aktion, wenn Gegner durchlassen, wie die Zugsuche rechnet, mit den noch einzulösenden Aufgaben (K4); „Zug beenden“ behält den Stand. */
   function bewertungen(zustand: Spielzustand, sitz: number, aktionen: readonly SpielAktion[]) {
-    return aktionen.map((aktion) => ({
-      aktion,
-      wert: bewerte(sichtFuer(aktion.typ === 'ZugBeenden' ? zustand : nachDurchlassen(zustand, aktion, sitz), sitz)),
-    }))
+    return aktionen.map((aktion) => {
+      const danach = aktion.typ === 'ZugBeenden' ? zustand : nachDurchlassen(zustand, aktion, sitz)
+      return { aktion, wert: bewerte(sichtFuer(danach, sitz)) + aufgabenwert(zustand, danach, sitz) }
+    })
   }
 
-  /** Eine Farbkarte ist schon gespielt; die KI an Stelle `sitz` wählt die Sonderkarte. */
+  /**
+   * Eine Farbkarte ist schon gespielt; die KI an Stelle `sitz` wählt die Sonderkarte. Ohne
+   * Risiko-Karten: Deren Ausgang deckt die Engine erst auf, verglichen würde mit der echten
+   * obersten Karte (K4, Kriterium 4); hier geht es um die Vorauswahl der Sonderkarten.
+   */
   function waehltBeste(zustand: Spielzustand, sitz: number) {
-    const aktionen = ermittleAktionen(zustand)
+    const aktionen = ermittleAktionen(zustand).filter((aktion) => aktion.typ !== 'RisikoKarteSpielen')
     const werte = bewertungen(zustand, sitz, aktionen)
     const beste = Math.max(...werte.map(({ wert }) => wert))
     const gewaehlt = planeZug(sichtFuer(zustand, sitz), aktionen, erzeugeZufall(1)).aktion

@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { anwendeAktion, berechneEndwertung, ermittleAktionen } from '../../engine'
 import type { SpielAktion, Spielzustand } from '../../engine'
 import { sichtFuer } from '../sicht'
-import { entscheidungenVon, nachDurchlassen } from '../__tests__/stellungen'
+import { aufgabenwert, entscheidungenVon, nachDurchlassen } from '../__tests__/stellungen'
 import { kisK3gegenK2, partienK3gegenK2 } from '../__tests__/k3partien'
 import { bewerte } from './bewertung'
 
@@ -15,7 +15,9 @@ Entscheidung der soliden KI. „Führend“ ist der Gegner mit der höchsten End
 
 K3.2 sichert wie K2.1 und K3.4 das Verhalten im Basis-Spiel und spielt dieselben
 18 Partien mit denselben Saaten, alle ohne Erweiterung (Empfehlung des Prüfers zu
-X4, umgesetzt in K2b). Dieselbe Aussage mit Erweiterung gehört zu K4, Kriterium 5.
+X4, umgesetzt in K2b). Seit K4 gilt dieselbe Aussage mit derselben Strenge auch in den
+18 Partien mit Erweiterung (Plan K4, Kriterium 5); bewertet wird dort wie in der
+Zugsuche, mit den Aufgaben, die die KI erfüllt und noch nicht hat (`aufgabenwert`).
 */
 
 const PARTIEN = partienK3gegenK2(18, 42_000)
@@ -23,6 +25,11 @@ const JE_PARTIE = PARTIEN.map((partie) => entscheidungenVon(partie, kisK3gegenK2
 const ALLE = JE_PARTIE.flat()
 /** Dieselben Partien ohne Erweiterung; die schon ohne gespielten werden nicht noch einmal gespielt. */
 const BASIS = PARTIEN.flatMap((partie, nummer) => (partie.erweiterung ? entscheidungenVon({ ...partie, erweiterung: false }, kisK3gegenK2(partie), 0) : JE_PARTIE[nummer]))
+/** Die Partien mit Erweiterung (K4, Kriterium 5): die 9 von oben und 9 weitere, damit wie im Basis-Spiel genug Blockaden und Farbendiebe vorkommen. */
+const ERWEITERUNG = [
+  ...PARTIEN.flatMap((partie, nummer) => (partie.erweiterung ? JE_PARTIE[nummer] : [])),
+  ...partienK3gegenK2(18, 42_018).flatMap((partie) => (partie.erweiterung ? entscheidungenVon(partie, kisK3gegenK2(partie), 0) : [])),
+]
 
 /** Die eigenen Punkte ohne Aufgaben: Gruppen, Vielfaltbonus, Kettenbonus (A11). */
 const punkte = (zustand: Spielzustand, sitz: number) => {
@@ -49,17 +56,20 @@ function getroffen(zustand: Spielzustand, aktion: SpielAktion): number[] {
 }
 
 describe('K3 Kriterium 2 in Partien: Schlangenblockade und Farbendieb treffen dort, wo der Führende am meisten verliert', () => {
-  it('K3.2: jede Blockade und jeder Farbendieb gegen einen Gegner lässt dem stärksten Gegner den kleinsten Vorsprung, den diese Karte zulässt, oder ist nachweislich besser bewertet (Basis-Spiel)', () => {
+  it.each([
+    ['Basis-Spiel', BASIS],
+    ['mit Erweiterung, K4.5', ERWEITERUNG],
+  ])('K3.2: jede Blockade und jeder Farbendieb gegen einen Gegner lässt dem stärksten Gegner den kleinsten Vorsprung, den diese Karte zulässt, oder ist nachweislich besser bewertet (%s)', (_art, entscheidungen) => {
     let geprueft = 0
     const ausnahmen: string[] = []
-    for (const { vorher, aktion } of BASIS) {
+    for (const { vorher, aktion } of entscheidungen) {
       if ((aktion.typ !== 'BlockadeLegen' && aktion.typ !== 'FarbendiebSpielen') || getroffen(vorher, aktion).length === 0) continue
       geprueft += 1
       const varianten = ermittleAktionen(vorher)
         .filter((angeboten) => 'karteId' in angeboten && angeboten.karteId === aktion.karteId && getroffen(vorher, angeboten).length > 0)
         .map((angeboten) => {
           const danach = nachDurchlassen(vorher, angeboten, 0)
-          return { angeboten, vorsprung: vorsprung(danach), wert: bewerte(sichtFuer(danach, 0)) }
+          return { angeboten, vorsprung: vorsprung(danach), wert: bewerte(sichtFuer(danach, 0)) + aufgabenwert(vorher, danach, 0) }
         })
       const kleinster = varianten.reduce((beste, variante) => (variante.vorsprung < beste.vorsprung ? variante : beste))
       const gewaehlt = varianten.find((variante) => JSON.stringify(variante.angeboten) === JSON.stringify(aktion))!

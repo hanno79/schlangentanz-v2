@@ -7,7 +7,7 @@ import { abwehren, durchlassen, waehle } from '../../entwicklung/szenarienTesthi
 import { kiWahl } from '../schritt'
 import { sichtFuer } from '../sicht'
 import { mischeVerborgenes } from '../__tests__/verborgenes'
-import { nachDurchlassen, partieZustaende } from '../__tests__/stellungen'
+import { aufgabenwert, nachDurchlassen, partieZustaende } from '../__tests__/stellungen'
 import { endpunkte, kisK3gegenK2, partienK3gegenK2 } from '../__tests__/k3partien'
 import { wehrtAb } from './abwehr'
 import type { Angriffslage } from './abwehr'
@@ -34,10 +34,16 @@ const GEFRAGT: Spielzustand[] = gefragtIn(partienK3gegenK2(36, 41_000))
 /*
 Die Mindestzahl der Abwehrstellungen, auch in der Schlussrunde, sichert das
 Basis-Spiel und zählt deshalb in denselben 36 Partien, alle ohne Erweiterung
-(Entscheid des Orchestrators zu X6, 24.11.2026). Dieselbe Aussage mit
-Erweiterung gehört zu K4 (Plan K4, wird nachgetragen).
+(Entscheid des Orchestrators zu X6, 24.11.2026). Seit K4 zählt dieselbe Mindestzahl
+auch in den Partien mit Erweiterung (Plan K4, Kriterium 5): GEFRAGT enthält beide,
+und die Abwehr wird dort wie in der Zugsuche bewertet, mit den Aufgaben, die der
+Gefragte erfüllt und noch nicht hat (`aufgabenwert`).
 */
 const GEFRAGT_BASIS: Spielzustand[] = gefragtIn(partienK3gegenK2(36, 41_000).map((partie) => ({ ...partie, erweiterung: false })))
+/** Dieselben 36 Partien, alle mit Erweiterung (K4, Kriterium 5). */
+const GEFRAGT_ERWEITERUNG: Spielzustand[] = gefragtIn(partienK3gegenK2(36, 41_000).map((partie) => ({ ...partie, erweiterung: true })))
+/** Jede gesammelte Stellung, mit und ohne Erweiterung. */
+const ALLE_GEFRAGT = [...GEFRAGT, ...GEFRAGT_ERWEITERUNG]
 
 /** Punkte aus Farbgruppen und Vielfaltbonus (A11), ohne Kettenbonus und Aufgaben. */
 function gruppenpunkte(zustand: Spielzustand, sitz: number): number {
@@ -54,16 +60,19 @@ function ausgaenge(zustand: Spielzustand) {
 }
 
 describe('K3 Kriterium 4: Abwehr in Partien', () => {
-  it('K3.4: genug Stellungen, in denen jemand mit Farbenschutz gefragt ist, auch in der Schlussrunde (Basis-Spiel)', () => {
-    expect(GEFRAGT_BASIS.every((zustand) => !zustand.erweiterung), 'K3.4: nur Partien ohne Erweiterung').toBe(true)
-    expect(GEFRAGT_BASIS.length, 'K3.4: Stellungen mit Farbenschutz').toBeGreaterThan(80)
+  it.each([
+    ['Basis-Spiel', false, GEFRAGT_BASIS],
+    ['mit Erweiterung, K4.5', true, GEFRAGT_ERWEITERUNG],
+  ])('K3.4: genug Stellungen, in denen jemand mit Farbenschutz gefragt ist, auch in der Schlussrunde (%s)', (_art, erweiterung, gefragt) => {
+    expect(gefragt.every((zustand) => zustand.erweiterung === erweiterung), `K3.4: nur Partien ${erweiterung ? 'mit' : 'ohne'} Erweiterung`).toBe(true)
+    expect(gefragt.length, 'K3.4: Stellungen mit Farbenschutz').toBeGreaterThan(80)
     // Angriffe in der Schlussrunde sind selten; den Fall zeigt dazu das Szenario `ki-abwehr-schlussrunde`.
-    expect(GEFRAGT_BASIS.filter((zustand) => zustand.partiephase === 'Schlussrunde').length, 'K3.4: davon in der Schlussrunde').toBeGreaterThanOrEqual(3)
+    expect(gefragt.filter((zustand) => zustand.partiephase === 'Schlussrunde').length, 'K3.4: davon in der Schlussrunde').toBeGreaterThanOrEqual(3)
   })
 
   it('K3.4: zerstört ein Angriff eine eigene Gruppe oder kostet er die Gruppen mindestens 3 Punkte, wehrt sie mit Farbenschutz ab', () => {
     let geprueft = 0
-    for (const zustand of GEFRAGT) {
+    for (const zustand of ALLE_GEFRAGT) {
       const { gefragt, durch } = ausgaenge(zustand)
       if (gruppenzahl(durch, gefragt) >= gruppenzahl(zustand, gefragt) && gruppenpunkte(zustand, gefragt) - gruppenpunkte(durch, gefragt) < 3) continue
       geprueft += 1
@@ -75,13 +84,13 @@ describe('K3 Kriterium 4: Abwehr in Partien', () => {
 
   it('K3.4: sie wehrt genau dann ab, wenn der Schaden den Farbenschutz aufwiegt, in der Schlussrunde bei jedem Schaden; gerechnet auf dem echten Zustand', () => {
     const zaehlung = { abgewehrt: 0, durchgelassen: 0 }
-    for (const [nummer, zustand] of GEFRAGT.entries()) {
+    for (const [nummer, zustand] of ALLE_GEFRAGT.entries()) {
       const { gefragt, schutz, durch, abgewehrt } = ausgaenge(zustand)
       const sicht = sichtFuer(zustand, gefragt)
       const nachher = sichtFuer(durch, gefragt)
       const lage: Angriffslage = {
-        durchgelassen: bewerte(nachher),
-        abgewehrt: bewerte(sichtFuer(abgewehrt, gefragt)),
+        durchgelassen: bewerte(nachher) + aufgabenwert(zustand, durch, gefragt),
+        abgewehrt: bewerte(sichtFuer(abgewehrt, gefragt)) + aufgabenwert(zustand, abgewehrt, gefragt),
         schutzwert: haltewert(sicht.hand.find((karte) => schutz.typ === 'Reagieren' && karte.id === schutz.farbenschutzId)!, sicht),
         schlussrunde: zustand.partiephase === 'Schlussrunde',
         gruppenpunkte: { vorher: gruppenwert(sicht.spieler[gefragt], sicht.erweiterung), nachher: gruppenwert(nachher.spieler[gefragt], sicht.erweiterung) },
@@ -107,13 +116,13 @@ describe('K3 Kriterium 6 (K2.7): die Abwehr beruht nur auf der Sicht', () => {
   it('K3.6: in jeder gesammelten Stellung bleibt die Abwehrentscheidung gleich, wenn fremde Hände, Stapel und fremde geheime Aufgaben neu gemischt werden', () => {
     let veraendert = 0
     const abweichend: number[] = []
-    for (const [nummer, zustand] of GEFRAGT.entries()) {
+    for (const [nummer, zustand] of ALLE_GEFRAGT.entries()) {
       const gemischt = mischeVerborgenes(zustand, ermittleEntscheider(zustand)!, erzeugeZufall(9000 + nummer))
       if (JSON.stringify(gemischt) !== JSON.stringify(zustand)) veraendert += 1
       const wahl = (stand: Spielzustand) => JSON.stringify(kiWahl(stand, erstelleSolideKi(erzeugeZufall(nummer))))
       if (wahl(gemischt) !== wahl(zustand)) abweichend.push(nummer)
     }
-    expect(veraendert, 'K3.6: das Mischen verändert fast jede Stellung').toBeGreaterThan(0.9 * GEFRAGT.length)
+    expect(veraendert, 'K3.6: das Mischen verändert fast jede Stellung').toBeGreaterThan(0.9 * ALLE_GEFRAGT.length)
     expect(abweichend, 'K3.6: hier hinge die Abwehr vom Verdeckten ab').toEqual([])
   }, 60_000)
 })

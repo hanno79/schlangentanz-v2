@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { anwendeAktion, deserialisiere, ermittleAktionen, ermittleEntscheider, erstellePartie, erzeugeZufall, werteSchlangen } from '../../engine'
+import { anwendeAktion, deserialisiere, erfuelltAufgabe, ermittleAktionen, ermittleEntscheider, erstellePartie, erzeugeZufall, werteSchlangen } from '../../engine'
 import type { Ereignis, SpielAktion, Spielzustand } from '../../engine'
 import { zufallszustand } from '../../engine/testing/zufallszustand'
 import { STRATEGIEN } from '../strategien'
@@ -87,7 +87,7 @@ export function gruppenzahl(zustand: Spielzustand, sitz: number): number {
 
 /**
  * Der Stand nach einer Karte, dazu jeder Stand nach einer zweiten Karte desselben Spielers im selben Zug (A5, D12); gefragte Gegner lassen durch.
- * Ohne Risiko-Karten: Die spielt die solide KI erst ab K4 (X5), und ihre Prüfung deckt verdeckt auf.
+ * Ohne Risiko-Karten: Ihre Prüfung deckt eine Karte auf, die bei der Wahl verdeckt ist (B2).
  */
 export function mitZweiterKarte(danach: Spielzustand, sitz: number): Spielzustand[] {
   if (danach.schwebend !== null || danach.zug.spielerIndex !== sitz || danach.zug.abschnitt !== 'Ausspielen') return [danach]
@@ -109,4 +109,20 @@ export function ersterTeilzug(start: Spielzustand, sitz: number, saat: number): 
     zustand = nachDurchlassen(zustand, aktion, sitz)
   }
   throw new Error('Testaufbau: Der Teilzug endet nicht nach zehn Schritten.')
+}
+
+/**
+ * Was die Zugsuche der soliden KI zu `bewerte` für den Sitz hinzuzählt (Plan K4), auf dem
+ * echten Zustand nachgerechnet: die Aufgaben, die er in `danach` erfüllt und noch nicht
+ * hat (offene und die eigene geheime, A9, D35), abzüglich der eingelösten, die erst nach
+ * `start` vom Aufgabenstapel aufgedeckt wurden. Die kennt die KI bei ihrer Wahl nicht.
+ */
+export function aufgabenwert(start: Spielzustand, danach: Spielzustand, sitz: number): number {
+  if (!danach.erweiterung) return 0
+  const geheimStart = start.spieler[sitz].geheimeAufgabe
+  const bekannt = new Set([...start.offeneAufgaben, ...start.spieler.flatMap((spieler) => spieler.erfuellteAufgaben), ...(geheimStart === null ? [] : [geheimStart])].map((aufgabe) => aufgabe.id))
+  const { geheimeAufgabe, geheimeAufgabeErfuellt, erfuellteAufgaben } = danach.spieler[sitz]
+  const frei = [...danach.offeneAufgaben, ...(geheimeAufgabeErfuellt || geheimeAufgabe === null ? [] : [geheimeAufgabe])].filter((aufgabe) => bekannt.has(aufgabe.id))
+  const offen = frei.reduce((summe, aufgabe) => summe + (erfuelltAufgabe(danach, sitz, aufgabe) ? aufgabe.punkte : 0), 0)
+  return offen - erfuellteAufgaben.filter((aufgabe) => !bekannt.has(aufgabe.id)).reduce((summe, aufgabe) => summe + aufgabe.punkte, 0)
 }
