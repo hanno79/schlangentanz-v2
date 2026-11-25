@@ -908,8 +908,10 @@ Lobby schon heute die Partie mit `Math.random` anlegt.
   5. K2.1 (vollenden, ausser ein anderer Zug ist nachweislich besser), K3.2
      (Blockade und Farbendieb gegen den Führenden) und K3.4 (Abwehr, in der
      Schlussrunde jeden Schaden) gelten auch in Partien mit Erweiterung. Seit
-     X6 und K2b prüfen die Tests dieser Aussagen nur Partien ohne Erweiterung
-     (Entscheid des Orchestrators vom 24.11.2026).
+     X6 und K2b prüfen die Tests von K3.2 und K3.4 nur Partien ohne
+     Erweiterung, K2.1 prüft Partien mit und ohne Erweiterung (Entscheid des
+     Orchestrators vom 24.11.2026). Den Schlangenkorb nehmen die Tests zu K2.1
+     und zum Zugende aus, bis K4 Kriterium 2 seine Nutzung festlegt.
 
 ### K5 Stärkenachweis
 
