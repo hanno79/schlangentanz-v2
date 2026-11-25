@@ -156,6 +156,13 @@ bedeuten, steht in DESIGN.md („Handkarte“, „Angebotenes Ziel“, „Zuglei
   border-top: 1px solid var(--farbe-linie);
 }
 
+/* Nimmt die Leiste selbst den Fokus (fokus.ts), liegt der Ring innen. */
+.st-zugleiste:focus-visible {
+  outline: var(--fokus-linie-innen);
+  outline-offset: -3px;
+  box-shadow: none;
+}
+
 .st-zugleiste-inhalt {
   flex: 1;
   min-width: 0;
@@ -210,8 +217,8 @@ bedeuten, steht in DESIGN.md („Handkarte“, „Angebotenes Ziel“, „Zuglei
   }
 }
 
-/* Ein Knopf mit seinem Grund daneben („Zug beenden“). */
-.st-zugleiste-mitgrund {
+/* Ein Knopf mit seinem Grund daneben (KnopfMitGrund: „Zug beenden“, „Ablegen“). */
+.st-mitgrund {
   display: flex;
   flex: 1 1 auto;
   align-items: center;
@@ -221,7 +228,7 @@ bedeuten, steht in DESIGN.md („Handkarte“, „Angebotenes Ziel“, „Zuglei
 }
 
 /* Der Grund neben einem gesperrten Knopf (DESIGN.md, „Komponenten“); er bricht um, statt den Knopf zu verdrängen. */
-.st-zugleiste-grund {
+.st-grund {
   flex: 0 1 auto;
   min-width: 0;
   font-size: var(--groesse-klein);
@@ -229,12 +236,12 @@ bedeuten, steht in DESIGN.md („Handkarte“, „Angebotenes Ziel“, „Zuglei
   text-align: right;
 }
 
-.st-zugleiste-mitgrund > .st-knopf {
+.st-mitgrund > .st-knopf {
   flex: none;
 }
 
-/* Gesperrt mit Grund: eine eigene Zeile, der Grund links neben dem Knopf. */
-.st-zugleiste-mitgrund--gesperrt {
+/* In der Zugleiste gesperrt mit Grund: eine eigene Zeile, der Grund links neben dem Knopf. */
+.st-zugleiste .st-mitgrund--gesperrt {
   flex-basis: 100%;
 }
 
@@ -247,6 +254,10 @@ bedeuten, steht in DESIGN.md („Handkarte“, „Angebotenes Ziel“, „Zuglei
   .st-zugleiste {
     flex-direction: column;
     border-left: 1px solid var(--farbe-linie);
+    box-shadow: var(--schatten-leiste);
+  }
+
+  .st-zugleiste:focus-visible {
     box-shadow: var(--schatten-leiste);
   }
 

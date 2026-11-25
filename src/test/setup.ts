@@ -22,6 +22,12 @@ if (typeof document !== 'undefined' && typeof globalThis.matchMedia !== 'functio
   })
 }
 
+// O11: jsdom kennt kein Layout und deshalb kein `scrollIntoView`; der Tisch scrollt damit ein Element, das die
+// Tastatur geholt hat, ins Bild (src/ui/tisch/fokus.ts). Ohne Layout gibt es nichts zu scrollen.
+if (typeof Element !== 'undefined' && typeof Element.prototype.scrollIntoView !== 'function') {
+  Element.prototype.scrollIntoView = () => {}
+}
+
 // M1dq (2026-06-26): Globale Test-Pollution-Praevention.
 // Verschiedene Slices (M1dp, M1dq) muessen fuer ihre RED-Tests
 // `window.history.pushState({}, '', '/game')` aufrufen, damit der

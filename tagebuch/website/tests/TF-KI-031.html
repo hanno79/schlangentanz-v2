@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-KI-031 Die solide KI entscheidet eine Abwehrfrage mit und ohne Farbenschutz in weniger als 100 ms, der Mindestpause bei „weniger Bewegung“. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 25.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-KI-031 Die solide KI entscheidet eine Abwehrfrage mit und ohne Farbenschutz in weniger als 100 ms, der Mindestpause bei „weniger Bewegung“.</h1><p class="etiketten"><span class="etikett">Bereich KI-Gegner</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Bei „weniger Bewegung“ wartet der Tisch vor jedem KI-Schritt nur 100 ms. Rechnet eine KI mit Farbenschutz länger als ohne und länger als diese Pause, sieht man an der Dauer, ob sie einen Farbenschutz hält. Gemessen wird deshalb die Rechenzeit der soliden KI bei Abwehrfragen über viele Fälle.</p><h2>Bestanden, wenn</h2><p>Über alle gemessenen Abwehrfragen bleibt die längste Rechenzeit mit Farbenschutz und die längste ohne Farbenschutz unter 100 ms.</p><h2>Fehlgeschlagen, wenn</h2><p>Mindestens eine Abwehrfrage braucht 100 ms oder länger.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>25.11.2026</dd><dt>Änderung</dt><dd>task/O11-barrierefreiheit (PR #121)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Quelltext, Stand ab Commit 5634c28, Node mit Vitest</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>150 ganze Partien (Saaten 9100 bis 9249, 2 bis 4 Spieler, mit und ohne Erweiterung, alle Sitze solide KI aus der Registry, je eigene Saat) und 4&#x27;000 Zufallszustände (Saaten 1 bis 4&#x27;000), davon jede Stellung, in der jemand über eine angesagte Karte entscheidet.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Repo, `src/ki/__tests__/`</td><td>Messdatei anlegen, wie unter „Technische Prüfung“ beschrieben</td><td></td><td></td></tr><tr><td>2</td><td>Konsole</td><td>`npx vitest run` über diese Datei</td><td></td><td>Test endet mit 0</td></tr><tr><td>3</td><td>Ausgabedatei</td><td>Maximum mit und ohne Farbenschutz ablesen</td><td></td><td>beide unter 100 ms</td></tr><tr><td>4</td><td>Repo</td><td>Messdatei wieder löschen</td><td></td><td>`git status` sauber</td></tr></tbody></table></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p>Eine nicht eingecheckte Vitest-Datei misst mit <code>performance.now()</code> den Aufruf <code>waehleFuer(zustand, entscheider, ki)</code>, genau den Aufruf aus <code>useSpiel</code>. Mit Farbenschutz heisst: Die Engine bietet mehr als eine Reaktion an. Ausgegeben werden Anzahl, Median, p95, p99 und Maximum je Gruppe.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Gemessen auf einem Desktop-Rechner in Node; ein langsames Handy rechnet mehrfach länger. Die Zeit für das Zeichnen nach der Wahl gehört nicht zur Rechenzeit der KI.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-25">25.11.2026 11:22</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer O11) &middot; agent &middot; pruefung-O11 @ <span class="commit" title="5634c28d5da7e2e54b90a29e4b789eded208def7">5634c28</span></p><p>150 Partien (Saaten 9100 bis 9249, 2 bis 4 Spieler, mit/ohne Erweiterung, alle Sitze solide KI) und 847 Abwehrfragen aus 4000 Zufallszuständen: mit Farbenschutz n=737, Median 1.57 ms, p95 2.52 ms, p99 3.42 ms, max 7.77 ms (Partie 9113); ohne Farbenschutz n=2861, Median 0.17 ms, p99 0.34 ms, max 3.26 ms. 0 Fälle über 25 ms, keiner über 100 ms. Messdatei danach gelöscht, git status sauber</p><ul class="belege"><li><a href="belege/2026-11-25-1122-TF-KI-031-1.txt">2026-11-25-1122-TF-KI-031-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

@@ -141,7 +141,7 @@ test.describe('O5 K9: Karten spielen mit Maus und Finger', () => {
     expect(await gespeichert(page)).not.toBe(start)
   })
 
-  test('O5 Iteration 2: neben dem gesperrten „Zug beenden“ steht der Grund der Engine, auch mit gewählter Karte und Ansage', async ({ page }, info) => {
+  test('O5 Iteration 2/O11: neben dem gesperrten „Zug beenden“ steht der Grund der Engine, auch mit gewählter Karte und Ansage (in Handy quer entfällt es dann)', async ({ page }, info) => {
     const tippe = bediene(info)
     await oeffneSzenario(page, 'farbkarte-beim-gegner')
     // O6: in Du-Form (Weg A), aus dem Grund der Engine „Spieler 1 muss erst …“.
@@ -157,11 +157,16 @@ test.describe('O5 K9: Karten spielen mit Maus und Finger', () => {
       expect(abstand, `${lage}: der Grund steht neben dem Knopf`).toBeLessThanOrEqual(16)
       expect(await waagrechterUeberstand(page), lage).toBe(0)
     }
+    // O11: In Handy quer entfällt ein gesperrtes „Zug beenden“ samt Grund, solange eine Karte gewählt ist (DESIGN.md, „Zugleiste“).
+    const quer = await page.evaluate(() => window.matchMedia('(orientation: landscape) and (max-height: 500px)').matches)
+    const mitKarte = quer ? (lage: string) => expect(zugBeenden, `${lage}: in Handy quer entfällt das gesperrte „Zug beenden“`).toBeHidden() : pruefe
     await pruefe('ohne Karte')
     await tippe(hand(page).getByRole('button', { name: 'Farbkarte Rot, 1 Punkt' }))
-    await pruefe('Karte gewählt')
+    await mitKarte('Karte gewählt')
     await tippe(page.getByRole('button', { name: 'KI-Gegner 1, Schlange 1: Ende', exact: true }))
-    await pruefe('Ansage')
+    await mitKarte('Ansage')
+    await tippe(zugleiste(page).getByRole('button', { name: 'Abbrechen' }))
+    await pruefe('nach „Abbrechen“')
   })
 
   test('O5: „Zur Lobby“ bleibt mitten in der Zielwahl bedienbar und führt zur Lobby', async ({ page }, info) => {

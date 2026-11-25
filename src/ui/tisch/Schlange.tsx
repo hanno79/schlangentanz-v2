@@ -3,7 +3,7 @@ import { Karte } from '../karten/Karte'
 import type { Wahl } from '../spiel/auswahl'
 import type { AblageAnsicht, GrubeAnsicht, KarteInSchlange, Person, SchlangeAnsicht } from '../spiel/tischAnsicht'
 import { KARTENGROESSE } from './groessen'
-import { useUeberlauf } from './ueberlauf'
+import { scrollFokus, useUeberlauf } from './ueberlauf'
 import { Weiter } from './Weiter'
 import { TISCH, ablageText, grubeText, punkteText, schlangenName, schlangenTitel } from './texte'
 import { useZiele, zielDerArt, zieleDerSchlange } from './bedienung'
@@ -59,7 +59,12 @@ export function Schlange({ schlange: liegend, titel, groesse }: { schlange: Schl
   const ganzeGewaehlt = ganze !== undefined && bedienung?.gewaehlt(ganze) === true
   return (
     <div className={ganzeGewaehlt ? 'st-rolle st-rolle--gewaehlt' : 'st-rolle'}>
-    <ol ref={zeile} className={ziele.length > 0 ? 'st-schlange st-schlange--ziele' : 'st-schlange'} aria-label={schlangenName(titel, laenge, schlange.farbgruppen)}>
+    <ol
+      ref={zeile}
+      className={ziele.length > 0 ? 'st-schlange st-schlange--ziele st-scrollt' : 'st-schlange st-scrollt'}
+      aria-label={schlangenName(titel, laenge, schlange.farbgruppen)}
+      tabIndex={scrollFokus(ueberlauf)}
+    >
       {ende('anfang')}
       {schlange.karten.map((glied, stelle) => {
         const karte = zielDerArt(ziele, 'schlangenkarte', (ziel) => ziel.karteId === glied.karte.id)

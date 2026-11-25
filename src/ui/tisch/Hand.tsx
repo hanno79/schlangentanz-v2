@@ -8,7 +8,7 @@ import type { Bedienung } from './bedienung'
 import { KARTENGROESSE } from './groessen'
 import { Ablage, Grube } from './Schlange'
 import { TISCH, deineHandTitel } from './texte'
-import { useUeberlauf } from './ueberlauf'
+import { scrollFokus, useUeberlauf } from './ueberlauf'
 import { Weiter } from './Weiter'
 import { ZielKnopf } from './Ziele'
 import { ZIELNAME, gesperrteKarte } from './zugtexte'
@@ -49,7 +49,7 @@ export function Hand({ ich }: { ich: EigeneAnsicht }) {
         <p className="st-leer">{TISCH.keineHandkarte}</p>
       ) : (
         <div className="st-rolle">
-          <ul ref={reihe} className="st-hand-karten" aria-label={TISCH.handkartenListe} style={anzahl}>
+          <ul ref={reihe} className="st-hand-karten st-scrollt" aria-label={TISCH.handkartenListe} style={anzahl} tabIndex={scrollFokus(ueberlauf)}>
             {ich.hand.map((karte) => (
               <li key={karte.id}>{bedienung === null ? <Karte karte={karte} sizes={KARTENGROESSE.hand} /> : <Handkarte karte={karte} bedienung={bedienung} />}</li>
             ))}

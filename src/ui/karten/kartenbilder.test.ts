@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest'
-import { existsSync, readdirSync } from 'node:fs'
+import { existsSync, readdirSync, statSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import type { Farbe } from '../../engine'
 import { erstelleAufgabenStapel } from '../../engine/aufgabenKarten'
@@ -90,6 +90,15 @@ describe('O1: Für jede Karte des Materials gibt es ein Bild (Kriterium 1)', () 
     expect(existsSync(dateiZu(LOGO_BILD)), `${LOGO_BILD} fehlt`).toBe(true)
     expect(existsSync(dateiZu(RUECKSEITE_BILD)), `${RUECKSEITE_BILD} fehlt`).toBe(true)
     expect(RUECKSEITE_BILD, 'Die Rückseite ist bis zur Datei des Autors ein Platzhalter').toMatch(/platzhalter/)
+  })
+
+  it('O11: das Logo ist höchstens 30 KB gross und reicht für die Lobby bei dreifacher Pixeldichte (160 px hoch)', () => {
+    const datei = dateiZu(LOGO_BILD)
+    const { breite, hoehe } = webpGroesse(datei)
+    expect(statSync(datei).size, `${LOGO_BILD}: ${statSync(datei).size} Bytes`).toBeLessThanOrEqual(30_000)
+    expect(hoehe, `${LOGO_BILD}: ${breite}×${hoehe}`).toBeGreaterThanOrEqual(480)
+    // Die Lobby nennt 521×672 als Grösse; das Seitenverhältnis muss dazu passen, sonst springt das Bild beim Laden.
+    expect(Math.abs(breite / hoehe - 521 / 672), `${LOGO_BILD}: ${breite}×${hoehe}`).toBeLessThan(0.01)
   })
 })
 

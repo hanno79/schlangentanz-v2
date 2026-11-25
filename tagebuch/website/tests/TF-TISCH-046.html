@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-TISCH-046 Gegnerzug, Angriff und Abwehr werden vom Ansager vorgelesen, und kein zweiter Bereich liest dasselbe vor. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 25.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-TISCH-046 Gegnerzug, Angriff und Abwehr werden vom Ansager vorgelesen, und kein zweiter Bereich liest dasselbe vor.</h1><p class="etiketten"><span class="etikett">Bereich Spieltisch</span><span class="etikett">Regression ja</span><span class="etikett">Priorität hoch</span><span class="etikett">Art manuell</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Ein Bildschirmleser liest nur Bereiche von selbst vor, die dafür markiert sind (<code>aria-live</code>). Am Tisch ist das genau eine Stelle, der Ansager. Er sagt, was ein Gegner tut, wer dich angreift und wie die Abwehr ausgeht.</p><h2>Bestanden, wenn</h2><p>Der Ansager (<code>data-testid=&quot;ansager&quot;</code>, <code>aria-live=&quot;polite&quot;</code>) enthält nacheinander die Sätze des Protokolls, etwa „KI-Gegner 1 spielt: Grün beginnt eine neue Schlange.“, „Abwehrfrage: Mit einem Farbenschutz wehrst du sie ab. …“ und „Du wehrst Schlangengrube mit Farbenschutz ab.“ Statuszeile und Protokoll stehen auf <code>aria-live=&quot;off&quot;</code>; ausser dem Ansager liest kein Bereich denselben Satz vor.</p><h2>Fehlgeschlagen, wenn</h2><p>Ein Gegnerzug, ein Angriff oder die Abwehr fehlt im Ansager, oder derselbe Satz steht in zwei vorlesenden Bereichen.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>25.11.2026</dd><dt>Änderung</dt><dd>task/O11-barrierefreiheit (PR #121)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Testhook-Build, Stand ab Commit 5634c28</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Szenarien <code>farbkarte-beim-gegner</code> und <code>angriff-auf-dich</code>.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Adresse</td><td>öffnen</td><td>`/spiel?szenario=farbkarte-beim-gegner&amp;tempo=sofort`</td><td>Ansager „Wähle eine Karte aus deiner Hand.“</td></tr><tr><td>2</td><td>Konsole</td><td>Änderungen des Ansagers mitschreiben (`MutationObserver`)</td><td></td><td></td></tr><tr><td>3</td><td>Tisch</td><td>eine Karte spielen, „Zug beenden“</td><td></td><td>Ansager nennt deinen Zug, dann „KI-Gegner 1 spielt: …“ und „Du bist dran.“</td></tr><tr><td>4</td><td>Adresse</td><td>öffnen</td><td>`/spiel?szenario=angriff-auf-dich&amp;tempo=sofort`</td><td>Ansager „Abwehrfrage: Mit einem Farbenschutz wehrst du sie ab. …“</td></tr><tr><td>5</td><td>Zugleiste</td><td>„Abwehren“</td><td></td><td>Ansager „Du wehrst Schlangengrube mit Farbenschutz ab. …“</td></tr><tr><td>6</td><td>Seitenbaum</td><td>alle Bereiche mit `aria-live`, `role=&quot;status&quot;`, `role=&quot;log&quot;` lesen</td><td></td><td>nur der Ansager liest vor</td></tr></tbody></table></section>
+<section class="kasten-zuruecksetzen"><h2>Zurücksetzen</h2><p>Ein neues Szenario setzt den Stand zurück.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Ob ein echter Bildschirmleser bei <code>tempo=sofort</code> jeden Satz ausspricht, ist nicht geprüft; mit der normalen Pause liegen die Sätze getrennt. Die erfüllte Aufgabe prüft <code>Ansager.test.tsx</code> (Szenario <code>aufgabe-lila-riese</code>), das Spielende TF-TISCH-045.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-25">25.11.2026 11:22</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer O11) &middot; agent &middot; pruefung-O11 @ <span class="commit" title="5634c28d5da7e2e54b90a29e4b789eded208def7">5634c28</span> / eingebauter Browser 1280x900 und Playwright Chromium 1.60.0</p><p>Eingebauter Browser: farbkarte-beim-gegner nach Zug beenden Ansager nacheinander Du ziehst 1 Karte. KI-Gegner 1 ist dran. / KI-Gegner 1 spielt: Grün beginnt eine neue Schlange. / KI-Gegner 1 zieht 1 Karte. Du bist dran. Wähle eine Karte aus deiner Hand.; angriff-auf-dich Abwehrfrage: Mit einem Farbenschutz wehrst du sie ab. ..., nach Abwehren Du wehrst Schlangengrube mit Farbenschutz ab. Schlangengrube bleibt ohne Wirkung. Volle Tastaturpartie Desktop mit Erweiterung: 309 Ansagen, darunter KI-Gegner 1 sagt an: Schlangengrube auf dich. Abwehrfrage: ... und 5 erfüllte Aufgaben (KI-Gegner 1 erfüllt die Aufgabe Farbwechsler. Neu offen liegt die Aufgabe Schlangenmeister.). Statuszeile role=status aria-live=off, Protokoll role=log aria-live=off, nur der Ansager aria-live=polite</p><ul class="belege"><li><a href="belege/2026-11-25-1122-TF-TISCH-046-1.txt">2026-11-25-1122-TF-TISCH-046-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-TISCH-047 Am Tisch, in der Lobby und in der Wertung hat jeder lesbare Text mindestens 4,5 : 1 Kontrast, und axe meldet nichts Schweres. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 25.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-TISCH-047 Am Tisch, in der Lobby und in der Wertung hat jeder lesbare Text mindestens 4,5 : 1 Kontrast, und axe meldet nichts Schweres.</h1><p class="etiketten"><span class="etikett">Bereich Spieltisch</span><span class="etikett">Regression ja</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Texte müssen sich genug vom Hintergrund abheben (WCAG 1.4.3: mindestens 4,5 : 1). axe-core prüft dazu Namen, Rollen und weitere Regeln. Gemessen wird selbst, mit der Deckkraft aller Vorfahren, an Stellen, die leicht zu blass geraten: Grund neben einem gesperrten Knopf, Hinweise, Bereichstitel, Abzeichen.</p><h2>Bestanden, wenn</h2><p>An jeder gemessenen Stelle mit bedienbarem oder reinem Text liegt das Verhältnis bei mindestens 4,5 : 1, und axe meldet in Lobby, Tisch am Zug, Karte gewählt, Häutung ordnen, Abwehrfrage, Dialog „Zu viele Handkarten“ und Wertung keinen Befund der Stufe „serious“ oder „critical“.</p><h2>Fehlgeschlagen, wenn</h2><p>Ein lesbarer Text liegt unter 4,5 : 1, oder axe meldet einen Befund der Stufe „serious“ oder „critical“.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>25.11.2026</dd><dt>Änderung</dt><dd>task/O11-barrierefreiheit (PR #121)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Produktionsbuild (Lobby) und Testhook-Build (Tisch), Stand ab Commit 5634c28</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Szenarien <code>farbkarte-beim-gegner</code>, <code>haeutung-punkte</code>, <code>angriff-auf-dich</code>, <code>schlussrunde-2</code>, <code>zu-viele-handkarten</code>, <code>wertung-beispiele</code>.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Lobby `/`</td><td>axe laufen lassen, Kontrast von Untertitel, gewähltem Segment und „Aus“ messen</td><td></td><td>keine schweren Befunde, alle ≥ 4,5</td></tr><tr><td>2</td><td>Tisch, jedes Szenario</td><td>axe laufen lassen; Kontrast von Statuszeile, Grund, Bereichstitel, Protokoll, Satz der Zugleiste, „Ansehen“, Abwehrhinweis, Abzeichen „Schlussrunde“ messen</td><td></td><td>keine schweren Befunde, alle ≥ 4,5</td></tr><tr><td>3</td><td>Tisch</td><td>Kontrast der gesperrten Knöpfe messen (halbe Deckkraft)</td><td></td><td>nur festhalten, siehe unten</td></tr></tbody></table></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p>Kontrast nach WCAG 2.1 aus <code>getComputedStyle</code>: Textfarbe mit der Deckkraft aller Vorfahren über die erste deckende Hintergrundfarbe gemischt. axe über <code>@axe-core/playwright</code> mit den Standardregeln.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Gesperrte Knöpfe (halbe Deckkraft) liegen bei etwa 2,4 : 1. WCAG 1.4.3 nimmt inaktive Bedienelemente vom Kontrast aus; der Lauf hält die Werte fest, wertet sie aber nicht. Text über Verläufen und auf Kartenbildern ist nicht messbar.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-25">25.11.2026 11:22</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer O11) &middot; agent &middot; pruefung-O11 @ <span class="commit" title="5634c28d5da7e2e54b90a29e4b789eded208def7">5634c28</span> / Playwright Chromium 1.60.0, Desktop 1280x900</p><p>axe von Hand (Desktop): Lobby, Tisch am Zug, Karte gewählt, Häutung ordnen, Abwehrfrage, Dialog Zu viele Handkarten je 0 Verstösse; Wertung nur landmark-unique (moderate). Kontrast mit Deckkraft gemessen: Lobby-Untertitel 6.04, gewähltes Segment 5.18, Schalter Aus 12.82, Statuszeile Titel 7.31, Statuszeile Text 6.50, Grund neben Zug beenden 6.50, Bereichstitel 5.30/6.50, Protokoll 6.50, Zugleiste 15.71, Ansehen 7.31, Abwehrhinweis 6.50, Abzeichen Schlussrunde 7.31, Grund neben Ablegen 6.50. Gesperrte Knöpfe (Deckkraft 0.5): Zug beenden 2.46, Ausführen 2.36, Ablegen 2.36, nach WCAG 1.4.3 ausgenommen. aria-describedby an gesperrtem Ablegen zeigt auf Wähle noch 2 Karten.</p><ul class="belege"><li><a href="belege/2026-11-25-1122-TF-TISCH-047-1.txt">2026-11-25-1122-TF-TISCH-047-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

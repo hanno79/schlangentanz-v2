@@ -1,0 +1,2 @@
+  ok 2370 [handy-quer-testhooks] › tests\layout\karten_spielen.hooks.spec.ts:87:3 › O5 K9: Karten spielen mit Maus und Finger › O5 K9/K5: nach einer Farbkarte beendet „Zug beenden“ den Zug (2.2s)
+  ok 2369 [handy-quer-testhooks] › tests\layout\karten_spielen.hooks.spec.ts:144:3 › O5 K9: Karten spielen mit Maus und Finger › O5 Iteration 2/O11: neben dem gesperrten „Zug beenden“ steht der Grund der Engine, auch mit gewählter Karte und Ansage (in Handy quer entfällt es dann) (2.5s)

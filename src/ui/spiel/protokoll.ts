@@ -38,6 +38,13 @@ export function protokollSchritt(vorher: Spielzustand, aktion: SpielAktion, erei
   const namen = tischnamen(ansicht, gespielteKarte(vorher, aktion))
   const kurz = (karteId: string) => kartenkurzname(namen.karte(karteId))
   const wer = person(vorher.spieler.findIndex((spieler) => spieler.id === aktion.spielerId))
+  // Eine erfüllte oder nachrückende Aufgabe liegt offen; sie kann eben erst vom Aufgabenstapel gekommen sein (D5).
+  const aufgabe = (aufgabeId: string) => {
+    const istSie = (kandidat: { id: string }) => kandidat.id === aufgabeId
+    const karte = vorher.offeneAufgaben.find(istSie) ?? vorher.aufgabenStapel.find(istSie)
+    if (karte === undefined) throw new Error(`Protokoll: Die Aufgabe ${aufgabeId} liegt weder offen noch auf dem Aufgabenstapel.`)
+    return karte.name
+  }
   const saetze: string[] = []
   const angesagt = ansicht.status.schwebend?.angesagt
   if (aktion.typ === 'Reagieren' && aktion.farbenschutzId === null && angesagt !== undefined) saetze.push(SCHRITT.laesstDurch(wer, kartenkurzname(angesagt)))
@@ -82,6 +89,15 @@ export function protokollSchritt(vorher: Spielzustand, aktion: SpielAktion, erei
         break
       case 'Entschieden':
         saetze.push(SCHRITT.entscheidet(person(ereignis.spielerIndex), ereignis.art))
+        break
+      case 'AufgabeErfuellt':
+        saetze.push(SCHRITT.aufgabeErfuellt(person(ereignis.spielerIndex), aufgabe(ereignis.aufgabeId)))
+        break
+      case 'AufgabeAufgedeckt':
+        saetze.push(SCHRITT.aufgabeAufgedeckt(aufgabe(ereignis.aufgabeId)))
+        break
+      case 'AufgabenstapelLeer':
+        saetze.push(SCHRITT.aufgabenstapelLeer)
         break
       case 'SchlussrundeBegonnen':
         saetze.push(SCHRITT.schlussrunde)

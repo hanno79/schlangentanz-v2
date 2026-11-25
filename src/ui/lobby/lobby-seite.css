@@ -98,6 +98,13 @@ Scrollen im Bild liegt. Nur Variablen aus `src/ui/tokens.css`.
   color: var(--farbe-auf-akzent);
 }
 
+/* Gewählt ist nicht nur an der Farbe zu erkennen (O11 K3): ein Haken vor der Zahl.
+   Vorgelesen wird er nicht; dass das Feld gewählt ist, sagt das Auswahlfeld selbst. */
+.lobby__segment input:checked + span::before {
+  content: '✓' / '';
+  margin-right: 2px;
+}
+
 /* Erweiterung: Beschriftung links, Schalter rechts; „An“ oder „Aus“ steht als Wort da. */
 .lobby__schalter {
   display: flex;
@@ -201,5 +208,57 @@ Scrollen im Bild liegt. Nur Variablen aus `src/ui/tokens.css`.
   .lobby__neu {
     gap: var(--abstand-2);
     padding: var(--abstand-3);
+  }
+}
+
+/* Unter den Geräteklassen: sehr flache Fenster im Querformat (568 × 320, TF-APP-018).
+   Der Kopf wird eine Zeile über dem Inhalt, Gegnerzahl und Erweiterung stehen
+   nebeneinander, damit Partie, Wahl und Rückfrage ohne Scrollen ins Bild passen. */
+@media (orientation: landscape) and (max-height: 22rem) and (min-width: 560px) {
+  .rahmen--lobby {
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    row-gap: var(--abstand-2);
+    padding-block: var(--abstand-2);
+  }
+
+  .rahmen--lobby .rahmen__kopf {
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
+    align-items: center;
+    justify-items: start;
+    column-gap: var(--abstand-3);
+    text-align: left;
+  }
+
+  .rahmen--lobby .rahmen__titel {
+    font-size: var(--groesse-titel);
+  }
+
+  .rahmen--lobby .rahmen__text {
+    font-size: var(--groesse-klein);
+  }
+
+  .lobby__logo {
+    height: 40px;
+  }
+
+  .lobby__inhalt {
+    gap: var(--abstand-2);
+  }
+
+  .lobby__laufend,
+  .lobby__neu,
+  .lobby__frage {
+    padding: var(--abstand-2);
+  }
+
+  .lobby__neu {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: center;
+    column-gap: var(--abstand-3);
+  }
+
+  .lobby__neu > :is(button, .lobby__frage) {
+    grid-column: 1 / -1;
   }
 }

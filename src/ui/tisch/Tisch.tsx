@@ -19,7 +19,8 @@ import { Gegner } from './Gegner'
 import { HaeutungKontext, useHaeutung } from './haeutung'
 import { Hand } from './Hand'
 import { GrossKnopf } from './Kartenknopf'
-import { useUeberlauf } from './ueberlauf'
+import { useFokusHalten } from './fokus'
+import { scrollFokus, useUeberlauf } from './ueberlauf'
 import { UeberhandDialog } from './UeberhandDialog'
 import { Weiter } from './Weiter'
 import { KARTENGROESSE } from './groessen'
@@ -45,6 +46,10 @@ Zugleiste steht unten bei deinem Platz (DESIGN.md „Zugleiste“). Eine laufend
 Schlangenhäutung (O7) liegt in einem eigenen Kontext. Mit O6 kommen
 Abwehrfrage, Protokoll und „Schneller“ dazu; sie brauchen den Verlauf der
 Partie (`useSpiel`). Ein Tisch ohne Verlauf zeigt nur den Stand.
+
+Mit O11 hält der Tisch den Fokus bei sich (`useFokusHalten`), und jeder
+Bereich, der gerade scrollt, nimmt den Fokus an, damit er sich auch mit den
+Pfeiltasten scrollen lässt.
 */
 
 interface TischEigenschaften {
@@ -66,10 +71,11 @@ export function Tisch({ ansicht, fuehreAus, ablehnung, haeutungsVorschau, verlau
   // Der Dialog zum Abwerfen ist offen, bis du ihn für diesen Stand schliesst.
   const [abwerfenZu, setzeAbwerfenZu] = useState<SpielAktion[] | null>(null)
   const [flaeche, flaecheUeberlauf] = useUeberlauf<HTMLDivElement>()
+  const wurzel = useFokusHalten()
   return (
     <ZielKontext.Provider value={bedienung}>
     <HaeutungKontext.Provider value={haeutung}>
-    <div className={bedienung.ziele.length > 0 ? 'spieltisch spieltisch--zielwahl' : 'spieltisch'} data-testid="spiel">
+    <div ref={wurzel} className={bedienung.ziele.length > 0 ? 'spieltisch spieltisch--zielwahl' : 'spieltisch'} data-testid="spiel">
       <header className="st-kopf">
         <Statuszeile status={ansicht.status} />
         <p className="st-kopf-stapel">
@@ -81,7 +87,7 @@ export function Tisch({ ansicht, fuehreAus, ablehnung, haeutungsVorschau, verlau
       </header>
 
       <div className="st-flaeche-rahmen">
-      <div ref={flaeche} className="st-flaeche">
+      <div ref={flaeche} className="st-flaeche st-scrollt" role="region" aria-label={TISCH.flaeche} tabIndex={scrollFokus(flaecheUeberlauf)}>
         <section className="st-gegnerliste" aria-label={TISCH.gegner}>
           {ansicht.gegner.map((gegner) => (
             <Gegner key={gegner.id} gegner={gegner} />
@@ -93,6 +99,18 @@ export function Tisch({ ansicht, fuehreAus, ablehnung, haeutungsVorschau, verlau
       </div>
       <Weiter ueberlauf={flaecheUeberlauf} />
       </div>
+
+      {/* Vor deinem Platz: So folgt die Tab-Reihe dem Bild in Handy hochkant (Leiste über den Schlangen)
+          und Handy quer (Leiste links unter der Tischfläche), und der Satz, was zu tun ist, kommt vor den Karten (O11 K1). */}
+      <Zugleiste
+        ansicht={ansicht}
+        bedienung={bedienung}
+        fuehreAus={fuehreAus}
+        ablehnung={ablehnung}
+        verlauf={verlauf}
+        zeigeGross={setzeGross}
+        oeffneAbwerfen={() => setzeAbwerfenZu(null)}
+      />
 
       <section className="st-unten" aria-label={TISCH.deinPlatz}>
         <section className="st-eigene" aria-label={TISCH.deineSchlangen}>
@@ -106,16 +124,6 @@ export function Tisch({ ansicht, fuehreAus, ablehnung, haeutungsVorschau, verlau
         <Hand ich={ansicht.ich} />
       </section>
 
-      <Zugleiste
-        ansicht={ansicht}
-        bedienung={bedienung}
-        fuehreAus={fuehreAus}
-        ablehnung={ablehnung}
-        verlauf={verlauf}
-        zeigeGross={setzeGross}
-        oeffneAbwerfen={() => setzeAbwerfenZu(null)}
-      />
-
       {gross !== null && <Grossansicht karte={gross} schliesse={() => setzeGross(null)} />}
       {bedienung.abwerfen > 0 && abwerfenZu !== ansicht.aktionen && (
         <UeberhandDialog hand={ansicht.ich.hand} bedienung={bedienung} fuehreAus={fuehreAus} schliesse={() => setzeAbwerfenZu(ansicht.aktionen)} />
@@ -126,11 +134,15 @@ export function Tisch({ ansicht, fuehreAus, ablehnung, haeutungsVorschau, verlau
   )
 }
 
-/** Wer ist dran, was steht an; wird vorgelesen, wenn es sich ändert. */
+/**
+ * Wer ist dran, was steht an. Vorgelesen wird es nicht von selbst
+ * (`aria-live="off"`): Wer dran ist und was zu entscheiden ist, sagt der
+ * Ansager in der Zugleiste schon (O11 K2); zweimal dasselbe hilft niemandem.
+ */
 function Statuszeile({ status }: { status: StatusAnsicht }) {
   const { titel, text } = statusText(status)
   return (
-    <div className="st-statuszeile" role="status" aria-live="polite">
+    <div className="st-statuszeile" role="status" aria-live="off">
       <span className="st-statuszeile-titel">{titel}</span>
       {status.partiephase === 'Schlussrunde' && <span className="st-abzeichen">{TISCH.schlussrunde}</span>}
       {text !== '' && <span className="st-statuszeile-text">{text}</span>}

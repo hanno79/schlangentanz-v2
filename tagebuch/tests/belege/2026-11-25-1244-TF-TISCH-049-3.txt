@@ -1,0 +1,1731 @@
+[
+ {
+  "lage": "568x320 am Zug",
+  "fenster": "568x320",
+  "scrollWidth": 568,
+  "clientWidth": 568,
+  "seiteScrollH": 416,
+  "spieltischH": 320,
+  "weiterOben": {
+   "mehr": [
+    191,
+    231
+   ],
+   "lobby": [
+    54,
+    98
+   ],
+   "ueberlappt": false
+  },
+  "kopf": {
+   "oben": 0,
+   "unten": 103,
+   "links": 0,
+   "rechts": 256,
+   "hoehe": 103,
+   "breite": 256,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "flaeche": {
+   "oben": 103,
+   "unten": 231,
+   "links": 0,
+   "rechts": 256,
+   "hoehe": 128,
+   "breite": 256,
+   "scrollH": 191,
+   "scrollW": 0
+  },
+  "unten": {
+   "oben": 0,
+   "unten": 416,
+   "links": 256,
+   "rechts": 568,
+   "hoehe": 416,
+   "breite": 312,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "eigene": {
+   "oben": 0,
+   "unten": 293,
+   "links": 257,
+   "rechts": 568,
+   "hoehe": 293,
+   "breite": 311,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "hand": {
+   "oben": 321,
+   "unten": 408,
+   "links": 269,
+   "rechts": 556,
+   "hoehe": 86,
+   "breite": 287,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zugleiste": {
+   "oben": 231,
+   "unten": 416,
+   "links": 0,
+   "rechts": 256,
+   "hoehe": 184,
+   "breite": 256,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zurLobby": {
+   "breite": 115,
+   "abgeschnitten": false,
+   "rechts": 207
+  },
+  "zugBeenden": {
+   "sichtbar": true,
+   "gesperrt": true,
+   "beschreibung": "Du musst erst mindestens eine Karte spielen; beenden ohne Karte geht nur mit leerer Hand (A5, D12)."
+  },
+  "ausserhalb": [
+   "Zug beenden 364..408"
+  ]
+ },
+ {
+  "lage": "568x320 Karte gewählt",
+  "fenster": "568x320",
+  "scrollWidth": 568,
+  "clientWidth": 568,
+  "seiteScrollH": 399,
+  "spieltischH": 320,
+  "weiterOben": {
+   "mehr": [
+    112,
+    152
+   ],
+   "lobby": [
+    -25,
+    19
+   ],
+   "ueberlappt": false
+  },
+  "kopf": {
+   "oben": -79,
+   "unten": 24,
+   "links": 0,
+   "rechts": 256,
+   "hoehe": 103,
+   "breite": 256,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "flaeche": {
+   "oben": 24,
+   "unten": 152,
+   "links": 0,
+   "rechts": 256,
+   "hoehe": 128,
+   "breite": 256,
+   "scrollH": 191,
+   "scrollW": 0
+  },
+  "unten": {
+   "oben": -79,
+   "unten": 320,
+   "links": 256,
+   "rechts": 568,
+   "hoehe": 399,
+   "breite": 312,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "eigene": {
+   "oben": -79,
+   "unten": 197,
+   "links": 257,
+   "rechts": 568,
+   "hoehe": 276,
+   "breite": 311,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "hand": {
+   "oben": 225,
+   "unten": 312,
+   "links": 269,
+   "rechts": 556,
+   "hoehe": 86,
+   "breite": 287,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zugleiste": {
+   "oben": 152,
+   "unten": 320,
+   "links": 0,
+   "rechts": 256,
+   "hoehe": 167,
+   "breite": 256,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zurLobby": {
+   "breite": 115,
+   "abgeschnitten": false,
+   "rechts": 207
+  },
+  "zugBeenden": {
+   "sichtbar": false,
+   "gesperrt": true,
+   "beschreibung": "Du musst erst mindestens eine Karte spielen; beenden ohne Karte geht nur mit leerer Hand (A5, D12)."
+  },
+  "ausserhalb": [
+   "Zur Lobby -25..19"
+  ]
+ },
+ {
+  "lage": "568x320 Ansage",
+  "fenster": "568x320",
+  "scrollWidth": 568,
+  "clientWidth": 568,
+  "seiteScrollH": 451,
+  "spieltischH": 320,
+  "weiterOben": {
+   "mehr": [
+    112,
+    152
+   ],
+   "lobby": [
+    -25,
+    19
+   ],
+   "ueberlappt": false
+  },
+  "kopf": {
+   "oben": -79,
+   "unten": 24,
+   "links": 0,
+   "rechts": 256,
+   "hoehe": 103,
+   "breite": 256,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "flaeche": {
+   "oben": 24,
+   "unten": 152,
+   "links": 0,
+   "rechts": 256,
+   "hoehe": 128,
+   "breite": 256,
+   "scrollH": 191,
+   "scrollW": 0
+  },
+  "unten": {
+   "oben": -79,
+   "unten": 372,
+   "links": 256,
+   "rechts": 568,
+   "hoehe": 451,
+   "breite": 312,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "eigene": {
+   "oben": -79,
+   "unten": 249,
+   "links": 257,
+   "rechts": 568,
+   "hoehe": 328,
+   "breite": 311,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "hand": {
+   "oben": 277,
+   "unten": 364,
+   "links": 269,
+   "rechts": 556,
+   "hoehe": 86,
+   "breite": 287,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zugleiste": {
+   "oben": 152,
+   "unten": 372,
+   "links": 0,
+   "rechts": 256,
+   "hoehe": 219,
+   "breite": 256,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zurLobby": {
+   "breite": 115,
+   "abgeschnitten": false,
+   "rechts": 207
+  },
+  "zugBeenden": {
+   "sichtbar": false,
+   "gesperrt": true,
+   "beschreibung": "Du musst erst mindestens eine Karte spielen; beenden ohne Karte geht nur mit leerer Hand (A5, D12)."
+  },
+  "ausserhalb": [
+   "Zur Lobby -25..19",
+   "Ausführen 320..364"
+  ]
+ },
+ {
+  "lage": "568x320 nach Ausführen",
+  "fenster": "568x320",
+  "scrollWidth": 568,
+  "clientWidth": 568,
+  "seiteScrollH": 323,
+  "spieltischH": 320,
+  "weiterOben": {
+   "mehr": [
+    188,
+    228
+   ],
+   "lobby": [
+    51,
+    95
+   ],
+   "ueberlappt": false
+  },
+  "kopf": {
+   "oben": -3,
+   "unten": 100,
+   "links": 0,
+   "rechts": 256,
+   "hoehe": 103,
+   "breite": 256,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "flaeche": {
+   "oben": 100,
+   "unten": 228,
+   "links": 0,
+   "rechts": 256,
+   "hoehe": 128,
+   "breite": 256,
+   "scrollH": 232,
+   "scrollW": 0
+  },
+  "unten": {
+   "oben": -3,
+   "unten": 320,
+   "links": 256,
+   "rechts": 568,
+   "hoehe": 323,
+   "breite": 312,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "eigene": {
+   "oben": -3,
+   "unten": 198,
+   "links": 257,
+   "rechts": 568,
+   "hoehe": 201,
+   "breite": 311,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "hand": {
+   "oben": 226,
+   "unten": 312,
+   "links": 269,
+   "rechts": 556,
+   "hoehe": 86,
+   "breite": 287,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zugleiste": {
+   "oben": 228,
+   "unten": 320,
+   "links": 0,
+   "rechts": 256,
+   "hoehe": 92,
+   "breite": 256,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zurLobby": {
+   "breite": 115,
+   "abgeschnitten": false,
+   "rechts": 207
+  },
+  "zugBeenden": {
+   "sichtbar": true,
+   "gesperrt": false,
+   "beschreibung": null
+  },
+  "ausserhalb": []
+ },
+ {
+  "lage": "568x320 Häutung ordnen",
+  "fenster": "568x320",
+  "scrollWidth": 568,
+  "clientWidth": 568,
+  "seiteScrollH": 502,
+  "spieltischH": 320,
+  "weiterOben": {
+   "mehr": [
+    159,
+    199
+   ],
+   "lobby": [
+    22,
+    66
+   ],
+   "ueberlappt": false
+  },
+  "kopf": {
+   "oben": -32,
+   "unten": 71,
+   "links": 0,
+   "rechts": 256,
+   "hoehe": 103,
+   "breite": 256,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "flaeche": {
+   "oben": 71,
+   "unten": 199,
+   "links": 0,
+   "rechts": 256,
+   "hoehe": 128,
+   "breite": 256,
+   "scrollH": 483,
+   "scrollW": 0
+  },
+  "unten": {
+   "oben": -32,
+   "unten": 470,
+   "links": 256,
+   "rechts": 568,
+   "hoehe": 502,
+   "breite": 312,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "eigene": {
+   "oben": -32,
+   "unten": 348,
+   "links": 257,
+   "rechts": 568,
+   "hoehe": 380,
+   "breite": 311,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "hand": {
+   "oben": 376,
+   "unten": 462,
+   "links": 269,
+   "rechts": 556,
+   "hoehe": 86,
+   "breite": 287,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zugleiste": {
+   "oben": 199,
+   "unten": 470,
+   "links": 0,
+   "rechts": 256,
+   "hoehe": 271,
+   "breite": 256,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zurLobby": {
+   "breite": 115,
+   "abgeschnitten": false,
+   "rechts": 206
+  },
+  "zugBeenden": {
+   "sichtbar": false,
+   "gesperrt": true,
+   "beschreibung": "Du musst erst mindestens eine Karte spielen; beenden ohne Karte geht nur mit leerer Hand (A5, D12)."
+  },
+  "ausserhalb": [
+   "Ansehen 314..358",
+   "Abbrechen 366..410",
+   "Ausführen 418..462"
+  ]
+ },
+ {
+  "lage": "568x320 Lobby",
+  "fenster": "568x320",
+  "scrollWidth": 568,
+  "clientWidth": 568,
+  "seiteScrollH": 320,
+  "weiterOben": null,
+  "kopf": null,
+  "flaeche": null,
+  "unten": null,
+  "eigene": null,
+  "hand": null,
+  "zugleiste": null,
+  "zurLobby": null,
+  "zugBeenden": "fehlt im DOM",
+  "ausserhalb": []
+ },
+ {
+  "lage": "handy-quer am Zug",
+  "fenster": "844x390",
+  "scrollWidth": 844,
+  "clientWidth": 844,
+  "seiteScrollH": 390,
+  "spieltischH": 390,
+  "weiterOben": {
+   "mehr": [
+    241,
+    281
+   ],
+   "lobby": [
+    13,
+    57
+   ],
+   "ueberlappt": false
+  },
+  "kopf": {
+   "oben": 0,
+   "unten": 72,
+   "links": 0,
+   "rechts": 428,
+   "hoehe": 72,
+   "breite": 428,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "flaeche": {
+   "oben": 72,
+   "unten": 281,
+   "links": 0,
+   "rechts": 428,
+   "hoehe": 209,
+   "breite": 428,
+   "scrollH": 89,
+   "scrollW": 0
+  },
+  "unten": {
+   "oben": 0,
+   "unten": 390,
+   "links": 428,
+   "rechts": 844,
+   "hoehe": 390,
+   "breite": 416,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "eigene": {
+   "oben": 0,
+   "unten": 241,
+   "links": 429,
+   "rechts": 844,
+   "hoehe": 241,
+   "breite": 415,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "hand": {
+   "oben": 270,
+   "unten": 382,
+   "links": 441,
+   "rechts": 832,
+   "hoehe": 112,
+   "breite": 391,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zugleiste": {
+   "oben": 281,
+   "unten": 390,
+   "links": 0,
+   "rechts": 428,
+   "hoehe": 109,
+   "breite": 428,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zurLobby": {
+   "breite": 115,
+   "abgeschnitten": false,
+   "rechts": 416
+  },
+  "zugBeenden": {
+   "sichtbar": true,
+   "gesperrt": true,
+   "beschreibung": "Du musst erst mindestens eine Karte spielen; beenden ohne Karte geht nur mit leerer Hand (A5, D12)."
+  },
+  "ausserhalb": []
+ },
+ {
+  "lage": "handy-quer Karte gewählt",
+  "fenster": "844x390",
+  "scrollWidth": 844,
+  "clientWidth": 844,
+  "seiteScrollH": 390,
+  "spieltischH": 390,
+  "weiterOben": {
+   "mehr": [
+    258,
+    298
+   ],
+   "lobby": [
+    13,
+    57
+   ],
+   "ueberlappt": false
+  },
+  "kopf": {
+   "oben": 0,
+   "unten": 72,
+   "links": 0,
+   "rechts": 428,
+   "hoehe": 72,
+   "breite": 428,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "flaeche": {
+   "oben": 72,
+   "unten": 298,
+   "links": 0,
+   "rechts": 428,
+   "hoehe": 226,
+   "breite": 428,
+   "scrollH": 72,
+   "scrollW": 0
+  },
+  "unten": {
+   "oben": 0,
+   "unten": 390,
+   "links": 428,
+   "rechts": 844,
+   "hoehe": 390,
+   "breite": 416,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "eigene": {
+   "oben": 0,
+   "unten": 241,
+   "links": 429,
+   "rechts": 844,
+   "hoehe": 241,
+   "breite": 415,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "hand": {
+   "oben": 270,
+   "unten": 382,
+   "links": 441,
+   "rechts": 832,
+   "hoehe": 112,
+   "breite": 391,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zugleiste": {
+   "oben": 298,
+   "unten": 390,
+   "links": 0,
+   "rechts": 428,
+   "hoehe": 92,
+   "breite": 428,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zurLobby": {
+   "breite": 115,
+   "abgeschnitten": false,
+   "rechts": 416
+  },
+  "zugBeenden": {
+   "sichtbar": false,
+   "gesperrt": true,
+   "beschreibung": "Du musst erst mindestens eine Karte spielen; beenden ohne Karte geht nur mit leerer Hand (A5, D12)."
+  },
+  "ausserhalb": []
+ },
+ {
+  "lage": "handy-quer Ansage",
+  "fenster": "844x390",
+  "scrollWidth": 844,
+  "clientWidth": 844,
+  "seiteScrollH": 390,
+  "spieltischH": 390,
+  "weiterOben": {
+   "mehr": [
+    235,
+    275
+   ],
+   "lobby": [
+    13,
+    57
+   ],
+   "ueberlappt": false
+  },
+  "kopf": {
+   "oben": 0,
+   "unten": 72,
+   "links": 0,
+   "rechts": 428,
+   "hoehe": 72,
+   "breite": 428,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "flaeche": {
+   "oben": 72,
+   "unten": 275,
+   "links": 0,
+   "rechts": 428,
+   "hoehe": 203,
+   "breite": 428,
+   "scrollH": 95,
+   "scrollW": 0
+  },
+  "unten": {
+   "oben": 0,
+   "unten": 390,
+   "links": 428,
+   "rechts": 844,
+   "hoehe": 390,
+   "breite": 416,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "eigene": {
+   "oben": 0,
+   "unten": 241,
+   "links": 429,
+   "rechts": 844,
+   "hoehe": 241,
+   "breite": 415,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "hand": {
+   "oben": 270,
+   "unten": 382,
+   "links": 441,
+   "rechts": 832,
+   "hoehe": 112,
+   "breite": 391,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zugleiste": {
+   "oben": 275,
+   "unten": 390,
+   "links": 0,
+   "rechts": 428,
+   "hoehe": 115,
+   "breite": 428,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zurLobby": {
+   "breite": 115,
+   "abgeschnitten": false,
+   "rechts": 416
+  },
+  "zugBeenden": {
+   "sichtbar": false,
+   "gesperrt": true,
+   "beschreibung": "Du musst erst mindestens eine Karte spielen; beenden ohne Karte geht nur mit leerer Hand (A5, D12)."
+  },
+  "ausserhalb": []
+ },
+ {
+  "lage": "handy-quer nach Ausführen",
+  "fenster": "844x390",
+  "scrollWidth": 844,
+  "clientWidth": 844,
+  "seiteScrollH": 390,
+  "spieltischH": 390,
+  "weiterOben": {
+   "mehr": [
+    258,
+    298
+   ],
+   "lobby": [
+    13,
+    57
+   ],
+   "ueberlappt": false
+  },
+  "kopf": {
+   "oben": 0,
+   "unten": 72,
+   "links": 0,
+   "rechts": 428,
+   "hoehe": 72,
+   "breite": 428,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "flaeche": {
+   "oben": 72,
+   "unten": 298,
+   "links": 0,
+   "rechts": 428,
+   "hoehe": 226,
+   "breite": 428,
+   "scrollH": 93,
+   "scrollW": 0
+  },
+  "unten": {
+   "oben": 0,
+   "unten": 390,
+   "links": 428,
+   "rechts": 844,
+   "hoehe": 390,
+   "breite": 416,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "eigene": {
+   "oben": 0,
+   "unten": 241,
+   "links": 429,
+   "rechts": 844,
+   "hoehe": 241,
+   "breite": 415,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "hand": {
+   "oben": 270,
+   "unten": 382,
+   "links": 441,
+   "rechts": 832,
+   "hoehe": 112,
+   "breite": 391,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zugleiste": {
+   "oben": 298,
+   "unten": 390,
+   "links": 0,
+   "rechts": 428,
+   "hoehe": 92,
+   "breite": 428,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zurLobby": {
+   "breite": 115,
+   "abgeschnitten": false,
+   "rechts": 416
+  },
+  "zugBeenden": {
+   "sichtbar": true,
+   "gesperrt": false,
+   "beschreibung": null
+  },
+  "ausserhalb": []
+ },
+ {
+  "lage": "handy-quer Häutung ordnen",
+  "fenster": "844x390",
+  "scrollWidth": 844,
+  "clientWidth": 844,
+  "seiteScrollH": 390,
+  "spieltischH": 390,
+  "weiterOben": {
+   "mehr": [
+    206,
+    246
+   ],
+   "lobby": [
+    13,
+    57
+   ],
+   "ueberlappt": false
+  },
+  "kopf": {
+   "oben": 0,
+   "unten": 72,
+   "links": 0,
+   "rechts": 428,
+   "hoehe": 72,
+   "breite": 428,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "flaeche": {
+   "oben": 72,
+   "unten": 246,
+   "links": 0,
+   "rechts": 428,
+   "hoehe": 175,
+   "breite": 428,
+   "scrollH": 330,
+   "scrollW": 0
+  },
+  "unten": {
+   "oben": 0,
+   "unten": 390,
+   "links": 428,
+   "rechts": 844,
+   "hoehe": 390,
+   "breite": 416,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "eigene": {
+   "oben": 0,
+   "unten": 241,
+   "links": 429,
+   "rechts": 844,
+   "hoehe": 241,
+   "breite": 415,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "hand": {
+   "oben": 270,
+   "unten": 382,
+   "links": 441,
+   "rechts": 832,
+   "hoehe": 112,
+   "breite": 391,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zugleiste": {
+   "oben": 246,
+   "unten": 390,
+   "links": 0,
+   "rechts": 428,
+   "hoehe": 144,
+   "breite": 428,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zurLobby": {
+   "breite": 115,
+   "abgeschnitten": false,
+   "rechts": 416
+  },
+  "zugBeenden": {
+   "sichtbar": false,
+   "gesperrt": true,
+   "beschreibung": "Du musst erst mindestens eine Karte spielen; beenden ohne Karte geht nur mit leerer Hand (A5, D12)."
+  },
+  "ausserhalb": []
+ },
+ {
+  "lage": "handy-quer Lobby",
+  "fenster": "844x390",
+  "scrollWidth": 844,
+  "clientWidth": 844,
+  "seiteScrollH": 390,
+  "weiterOben": null,
+  "kopf": null,
+  "flaeche": null,
+  "unten": null,
+  "eigene": null,
+  "hand": null,
+  "zugleiste": null,
+  "zurLobby": null,
+  "zugBeenden": "fehlt im DOM",
+  "ausserhalb": []
+ },
+ {
+  "lage": "Grenze 568x339 Tisch",
+  "fenster": "568x339",
+  "scrollWidth": 568,
+  "clientWidth": 568,
+  "seiteScrollH": 416,
+  "spieltischH": 339,
+  "weiterOben": {
+   "mehr": [
+    191,
+    231
+   ],
+   "lobby": [
+    54,
+    98
+   ],
+   "ueberlappt": false
+  },
+  "kopf": {
+   "oben": 0,
+   "unten": 103,
+   "links": 0,
+   "rechts": 256,
+   "hoehe": 103,
+   "breite": 256,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "flaeche": {
+   "oben": 103,
+   "unten": 231,
+   "links": 0,
+   "rechts": 256,
+   "hoehe": 128,
+   "breite": 256,
+   "scrollH": 191,
+   "scrollW": 0
+  },
+  "unten": {
+   "oben": 0,
+   "unten": 416,
+   "links": 256,
+   "rechts": 568,
+   "hoehe": 416,
+   "breite": 312,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "eigene": {
+   "oben": 0,
+   "unten": 293,
+   "links": 257,
+   "rechts": 568,
+   "hoehe": 293,
+   "breite": 311,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "hand": {
+   "oben": 321,
+   "unten": 408,
+   "links": 269,
+   "rechts": 556,
+   "hoehe": 86,
+   "breite": 287,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zugleiste": {
+   "oben": 231,
+   "unten": 416,
+   "links": 0,
+   "rechts": 256,
+   "hoehe": 184,
+   "breite": 256,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zurLobby": {
+   "breite": 115,
+   "abgeschnitten": false,
+   "rechts": 207
+  },
+  "zugBeenden": {
+   "sichtbar": true,
+   "gesperrt": true,
+   "beschreibung": "Du musst erst mindestens eine Karte spielen; beenden ohne Karte geht nur mit leerer Hand (A5, D12)."
+  },
+  "ausserhalb": [
+   "Zug beenden 364..408"
+  ]
+ },
+ {
+  "lage": "Grenze 568x339 Lobby",
+  "fenster": "568x339",
+  "scrollWidth": 568,
+  "clientWidth": 568,
+  "seiteScrollH": 339,
+  "weiterOben": null,
+  "kopf": null,
+  "flaeche": null,
+  "unten": null,
+  "eigene": null,
+  "hand": null,
+  "zugleiste": null,
+  "zurLobby": null,
+  "zugBeenden": "fehlt im DOM",
+  "ausserhalb": []
+ },
+ {
+  "lage": "Grenze 568x340 Tisch",
+  "fenster": "568x340",
+  "scrollWidth": 568,
+  "clientWidth": 568,
+  "seiteScrollH": 416,
+  "spieltischH": 340,
+  "weiterOben": {
+   "mehr": [
+    191,
+    231
+   ],
+   "lobby": [
+    54,
+    98
+   ],
+   "ueberlappt": false
+  },
+  "kopf": {
+   "oben": 0,
+   "unten": 103,
+   "links": 0,
+   "rechts": 256,
+   "hoehe": 103,
+   "breite": 256,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "flaeche": {
+   "oben": 103,
+   "unten": 231,
+   "links": 0,
+   "rechts": 256,
+   "hoehe": 128,
+   "breite": 256,
+   "scrollH": 191,
+   "scrollW": 0
+  },
+  "unten": {
+   "oben": 0,
+   "unten": 416,
+   "links": 256,
+   "rechts": 568,
+   "hoehe": 416,
+   "breite": 312,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "eigene": {
+   "oben": 0,
+   "unten": 293,
+   "links": 257,
+   "rechts": 568,
+   "hoehe": 293,
+   "breite": 311,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "hand": {
+   "oben": 321,
+   "unten": 408,
+   "links": 269,
+   "rechts": 556,
+   "hoehe": 86,
+   "breite": 287,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zugleiste": {
+   "oben": 231,
+   "unten": 416,
+   "links": 0,
+   "rechts": 256,
+   "hoehe": 184,
+   "breite": 256,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zurLobby": {
+   "breite": 115,
+   "abgeschnitten": false,
+   "rechts": 207
+  },
+  "zugBeenden": {
+   "sichtbar": true,
+   "gesperrt": true,
+   "beschreibung": "Du musst erst mindestens eine Karte spielen; beenden ohne Karte geht nur mit leerer Hand (A5, D12)."
+  },
+  "ausserhalb": [
+   "Zug beenden 364..408"
+  ]
+ },
+ {
+  "lage": "Grenze 568x340 Lobby",
+  "fenster": "568x340",
+  "scrollWidth": 568,
+  "clientWidth": 568,
+  "seiteScrollH": 340,
+  "weiterOben": null,
+  "kopf": null,
+  "flaeche": null,
+  "unten": null,
+  "eigene": null,
+  "hand": null,
+  "zugleiste": null,
+  "zurLobby": null,
+  "zugBeenden": "fehlt im DOM",
+  "ausserhalb": []
+ },
+ {
+  "lage": "Grenze 568x341 Tisch",
+  "fenster": "568x341",
+  "scrollWidth": 568,
+  "clientWidth": 568,
+  "seiteScrollH": 526,
+  "spieltischH": 341,
+  "weiterOben": {
+   "mehr": [
+    212,
+    252
+   ],
+   "lobby": [
+    75,
+    119
+   ],
+   "ueberlappt": false
+  },
+  "kopf": {
+   "oben": 0,
+   "unten": 124,
+   "links": 0,
+   "rechts": 256,
+   "hoehe": 124,
+   "breite": 256,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "flaeche": {
+   "oben": 124,
+   "unten": 252,
+   "links": 0,
+   "rechts": 256,
+   "hoehe": 128,
+   "breite": 256,
+   "scrollH": 191,
+   "scrollW": 0
+  },
+  "unten": {
+   "oben": 0,
+   "unten": 526,
+   "links": 256,
+   "rechts": 568,
+   "hoehe": 526,
+   "breite": 312,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "eigene": {
+   "oben": 0,
+   "unten": 398,
+   "links": 257,
+   "rechts": 568,
+   "hoehe": 398,
+   "breite": 311,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "hand": {
+   "oben": 427,
+   "unten": 518,
+   "links": 269,
+   "rechts": 556,
+   "hoehe": 91,
+   "breite": 287,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zugleiste": {
+   "oben": 252,
+   "unten": 526,
+   "links": 0,
+   "rechts": 256,
+   "hoehe": 274,
+   "breite": 256,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zurLobby": {
+   "breite": 115,
+   "abgeschnitten": false,
+   "rechts": 127
+  },
+  "zugBeenden": {
+   "sichtbar": true,
+   "gesperrt": true,
+   "beschreibung": "Du musst erst mindestens eine Karte spielen; beenden ohne Karte geht nur mit leerer Hand (A5, D12)."
+  },
+  "ausserhalb": [
+   "Zug beenden 394..438"
+  ]
+ },
+ {
+  "lage": "Grenze 568x341 Lobby",
+  "fenster": "568x341",
+  "scrollWidth": 568,
+  "clientWidth": 568,
+  "seiteScrollH": 341,
+  "weiterOben": null,
+  "kopf": null,
+  "flaeche": null,
+  "unten": null,
+  "eigene": null,
+  "hand": null,
+  "zugleiste": null,
+  "zurLobby": null,
+  "zugBeenden": "fehlt im DOM",
+  "ausserhalb": []
+ },
+ {
+  "lage": "Grenze 560x320 Tisch",
+  "fenster": "560x320",
+  "scrollWidth": 560,
+  "clientWidth": 560,
+  "seiteScrollH": 436,
+  "spieltischH": 320,
+  "weiterOben": {
+   "mehr": [
+    191,
+    231
+   ],
+   "lobby": [
+    54,
+    98
+   ],
+   "ueberlappt": false
+  },
+  "kopf": {
+   "oben": 0,
+   "unten": 103,
+   "links": 0,
+   "rechts": 252,
+   "hoehe": 103,
+   "breite": 252,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "flaeche": {
+   "oben": 103,
+   "unten": 231,
+   "links": 0,
+   "rechts": 252,
+   "hoehe": 128,
+   "breite": 252,
+   "scrollH": 191,
+   "scrollW": 0
+  },
+  "unten": {
+   "oben": 0,
+   "unten": 436,
+   "links": 252,
+   "rechts": 560,
+   "hoehe": 436,
+   "breite": 308,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "eigene": {
+   "oben": 0,
+   "unten": 313,
+   "links": 253,
+   "rechts": 560,
+   "hoehe": 313,
+   "breite": 307,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "hand": {
+   "oben": 342,
+   "unten": 428,
+   "links": 265,
+   "rechts": 548,
+   "hoehe": 86,
+   "breite": 283,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zugleiste": {
+   "oben": 231,
+   "unten": 436,
+   "links": 0,
+   "rechts": 252,
+   "hoehe": 205,
+   "breite": 252,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zurLobby": {
+   "breite": 115,
+   "abgeschnitten": false,
+   "rechts": 207
+  },
+  "zugBeenden": {
+   "sichtbar": true,
+   "gesperrt": true,
+   "beschreibung": "Du musst erst mindestens eine Karte spielen; beenden ohne Karte geht nur mit leerer Hand (A5, D12)."
+  },
+  "ausserhalb": [
+   "Zug beenden 384..428"
+  ]
+ },
+ {
+  "lage": "Grenze 560x320 Lobby",
+  "fenster": "560x320",
+  "scrollWidth": 560,
+  "clientWidth": 560,
+  "seiteScrollH": 320,
+  "weiterOben": null,
+  "kopf": null,
+  "flaeche": null,
+  "unten": null,
+  "eigene": null,
+  "hand": null,
+  "zugleiste": null,
+  "zurLobby": null,
+  "zugBeenden": "fehlt im DOM",
+  "ausserhalb": []
+ },
+ {
+  "lage": "Grenze 559x320 Tisch",
+  "fenster": "559x320",
+  "scrollWidth": 559,
+  "clientWidth": 559,
+  "seiteScrollH": 436,
+  "spieltischH": 320,
+  "weiterOben": {
+   "mehr": [
+    191,
+    231
+   ],
+   "lobby": [
+    54,
+    98
+   ],
+   "ueberlappt": false
+  },
+  "kopf": {
+   "oben": 0,
+   "unten": 103,
+   "links": 0,
+   "rechts": 252,
+   "hoehe": 103,
+   "breite": 252,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "flaeche": {
+   "oben": 103,
+   "unten": 231,
+   "links": 0,
+   "rechts": 252,
+   "hoehe": 128,
+   "breite": 252,
+   "scrollH": 191,
+   "scrollW": 0
+  },
+  "unten": {
+   "oben": 0,
+   "unten": 436,
+   "links": 252,
+   "rechts": 559,
+   "hoehe": 436,
+   "breite": 307,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "eigene": {
+   "oben": 0,
+   "unten": 313,
+   "links": 253,
+   "rechts": 559,
+   "hoehe": 313,
+   "breite": 306,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "hand": {
+   "oben": 342,
+   "unten": 428,
+   "links": 265,
+   "rechts": 547,
+   "hoehe": 86,
+   "breite": 282,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zugleiste": {
+   "oben": 231,
+   "unten": 436,
+   "links": 0,
+   "rechts": 252,
+   "hoehe": 205,
+   "breite": 252,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zurLobby": {
+   "breite": 115,
+   "abgeschnitten": false,
+   "rechts": 207
+  },
+  "zugBeenden": {
+   "sichtbar": true,
+   "gesperrt": true,
+   "beschreibung": "Du musst erst mindestens eine Karte spielen; beenden ohne Karte geht nur mit leerer Hand (A5, D12)."
+  },
+  "ausserhalb": [
+   "Zug beenden 384..428"
+  ]
+ },
+ {
+  "lage": "Grenze 559x320 Lobby",
+  "fenster": "559x320",
+  "scrollWidth": 559,
+  "clientWidth": 559,
+  "seiteScrollH": 407,
+  "weiterOben": null,
+  "kopf": null,
+  "flaeche": null,
+  "unten": null,
+  "eigene": null,
+  "hand": null,
+  "zugleiste": null,
+  "zurLobby": null,
+  "zugBeenden": "fehlt im DOM",
+  "ausserhalb": [
+   "Neue Partie 334..378"
+  ]
+ },
+ {
+  "lage": "Grenze 600x352 Tisch",
+  "fenster": "600x352",
+  "scrollWidth": 600,
+  "clientWidth": 600,
+  "seiteScrollH": 506,
+  "spieltischH": 352,
+  "weiterOben": {
+   "mehr": [
+    212,
+    252
+   ],
+   "lobby": [
+    75,
+    119
+   ],
+   "ueberlappt": false
+  },
+  "kopf": {
+   "oben": 0,
+   "unten": 124,
+   "links": 0,
+   "rechts": 270,
+   "hoehe": 124,
+   "breite": 270,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "flaeche": {
+   "oben": 124,
+   "unten": 252,
+   "links": 0,
+   "rechts": 270,
+   "hoehe": 128,
+   "breite": 270,
+   "scrollH": 191,
+   "scrollW": 0
+  },
+  "unten": {
+   "oben": 0,
+   "unten": 506,
+   "links": 270,
+   "rechts": 600,
+   "hoehe": 506,
+   "breite": 330,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "eigene": {
+   "oben": 0,
+   "unten": 372,
+   "links": 271,
+   "rechts": 600,
+   "hoehe": 372,
+   "breite": 329,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "hand": {
+   "oben": 401,
+   "unten": 498,
+   "links": 283,
+   "rechts": 588,
+   "hoehe": 97,
+   "breite": 305,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zugleiste": {
+   "oben": 252,
+   "unten": 506,
+   "links": 0,
+   "rechts": 270,
+   "hoehe": 254,
+   "breite": 270,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zurLobby": {
+   "breite": 115,
+   "abgeschnitten": false,
+   "rechts": 127
+  },
+  "zugBeenden": {
+   "sichtbar": true,
+   "gesperrt": true,
+   "beschreibung": "Du musst erst mindestens eine Karte spielen; beenden ohne Karte geht nur mit leerer Hand (A5, D12)."
+  },
+  "ausserhalb": [
+   "Zug beenden 384..428"
+  ]
+ },
+ {
+  "lage": "Grenze 600x352 Lobby",
+  "fenster": "600x352",
+  "scrollWidth": 600,
+  "clientWidth": 600,
+  "seiteScrollH": 352,
+  "weiterOben": null,
+  "kopf": null,
+  "flaeche": null,
+  "unten": null,
+  "eigene": null,
+  "hand": null,
+  "zugleiste": null,
+  "zurLobby": null,
+  "zugBeenden": "fehlt im DOM",
+  "ausserhalb": []
+ },
+ {
+  "lage": "Grenze 600x353 Tisch",
+  "fenster": "600x353",
+  "scrollWidth": 600,
+  "clientWidth": 600,
+  "seiteScrollH": 506,
+  "spieltischH": 353,
+  "weiterOben": {
+   "mehr": [
+    212,
+    252
+   ],
+   "lobby": [
+    75,
+    119
+   ],
+   "ueberlappt": false
+  },
+  "kopf": {
+   "oben": 0,
+   "unten": 124,
+   "links": 0,
+   "rechts": 270,
+   "hoehe": 124,
+   "breite": 270,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "flaeche": {
+   "oben": 124,
+   "unten": 252,
+   "links": 0,
+   "rechts": 270,
+   "hoehe": 128,
+   "breite": 270,
+   "scrollH": 191,
+   "scrollW": 0
+  },
+  "unten": {
+   "oben": 0,
+   "unten": 506,
+   "links": 270,
+   "rechts": 600,
+   "hoehe": 506,
+   "breite": 330,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "eigene": {
+   "oben": 0,
+   "unten": 372,
+   "links": 271,
+   "rechts": 600,
+   "hoehe": 372,
+   "breite": 329,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "hand": {
+   "oben": 401,
+   "unten": 498,
+   "links": 283,
+   "rechts": 588,
+   "hoehe": 97,
+   "breite": 305,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zugleiste": {
+   "oben": 252,
+   "unten": 506,
+   "links": 0,
+   "rechts": 270,
+   "hoehe": 254,
+   "breite": 270,
+   "scrollH": 0,
+   "scrollW": 0
+  },
+  "zurLobby": {
+   "breite": 115,
+   "abgeschnitten": false,
+   "rechts": 127
+  },
+  "zugBeenden": {
+   "sichtbar": true,
+   "gesperrt": true,
+   "beschreibung": "Du musst erst mindestens eine Karte spielen; beenden ohne Karte geht nur mit leerer Hand (A5, D12)."
+  },
+  "ausserhalb": [
+   "Zug beenden 384..428"
+  ]
+ },
+ {
+  "lage": "Grenze 600x353 Lobby",
+  "fenster": "600x353",
+  "scrollWidth": 600,
+  "clientWidth": 600,
+  "seiteScrollH": 353,
+  "weiterOben": null,
+  "kopf": null,
+  "flaeche": null,
+  "unten": null,
+  "eigene": null,
+  "hand": null,
+  "zugleiste": null,
+  "zurLobby": null,
+  "zugBeenden": "fehlt im DOM",
+  "ausserhalb": []
+ }
+]
+568 am Zug unten {
+  scrollY: 96,
+  hand: '233..312 233..312 233..312 233..312 233..312',
+  zugBeenden: '268..312'
+}
+handy-quer Abwehr {
+  sH: 391,
+  knoepfe: [ 'Durchlassen 331..375', 'Abwehren 331..375' ],
+  ansager: 'KI-Gegner 1 sagt an: Schlangengrube auf dich. Abwehrfrage: Mit einem Farbenschutz wehrst du sie ab. Er kommt auf deine Ablage, und du ziehst erst zu Beginn deines nächsten Zuges nach.'
+}
+568x320 am Zug | schwer: keine | übrige: keine
+568x320 Häutung ordnen | schwer: keine | übrige: keine
+desktop Abwehrfrage nach Neuladen | schwer: keine | übrige: keine
+desktop Wertung mit Fokus auf Titel | schwer: keine | übrige: landmark-unique (moderate)
+desktop Fokus Wertung: H1 KI-Gegner 2 gewinnt! focus-visible true
+handy-quer Abwehrfrage nach Neuladen | schwer: keine | übrige: keine
+handy-quer Wertung mit Fokus auf Titel | schwer: keine | übrige: landmark-unique (moderate)
+handy-quer Fokus Wertung: H1 KI-Gegner 2 gewinnt! focus-visible true
+handy-quer lange Gegnerschlangen | schwer: keine | übrige: keine

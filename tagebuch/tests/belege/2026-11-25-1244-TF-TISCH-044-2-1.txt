@@ -1,0 +1,62 @@
+Gegner gewählt: 1 Gegner
+{
+ "klasse": "desktop",
+ "erweiterung": true,
+ "gegner": 1,
+ "dauerSekunden": 139,
+ "nichtGanz": [],
+ "tabs": 1385,
+ "unsichtbar": [],
+ "leereSeite": [],
+ "abwehrfragen": 4,
+ "abgewehrt": 1,
+ "haeutungen": 2,
+ "gespielt": 49,
+ "zugEnde": 49,
+ "abgelegt": 0,
+ "escape": 0,
+ "pfeile": 2,
+ "unsichtbarAnzahl": 0,
+ "leereSeiteAnzahl": 0,
+ "nochEinmalErreicht": true,
+ "fokusAmEnde": "H1 KI-Gegner 1 gewinnt! focus-visible true | Bildvergleich sichtbar true",
+ "liveAmEnde": [
+  "P.nur-vorlesen: KI-Gegner 1 gewinnt! Mit 126 Punkten. Du bist auf Platz 2 mit 4 Punkten."
+ ],
+ "titelAmEnde": "Spieltisch · Schlangentanz",
+ "breite": {
+  "scrollWidth": 1280,
+  "clientWidth": 1280
+ },
+ "konsolenfehler": [],
+ "ergebnisAnfang": "KI-Gegner 1 gewinnt!\n\nMit 126 Punkten. Du bist auf Platz 2 mit 4 Punkten.\n\nKI-Gegner 1 gewinnt! Mit 126 Punkten. Du bist auf Platz 2 mit 4 Punkten.\n\n1.\nKI-Gegner 1\nSieger\n126 Punkte\nFarbgruppen\n78\nVielfalt\n4\nLängste Kette\n5\nAufgaben\n39\nSchlange 1: 50 Punkte\nRot × 4: 4 Punkte\nViolett × 4: 6 Punkte\nBraun × 4: 8 Punkte\nGrün × 3: 9 Punkte\nBlau × 3: 4 Punkte\nGelb × 5: 5 Punkte\nBlau × 3: 6 Punkte\nRot × ",
+ "ansagenAnzahl": 323,
+ "ansagenBeispiele": [
+  "Du ziehst 1 Karte. KI-Gegner 1 ist dran.",
+  "KI-Gegner 1 spielt: Grün beginnt eine neue Schlange.",
+  "KI-Gegner 1 spielt: Regenbogenschlange in die Schlange 1 von KI-Gegner 1, vor Karte 1.",
+  "KI-Gegner 1 zieht 2 Karten. Du bist dran. Wähle eine Karte aus deiner Hand.",
+  "KI-Gegner 1 zieht 2 Karten. Du bist dran. Lege die Karte an ein Ende einer Schlange (+) oder beginne eine neue Schlange.",
+  "KI-Gegner 1 zieht 2 Karten. Du bist dran. Ansage: Blau an den Anfang der Schlange 1 von KI-Gegner 1.",
+  "Du spielst: Blau an den Anfang der Schlange 1 von KI-Gegner 1. Wähle eine Karte aus deiner Hand oder beende deinen Zug.",
+  "Du ziehst 1 Karte. KI-Gegner 1 ist dran.",
+  "KI-Gegner 1 spielt: Verdoppler, danach folgt ein zweiter Zug.",
+  "KI-Gegner 1 spielt: Blau an den Anfang der Schlange 1 von KI-Gegner 1.",
+  "KI-Gegner 1 zieht 2 Karten. KI-Gegner 1 spielt den zweiten Zug nach dem Verdoppler.",
+  "KI-Gegner 1 spielt: Rot beginnt eine neue Schlange."
+ ],
+ "ansagenAufgaben": [
+  "Du ziehst 1 Karte. KI-Gegner 1 ist dran. KI-Gegner 1 erfüllt die Aufgabe Farbwechsler. Neu offen liegt die Aufgabe Vielfaltskönig.",
+  "KI-Gegner 1 spielt: Violett an den Anfang der Schlange 2 von KI-Gegner 1. KI-Gegner 1 erfüllt die Aufgabe Vielfaltskönig. Neu offen liegt die Aufgabe Farbenpracht.",
+  "KI-Gegner 1 zieht 1 Karte. KI-Gegner 1 erfüllt die Aufgabe Farbenpracht. Neu offen liegt die Aufgabe Fusionsexperte. KI-Gegner 1 erfüllt die Aufgabe Fusionsexperte. Neu offen liegt die Aufgabe Schlangenrepertoire. Du bist dran. Wähle eine Karte aus deiner Hand.",
+  "KI-Gegner 1 zieht 1 Karte. KI-Gegner 1 erfüllt die Aufgabe Farbenpracht. Neu offen liegt die Aufgabe Fusionsexperte. KI-Gegner 1 erfüllt die Aufgabe Fusionsexperte. Neu offen liegt die Aufgabe Schlangenrepertoire. Du bist dran. Wähle, was der Schlangenfrass entfernt.",
+  "KI-Gegner 1 zieht 1 Karte. KI-Gegner 1 erfüllt die Aufgabe Farbenpracht. Neu offen liegt die Aufgabe Fusionsexperte. KI-Gegner 1 erfüllt die Aufgabe Fusionsexperte. Neu offen liegt die Aufgabe Schlangenrepertoire. Du bist dran. Wähle, was der Schlangenfrass frisst.",
+  "KI-Gegner 1 zieht 1 Karte. KI-Gegner 1 erfüllt die Aufgabe Farbenpracht. Neu offen liegt die Aufgabe Fusionsexperte. KI-Gegner 1 erfüllt die Aufgabe Fusionsexperte. Neu offen liegt die Aufgabe Schlangenrepertoire. Du bist dran. Ansage: Schlangenfrass frisst Rot aus der Schlange 1 von KI-Gegner 1 und Rot aus der Schlange 1 von KI-Gegner 1."
+ ],
+ "ansagenAngriff": [
+  "KI-Gegner 1 sagt an: Schlangenblockade in deine Schlange 1, vor Karte 1. Abwehrfrage: Du hast keinen Farbenschutz auf der Hand und kannst nur durchlassen.",
+  "KI-Gegner 1 sagt an: Schlangengrube auf dich. Abwehrfrage: Mit einem Farbenschutz wehrst du sie ab. Er kommt auf deine Ablage, und du ziehst erst zu Beginn deines nächsten Zuges nach.",
+  "KI-Gegner 1 sagt an: Farbendieb: Braun aus deiner Schlange 1 in die Schlange 1 von KI-Gegner 1, zwischen Karte 6 und 7. Abwehrfrage: Du hast keinen Farbenschutz auf der Hand und kannst nur durchlassen.",
+  "KI-Gegner 1 sagt an: Farbendieb: Gelb aus deiner Schlange 1 in die Schlange 1 von KI-Gegner 1, zwischen Karte 33 und 34. Abwehrfrage: Du hast keinen Farbenschutz auf der Hand und kannst nur durchlassen."
+ ]
+}
