@@ -1,0 +1,5 @@
+Partien: 150, Abwehrfragen aus Zufallszuständen: 847
+mit Farbenschutz: n=737, min=0.57 ms, Median=1.57 ms, p95=2.52 ms, p99=3.42 ms, max=7.77 ms
+ohne Farbenschutz: n=2861, min=0.04 ms, Median=0.17 ms, p95=0.31 ms, p99=0.34 ms, max=3.26 ms
+über 100 ms: mit 0, ohne 0; über 50 ms: mit 0; über 25 ms: mit 0
+langsamste: Partie 9113 mit 7.77 ms | Partie 9190 mit 6.65 ms | Partie 9225 mit 6.50 ms | Partie 9232 mit 5.36 ms | Partie 9207 mit 5.06 ms

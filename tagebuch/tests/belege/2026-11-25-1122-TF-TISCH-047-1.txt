@@ -1,0 +1,383 @@
+[
+ {
+  "lage": "Lobby",
+  "verstoesse": [],
+  "unvollstaendig": []
+ },
+ {
+  "stelle": "Lobby: Untertitel",
+  "selektor": ".rahmen__text",
+  "werte": [
+   {
+    "text": "Du gegen bis zu drei KI-Gegner",
+    "farbe": "rgb(107, 91, 78)",
+    "hintergrund": "rgb(251,246,238)",
+    "deckkraft": 1,
+    "schrift": "16px 400",
+    "verhaeltnis": 6.04
+   }
+  ]
+ },
+ {
+  "stelle": "Lobby: gewähltes Segment",
+  "selektor": ".lobby__segment input:checked + span",
+  "werte": [
+   {
+    "text": "1 Gegner",
+    "farbe": "rgb(255, 255, 255)",
+    "hintergrund": "rgb(194,65,12)",
+    "deckkraft": 1,
+    "schrift": "16px 700",
+    "verhaeltnis": 5.18
+   }
+  ]
+ },
+ {
+  "stelle": "Lobby: Schalter An/Aus",
+  "selektor": ".lobby__bahn",
+  "werte": [
+   {
+    "text": "Aus",
+    "farbe": "rgb(43, 33, 28)",
+    "hintergrund": "rgb(241,231,214)",
+    "deckkraft": 1,
+    "schrift": "16px 700",
+    "verhaeltnis": 12.82
+   }
+  ]
+ },
+ {
+  "lage": "Tisch am Zug",
+  "verstoesse": [],
+  "unvollstaendig": []
+ },
+ {
+  "stelle": "Statuszeile Titel",
+  "selektor": ".st-statuszeile-titel",
+  "werte": [
+   {
+    "text": "Du bist dran",
+    "farbe": "rgb(154, 52, 18)",
+    "hintergrund": "rgb(255,255,255)",
+    "deckkraft": 1,
+    "schrift": "20px 400",
+    "verhaeltnis": 7.31
+   }
+  ]
+ },
+ {
+  "stelle": "Statuszeile Text",
+  "selektor": ".st-statuszeile-text",
+  "werte": [
+   {
+    "text": "Spiele Karten aus deiner Hand.",
+    "farbe": "rgb(107, 91, 78)",
+    "hintergrund": "rgb(255,255,255)",
+    "deckkraft": 1,
+    "schrift": "14px 400",
+    "verhaeltnis": 6.5
+   }
+  ]
+ },
+ {
+  "stelle": "Grund neben gesperrtem Zug beenden",
+  "selektor": ".st-grund",
+  "werte": [
+   {
+    "text": "Du musst erst mindestens eine Karte spielen; beenden ohne Ka",
+    "farbe": "rgb(107, 91, 78)",
+    "hintergrund": "rgb(255,255,255)",
+    "deckkraft": 1,
+    "schrift": "14px 400",
+    "verhaeltnis": 6.5
+   }
+  ]
+ },
+ {
+  "stelle": "gesperrter Knopf (Zug beenden)",
+  "selektor": ".st-zugleiste button:disabled",
+  "werte": [
+   {
+    "text": "Zug beenden",
+    "farbe": "rgb(154, 52, 18)",
+    "hintergrund": "rgb(255,255,255)",
+    "deckkraft": 0.5,
+    "schrift": "16px 600",
+    "verhaeltnis": 2.46
+   }
+  ]
+ },
+ {
+  "stelle": "gesperrte Handkarte (falls vorhanden)",
+  "selektor": ".st-hand-karten button:disabled",
+  "werte": []
+ },
+ {
+  "stelle": "Kopfleiste Stapel",
+  "selektor": ".st-kopf-stapel",
+  "werte": [
+   {
+    "text": "Stapel 94",
+    "farbe": "rgb(107, 91, 78)",
+    "hintergrund": "rgb(255,255,255)",
+    "deckkraft": 1,
+    "schrift": "14px 400",
+    "verhaeltnis": 6.5
+   }
+  ]
+ },
+ {
+  "stelle": "Bereichstitel",
+  "selektor": ".st-bereichstitel",
+  "werte": [
+   {
+    "text": "Protokoll",
+    "farbe": "rgb(107, 91, 78)",
+    "hintergrund": "rgb(241,231,214)",
+    "deckkraft": 1,
+    "schrift": "14px 600",
+    "verhaeltnis": 5.3
+   },
+   {
+    "text": "Deine Schlangen",
+    "farbe": "rgb(107, 91, 78)",
+    "hintergrund": "rgb(255,255,255)",
+    "deckkraft": 1,
+    "schrift": "14px 600",
+    "verhaeltnis": 6.5
+   },
+   {
+    "text": "Deine Hand · 5 Karten",
+    "farbe": "rgb(107, 91, 78)",
+    "hintergrund": "rgb(255,255,255)",
+    "deckkraft": 1,
+    "schrift": "14px 600",
+    "verhaeltnis": 6.5
+   }
+  ]
+ },
+ {
+  "stelle": "Protokoll Eintrag",
+  "selektor": ".st-protokoll-liste li",
+  "werte": [
+   {
+    "text": "Noch kein Schritt",
+    "farbe": "rgb(107, 91, 78)",
+    "hintergrund": "rgb(255,255,255)",
+    "deckkraft": 1,
+    "schrift": "14px 400",
+    "verhaeltnis": 6.5
+   }
+  ]
+ },
+ {
+  "stelle": "Satz der Zugleiste",
+  "selektor": ".st-zugleiste-text",
+  "werte": [
+   {
+    "text": "Wähle eine Karte aus deiner Hand.",
+    "farbe": "rgb(43, 33, 28)",
+    "hintergrund": "rgb(255,255,255)",
+    "deckkraft": 1,
+    "schrift": "16px 600",
+    "verhaeltnis": 15.71
+   }
+  ]
+ },
+ {
+  "lage": "Karte gewählt",
+  "verstoesse": [],
+  "unvollstaendig": [
+   "label-content-name-mismatch (6)"
+  ]
+ },
+ {
+  "stelle": "Satz der Zugleiste mit Karte",
+  "selektor": ".st-zugleiste-text",
+  "werte": [
+   {
+    "text": "Lege die Karte an ein Ende einer Schlange (+).",
+    "farbe": "rgb(43, 33, 28)",
+    "hintergrund": "rgb(255,255,255)",
+    "deckkraft": 1,
+    "schrift": "16px 600",
+    "verhaeltnis": 15.71
+   }
+  ]
+ },
+ {
+  "stelle": "Abbrechen (leise)",
+  "selektor": ".st-zugleiste .st-knopf--leise",
+  "werte": [
+   {
+    "text": "Ansehen",
+    "farbe": "rgb(154, 52, 18)",
+    "hintergrund": "rgb(255,255,255)",
+    "deckkraft": 1,
+    "schrift": "16px 600",
+    "verhaeltnis": 7.31
+   }
+  ]
+ },
+ {
+  "lage": "Häutung ordnen",
+  "verstoesse": [],
+  "unvollstaendig": []
+ },
+ {
+  "stelle": "Häutung: Grund D26 / Texte",
+  "selektor": ".st-grund, .st-zugleiste [id] ",
+  "werte": [
+   {
+    "text": "Tippe zwei Karten an, um sie zu tauschen. Die Farbfolge ist ",
+    "farbe": "rgb(43, 33, 28)",
+    "hintergrund": "rgb(255,255,255)",
+    "deckkraft": 1,
+    "schrift": "16px 600",
+    "verhaeltnis": 15.71
+   },
+   {
+    "text": "Du musst erst mindestens eine Karte spielen; beenden ohne Ka",
+    "farbe": "rgb(107, 91, 78)",
+    "hintergrund": "rgb(255,255,255)",
+    "deckkraft": 1,
+    "schrift": "14px 400",
+    "verhaeltnis": 6.5
+   }
+  ]
+ },
+ {
+  "stelle": "Häutung: gesperrtes Ausführen",
+  "selektor": ".st-zugleiste button:disabled",
+  "werte": [
+   {
+    "text": "Zug beenden",
+    "farbe": "rgb(154, 52, 18)",
+    "hintergrund": "rgb(255,255,255)",
+    "deckkraft": 0.5,
+    "schrift": "16px 600",
+    "verhaeltnis": 2.46
+   },
+   {
+    "text": "Ausführen",
+    "farbe": "rgb(255, 255, 255)",
+    "hintergrund": "rgb(194,65,12)",
+    "deckkraft": 0.5,
+    "schrift": "16px 600",
+    "verhaeltnis": 2.36
+   }
+  ]
+ },
+ {
+  "lage": "Abwehrfrage",
+  "verstoesse": [],
+  "unvollstaendig": []
+ },
+ {
+  "stelle": "Abwehrfrage Hinweis",
+  "selektor": ".st-reaktion-hinweis",
+  "werte": [
+   {
+    "text": "Mit einem Farbenschutz wehrst du sie ab. Er kommt auf deine ",
+    "farbe": "rgb(107, 91, 78)",
+    "hintergrund": "rgb(255,255,255)",
+    "deckkraft": 1,
+    "schrift": "14px 400",
+    "verhaeltnis": 6.5
+   }
+  ]
+ },
+ {
+  "stelle": "Abzeichen Schlussrunde",
+  "selektor": ".st-abzeichen",
+  "werte": [
+   {
+    "text": "Schlussrunde",
+    "farbe": "rgb(255, 255, 255)",
+    "hintergrund": "rgb(154,52,18)",
+    "deckkraft": 1,
+    "schrift": "14px 700",
+    "verhaeltnis": 7.31
+   }
+  ]
+ },
+ {
+  "lage": "Dialog zu viele Handkarten",
+  "verstoesse": [],
+  "unvollstaendig": []
+ },
+ {
+  "stelle": "Dialog: Grund neben Ablegen",
+  "selektor": "dialog[open] .st-grund",
+  "werte": [
+   {
+    "text": "Wähle noch 2 Karten.",
+    "farbe": "rgb(107, 91, 78)",
+    "hintergrund": "rgb(255,255,255)",
+    "deckkraft": 1,
+    "schrift": "14px 400",
+    "verhaeltnis": 6.5
+   }
+  ]
+ },
+ {
+  "stelle": "Dialog: gesperrtes Ablegen",
+  "selektor": "dialog[open] button:disabled",
+  "werte": [
+   {
+    "text": "Ablegen",
+    "farbe": "rgb(255, 255, 255)",
+    "hintergrund": "rgb(194,65,12)",
+    "deckkraft": 0.5,
+    "schrift": "16px 600",
+    "verhaeltnis": 2.36
+   }
+  ]
+ },
+ {
+  "stelle": "Dialog: aria-describedby an Ablegen",
+  "werte": [
+   {
+    "describedby": "_r_4_",
+    "text": "Wähle noch 2 Karten."
+   }
+  ]
+ },
+ {
+  "lage": "Wertung",
+  "verstoesse": [
+   "landmark-unique (moderate, 1)"
+  ],
+  "unvollstaendig": []
+ },
+ {
+  "stelle": "Wertung Rangliste Texte",
+  "selektor": "[data-testid=\"ergebnis\"] li *",
+  "werte": [
+   {
+    "text": "1.KI-Gegner 2Sieger28 Punkte",
+    "farbe": "rgb(43, 33, 28)",
+    "hintergrund": "rgb(255,255,255)",
+    "deckkraft": 1,
+    "schrift": "16px 400",
+    "verhaeltnis": 15.71
+   },
+   {
+    "text": "1.",
+    "farbe": "rgb(107, 91, 78)",
+    "hintergrund": "rgb(255,255,255)",
+    "deckkraft": 1,
+    "schrift": "20px 400",
+    "verhaeltnis": 6.5
+   },
+   {
+    "text": "KI-Gegner 2",
+    "farbe": "rgb(43, 33, 28)",
+    "hintergrund": "rgb(255,255,255)",
+    "deckkraft": 1,
+    "schrift": "16px 700",
+    "verhaeltnis": 15.71
+   }
+  ]
+ }
+]

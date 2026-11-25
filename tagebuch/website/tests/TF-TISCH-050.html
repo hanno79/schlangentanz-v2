@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-TISCH-050 In Handy quer bleibt der Tischfläche mit gewählter Karte und beim Ordnen der Häutung genug Höhe, und der Grund für ein gesperrtes „Zug beenden“ kommt nach „Abbrechen“ zurück. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 25.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-TISCH-050 In Handy quer bleibt der Tischfläche mit gewählter Karte und beim Ordnen der Häutung genug Höhe, und der Grund für ein gesperrtes „Zug beenden“ kommt nach „Abbrechen“ zurück.</h1><p class="etiketten"><span class="etikett">Bereich Spieltisch</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>In Handy quer (844 × 390) nahm der dreizeilige Grund neben dem gesperrten „Zug beenden“ der Tischfläche die meiste Höhe. Seit O11 entfällt der gesperrte Knopf samt Grund, solange eine Karte gewählt ist. Geprüft wird, ob die Tischfläche dadurch Platz gewinnt und ob der Grund zurückkommt, sobald keine Karte mehr gewählt ist.</p><h2>Bestanden, wenn</h2><p>Mit gewählter Karte misst die Tischfläche mindestens 200 px, beim Ordnen der Häutung mindestens 150 px. Nach „Abbrechen“ steht „Zug beenden“ wieder gesperrt da, mit dem Grund „Du musst erst mindestens eine Karte spielen; …“ daneben und als Beschreibung des Knopfs.</p><h2>Fehlgeschlagen, wenn</h2><p>Die Tischfläche ist kleiner, oder der Grund fehlt nach „Abbrechen“.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>25.11.2026</dd><dt>Änderung</dt><dd>task/O11-barrierefreiheit (PR #121)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Testhook-Build, Stand ab Commit 5634c28, Playwright Chromium mit Touch, Fenster 844 × 390</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Szenarien <code>farbkarte-beim-gegner</code> und <code>haeutung-punkte</code>.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Adresse</td><td>öffnen</td><td>`/spiel?szenario=farbkarte-beim-gegner&amp;tempo=sofort`</td><td>„Zug beenden“ gesperrt, Grund daneben</td></tr><tr><td>2</td><td>„Deine Hand“</td><td>„Farbkarte Rot, 1 Punkt“ antippen</td><td></td><td>„Zug beenden“ und Grund verschwinden, Tischfläche ≥ 200 px</td></tr><tr><td>3</td><td>Zugleiste</td><td>„Abbrechen“</td><td></td><td>„Zug beenden“ gesperrt mit Grund wieder da</td></tr><tr><td>4</td><td>Adresse</td><td>öffnen</td><td>`/spiel?szenario=haeutung-punkte&amp;tempo=sofort`</td><td></td></tr><tr><td>5</td><td>Tisch</td><td>Häutung, „Deine Schlange 1 wählen“, Karte 1 und Karte 3 antippen</td><td></td><td>Tischfläche ≥ 150 px</td></tr></tbody></table></section>
+<section class="kasten-zuruecksetzen"><h2>Zurücksetzen</h2><p>Ein neues Szenario setzt den Stand zurück.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Ob Spieler verstehen, warum „Zug beenden“ während einer Auswahl fehlt, lässt sich nicht messen; das beurteilt ein Mensch. Ein bedienbares „Zug beenden“ mit gewählter Karte (etwa nach einem Verdoppler) ist nicht im Browser geprüft; die Regel in <code>quer.css</code> blendet nur <code>.st-mitgrund--gesperrt</code> aus.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-25">25.11.2026 11:22</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer O11) &middot; agent &middot; pruefung-O11 @ <span class="commit" title="5634c28d5da7e2e54b90a29e4b789eded208def7">5634c28</span> / Playwright Chromium 1.60.0, Handy quer 844x390 Touch</p><p>844x390 Touch: am Zug Tischfläche 72..281 (209 px), Zug beenden gesperrt sichtbar mit Grund; Karte gewählt Tischfläche 226 px, Zug beenden ausgeblendet (aria-describedby zeigt weiter auf den Grund); Ansage 203 px; Häutung ordnen 174 px (72..246); nach Ausführen Zug beenden frei sichtbar. platz.hooks.spec in handy-quer-testhooks 3/3 grün (≥200, ≥150, Grund ohne Karte); karten_spielen.hooks.spec handy-quer-testhooks: nach Abbrechen gesperrtes Zug beenden mit Grund zurück, grün</p><ul class="belege"><li><a href="belege/2026-11-25-1122-TF-TISCH-050-1.png"><img class="beleg-vorschau" src="belege/2026-11-25-1122-TF-TISCH-050-1.png" alt="Beleg 2026-11-25-1122-TF-TISCH-050-1.png" loading="lazy"></a></li><li><a href="belege/2026-11-25-1122-TF-TISCH-050-2.txt">2026-11-25-1122-TF-TISCH-050-2.txt</a></li><li><a href="belege/2026-11-25-1122-TF-TISCH-050-3.txt">2026-11-25-1122-TF-TISCH-050-3.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

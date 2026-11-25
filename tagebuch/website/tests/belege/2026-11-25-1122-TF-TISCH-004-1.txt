@@ -1,0 +1,18 @@
+
+Running 13 tests using 13 workers
+
+  ok  1 [handy-quer] › tests\layout\waechter_labels.spec.ts:38:3 › O2b: Wächter messen versteckte Auswahlfelder an ihrem Label › O2b: ein zugedecktes Label gilt als vollständig verdeckt (248ms)
+  ok  2 [handy-quer] › tests\layout\waechter_labels.spec.ts:69:3 › O11 (TF-PRUEF-027): Wächter messen ein sichtbares Feld mit nur vorgelesenem Label am Feld › O11: ein Feld 100 px unter dem Bildrand gilt als ausserhalb des Bildes (331ms)
+  ok  4 [handy-quer] › tests\layout\waechter_labels.spec.ts:32:3 › O2b: Wächter messen versteckte Auswahlfelder an ihrem Label › O2b: ein Label unter dem Bildrand gilt als ausserhalb des Bildes (252ms)
+  ok  3 [handy-quer] › tests\layout\waechter_labels.spec.ts:79:3 › O11 (TF-PRUEF-027): Wächter messen ein sichtbares Feld mit nur vorgelesenem Label am Feld › O11: ein freies Feld im Bild ist gross genug und meldet keiner der Wächter (351ms)
+  ok  6 [handy-quer] › tests\layout\waechter_labels.spec.ts:74:3 › O11 (TF-PRUEF-027): Wächter messen ein sichtbares Feld mit nur vorgelesenem Label am Feld › O11: ein zugedecktes Feld gilt als vollständig verdeckt (310ms)
+  ok  7 [handy-quer] › tests\layout\waechter_labels.spec.ts:44:3 › O2b: Wächter messen versteckte Auswahlfelder an ihrem Label › O2b: ein freies Label im Bild meldet keiner der beiden Wächter (306ms)
+  ok  5 [handy-quer-testhooks] › tests\layout\platz.hooks.spec.ts:46:3 › O11: Handy quer lässt der Tischfläche Höhe › O11: ohne gewählte Karte steht das gesperrte „Zug beenden“ mit seinem Grund da (1.5s)
+  ok  8 [handy-quer-testhooks] › tests\layout\platz.hooks.spec.ts:27:3 › O11: Handy quer lässt der Tischfläche Höhe › O11: mit gewählter Karte misst die Tischfläche mindestens 200 px (1.7s)
+  ok 12 [handy-quer] › tests\layout\klein.spec.ts:70:3 › O11 (TF-APP-018): die Lobby bei 568 × 320 › O11: ohne Spielstand (1.3s)
+  ok 10 [handy-quer] › tests\layout\klein.spec.ts:25:3 › O11 (TF-TISCH-004): der Tisch bei 568 × 320 › O11: „Zur Lobby“ steht ganz da, und kein Text der Kopfleiste liegt auf einem anderen (1.4s)
+  ok 11 [handy-quer] › tests\layout\klein.spec.ts:48:3 › O11 (TF-TISCH-004): der Tisch bei 568 × 320 › O11: deine Schlangen halten keine Höhe zurück, und die Tischfläche schneidet seitlich nichts ab (1.4s)
+  ok  9 [handy-quer-testhooks] › tests\layout\platz.hooks.spec.ts:35:3 › O11: Handy quer lässt der Tischfläche Höhe › O11: beim Ordnen der Häutung misst die Tischfläche mindestens 150 px (2.0s)
+  ok 13 [handy-quer] › tests\layout\klein.spec.ts:75:3 › O11 (TF-APP-018): die Lobby bei 568 × 320 › O11: mit laufender Partie und mit offener Rückfrage; kein Knopf bricht mitten im Wort um (1.4s)
+
+  13 passed (15.1s)
