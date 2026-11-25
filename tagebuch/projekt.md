@@ -2,7 +2,7 @@
 projekt: Schlangentanz v2
 start: 2026-05-31
 stand: laufend
-stand_vom: 2026-11-21
+stand_vom: 2026-11-25
 ---
 
 ## Kurzfassung
@@ -11,4 +11,4 @@ Schlangentanz v2 ist die digitale Fassung des Kartenspiels Schlangentanz: Ein Me
 
 ## Stand heute
 
-Meilenstein M1 ist erreicht: Die Engine spielt das Basis-Spiel samt Schlangenhäutung nach den Regeln der Website, abgesichert durch Regeltests je Abschnitt, 2'000 Zufallspartien und einen gelesenen Golden Master. Die Partie-Steuerung (O3) ist fertig; die neue KI (K2) und das Spielen am Tisch (O5) sind in der Prüfung. Für das spielbare Basis-Spiel (M2) fehlen noch Abwehr und Gegnerzüge (O6), die Häutung am Tisch (O7) und das Spielende (O8). Für die Zeit vom 14. bis 20.11.2026 fehlen Tagebucheinträge.
+Das Basis-Spiel ist am Tisch spielbar: Gegnerzüge mit Abwehr, Schlangenhäutung und Spielende (O6 bis O8) sind gemergt, die solide KI spielt nach K2, K3 und K2b. Für M2 fehlen noch die Feinarbeit an der Oberfläche (O11), Z1 und K5, danach die Freigabe des Autors und der Merge nach main. Die Engine spielt auch die Erweiterung vollständig (X1 bis X6); offen sind dort die Schlussabnahme X7, die KI für die Erweiterung (K4) und die Bedienung am Tisch (O10). Für den 14. bis 20.11. und den 22. bis 24.11.2026 fehlen eigene Tagebucheinträge.

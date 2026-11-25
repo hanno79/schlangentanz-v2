@@ -12,7 +12,10 @@
 
 | Punkt | wer | blockiert | seit |
 |---|---|---|---|
-| K2 (neue KI) und O5 (Karten spielen) abnehmen und mergen. | Claude Code | O6, O7 | 21.11.2026 |
-| O6 (Gegnerzüge, Abwehr, Protokoll), O7 (Häutung am Tisch) und O8 (Spielende) umsetzen. | Claude Code | M2 | 21.11.2026 |
+| P0.5h abnehmen: Antworten vom 24.11.2026 als D68 ff., Teil C leer, B1 auf „ja“. | Claude Code | X7 | 25.11.2026 |
+| X7 Abnahme Erweiterung: Dauerlauf mit 2'000 Partien, neuer Golden Master mit Erweiterung, eine Partie am Entwicklertisch. | Claude Code | M3 | 25.11.2026 |
+| O11, Z1 und K5 für das spielbare Basis-Spiel umsetzen. | Claude Code | M2 | 25.11.2026 |
+| O10 Erweiterung am Tisch; vorrangig: Wer nur den Schlangenkorb hält, kann unter /spiel nichts tun. | Claude Code | M3 | 25.11.2026 |
+| K4 KI für die Erweiterung, samt K2.1, K3.2 und K3.4 in Partien mit Erweiterung. | Claude Code | M3 | 25.11.2026 |
 | Gemeinsame Hilfen der Kartentasks zusammenführen: Schlange anlegen und finden, Karte entnehmen, Klickhilfe der Szenariotests. | Claude Code | | 21.11.2026 |
-| P0.5: G1 bis G8 und G10 bis G23 beantworten und die Antworten D14 bis D33 auf die Website bringen. | Autor | X1 | 12.11.2026 |
+| Die Antworten mit „Website folgt“ aus docs/WEBSITE_NACHTRAG.md auf die Website bringen. | Autor | | 12.11.2026 |

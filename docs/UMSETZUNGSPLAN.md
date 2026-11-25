@@ -786,8 +786,9 @@ Entscheidungsablauf, Ziehen mitten im Zug über `stapel.ts`.*
      ohne Wirkung (D46, D56).
   4. Verdoppler, Comeback und die zugerweiternden Boni schliessen sich aus
      (D47).
-  5. Nach der Nutzung aus dem Spiel; nie auf einem Ablagestapel, also nicht
-     zurückholbar (A8.2 Aktion 4, D54).
+  5. Nach der Nutzung aus dem Spiel und nie auf einem Ablagestapel (D54). Ein
+     ungenutzt abgeworfener Korb liegt auf dem Ablagestapel (D69) und ist von
+     dort nicht zurückholbar (A8.2 Aktion 4).
 - **Für alle drei:** jeder Regelsatz des Abschnitts hat einen Test; Dauerlauf
   mit Erweiterung grün; Szenarien am Entwicklertisch.
 - **Zusätzliche Dateien für alle drei (U13, nachgetragen nach E1):** E1 legt
