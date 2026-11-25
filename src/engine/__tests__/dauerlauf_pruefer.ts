@@ -2,6 +2,7 @@ import { expect } from 'vitest'
 import { AKTIONSTYPEN, anwendeAktion, ermittleAktionen, ermittleEntscheider, pruefeAktion } from '../index'
 import type { SpielAktion, Spielzustand } from '../index'
 import { alleSpielkarten } from '../invarianten'
+import { neuErfuellteGeheimeAufgaben } from '../testing/aufgaben'
 import { istFarbenschutz } from '../reaktion'
 import { dauerlauf, ENGINE_MOTOR } from '../testing/dauerlauf'
 import type { DauerlaufErgebnis, DauerlaufPartie, Motor, SchrittPruefer } from '../testing/dauerlauf'
@@ -88,13 +89,14 @@ export function neueErweiterung(): Erweiterung {
  */
 export function erweiterungsPruefer(zaehler: Erweiterung): SchrittPruefer {
   return (vorher, aktion, { zustand, ereignisse }) => {
+    if (!zustand.erweiterung) return null
     for (const ereignis of ereignisse) {
       if (ereignis.typ === 'AufgabeErfuellt' || ereignis.typ === 'ComebackEingesetzt') zaehler[ereignis.typ] += 1
       if (ereignis.typ === 'RisikoKarteGespielt') zaehler[ereignis.erfolg ? 'RisikoErfolg' : 'RisikoMisserfolg'] += 1
       if (ereignis.typ === 'EntscheidungVerlangt' && ereignis.art.startsWith('Risiko') && ereignis.spielerIndex !== vorher.zug.spielerIndex) zaehler.RisikoGegnerEntscheidet += 1
     }
     if (aktion.typ === 'SchlangenkorbSpielen') zaehler.SchlangenkorbGespielt += 1
-    zaehler.GeheimeAufgabeErfuellt += zustand.spieler.filter((spieler, index) => spieler.geheimeAufgabeErfuellt && !vorher.spieler[index].geheimeAufgabeErfuellt).length
+    zaehler.GeheimeAufgabeErfuellt += neuErfuellteGeheimeAufgaben(vorher, zustand).length
     return null
   }
 }

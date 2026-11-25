@@ -5,8 +5,10 @@ import { risikoaktionText } from '../erweiterung/risiko';
 import { alleSpielkarten } from '../invarianten';
 import { findeSchlange } from '../schlangen';
 import { berechneEndwertung } from '../scoring';
+import type { Endwertung } from '../scoring';
 import type { Schlange, Spieler, Spielkarte, Spielzustand } from '../types';
 import { spielerIndexVon } from '../zugablauf';
+import { neuErfuellteGeheimeAufgaben } from './aufgaben';
 import { ENGINE_MOTOR, spieleDauerlaufPartie } from './dauerlauf';
 import type { DauerlaufPartie, Motor, SchrittPruefer } from './dauerlauf';
 
@@ -35,6 +37,8 @@ Erweiterung schreibt es wie zuvor.
 export interface Partieprotokoll {
   text: string;
   schritte: number;
+  /** Die Endwertung, wie sie im Protokoll steht. */
+  endwertung: Endwertung;
 }
 
 /** Sortiert die Aufzählung, bevor der Lauf wählt; prüft und wendet an wie die Engine. */
@@ -53,6 +57,11 @@ function karten(anzahl: number): string {
 
 function kartenname(karte: Spielkarte): string {
   return karte.typ === 'Farbkarte' ? karte.farbe : karte.name;
+}
+
+/** Die Einträge mit Komma getrennt, „keine“ ohne Eintrag. */
+function aufzaehlung(eintraege: readonly string[]): string {
+  return eintraege.length === 0 ? 'keine' : eintraege.join(', ');
 }
 
 function aufgabe(id: string): string {
@@ -261,7 +270,7 @@ class Schreiber {
 
   /** X7: was ein Spieler mit Erweiterung vor sich hat, auch die verdeckte geheime Aufgabe (A4, A8.1, A8.2, A9, D35). */
   auslage(spieler: Spieler): string {
-    const erfuellt = spieler.erfuellteAufgaben.length === 0 ? 'keine' : spieler.erfuellteAufgaben.map((eintrag) => aufgabe(eintrag.id)).join(', ');
+    const erfuellt = aufzaehlung(spieler.erfuellteAufgaben.map((eintrag) => aufgabe(eintrag.id)));
     const geheim = spieler.geheimeAufgabe === null ? 'keine' : `${aufgabe(spieler.geheimeAufgabe.id)}, ${spieler.geheimeAufgabeErfuellt ? 'erfüllt' : 'nicht erfüllt'}`;
     const comeback = spieler.comeback === null ? 'keine' : spieler.comeback.verbraucht ? 'verbraucht' : 'bereit';
     return `Aufgaben erfüllt: ${erfuellt}; geheime Aufgabe: ${geheim}; Comeback-Karte ${comeback}; Risiko-Karten: ${spieler.risikoKarten.length}`;
@@ -270,16 +279,14 @@ class Schreiber {
   /** X7: offene Aufgaben, Aufgabenstapel, offen aufgedeckte und aus dem Spiel genommene Karten (A7.10, A8.2, A9, D54). */
   tischDerErweiterung(): string {
     const { offeneAufgaben, aufgabenStapel, aufgedeckt, ausDemSpiel } = this.zustand;
-    const offen = offeneAufgaben.length === 0 ? 'keine' : offeneAufgaben.map((eintrag) => aufgabe(eintrag.id)).join(', ');
-    const liste = (eintraege: ReadonlyArray<{ id: string }>) => (eintraege.length === 0 ? 'keine' : eintraege.map((karte) => this.karte(karte.id)).join(', '));
+    const offen = aufzaehlung(offeneAufgaben.map((eintrag) => aufgabe(eintrag.id)));
+    const liste = (eintraege: ReadonlyArray<{ id: string }>) => aufzaehlung(eintraege.map((karte) => this.karte(karte.id)));
     return `Offene Aufgaben: ${offen}; Aufgabenstapel: ${karten(aufgabenStapel.length)}; aufgedeckt: ${liste(aufgedeckt)}; aus dem Spiel: ${liste(ausDemSpiel)}`;
   }
 
   /** X7, D35: Eine geheime Aufgabe meldet kein Ereignis; das Protokoll vermerkt verdeckt, in welchem Schritt sie erfüllt war. */
   geheimeErfuellt(vorher: Spielzustand): string[] {
-    return this.zustand.spieler
-      .filter((spieler, index) => spieler.geheimeAufgabeErfuellt && !vorher.spieler[index].geheimeAufgabeErfuellt)
-      .map((spieler) => `(verdeckt, D35) ${spieler.name} hat die geheime Aufgabe ${aufgabe(spieler.geheimeAufgabe!.id)} erfüllt.`);
+    return neuErfuellteGeheimeAufgaben(vorher, this.zustand).map((spieler) => `(verdeckt, D35) ${spieler.name} hat die geheime Aufgabe ${aufgabe(spieler.geheimeAufgabe!.id)} erfüllt.`);
   }
 
   zugkopf(): void {
@@ -291,7 +298,7 @@ class Schreiber {
     this.lage();
   }
 
-  wertung(): void {
+  wertung(): Endwertung {
     const endwertung = berechneEndwertung(this.zustand);
     this.zeile('');
     this.zeile('Endwertung (A11)');
@@ -306,12 +313,13 @@ class Schreiber {
       const kette = wertung.kette === null || wertung.kette.laenge === 0 ? 'keine Kette ab 3 Farbkarten' : `Kette ${wertung.kette.laenge}, Bonus ${wertung.kette.bonus}`;
       this.zeile(`    Gruppenpunkte ${wertung.gruppenPunkte}; ${kette}`);
       if (wertung.aufgaben !== null) {
-        const aufgaben = wertung.aufgaben.map((eintrag) => `${aufgabe(eintrag.aufgabeId)} ${eintrag.geheim ? 'geheim' : 'offen'} ${eintrag.punkte}`).join(', ');
-        this.zeile(`    Vielfaltbonus ${wertung.vielfaltBonus ?? 0}; Aufgaben ${aufgaben === '' ? 'keine' : aufgaben}, zusammen ${wertung.aufgabenPunkte}`);
+        const aufgaben = aufzaehlung(wertung.aufgaben.map((eintrag) => `${aufgabe(eintrag.aufgabeId)} ${eintrag.geheim ? 'geheim' : 'offen'} ${eintrag.punkte}`));
+        this.zeile(`    Vielfaltbonus ${wertung.vielfaltBonus ?? 0}; Aufgaben ${aufgaben}, zusammen ${wertung.aufgabenPunkte}`);
       }
     }
     const gewinner = endwertung.spieler.filter((wertung) => endwertung.gewinner.includes(wertung.spielerId)).map((wertung) => wertung.name);
     this.zeile(`  Gewonnen: ${gewinner.join(', ')} mit ${endwertung.hoechstePunktzahl} Punkten.`);
+    return endwertung;
   }
 }
 
@@ -354,6 +362,6 @@ export function protokolliere(partie: DauerlaufPartie, pruefer: SchrittPruefer =
   fertig.zeile('');
   fertig.zeile('Lage am Ende');
   fertig.lage();
-  fertig.wertung();
-  return { text: `${fertig.zeilen.join('\n')}\n`, schritte: ergebnis.schritte };
+  const endwertung = fertig.wertung();
+  return { text: `${fertig.zeilen.join('\n')}\n`, schritte: ergebnis.schritte, endwertung };
 }

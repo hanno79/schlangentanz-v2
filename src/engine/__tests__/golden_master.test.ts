@@ -1,11 +1,8 @@
 // @vitest-environment node
 import { existsSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-import { berechneEndwertung } from '../index'
-import type { Endwertung } from '../index'
 import { protokolliere } from '../testing/partieprotokoll'
 import type { Partieprotokoll } from '../testing/partieprotokoll'
-import type { SchrittPruefer } from '../testing/dauerlauf'
 import { allePruefer, erweiterungsPruefer, neueErweiterung, neueReaktionen, neuerZugzaehler, reaktionsPruefer, regelPruefer } from './dauerlauf_pruefer'
 import type { Erweiterung, Reaktionen, Zugzaehler } from './dauerlauf_pruefer'
 
@@ -51,10 +48,9 @@ interface GeprueftePartie {
   zuege: Zugzaehler
   reaktionen: Reaktionen
   erweiterung: Erweiterung
-  endwertung: Endwertung
 }
 
-/** Jede Partie wird einmal gespielt, mit den Prüfern des Dauerlaufs und der Endwertung; die Tests lesen daraus. */
+/** Jede Partie wird einmal gespielt, mit den Prüfern des Dauerlaufs; die Tests lesen daraus. */
 const gespielt = new Map<string, GeprueftePartie>()
 function spiele(saat: number, spielerzahl: number, erweiterung = false): GeprueftePartie {
   const schluessel = `${saat}/${spielerzahl}/${erweiterung}`
@@ -62,14 +58,8 @@ function spiele(saat: number, spielerzahl: number, erweiterung = false): Gepruef
     const zuege = neuerZugzaehler()
     const reaktionen = neueReaktionen()
     const gezaehlt = neueErweiterung()
-    let endwertung: Endwertung | null = null
-    const amEnde: SchrittPruefer = (_vorher, _aktion, { zustand }) => {
-      if (zustand.partiephase === 'Beendet') endwertung = berechneEndwertung(zustand)
-      return null
-    }
-    const protokoll = protokolliere({ saat, spielerzahl, erweiterung }, allePruefer(regelPruefer(zuege), reaktionsPruefer(reaktionen), erweiterungsPruefer(gezaehlt), amEnde))
-    // protokolliere wirft, wenn die Partie nicht regulär endet; danach gibt es die Endwertung.
-    gespielt.set(schluessel, { protokoll, zuege, reaktionen, erweiterung: gezaehlt, endwertung: endwertung! })
+    const protokoll = protokolliere({ saat, spielerzahl, erweiterung }, allePruefer(regelPruefer(zuege), reaktionsPruefer(reaktionen), erweiterungsPruefer(gezaehlt)))
+    gespielt.set(schluessel, { protokoll, zuege, reaktionen, erweiterung: gezaehlt })
   }
   return gespielt.get(schluessel)!
 }
@@ -89,7 +79,8 @@ describe('A4/A5/A6/A7/A8/A9/A10/A11: Golden Master, je drei Partien mit fester S
   })
 
   it.each(PARTIEN_ERWEITERUNG)('A7.10/A8.1/A8.2/A9 (X7): $spielerzahl Spieler, Saat $saat: Aufgabe eingelöst, geheime Aufgabe gewertet, Comeback, Risiko mit Erfolg und Misserfolg samt Gegnerwahl, Schlangenkorb', ({ saat, spielerzahl }) => {
-    const { erweiterung, endwertung } = spiele(saat, spielerzahl, true)
+    const { erweiterung, protokoll } = spiele(saat, spielerzahl, true)
+    const { endwertung } = protokoll
     expect(erweiterung.AufgabeErfuellt, 'A9: eingelöste offene Aufgaben').toBeGreaterThan(0)
     const geheimGewertet = endwertung.spieler.filter((wertung) => wertung.aufgaben?.some((eintrag) => eintrag.geheim) === true)
     expect(geheimGewertet.length, 'A9/A11/D35: Spieler mit geheimer Aufgabe in der Endwertung').toBeGreaterThan(0)
