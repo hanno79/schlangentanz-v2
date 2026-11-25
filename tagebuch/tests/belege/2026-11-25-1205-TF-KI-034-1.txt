@@ -1,0 +1,185 @@
+=== Gegenprobe 1
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a8c70568827fde563
+
+ ❯ src/ki/strategien/ersteAktionKi.test.ts (4 tests | 1 failed) 32ms
+     × K5: sie wählt immer die erste angebotene Aktion und braucht keinen Zufall 27ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/ki/strategien/ersteAktionKi.test.ts > K5: die KI „erste erlaubte Aktion“ > K5: sie wählt immer die erste angebotene Aktion und braucht keinen Zufall
+AssertionError: expected { typ: 'ZugBeenden', spielerId: 'c' } to be { typ: 'ZugBeenden', spielerId: 'a' } // Object.is equality
+
+- Expected
++ Received
+
+  {
+-   "spielerId": "a",
++   "spielerId": "c",
+    "typ": "ZugBeenden",
+  }
+
+ ❯ src/ki/strategien/ersteAktionKi.test.ts:22:40
+     20|   it('K5: sie wählt immer die erste angebotene Aktion und braucht kein…
+     21|     const ki = erstelle(nie)
+     22|     expect(ki.waehle(SICHT, AKTIONEN)).toBe(AKTIONEN[0])
+       |                                        ^
+     23|     expect(ki.waehle(SICHT, AKTIONEN.slice(1))).toBe(AKTIONEN[1])
+     24|     expect(ki.waehle(SICHT, AKTIONEN.slice(2))).toBe(AKTIONEN[2])
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  11:57:14
+   Duration  3.72s (transform 801ms, setup 292ms, import 843ms, tests 32ms, environment 2.26s)
+
+=== Gegenprobe 2
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a8c70568827fde563
+
+ ❯ tests/staerke_k5_schwellen.test.ts (8 tests | 3 failed) 15ms
+     × K5: jede Schwelle ist max(Plan, abgerundet 99 % der gemessenen Siege): 495, 495, 297, 495, 495, 289 7ms
+     × K5: ein Sieg unter der Schwelle ist rot und nennt die Zahlen 1ms
+     × K5: eine Schwelle über dem Messwert ist rot: mit 300 statt 292 gemessenen Siegen verlangt der Lauf 297, und 292 reichen nicht 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/staerke_k5_schwellen.test.ts > K5: festgeschriebene Schwellen der Messläufe > K5: jede Schwelle ist max(Plan, abgerundet 99 % der gemessenen Siege): 495, 495, 297, 495, 495, 289
+AssertionError: K5: mindestSiege je Messlauf: expected [ 490, 490, 294, 490, 490, 286 ] to deeply equal [ 495, 495, 297, 495, 495, 289 ]
+
+- Expected
++ Received
+
+  [
+-   495,
+-   495,
+-   297,
+-   495,
+-   495,
+-   289,
++   490,
++   490,
++   294,
++   490,
++   490,
++   286,
+  ]
+
+ ❯ tests/staerke_k5_schwellen.test.ts:20:70
+     18|
+     19|   it('K5: jede Schwelle ist max(Plan, abgerundet 99 % der gemessenen S…
+     20|     expect(LAEUFE.map(mindestSiege), 'K5: mindestSiege je Messlauf').t…
+       |                                                                      ^
+     21|   })
+     22|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/staerke_k5_schwellen.test.ts > K5: Auswertung eines Messlaufs (Gegenproben) > K5: ein Sieg unter der Schwelle ist rot und nennt die Zahlen
+AssertionError: expected [Function] to throw an error
+
+- Expected:
+null
+
++ Received:
+undefined
+
+ ❯ tests/staerke_k5_schwellen.test.ts:45:74
+     43|
+     44|   it('K5: ein Sieg unter der Schwelle ist rot und nennt die Zahlen', (…
+     45|     expect(() => pruefeErgebnis(lauf, { siege: 288, nichtBeendet: [] }…
+       |                                                                          ^
+     46|   })
+     47|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/staerke_k5_schwellen.test.ts > K5: Auswertung eines Messlaufs (Gegenproben) > K5: eine Schwelle über dem Messwert ist rot: mit 300 statt 292 gemessenen Siegen verlangt der Lauf 297, und 292 reichen nicht
+AssertionError: expected [Function] to throw error matching /mindestens 297/ but got 'K5 Kriterium 5: zu wenige Siege der s…'
+
+- Expected:
+/mindestens 297/
+
++ Received:
+"K5 Kriterium 5: zu wenige Siege der soliden KI; K5 Kriterium 5 mit Erweiterung: 300 Partien zu 4 gegen die Zufalls-KI, Saaten ab 1164999137, KI-Saat 2048025225: 292 Siege (97.3 %), festgeschrieben mindestens 294, Plan mindestens 50 %: expected 292 to be greater than or equal to 294"
+
+ ❯ tests/staerke_k5_schwellen.test.ts:49:96
+     47|
+     48|   it('K5: eine Schwelle über dem Messwert ist rot: mit 300 statt 292 g…
+     49|     expect(() => pruefeErgebnis({ ...lauf, gemessen: 300 }, { siege: 2…
+       |                                                                                                ^
+     50|   })
+     51|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 5 passed (8)
+   Start at  11:57:35
+   Duration  1.25s (transform 626ms, setup 280ms, import 654ms, tests 15ms, environment 0ms)
+
+=== Gegenprobe 3
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a8c70568827fde563
+
+ ❯ tests/staerke_k5_vier.staerke.test.ts (1 test | 1 failed) 46574ms
+     × K5 Kriterium 3 und 4: 300 Partien gegen 3 Gegner der Art die Zufalls-KI, mindestens 297 Siege; alle enden ohne Invariantenverletzung 46572ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/staerke_k5_vier.staerke.test.ts > K5: Stärkenachweis der soliden KI ohne Erweiterung, Kriterium 3 > K5 Kriterium 3 und 4: 300 Partien gegen 3 Gegner der Art die Zufalls-KI, mindestens 297 Siege; alle enden ohne Invariantenverletzung
+AssertionError: K5 Kriterium 3: zu wenige Siege der soliden KI; K5 Kriterium 3: 300 Partien zu 4 gegen die Zufalls-KI, Saaten ab 1328338692, KI-Saat 1885811723: 74 Siege (24.7 %), festgeschrieben mindestens 297, Plan mindestens 50 %: expected 74 to be greater than or equal to 297
+ ❯ pruefeErgebnis tests/staerke_k5.ts:168:94
+    166|   const zahlen = beschreibe(lauf, siege)
+    167|   expect(nichtBeendet, `K5 Kriterium 4: erwartet, dass jede Partie end…
+    168|   expect(siege, `K5 Kriterium ${lauf.kriterium}: zu wenige Siege der s…
+       |                                                                                              ^
+    169| }
+    170|
+ ❯ pruefeMesslauf tests/staerke_k5.ts:161:3
+ ❯ tests/staerke_k5_vier.staerke.test.ts:7:5
+
+ ❯ tests/staerke_k5_vier.staerke.test.ts:7:5 notice
+   ↳ K5 Kriterium 3: 300 Partien zu 4 gegen die Zufalls-KI, Saaten ab 1328338692, KI-Saat 1885811723: 74 Siege (24.7 %), festgeschrieben mindestens 297, Plan mindestens 50 %
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  11:57:49
+   Duration  47.83s (transform 1.71s, setup 278ms, import 678ms, tests 46.57s, environment 0ms)
+
+=== Gegenprobe 4
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a8c70568827fde563
+
+ ❯ tests/staerke_k5_vier.staerke.test.ts (1 test | 1 failed) 239ms
+     × K5 Kriterium 3 und 4: 300 Partien gegen 3 Gegner der Art die Zufalls-KI, mindestens 297 Siege; alle enden ohne Invariantenverletzung 236ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/staerke_k5_vier.staerke.test.ts > K5: Stärkenachweis der soliden KI ohne Erweiterung, Kriterium 3 > K5 Kriterium 3 und 4: 300 Partien gegen 3 Gegner der Art die Zufalls-KI, mindestens 297 Siege; alle enden ohne Invariantenverletzung
+Error: K5: Die Fabrik von solideKi kam zweimal aus demselben Modul; jede Instanz braucht ein frisch geladenes.
+ ❯ frischerTeilnehmer tests/staerke_k5.ts:69:42
+     67|   for (let nummer = 0; nummer < anzahl; nummer++) {
+     68|     const fabrik = await ladeFrischeFabrik(STRATEGIEN_REGISTRY, eintra…
+     69|     if (fabriken.includes(fabrik)) throw new Error(`K5: Die Fabrik von…
+       |                                          ^
+     70|     fabriken.push(fabrik)
+     71|   }
+ ❯ messe tests/staerke_k5.ts:88:25
+ ❯ pruefeMesslauf tests/staerke_k5.ts:159:19
+ ❯ tests/staerke_k5_vier.staerke.test.ts:7:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  11:58:51
+   Duration  2.82s (transform 1.60s, setup 575ms, import 1.46s, tests 239ms, environment 0ms)
+

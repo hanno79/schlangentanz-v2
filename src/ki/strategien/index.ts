@@ -1,3 +1,4 @@
+import { erstelleErsteAktionKi } from './ersteAktionKi';
 import { erstelleSolideKi } from './solideKi';
 import type { Fabrik } from './strategie';
 import { erstelleZufallsKi } from './zufallsKi';
@@ -13,4 +14,5 @@ importieren diese Datei nicht; sie gehört dem Rahmen, der App und den Tests.
 export const STRATEGIEN: Readonly<Record<string, Fabrik>> = {
   zufallsKi: erstelleZufallsKi,
   solideKi: erstelleSolideKi,
+  ersteAktion: erstelleErsteAktionKi,
 };

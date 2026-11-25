@@ -1,0 +1,46 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a8c70568827fde563
+
+stdout | tests/zz_pruefer_k5_vier.staerke.test.ts > Prüferprobe K5: 300 Partien zu viert gegen drei Zufalls-KIs, eigene Saaten
+Probe zufallsKi zu 4, 300 Partien ab Saat 913377402, kiSaat 288501967: Siege 300 (100.0 %), davon allein 300, geteilt 0; nicht beendet 0; Punkte KI im Mittel 31.1, bester Gegner im Mittel 1.5
+
+ ✓ tests/zz_pruefer_k5_vier.staerke.test.ts > Prüferprobe K5: 300 Partien zu viert gegen drei Zufalls-KIs, eigene Saaten 211800ms
+
+   ❯ tests/zz_pruefer_k5_vier.staerke.test.ts:7:9 notice
+     ↳ Probe zufallsKi zu 4, 300 Partien ab Saat 913377402, kiSaat 288501967: Siege 300 (100.0 %), davon allein 300, geteilt 0; nicht beendet 0; Punkte KI im Mittel 31.1, bester Gegner im Mittel 1.5
+
+stdout | tests/zz_pruefer_k5_vierErw.staerke.test.ts > Prüferprobe K5: 300 Partien zu viert mit Erweiterung gegen drei Zufalls-KIs, eigene Saaten
+Probe zufallsKi zu 4 mit Erweiterung, 300 Partien ab Saat 1513640028, kiSaat 77204119: Siege 292 (97.3 %), davon allein 291, geteilt 1; nicht beendet 0; Punkte KI im Mittel 54.4, bester Gegner im Mittel 9.4
+
+ ✓ tests/zz_pruefer_k5_vierErw.staerke.test.ts > Prüferprobe K5: 300 Partien zu viert mit Erweiterung gegen drei Zufalls-KIs, eigene Saaten 277331ms
+
+   ❯ tests/zz_pruefer_k5_vierErw.staerke.test.ts:7:9 notice
+     ↳ Probe zufallsKi zu 4 mit Erweiterung, 300 Partien ab Saat 1513640028, kiSaat 77204119: Siege 292 (97.3 %), davon allein 291, geteilt 1; nicht beendet 0; Punkte KI im Mittel 54.4, bester Gegner im Mittel 9.4
+
+stdout | tests/zz_pruefer_k5_erste2.staerke.test.ts > Prüferprobe K5: 200 Partien zu zweit mit Erweiterung gegen erste erlaubte Aktion, eigene Saaten
+Probe ersteAktion zu 2 mit Erweiterung, 200 Partien ab Saat 1202334455, kiSaat 990112334: Siege 199 (99.5 %), davon allein 199, geteilt 0; nicht beendet 0; Punkte KI im Mittel 101.6, bester Gegner im Mittel 9.4
+
+ ✓ tests/zz_pruefer_k5_erste2.staerke.test.ts > Prüferprobe K5: 200 Partien zu zweit mit Erweiterung gegen erste erlaubte Aktion, eigene Saaten 456293ms
+
+   ❯ tests/zz_pruefer_k5_erste2.staerke.test.ts:7:9 notice
+     ↳ Probe ersteAktion zu 2 mit Erweiterung, 200 Partien ab Saat 1202334455, kiSaat 990112334: Siege 199 (99.5 %), davon allein 199, geteilt 0; nicht beendet 0; Punkte KI im Mittel 101.6, bester Gegner im Mittel 9.4
+
+stdout | tests/zz_pruefer_k5_zufall2.staerke.test.ts > Prüferprobe K5: 500 Partien zu zweit gegen die Zufalls-KI, eigene Saaten
+Probe zufallsKi zu 2, 500 Partien ab Saat 731904155, kiSaat 402118773: Siege 500 (100.0 %), davon allein 500, geteilt 0; nicht beendet 0; Punkte KI im Mittel 63.3, bester Gegner im Mittel 0.2
+
+ ✓ tests/zz_pruefer_k5_zufall2.staerke.test.ts > Prüferprobe K5: 500 Partien zu zweit gegen die Zufalls-KI, eigene Saaten 726472ms
+
+   ❯ tests/zz_pruefer_k5_zufall2.staerke.test.ts:7:9 notice
+     ↳ Probe zufallsKi zu 2, 500 Partien ab Saat 731904155, kiSaat 402118773: Siege 500 (100.0 %), davon allein 500, geteilt 0; nicht beendet 0; Punkte KI im Mittel 63.3, bester Gegner im Mittel 0.2
+
+
+ Test Files  4 passed (4)
+      Tests  4 passed (4)
+   Start at  11:29:51
+   Duration  727.83s (transform 6.34s, setup 1.24s, import 2.71s, tests 1671.90s, environment 0ms)
+
+
+real	12m10.515s
+user	0m0.106s
+sys	0m0.183s
+exit 0

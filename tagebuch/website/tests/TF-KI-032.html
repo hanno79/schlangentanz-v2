@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-KI-032 Die solide KI gewinnt in den sechs Turnieren des Stärkenachweises mit festen Saaten mindestens so oft wie festgeschrieben, und jede Partie endet ohne verletzte Invariante. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 25.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-KI-032 Die solide KI gewinnt in den sechs Turnieren des Stärkenachweises mit festen Saaten mindestens so oft wie festgeschrieben, und jede Partie endet ohne verletzte Invariante.</h1><p class="etiketten"><span class="etikett">Bereich KI-Gegner</span><span class="etikett">Regression ja</span><span class="etikett">Priorität hoch</span><span class="etikett">Art automatisch</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>K5 belegt, dass die solide KI klar stärker ist als die Zufalls-KI und als „erste erlaubte Aktion“. Sechs Turniere mit festen Saaten laufen in <code>npm run test:staerke</code>, drei ohne und drei mit Erweiterung. Jede KI kommt dabei aus einem frisch geladenen Modul.</p><h2>Bestanden, wenn</h2><p>Alle sechs Tests sind grün. Die solide KI holt ohne Erweiterung 500 von 500 Siegen gegen die Zufalls-KI, 500 von 500 gegen „erste erlaubte Aktion“ und 300 von 300 zu viert, mit Erweiterung 500, 500 und 292. Festgeschrieben sind mindestens 495, 495, 297, 495, 495 und 289 Siege. Keine Partie endet an der Schrittgrenze oder an einer verletzten Invariante.</p><h2>Fehlgeschlagen, wenn</h2><p>Ein Test ist rot: weniger Siege als festgeschrieben, eine Partie endet nicht oder verletzt eine Invariante, oder eine Fabrik kommt zweimal aus demselben Modul.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>25.11.2026</dd><dt>Änderung</dt><dd>task/K5-staerkenachweis (PR #122)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Ausgangslage</td><td>Worktree auf dem geprüften Stand, <code>npm ci</code> gelaufen</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Saaten und KI-Saaten stehen in <code>MESSLAEUFE</code> und <code>MESSLAEUFE_ERWEITERUNG</code> in <code>tests/staerke_k5.ts</code>.</p></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p><code>npm run test:staerke</code>. Jeder Test schreibt eine Anmerkung mit Siegen, Anteil und Schwelle; der Reporter <code>verbose</code> zeigt sie auch, wenn der Test besteht. Laufzeit rund 21 Minuten, sechs Dateien parallel.</p></section>
+<section><h2>Grenzfälle</h2><table><thead><tr><th>ID</th><th>Titel</th><th>Letzter Lauf</th></tr></thead><tbody><tr><td><a href="TF-KI-033.html">TF-KI-033</a></td><td>Auch mit Saaten, die nicht im Test stehen, liegt die solide KI klar über den Schwellen des Plans K5.</td><td><span class="status status-bestanden">bestanden</span> 25.11.2026</td></tr><tr><td><a href="TF-KI-034.html">TF-KI-034</a></td><td>Der Stärkenachweis K5 wird rot, wenn die gemessene KI schwächer ist, die Schwelle gesenkt wird, Instanzen ein Modul teilen oder „erste erlaubte Aktion“ eine andere Aktion wählt.</td><td><span class="status status-bestanden">bestanden</span> 25.11.2026</td></tr></tbody></table></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Saaten ausserhalb des Tests prüft TF-KI-033. Dass die Auswertung eine schwächere KI, eine gesenkte Schwelle und geteilte Module erkennt, prüft TF-KI-034. Partien zu dritt misst K5 nicht, der Plan verlangt nur zwei und vier Spieler.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-25">25.11.2026 12:05</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer K5) &middot; agent &middot; pruefung-K5 @ <span class="commit" title="ae3881511d107a5f9d8a3aaee179cc0c71e83796">ae38815</span></p><p>npm run test:staerke Exit 0, 6 von 6 grün in 21 min 06 s: ohne Erweiterung 500/500 gegen Zufalls-KI (Schwelle 495), 500/500 gegen erste erlaubte Aktion (495), 300/300 zu viert (297); mit Erweiterung 500/500 (495), 500/500 (495), 292/300 (289); keine Partie an Schrittgrenze oder Invariante; Zahlen gleich der ersten Messung</p><ul class="belege"><li><a href="belege/2026-11-25-1205-TF-KI-032-1.txt">2026-11-25-1205-TF-KI-032-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>
