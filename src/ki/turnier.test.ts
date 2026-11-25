@@ -34,16 +34,6 @@ describe('K1: Sitzordnung im Turnier', () => {
     expect(() => turnier({ teilnehmer: zufallsTeilnehmer(2), partien: 0, ersteSaat: 1, kiSaat: 7, erweiterung: false })).toThrow(
       'Turnier: Ungültige Zahl der Partien 0; erwartet eine ganze Zahl ab 1.',
     )
-    expect(() => turnier({ teilnehmer: zufallsTeilnehmer(2), partien: 1, ersteSaat: 1, kiSaat: 7, erweiterung: false, erstePartie: -1 })).toThrow(
-      'Turnier: Ungültige Nummer der ersten Partie -1; erwartet eine ganze Zahl ab 0.',
-    )
-  })
-
-  it('K5: ein Turnier in Abschnitten mit erstePartie spielt Partie für Partie dasselbe wie ein einziges Turnier', () => {
-    const optionen = { teilnehmer: zufallsTeilnehmer(3), ersteSaat: 60, kiSaat: 7, erweiterung: false }
-    const ganz = turnier({ ...optionen, partien: 5 })
-    const abschnitte = [turnier({ ...optionen, partien: 2 }), turnier({ ...optionen, partien: 3, erstePartie: 2 })]
-    expect(abschnitte.flatMap((abschnitt) => abschnitt.partien), 'K5: Saat, Sitze, Verlauf und Sieger je Partie').toEqual(ganz.partien)
   })
 })
 

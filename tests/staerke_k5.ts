@@ -17,8 +17,16 @@ Bekannte Grenze (Plan K5): Eine Strategie, die diese Saaten kennt, könnte aus i
 Starthand die Partie nachrechnen; dagegen hilft nur das Review jeder Strategie.
 
 Gespielt wird in Abschnitten von ABSCHNITT Partien, damit nicht alle frisch geladenen
-Module einer Messung zugleich im Speicher liegen. Mit `erstePartie` ist jeder
-Abschnitt genau ein Stück desselben Turniers; das Ergebnis hängt nicht von ABSCHNITT ab.
+Module einer Messung zugleich im Speicher liegen; jeder Abschnitt ist ein eigenes
+Turnier. Abschnitt `a` spielt die Partiesaaten ab `ersteSaat + a × ABSCHNITT` mit der
+KI-Saat `kiSaat + a`, und in jedem Abschnitt beginnt die Sitzordnung von vorn.
+ABSCHNITT ist ein Vielfaches von 2 und 4, so beginnt jeder Teilnehmer gleich oft.
+
+ABSCHNITT gehört damit zur Messung: Mit einem anderen Wert bekämen die KIs andere
+Saaten, und die festgeschriebenen Siege gälten nicht mehr. Wie empfindlich das ist,
+zeigte ein Versuch (25.11.2026), der die Abschnitte zu einem einzigen Turnier
+zusammensetzte: zu viert ohne Erweiterung 298 statt 300 Siege, mit Erweiterung 295
+statt 292. Ein anderer Wert ist deshalb eine neue erste Messung.
 */
 
 const ABSCHNITT = 20
@@ -75,12 +83,12 @@ async function frischerTeilnehmer(eintrag: string, anzahl: number): Promise<Teil
 /** Spielt den Messlauf; die solide KI ist Teilnehmer 0, die Gegner die übrigen. */
 async function messe(lauf: Messlauf): Promise<Messung> {
   const messung: Messung = { siege: 0, nichtBeendet: [] }
-  for (let erstePartie = 0; erstePartie < lauf.partien; erstePartie += ABSCHNITT) {
-    const partien = Math.min(ABSCHNITT, lauf.partien - erstePartie)
+  for (let abschnitt = 0; abschnitt * ABSCHNITT < lauf.partien; abschnitt++) {
+    const gespielt = abschnitt * ABSCHNITT
+    const partien = Math.min(ABSCHNITT, lauf.partien - gespielt)
     const teilnehmer = [await frischerTeilnehmer('solideKi', partien)]
     for (let sitz = 1; sitz < lauf.spielerzahl; sitz++) teilnehmer.push(await frischerTeilnehmer(lauf.gegner, partien))
-    const { ersteSaat, kiSaat, erweiterung } = lauf
-    const ergebnis = turnier({ teilnehmer, partien, erstePartie, ersteSaat, kiSaat, erweiterung })
+    const ergebnis = turnier({ teilnehmer, partien, ersteSaat: lauf.ersteSaat + gespielt, kiSaat: (lauf.kiSaat + abschnitt) >>> 0, erweiterung: lauf.erweiterung })
     messung.siege += ergebnis.siege[0]
     for (const { ausgang, saat, schritte, detail } of ergebnis.partien) {
       if (ausgang !== 'beendet') messung.nichtBeendet.push(`Saat ${saat}: ${ausgang} nach ${schritte} Schritten, ${detail}`)
