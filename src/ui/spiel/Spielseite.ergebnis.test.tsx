@@ -53,6 +53,35 @@ describe('O8: Nach Spielende steht die Wertung da', () => {
   })
 })
 
+/** Bereiche, die ein Bildschirmleser bei einer Änderung von selbst vorliest. */
+const vorlesend = () =>
+  Array.from(document.querySelectorAll('[aria-live], [role="status"], [role="alert"]')).filter((bereich) => bereich.getAttribute('aria-live') !== 'off')
+
+describe('O11 K1/K2: Spielende mit Tastatur und Bildschirmleser (TF-TISCH-045)', () => {
+  it('O11 K1/K2: endet die Partie am Tisch, steht der Fokus auf der Überschrift der Wertung, und das Ergebnis wird vorgelesen', () => {
+    vi.useFakeTimers()
+    speichereSpielstand(erzeugeSzenario('schlussrunde-ohne-dich'))
+    oeffne('/spiel')
+    // Wie mit der Tastatur: Der Fokus steht am Tisch, solange die Gegner spielen.
+    within(screen.getByRole('region', { name: 'Zugleiste' })).getByRole('button', { name: 'Schneller' }).focus()
+    for (let schritt = 0; schritt < 40 && screen.queryByTestId('ergebnis') === null; schritt += 1) warte(700)
+    const titel = within(ergebnis()).getByRole('heading', { level: 1 })
+    expect(document.activeElement, 'nach dem Spielende steht der Fokus auf der leeren Seite').toBe(titel)
+    warte(0)
+    const meldung = vorlesend().find((bereich) => (bereich.textContent ?? '').includes(titel.textContent ?? '—'))
+    expect(meldung, `kein vorlesender Bereich nennt „${titel.textContent}“`).toBeDefined()
+    expect(meldung).toHaveTextContent(/Mit \d+ Punkt/)
+  })
+
+  it('O11 K2: wer die Wertung später öffnet, bekommt sie ebenso vorgelesen, und der Fokus steht auf der Überschrift', () => {
+    speichereSpielstand(erzeugeSzenario('wertung-beispiele'))
+    oeffne('/spiel')
+    const titel = screen.getByRole('heading', { level: 1 })
+    expect(document.activeElement).toBe(titel)
+    expect(vorlesend().some((bereich) => (bereich.textContent ?? '').includes('KI-Gegner 2 gewinnt!'))).toBe(true)
+  })
+})
+
 describe('O8 K4: Noch einmal und Zur Lobby', () => {
   it.each([
     ['wertung-beispiele', 3, true],

@@ -92,6 +92,49 @@ export async function erwarteSichtbarenFokus(page: Page, lage: string): Promise<
 }
 
 /**
+ * Ob das Element mit dem Fokus ganz zu sehen ist (TF-TISCH-044): ganz im
+ * Fenster und im sichtbaren Teil jedes Vorfahren, der Überstehendes nicht
+ * zeigt, und kein Zeichen „geht weiter“ liegt darauf. Ein Element, das grösser
+ * ist als sein sichtbarer Rahmen (ein scrollender Bereich selbst), gilt als
+ * ganz zu sehen, wenn es den Rahmen füllt. `null`: Fokus auf der leeren Seite.
+ */
+export async function fokusGanzImBild(page: Page): Promise<{ name: string; detail: string | null } | null> {
+  return page.evaluate(() => {
+    const element = document.activeElement
+    if (element === null || element === document.body) return null
+    const name = element.getAttribute('aria-label') ?? (element.textContent ?? '').trim().slice(0, 60)
+    const box = element.getBoundingClientRect()
+    let [links, oben, rechts, unten] = [0, 0, window.innerWidth, window.innerHeight]
+    for (let vorfahr = element.parentElement; vorfahr !== null; vorfahr = vorfahr.parentElement) {
+      const stil = getComputedStyle(vorfahr)
+      if (stil.overflowX === 'visible' && stil.overflowY === 'visible') continue
+      const k = vorfahr.getBoundingClientRect()
+      links = Math.max(links, k.left + vorfahr.clientLeft)
+      oben = Math.max(oben, k.top + vorfahr.clientTop)
+      rechts = Math.min(rechts, k.left + vorfahr.clientLeft + vorfahr.clientWidth)
+      unten = Math.min(unten, k.top + vorfahr.clientTop + vorfahr.clientHeight)
+    }
+    const breitGenug = box.width <= rechts - links + 1
+    const hochGenug = box.height <= unten - oben + 1
+    const waagrecht = breitGenug ? box.left >= links - 1 && box.right <= rechts + 1 : box.left <= links + 1 && box.right >= rechts - 1
+    const senkrecht = hochGenug ? box.top >= oben - 1 && box.bottom <= unten + 1 : box.top <= oben + 1 && box.bottom >= unten - 1
+    if (!waagrecht || !senkrecht) {
+      return { name, detail: `liegt bei ${Math.round(box.left)}..${Math.round(box.right)} × ${Math.round(box.top)}..${Math.round(box.bottom)}, sichtbar ist ${Math.round(links)}..${Math.round(rechts)} × ${Math.round(oben)}..${Math.round(unten)}` }
+    }
+    // Ein scrollender Bereich mit Fokus trägt seine Zeichen selbst am Rand.
+    if (element.classList.contains('st-scrollt')) return { name, detail: null }
+    for (const zeichen of Array.from(document.querySelectorAll('.st-weiter-zeichen'))) {
+      if (element.contains(zeichen)) continue
+      const z = zeichen.getBoundingClientRect()
+      if (z.left < box.right - 1 && box.left < z.right - 1 && z.top < box.bottom - 1 && box.top < z.bottom - 1) {
+        return { name, detail: `unter dem Zeichen „${(zeichen.textContent ?? '').trim()}“` }
+      }
+    }
+    return { name, detail: null }
+  })
+}
+
+/**
  * Drückt Tab (oder Umschalt+Tab), bis das Element mit dem Fokus `ziel` heisst.
  * Bei jedem Halt auf einem Element muss der Fokus zu sehen sein; ein Halt auf
  * der leeren Seite (der Fokus verlässt das Dokument am Ende der Reihe) zählt
@@ -106,6 +149,8 @@ export async function tabBis(page: Page, ziel: string | RegExp, { rueckwaerts = 
     if (name === null) continue
     gesehen.push(name)
     expect(sichtbar, `Tab-Halt ${schritt + 1}: der Fokus auf „${name}“ ist nicht zu sehen`).toBe(true)
+    const ganz = await fokusGanzImBild(page)
+    expect(ganz?.detail ?? null, `Tab-Halt ${schritt + 1}: „${name}“ ist nicht ganz zu sehen`).toBeNull()
     if (passt(name)) return
   }
   throw new Error(`„${String(ziel)}“ nach ${hoechstens} Tab-Schritten nicht erreicht; gesehen: ${gesehen.join(' · ')}`)

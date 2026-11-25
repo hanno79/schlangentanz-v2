@@ -1,4 +1,6 @@
 import { expect, test, type Page } from '@playwright/test'
+import { readFileSync } from 'node:fs'
+import { deserialisiere } from '../../src/engine'
 import type { Spielzustand } from '../../src/engine'
 import { langeSchlange, mittelspiel, neuePartie, volltisch, zehnHandkarten } from '../../src/ui/tisch/__tests__/szenarien'
 import { bewegungen, erwarteGrundlagen, erwarteSichtbarenFokus, merkmaleOhneFarbe, tabBis, unterschiedOhneFarbe } from './barrierefreiheit_messung'
@@ -50,6 +52,25 @@ test.describe('O11 K3/K4: Lobby und Regeln', () => {
     await page.keyboard.press('Enter')
     await expect(page.getByRole('alertdialog')).toBeVisible()
     await erwarteSichtbarenFokus(page, 'Rückfrage geöffnet')
+  })
+})
+
+/**
+ * Ein Stand aus einer vollen Tastaturpartie des Prüfers (TF-TISCH-044, Beleg
+ * 2026-11-25-1122-3): Du bist am Zug, KI-Gegner 1 hat Schlangen mit 15 und 11,
+ * KI-Gegner 2 mit 6 und 9 Karten. In Handy quer lag das Ziel am Ende der
+ * Schlange 2 von KI-Gegner 2 mit Fokus hinter dem Rand.
+ */
+const langeGegnerschlangen = (): Spielzustand => deserialisiere(readFileSync(new URL('./stand_tf_tisch_044.json', import.meta.url), 'utf8'))
+
+test.describe('O11 K1 (TF-TISCH-044): Fokus an langen Gegnerschlangen', () => {
+  test('O11 K1: mit gewählter Karte ist jeder Tab-Halt einer ganzen Runde ganz zu sehen, auch an den Enden langer Zeilen', async ({ page }) => {
+    await legeSpielstand(page, langeGegnerschlangen())
+    await oeffne(page, '/spiel')
+    await tabBis(page, 'Farbkarte Rot, 1 Punkt')
+    await page.keyboard.press('Enter')
+    await expect(page.getByRole('region', { name: 'Deine Hand' }).getByRole('button', { name: 'Farbkarte Rot, 1 Punkt' })).toHaveAttribute('aria-pressed', 'true')
+    await tabBis(page, 'Farbkarte Rot, 1 Punkt', { hoechstens: 120 })
   })
 })
 

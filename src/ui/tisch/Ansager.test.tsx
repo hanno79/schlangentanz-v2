@@ -79,6 +79,14 @@ describe('O11 K2: Ereignisse werden vorgelesen', () => {
     expect(ansager()).toHaveTextContent('Abwehrfrage')
     expect(ansager()).toHaveTextContent('Mit einem Farbenschutz wehrst du sie ab.')
     expect(vorgelesen('KI-Gegner 1 sagt an: Schlangengrube auf dich.')).toBe(1)
+    expect(ansager().textContent?.split('KI-Gegner 1 sagt an').length, 'die Ansage steht nur einmal im Ansager').toBe(2)
+  })
+
+  it('O11 K2: nach dem Neuladen während einer Abwehrfrage sagt der Ansager, wer was angesagt hat, und zwar einmal', () => {
+    spieleAm(erzeugeSzenario('angriff-auf-dich'))
+    const satz = 'KI-Gegner 1 sagt an: Schlangengrube auf dich.'
+    expect(ansager()).toHaveTextContent(satz)
+    expect(ansager().textContent?.split(satz).length, `„${satz}“ steht mehr als einmal im Ansager`).toBe(2)
   })
 
   it('O11 K2: eine erfüllte Aufgabe wird vorgelesen, ebenso die Aufgabe, die nachrückt', () => {
