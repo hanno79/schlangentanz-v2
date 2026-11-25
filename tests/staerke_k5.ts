@@ -26,7 +26,8 @@ ABSCHNITT gehört damit zur Messung: Mit einem anderen Wert bekämen die KIs and
 Saaten, und die festgeschriebenen Siege gälten nicht mehr. Wie empfindlich das ist,
 zeigte ein Versuch (25.11.2026), der die Abschnitte zu einem einzigen Turnier
 zusammensetzte: zu viert ohne Erweiterung 298 statt 300 Siege, mit Erweiterung 295
-statt 292. Ein anderer Wert ist deshalb eine neue erste Messung.
+statt 292, zu zweit gegen die Zufalls-KI mit Erweiterung 499 statt 500; die übrigen
+drei Läufe blieben bei 500. Ein anderer Wert ist deshalb eine neue erste Messung.
 */
 
 const ABSCHNITT = 20
