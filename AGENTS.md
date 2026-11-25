@@ -110,6 +110,10 @@ unter die Marker, nicht hinein.
   mit Erweiterung), rund 4 Minuten. Gehört zu den Gates jedes Engine-Tasks.
 - `npm run test:staerke` — Stärkenachweis der soliden KI (K5), sechs Turniere,
   rund 22 Minuten. Pflicht bei jeder Änderung unter `src/ki/strategien/`.
+- `npm run test:vollpartien` — Z1: ganze Partien von der Lobby bis zur Wertung
+  über echte Klicks, Desktop und Handy hochkant, gegen einen eigenen
+  Produktionsbuild auf Port 4175 oder gegen `Z1_BASIS_URL`. Rund eine Minute.
+  Siehe `docs/WORKFLOW.md`, „Vollpartien im Browser“.
 - `npm run typecheck`
 - `npm run build`
 - `npm run check:test-lines`

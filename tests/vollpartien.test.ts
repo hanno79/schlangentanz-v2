@@ -2,10 +2,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
-import { anwendeAktion, ermittleAktionen, serialisiere } from '../src/engine'
+import { anwendeAktion, erstellePartie, ermittleAktionen, erzeugeZufall, serialisiere } from '../src/engine'
 import { starteEntwicklerPartie } from '../src/entwicklung/partie'
 import { erzeugeSzenario } from '../src/entwicklung/szenarien'
-import { erwarteteWertung, fremdeHandkarten, gefundeneIds, punkteAusText, schrittZwischen } from './vollpartien/pruefung'
+import { erwarteteWertung, fremdeHandkarten, gefundeneIds, partieAusSaat, punkteAusText, schrittZwischen } from './vollpartien/pruefung'
 
 /*
 Z1: die Prüfungen, mit denen der Lauf `npm run test:vollpartien` jede Partie
@@ -29,13 +29,24 @@ describe('Z1 K2: fremde Handkarten im Seitenquelltext', () => {
   })
 
   it('Z1 K2: eine Id zählt als ganzes Wort, auch in Attributen und mit Bindestrich davor', () => {
-    const html = '<button data-ziel="karte:rot-01">x</button><li data-x="ziel-blau-03"></li><p>gelb-07</p>'
+    const html = '<button data-ziel="{&quot;karteId&quot;:&quot;rot-01&quot;}">x</button><li data-x="ziel-blau-03"></li><p>gelb-07</p>'
     expect(gefundeneIds(html, ['rot-01', 'blau-03', 'gelb-07', 'gruen-02'])).toEqual(['rot-01', 'blau-03', 'gelb-07'])
   })
 
   it('Z1 K2: eine längere Id mit derselben Vorsilbe ist keine Fundstelle', () => {
     const html = '<p>rot-010 rot-01a xrot-01 farbenschutz-011</p>'
     expect(gefundeneIds(html, ['rot-01', 'farbenschutz-01'])).toEqual([])
+  })
+})
+
+describe('Z1 K1: feste Saaten', () => {
+  it('Z1 K1: die Partie der Saat ist die von erstellePartie, nach dem Versatz der schon gezogenen Werte', () => {
+    expect(serialisiere(partieAusSaat(13, 0, 4, false)), 'partieAusSaat: ohne Versatz die Partie der Saat').toBe(serialisiere(starteEntwicklerPartie(13, 4, false)))
+    const zufall = erzeugeZufall(13)
+    for (let gezogen = 0; gezogen < 3; gezogen += 1) zufall()
+    const versetzt = erstellePartie({ spielerzahl: 4, erweiterung: false, zufall })
+    expect(serialisiere(partieAusSaat(13, 3, 4, false)), 'partieAusSaat: drei Werte übersprungen').toBe(serialisiere(versetzt))
+    expect(serialisiere(versetzt), 'partieAusSaat: der Versatz ändert die Partie').not.toBe(serialisiere(starteEntwicklerPartie(13, 4, false)))
   })
 })
 

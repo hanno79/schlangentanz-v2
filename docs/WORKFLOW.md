@@ -111,6 +111,9 @@ Testhook-Build nutzt den Vite-Modus `testhooks`; warum, steht in
    Zufallspartien, rund 4 Minuten), KI-Tasks zusätzlich `npm run test:staerke`
    (Turniere aus K5, rund 22 Minuten). Beide laufen in eigenen Vitest-Modi
    (`--mode dauerlauf`, `--mode staerke`) und sind nicht Teil von `npm test`.
+   `npm run test:vollpartien` spielt ganze Partien im Browser (Z1, rund eine
+   Minute); er ist nicht Teil von `npm run test:layout` (Abschnitt
+   „Vollpartien im Browser“).
 
    `npm run check:regeln` prüft die Umsetzungsregeln U1, U6 und U7 (Plan 3.7);
    den Altbestand duldet `scripts/check_regeln_ausnahmen.json`, die nur
@@ -479,6 +482,61 @@ und sind mit ihm entfallen. Was blieb, war bereits gemessen.
 
 Die Lobby-Migration hat nebenbei einen regredierten Vertrag aufgedeckt — siehe
 `docs/PLAYABILITY_GATE.md`, Abschnitt „AP-6: M3g-Erstbild-Vertrag ist regrediert".
+
+## Vollpartien im Browser (Z1)
+
+`npm run test:vollpartien` spielt ganze Partien so, wie ein Mensch sie spielt:
+Lobby öffnen, Gegnerzahl wählen, „Neue Partie“, dann jeden Schritt über die
+Oberfläche bis zur Wertung, auf dem Handy mit Tippen. Die Regel, nach der der
+Mensch spielt, steht in `tests/vollpartien/mensch.ts`; die KI-Gegner spielen
+ihre Züge selbst. Konfiguration: `playwright.vollpartien.config.ts`, Läufe:
+`tests/vollpartien/vollpartie.spec.ts`.
+
+| Lauf | Saat | Projekte |
+|---|---|---|
+| Basis zu zweit | 2026 | `desktop` 1280×900, `handy-hochkant` 390×844 mit Touch |
+| Basis zu viert | 13 | dieselben |
+| Erweiterung zu zweit und zu viert | 3101, 3103 | warten auf O10, noch nicht angelegt |
+
+Nach jedem Schritt, jedem Klick des Menschen und jedem Zug eines KI-Gegners,
+prüft der Lauf: kein Konsolenfehler, keine Karten-Id aus einer fremden Hand in
+`page.content()`, und der neue Stand im Speicher entsteht aus dem vorigen durch
+eine Aktion, die die Engine aufzählt. Am Ende muss die Wertung je Spieler die
+Endwertung der Engine aus dem gespeicherten Schlussstand sein. Damit jeder
+KI-Schritt einzeln geprüft wird, steht die Uhr der Seite still; der Lauf
+stellt sie je KI-Schritt um die Pause vor.
+
+**Feste Saat ohne Testhooks.** Vor dem Laden bekommt die Seite ein
+`Math.random` aus der Saat des Laufs (derselbe Mulberry32 wie
+`erzeugeZufall`). Daraus mischt die Lobby die Partie und ziehen die KI-Gegner
+ihre Saaten, genau wie in der ausgelieferten App. Der Lauf braucht deshalb
+weder `/spiel?seed=` noch `VITE_TEST_HOOKS` und spielt den Produktionsbuild.
+Zu Beginn prüft er, dass der Startstand die Partie der Saat ist; React zieht
+beim Laden selbst ein paar Werte, die Seite zählt sie mit.
+
+**Ziel.** Ohne Umgebungsvariable baut Playwright einen eigenen
+Produktionsbuild nach `dist-vollpartien` und startet ihn auf Port 4175, mit
+`reuseExistingServer: false` wie bei den Layout-Verträgen. 4173 und 4174
+bleiben frei, der Lauf kann neben `test:layout` laufen. Vorher prüfen:
+`netstat -ano | grep -E ':4175 ' | grep -E 'LISTENING|ABH'`.
+
+**Gegen eine Vercel-Vorschau.** `Z1_BASIS_URL` nennt die Adresse
+(`.env.example`); dann startet kein eigener Server. Die Vorschau braucht keine
+Testhooks. Sie ist aber durch die Vercel-Anmeldung geschützt (Abschnitt
+„Lokale Einrichtung unter Windows“, Punkt 10). Ohne Anmeldung kommt
+Playwright nur mit dem Geheimnis aus „Protection Bypass for Automation“
+hinein, das der Inhaber des Vercel-Projekts unter Settings → Deployment
+Protection anlegt; es geht als `Z1_VERCEL_SCHUTZ` mit, der Lauf schickt es als
+Kopf `x-vercel-protection-bypass`. In PowerShell:
+
+```
+$env:Z1_BASIS_URL = '<adresse der vorschau>'
+$env:Z1_VERCEL_SCHUTZ = '<geheimnis>'
+npm run test:vollpartien
+```
+
+Gegen eine echte Vorschau ist der Lauf noch nicht gelaufen (Stand Z1): Das
+Geheimnis gibt es erst, wenn es im Vercel-Projekt angelegt ist.
 
 ## Bewusst nicht implementiert (Stand 30.07.2026, überholt seit 12.11.2026)
 

@@ -1,12 +1,12 @@
 import { expect, test, type Locator, type Page } from '@playwright/test'
-import { erstellePartie, ermittleEntscheider, erzeugeZufall, serialisiere } from '../../src/engine'
+import { ermittleEntscheider, serialisiere } from '../../src/engine'
 import type { Spielzustand } from '../../src/engine'
 import { ERGEBNIS } from '../../src/ui/ergebnis/texte'
 import { LOBBY } from '../../src/ui/lobby/texte'
 import { TISCH } from '../../src/ui/tisch/texte'
 import { spieleMenschenschritt } from './mensch'
-import { erwarteteWertung, punkteAusText, schrittZwischen } from './pruefung'
-import { bedienung, beobachteKonsole, bereiteSeiteVor, lassKiSpielen, leseStand, pruefeSeite } from './seite'
+import { erwarteteWertung, partieAusSaat, punkteAusText, schrittZwischen } from './pruefung'
+import { bedienung, beobachteKonsole, bereiteSeiteVor, gezogeneZufallswerte, lassKiSpielen, leseStand, pruefeSeite } from './seite'
 
 /*
 Z1 (Plan, Phase 5): ganze Partien im Browser, gespielt wie von einem Menschen.
@@ -54,9 +54,17 @@ interface Lauf {
   wartetAuf: string | null
 }
 
+/*
+Die Saaten sind so gewählt, dass auch du Punkte machst (sonst prüfte die
+Wertung bei dir nur eine 0) und zu viert ein Gleichstand zweier Sieger
+entsteht (D22). Mit der Regel aus `mensch.ts` endete Saat 2026 zu zweit am
+25.11.2026 mit Du 5, KI-Gegner 1 53; Saat 13 zu viert mit Du 3, KI-Gegner 1
+und KI-Gegner 3 je 16. Ändert sich die KI oder der Tisch, ändern sich auch
+die Partien; der Lauf bleibt gültig, nur diese Zahlen veralten.
+*/
 const LAEUFE: readonly Lauf[] = [
   { titel: 'Basis zu zweit', gegner: 1, erweiterung: false, saat: 2026, wartetAuf: null },
-  { titel: 'Basis zu viert', gegner: 3, erweiterung: false, saat: 1125, wartetAuf: null },
+  { titel: 'Basis zu viert', gegner: 3, erweiterung: false, saat: 13, wartetAuf: null },
   { titel: 'Erweiterung zu zweit', gegner: 1, erweiterung: true, saat: 3101, wartetAuf: 'O10' },
   { titel: 'Erweiterung zu viert', gegner: 3, erweiterung: true, saat: 3103, wartetAuf: 'O10' },
 ]
@@ -64,14 +72,17 @@ const LAEUFE: readonly Lauf[] = [
 /** Mehr Schritte hat keine Partie; wer hier ankommt, hängt. */
 const HOECHSTENS_SCHRITTE = 4000
 
-async function starteInDerLobby(page: Page, lauf: Lauf, tippe: (element: Locator) => Promise<void>): Promise<void> {
+/** Wählt in der Lobby Gegnerzahl und Erweiterung und beginnt die Partie; gibt zurück, wie viele Zufallswerte vorher gezogen waren. */
+async function starteInDerLobby(page: Page, lauf: Lauf, tippe: (element: Locator) => Promise<void>): Promise<number> {
   await page.goto('/')
   await expect(page.getByTestId('lobby')).toBeVisible()
   if (lauf.gegner !== 1) await tippe(page.getByText(LOBBY.gegner(lauf.gegner), { exact: true }))
   await expect(page.getByRole('radio', { name: LOBBY.gegner(lauf.gegner) })).toBeChecked()
   if (lauf.erweiterung) await tippe(page.getByText(LOBBY.erweiterung, { exact: true }))
+  const versatz = await gezogeneZufallswerte(page)
   await tippe(page.getByRole('button', { name: LOBBY.neuePartie }))
   await expect(page.getByRole('region', { name: TISCH.deineHand })).toBeVisible()
+  return versatz
 }
 
 async function pruefeWertung(page: Page, ende: Spielzustand): Promise<string> {
@@ -97,12 +108,12 @@ for (const lauf of LAEUFE.filter(({ wartetAuf }) => wartetAuf === null)) {
     const tippe = bedienung(info)
     const konsole = beobachteKonsole(page)
     await bereiteSeiteVor(page, lauf.saat)
-    await starteInDerLobby(page, lauf, tippe)
+    const versatz = await starteInDerLobby(page, lauf, tippe)
 
     let stand = await leseStand(page)
-    const saatpartie = erstellePartie({ spielerzahl: lauf.gegner + 1, erweiterung: lauf.erweiterung, zufall: erzeugeZufall(lauf.saat) })
-    expect(serialisiere(stand), 'Z1: Der Startstand ist die Partie der Saat').toBe(serialisiere(saatpartie))
-    await pruefeSeite(page, stand, konsole, 'nach dem Start')
+    const saatpartie = partieAusSaat(lauf.saat, versatz, lauf.gegner + 1, lauf.erweiterung)
+    expect(serialisiere(stand) === serialisiere(saatpartie), `Z1: Der Startstand ist die Partie der Saat ${lauf.saat} nach ${versatz} gezogenen Werten`).toBe(true)
+    await pruefeSeite(page, konsole, 'nach dem Start')
 
     let menschenschritte = 0
     let schritte = 0
@@ -112,15 +123,16 @@ for (const lauf of LAEUFE.filter(({ wartetAuf }) => wartetAuf === null)) {
       if (entscheider === null) throw new Error('Z1: Die Partie läuft, aber niemand entscheidet.')
       const ki = stand.spieler[entscheider].steuerung === 'KI'
       const wo = `Schritt ${schritte} (${stand.spieler[entscheider].name})`
-      const neu = ki ? await lassKiSpielen(page, stand) : await spieleMenschenschritt(page, stand, tippe, (was) => pruefeSeite(page, stand, konsole, `${wo}, ${was}`))
+      // Der Mensch prüft nach jedem seiner Klicks, auch nach dem letzten; nach einem KI-Schritt prüft der Lauf.
+      const neu = ki ? await lassKiSpielen(page, stand) : await spieleMenschenschritt(page, stand, tippe, (was) => pruefeSeite(page, konsole, `${wo}, ${was}`))
+      if (ki) await pruefeSeite(page, konsole, `nach ${wo}`)
+      else menschenschritte += 1
       schrittZwischen(stand, neu)
       stand = neu
-      if (!ki) menschenschritte += 1
-      await pruefeSeite(page, stand, konsole, `nach ${wo}`)
     }
 
     const wertung = await pruefeWertung(page, stand)
-    await pruefeSeite(page, stand, konsole, 'auf der Wertung')
+    await pruefeSeite(page, konsole, 'auf der Wertung')
     info.annotations.push({ type: 'Z1', description: `${schritte} Schritte, davon ${menschenschritte} von dir; Endwertung: ${wertung}` })
   })
 }
