@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-SPEC-030 Wird eine der Antworten D68 bis D79, die Präzisierung von D54, B1, B2 oder die leere Teil C verfälscht, schlagen die Spec-Tests fehl. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-SPEC-030 Wird eine der Antworten D68 bis D79, die Präzisierung von D54, B1, B2 oder die leere Teil C verfälscht, schlagen die Spec-Tests fehl.</h1><p class="etiketten"><span class="etikett">Bereich Regelspiegel, Regelfragen an den Autor und Website-Abgleich</span><span class="etikett">Regression nein</span><span class="etikett">Priorität hoch</span><span class="etikett">Art automatisch</span><span class="etikett">Grenzfall von TF-SPEC-029</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Ein Test hält eine Antwort des Autors nur fest, wenn er bei einer verfälschten Fassung anschlägt. P0.5h bringt zwölf neue Antworten, verändert D54, B1, B2 und den Kopf von Teil C und leert die Tabelle in Teil C. Geprüft wird das mit absichtlich verfälschten Fassungen, darunter Grenzfälle wie eine Nummer, die nur als Teil einer längeren Nummer vorkommt.</p><h2>Bestanden, wenn</h2><p>Die Verfälschungen G1 bis G20 aus den Testdaten enden je mit Exit 1, und der rote Test nennt die verfälschte Stelle. Nach dem Zurückholen der Dateien ist <code>git status --short</code> leer. L1 und L2 sind bekannte Lücken und kein Kriterium.</p><h2>Fehlgeschlagen, wenn</h2><p>Eine der Verfälschungen G1 bis G20 endet mit Exit 0, oder nach dem Zurücksetzen bleibt eine Datei verändert.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>25.11.2026</dd><dt>Änderung</dt><dd>task/P0.5h-antworten-x4-x6 (PR #119)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Arbeitskopie auf dem zu prüfenden Commit, <code>npm ci</code> gelaufen, keine lokalen Änderungen</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Je eine Ersetzung mit genau einer Fundstelle in <code>docs/GAME_SPEC.md</code> oder <code>docs/WEBSITE_NACHTRAG.md</code>: G1 D70 Wahl „Auch ohne Tausch“; G2 D72 „direkt nach dem Ziehen …, vor jeder anderen Aktion“; G3 D78 „freiwillig, er kann sie ablehnen“; G4 Zeile C14 wieder in Teil C; G5 „C10 und C14 (X2a, 24.11.2026)“ aus „Behoben und gestrichen“ entfernt; G6 B1 Vielfaltbonus „nein“; G7 Ausnahme in B2 entfernt; G8 Präzisierung durch D69 aus D54 entfernt; G9 alter Satz „der Satz dazu in A8.2 ist nur eine Klarstellung“ aus D54 entfernt; G10 „Abgeleitet aus A7.10“ in D70 umformuliert; G11 Zitat aus A8.2 in D69 verkürzt; G12 Datum D75 25.11.2026; G13 „(D71)“ im Nachtrag umbenannt; G14 B1 Schlangenkorb „nein“; G15 „C2 (E5, 21.11.2026)“ entfernt, sodass C2 nur noch in C20 bis C23 steckt; G16 Schlusssatz von Teil C nennt wieder <code>src/kiZug.ts</code>; G17 D74 „Ja:“ statt „Nein:“; G18 Nachtrag D77 mit „bleibt verdeckt“; G19 D68 ohne Verweis auf D46; G20 Einleitung Teil D „D68–D78“. Lücken: L1 in D71 „Daneben bleibt die Sonderkarte des Zuges frei (D42).“; L2 in D77 Satz zur anderen gelegten Karte entfernt.</p></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p>Für jede Ersetzung: anwenden, <code>npx vitest run</code> über <code>tests/spec_documentation_teil_b_c.test.ts</code>, <code>tests/spec_documentation_teil_d.test.ts</code>, <code>tests/spec_documentation_teil_e.test.ts</code>, <code>tests/spec_documentation_teil_a.test.ts</code>, <code>tests/spec_documentation.test.ts</code>, <code>tests/regelfragen_antworten.test.ts</code> und <code>tests/regelfragen.test.ts</code>, Exit-Code und rote Tests notieren, die Datei mit <code>git checkout -- &lt;datei&gt;</code> zurückholen. Erwartet: Exit 1 bei G1 bis G20, ohne Ersetzung 548 bestandene Tests.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-25">25.11.2026 08:02</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code &middot; agent &middot; pruefung-P0.5h @ <span class="commit" title="a98d24168a34f1b6fb761a311e204ecea48a8a55">a98d241</span></p><p>a98d2416: G1 bis G20 je Exit 1 mit dem roten Test zur verfälschten Stelle (meist 1 von 548), git status danach sauber; bekannte Lücken L1 (D71 Satz zu D42 verfälscht) und L2 (D77 Satz zur anderen Karte entfernt) bleiben grün, Exit 0</p><ul class="belege"><li><a href="belege/2026-11-25-0802-TF-SPEC-030-1.txt">2026-11-25-0802-TF-SPEC-030-1.txt</a></li><li><a href="belege/2026-11-25-0802-TF-SPEC-030-2.log">2026-11-25-0802-TF-SPEC-030-2.log</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

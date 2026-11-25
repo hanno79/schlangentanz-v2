@@ -9,6 +9,7 @@ angelegt: 2026-11-23
 veraendert_daten: nein
 skript: tests/spec_documentation_teil_b_c.test.ts
 aenderung: task/P0.5g-antworten-x2-x3 (PR #110)
+status: stillgelegt
 ---
 
 ## Worum es geht
