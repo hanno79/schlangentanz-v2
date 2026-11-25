@@ -4,6 +4,7 @@ import { baukasten } from '../../engine/testing/szenario'
 import { sichtFuer } from '../sicht'
 import { erstelleErsteAktionKi } from './ersteAktionKi'
 import { STRATEGIEN } from './index'
+import type { Fabrik } from './strategie'
 
 const SICHT = sichtFuer(baukasten({ spielerzahl: 2, erweiterung: false }).haendeAuffuellen().zustand(), 0)
 const AKTIONEN: SpielAktion[] = ['a', 'b', 'c'].map((spielerId) => ({ typ: 'ZugBeenden', spielerId }))
@@ -12,21 +13,23 @@ const AKTIONEN: SpielAktion[] = ['a', 'b', 'c'].map((spielerId) => ({ typ: 'ZugB
 const nie = () => {
   throw new Error('Die KI „erste erlaubte Aktion“ fragt den Zufall.')
 }
+/** So, wie die Registry und das Turnier sie aufrufen: mit Zufallsquelle. */
+const erstelle: Fabrik = erstelleErsteAktionKi
 
 describe('K5: die KI „erste erlaubte Aktion“', () => {
   it('K5: sie wählt immer die erste angebotene Aktion und braucht keinen Zufall', () => {
-    const ki = erstelleErsteAktionKi(nie)
+    const ki = erstelle(nie)
     expect(ki.waehle(SICHT, AKTIONEN)).toBe(AKTIONEN[0])
     expect(ki.waehle(SICHT, AKTIONEN.slice(1))).toBe(AKTIONEN[1])
     expect(ki.waehle(SICHT, AKTIONEN.slice(2))).toBe(AKTIONEN[2])
   })
 
   it('K5: sie heisst „Erste erlaubte Aktion“', () => {
-    expect(erstelleErsteAktionKi(nie).name).toBe('Erste erlaubte Aktion')
+    expect(erstelle(nie).name).toBe('Erste erlaubte Aktion')
   })
 
   it('K5: ohne Aktion gibt es nichts zu wählen; das ist ein Fehler, kein stiller Ersatz', () => {
-    expect(() => erstelleErsteAktionKi(nie).waehle(SICHT, [])).toThrow('Erste erlaubte Aktion: Es gibt keine Aktion zur Auswahl.')
+    expect(() => erstelle(nie).waehle(SICHT, [])).toThrow('Erste erlaubte Aktion: Es gibt keine Aktion zur Auswahl.')
   })
 
   it('U5: STRATEGIEN.ersteAktion ist ihre Fabrik', () => {
