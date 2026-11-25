@@ -58,6 +58,12 @@ export interface TurnierOptionen {
   /** Partie `n` (ab 0) spielt mit Saat `ersteSaat + n`; für Messläufe gross und zufällig gewählt (K5). */
   ersteSaat: number;
   /**
+   * Die Nummer der ersten Partie dieses Aufrufs, ohne Angabe 0. Ein Messlauf, der in
+   * Abschnitten spielt (K5), setzt sie auf die Zahl der schon gespielten Partien: Dann
+   * sind Saaten, Sitzordnung und KI-Saaten dieselben wie in einem einzigen Turnier.
+   */
+  erstePartie?: number;
+  /**
    * Saat für die Zufallsquellen der KIs, getrennt von der Partiesaat (P0.3d): Hinge
    * der KI-Zufall an der Partiesaat, rechnete eine Strategie aus ihrem ersten
    * Zufallswert die Saat und damit alle Starthände und den Stapel zurück.
@@ -115,20 +121,22 @@ export function spielePartie(start: Spielzustand, kis: readonly Ki[], schrittGre
   }
 }
 
-function pruefeOptionen({ teilnehmer, partien }: TurnierOptionen): void {
+function pruefeOptionen({ teilnehmer, partien, erstePartie = 0 }: TurnierOptionen): void {
   if (teilnehmer.length < SPIELER_MIN || teilnehmer.length > SPIELER_MAX) {
     throw new Error(`Turnier: ${teilnehmer.length} Teilnehmer; eine Partie hat ${SPIELER_MIN} bis ${SPIELER_MAX} Spieler (A2).`);
   }
   if (!Number.isInteger(partien) || partien < 1) throw new Error(`Turnier: Ungültige Zahl der Partien ${partien}; erwartet eine ganze Zahl ab 1.`);
+  if (!Number.isInteger(erstePartie) || erstePartie < 0) throw new Error(`Turnier: Ungültige Nummer der ersten Partie ${erstePartie}; erwartet eine ganze Zahl ab 0.`);
 }
 
 /** Spielt `partien` Partien mit festen Saaten und rotierendem Sitz. */
 export function turnier(optionen: TurnierOptionen): TurnierErgebnis {
   pruefeOptionen(optionen);
-  const { teilnehmer, partien, ersteSaat, kiSaat, erweiterung, schrittGrenze } = optionen;
+  const { teilnehmer, partien, ersteSaat, kiSaat, erweiterung, schrittGrenze, erstePartie = 0 } = optionen;
   const siege = teilnehmer.map(() => 0);
 
-  const ergebnisse = Array.from({ length: partien }, (_, nummer): TurnierPartie => {
+  const ergebnisse = Array.from({ length: partien }, (_, index): TurnierPartie => {
+    const nummer = erstePartie + index;
     const saat = ersteSaat + nummer;
     const sitze = sitzordnung(nummer, teilnehmer.length);
     const start = erstellePartie({ spielerzahl: teilnehmer.length, erweiterung, zufall: erzeugeZufall(saat) });

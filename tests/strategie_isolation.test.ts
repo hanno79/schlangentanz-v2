@@ -3,7 +3,8 @@ import { describe, expect, it } from 'vitest'
 import { erstellePartie, erzeugeZufall } from '../src/engine'
 import type { Ki } from '../src/ki/strategien/strategie'
 import { spielePartie } from '../src/ki/turnier'
-import { STRATEGIEN_REGISTRY, ladeRegistry } from './registry_laden'
+import { STRATEGIEN_REGISTRY, ladeFrischeFabrik, ladeRegistry } from './registry_laden'
+import type { RegistryQuelle } from './registry_laden'
 
 /*
 Isolationstest der Strategien (P0.3d, Entscheidung des Autors vom 21.11.2026,
@@ -48,16 +49,17 @@ function sichtbarerZustand(ki: Ki): string {
   })
 }
 
-type Quelle = { pfad: string; registry: string; eintrag: string }
+type Quelle = RegistryQuelle & { eintrag: string }
 
 /** Spielt `partien`; mit `jeInstanzNeu` kommt jede KI aus einer eigenen, frisch geladenen Registry. */
-async function spiele({ pfad, registry, eintrag }: Quelle, jeInstanzNeu: boolean, partien: Partie[]) {
-  const gemeinsam = jeInstanzNeu ? null : await ladeRegistry(pfad, registry)
+async function spiele(quelle: Quelle, jeInstanzNeu: boolean, partien: Partie[]) {
+  const { eintrag } = quelle
+  const gemeinsam = jeInstanzNeu ? null : await ladeFrischeFabrik(quelle, eintrag)
   const ergebnisse: Array<{ ausgang: string; verlauf: unknown[]; kis: string[] }> = []
   for (const [nummer, { spielerzahl, erweiterung, saat }] of partien.entries()) {
     const kis: Ki[] = []
     for (let sitz = 0; sitz < spielerzahl; sitz++) {
-      const fabrik = (gemeinsam ?? (await ladeRegistry(pfad, registry)))[eintrag]
+      const fabrik = gemeinsam ?? (await ladeFrischeFabrik(quelle, eintrag))
       kis.push(fabrik(erzeugeZufall((saat ^ (1000 * (nummer + 1) + sitz)) >>> 0)))
     }
     const lauf = spielePartie(erstellePartie({ spielerzahl, erweiterung, zufall: erzeugeZufall(saat) }), kis, undefined, `${eintrag}, Partie ${nummer + 1}`)
@@ -70,7 +72,7 @@ async function vergleiche(quelle: Quelle, partien = PARTIEN) {
   return { geteilt: await spiele(quelle, false, partien), getrennt: await spiele(quelle, true, partien) }
 }
 
-const eintraege = Object.keys(await ladeRegistry(STRATEGIEN_REGISTRY.pfad, STRATEGIEN_REGISTRY.registry))
+const eintraege = Object.keys(await ladeRegistry(STRATEGIEN_REGISTRY))
 
 describe('P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest)', () => {
   it('P0.3d: der Test prüft jede Fabrik der Registry, mindestens die Zufalls-KI', () => {
@@ -94,7 +96,7 @@ describe('P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest)',
 })
 
 describe('P0.3d: Gegenproben – der Isolationstest erkennt geteiltes Wissen', () => {
-  const SPIONE = { pfad: 'tests/isolation/index.ts', registry: 'SPIONE' }
+  const SPIONE: RegistryQuelle = { pfad: 'tests/isolation/index.ts', registry: 'SPIONE' }
   const spione = [
     ['anker', 'Eigenschaft einer Funktion über Array.of (Angriff der Prüfung)'],
     ['map', 'Funktion der Modulebene über Map.set/get'],
@@ -110,8 +112,8 @@ describe('P0.3d: Gegenproben – der Isolationstest erkennt geteiltes Wissen', (
   }, 120_000)
 
   it('P0.3d: zwei Ladevorgänge der Registry liefern verschiedene Modulobjekte', async () => {
-    const erste = await ladeRegistry(SPIONE.pfad, SPIONE.registry)
-    const zweite = await ladeRegistry(SPIONE.pfad, SPIONE.registry)
+    const erste = await ladeRegistry(SPIONE)
+    const zweite = await ladeRegistry(SPIONE)
 
     expect(zweite.anker, 'P0.3d: ohne vi.resetModules() kämen beide Fabriken aus demselben Modul').not.toBe(erste.anker)
   })

@@ -1,8 +1,8 @@
 import { expect } from 'vitest'
 import { turnier } from '../src/ki/turnier'
-import type { Teilnehmer, TurnierPartie } from '../src/ki/turnier'
+import type { Teilnehmer } from '../src/ki/turnier'
 import type { Fabrik } from '../src/ki/strategien/strategie'
-import { STRATEGIEN_REGISTRY, ladeRegistry } from './registry_laden'
+import { STRATEGIEN_REGISTRY, ladeFrischeFabrik } from './registry_laden'
 
 /*
 K5 Stärkenachweis: Die solide KI spielt Turniere mit festen Saaten gegen die
@@ -16,15 +16,19 @@ Die Saaten wurden vor der ersten Messung zufällig gezogen und stehen hier fest.
 Bekannte Grenze (Plan K5): Eine Strategie, die diese Saaten kennt, könnte aus ihrer
 Starthand die Partie nachrechnen; dagegen hilft nur das Review jeder Strategie.
 
-Gespielt wird in Blöcken von BLOCK Partien, damit nicht alle frisch geladenen
-Module einer Messung zugleich im Speicher liegen. BLOCK ist ein Vielfaches von 2 und
-4, so beginnt in jedem Block jeder Teilnehmer gleich oft. Block `b` spielt die
-Partiesaaten `ersteSaat + b × BLOCK` und folgende und hat die KI-Saat `kiSaat + b`.
+Gespielt wird in Abschnitten von ABSCHNITT Partien, damit nicht alle frisch geladenen
+Module einer Messung zugleich im Speicher liegen. Mit `erstePartie` ist jeder
+Abschnitt genau ein Stück desselben Turniers; das Ergebnis hängt nicht von ABSCHNITT ab.
 */
 
-const BLOCK = 20
+const ABSCHNITT = 20
+
+/** So lange darf ein Messlauf dauern; gemessen 4 bis 21 Minuten je Datei, sechs Dateien parallel. */
+export const MESSDAUER = 3_600_000
 
 export type Gegner = 'zufallsKi' | 'ersteAktion'
+
+const GEGNER_NAME: Readonly<Record<Gegner, string>> = { zufallsKi: 'die Zufalls-KI', ersteAktion: '„erste erlaubte Aktion“' }
 
 export interface Messlauf {
   /** Kriterium des Plans K5. */
@@ -44,42 +48,43 @@ export interface Messlauf {
   mindestSiege: number
 }
 
-export interface Messung {
+interface Messung {
   siege: number
-  partien: TurnierPartie[]
+  /** Die Partien, die nicht regulär geendet haben (Kriterium 4), mit Saat und Grund. */
+  nichtBeendet: string[]
 }
 
 /** Ein Teilnehmer, der jede seiner `anzahl` Instanzen aus einer eigenen, frisch geladenen Registry baut. */
 async function frischerTeilnehmer(eintrag: string, anzahl: number): Promise<Teilnehmer> {
   const fabriken: Fabrik[] = []
   for (let nummer = 0; nummer < anzahl; nummer++) {
-    const fabrik = (await ladeRegistry(STRATEGIEN_REGISTRY.pfad, STRATEGIEN_REGISTRY.registry))[eintrag]
-    if (fabrik === undefined) throw new Error(`K5: Die Strategie ${eintrag} steht nicht in der Registry src/ki/strategien/index.ts.`)
+    const fabrik = await ladeFrischeFabrik(STRATEGIEN_REGISTRY, eintrag)
     if (fabriken.includes(fabrik)) throw new Error(`K5: Die Fabrik von ${eintrag} kam zweimal aus demselben Modul; jede Instanz braucht ein frisch geladenes.`)
     fabriken.push(fabrik)
   }
-  let naechste = 0
   return {
     name: eintrag,
     erstelle(zufall) {
-      const fabrik = fabriken[naechste]
+      const fabrik = fabriken.shift()
       if (fabrik === undefined) throw new Error(`K5: ${eintrag} hat nur ${anzahl} frisch geladene Fabriken.`)
-      naechste += 1
       return fabrik(zufall)
     },
   }
 }
 
 /** Spielt den Messlauf; die solide KI ist Teilnehmer 0, die Gegner die übrigen. */
-export async function messe(lauf: Messlauf): Promise<Messung> {
-  const messung: Messung = { siege: 0, partien: [] }
-  for (let start = 0, block = 0; start < lauf.partien; start += BLOCK, block++) {
-    const anzahl = Math.min(BLOCK, lauf.partien - start)
-    const teilnehmer = [await frischerTeilnehmer('solideKi', anzahl)]
-    for (let sitz = 1; sitz < lauf.spielerzahl; sitz++) teilnehmer.push(await frischerTeilnehmer(lauf.gegner, anzahl))
-    const ergebnis = turnier({ teilnehmer, partien: anzahl, ersteSaat: lauf.ersteSaat + start, kiSaat: (lauf.kiSaat + block) >>> 0, erweiterung: lauf.erweiterung })
+async function messe(lauf: Messlauf): Promise<Messung> {
+  const messung: Messung = { siege: 0, nichtBeendet: [] }
+  for (let erstePartie = 0; erstePartie < lauf.partien; erstePartie += ABSCHNITT) {
+    const partien = Math.min(ABSCHNITT, lauf.partien - erstePartie)
+    const teilnehmer = [await frischerTeilnehmer('solideKi', partien)]
+    for (let sitz = 1; sitz < lauf.spielerzahl; sitz++) teilnehmer.push(await frischerTeilnehmer(lauf.gegner, partien))
+    const { ersteSaat, kiSaat, erweiterung } = lauf
+    const ergebnis = turnier({ teilnehmer, partien, erstePartie, ersteSaat, kiSaat, erweiterung })
     messung.siege += ergebnis.siege[0]
-    messung.partien.push(...ergebnis.partien)
+    for (const { ausgang, saat, schritte, detail } of ergebnis.partien) {
+      if (ausgang !== 'beendet') messung.nichtBeendet.push(`Saat ${saat}: ${ausgang} nach ${schritte} Schritten, ${detail}`)
+    }
   }
   return messung
 }
@@ -100,19 +105,25 @@ export const MESSLAEUFE: Readonly<Record<Lauf, Messlauf>> = {
 /**
  * Kriterium 5 (M3): dieselben Läufe mit Erweiterung, eigene Saaten. Die erste Messung
  * (25.11.2026, Stand vor K4) ergab 500, 500 und 292 Siege; alle über den Schwellen
- * des Plans, deshalb hier schon festgeschrieben.
+ * des Plans, deshalb hier schon festgeschrieben. Zu zweit gilt wie ohne Erweiterung
+ * jede Partie.
  */
 export const MESSLAEUFE_ERWEITERUNG: Readonly<Record<Lauf, Messlauf>> = {
-  zufall: { ...MESSLAEUFE.zufall, kriterium: 5, ersteSaat: 1_742_726_465, kiSaat: 1_762_180_639, erweiterung: true, mindestSiege: 500 },
-  erste: { ...MESSLAEUFE.erste, kriterium: 5, ersteSaat: 1_943_143_123, kiSaat: 1_139_605_235, erweiterung: true, mindestSiege: 500 },
+  zufall: { ...MESSLAEUFE.zufall, kriterium: 5, ersteSaat: 1_742_726_465, kiSaat: 1_762_180_639, erweiterung: true },
+  erste: { ...MESSLAEUFE.erste, kriterium: 5, ersteSaat: 1_943_143_123, kiSaat: 1_139_605_235, erweiterung: true },
   vier: { ...MESSLAEUFE.vier, kriterium: 5, ersteSaat: 1_164_999_137, kiSaat: 2_048_025_225, erweiterung: true, mindestSiege: 292 },
 }
 
+/** Der Testname eines Messlaufs, aus seinen eigenen Angaben. */
+export function titel(lauf: Messlauf): string {
+  const gegner = lauf.spielerzahl === 2 ? GEGNER_NAME[lauf.gegner] : `${lauf.spielerzahl - 1} Gegner der Art ${GEGNER_NAME[lauf.gegner]}`
+  return `K5 Kriterium ${lauf.kriterium} und 4: ${lauf.erweiterung ? 'mit Erweiterung ' : ''}${lauf.partien} Partien gegen ${gegner}, mindestens ${lauf.mindestSiege} Siege; alle enden ohne Invariantenverletzung`
+}
+
 /** Für Meldungen: was gemessen wurde und mit welchem Ergebnis. */
-export function beschreibe(lauf: Messlauf, messung: Messung): string {
-  const anteil = (100 * messung.siege) / lauf.partien
-  const gegner = lauf.gegner === 'zufallsKi' ? 'Zufalls-KI' : '„erste erlaubte Aktion“'
-  return `K5 Kriterium ${lauf.kriterium}${lauf.erweiterung ? ' mit Erweiterung' : ''}: ${lauf.partien} Partien zu ${lauf.spielerzahl} gegen ${gegner}, Saaten ab ${lauf.ersteSaat}, KI-Saat ${lauf.kiSaat}: ${messung.siege} Siege (${anteil.toFixed(1)} %), festgeschrieben mindestens ${lauf.mindestSiege}, Plan mindestens ${(100 * lauf.planAnteil).toFixed(0)} %`
+function beschreibe(lauf: Messlauf, siege: number): string {
+  const anteil = (100 * siege) / lauf.partien
+  return `K5 Kriterium ${lauf.kriterium}${lauf.erweiterung ? ' mit Erweiterung' : ''}: ${lauf.partien} Partien zu ${lauf.spielerzahl} gegen ${GEGNER_NAME[lauf.gegner]}, Saaten ab ${lauf.ersteSaat}, KI-Saat ${lauf.kiSaat}: ${siege} Siege (${anteil.toFixed(1)} %), festgeschrieben mindestens ${lauf.mindestSiege}, Plan mindestens ${(100 * lauf.planAnteil).toFixed(0)} %`
 }
 
 /**
@@ -121,13 +132,11 @@ export function beschreibe(lauf: Messlauf, messung: Messung): string {
  * mit dem Reporter `verbose` auch, wenn der Test besteht.
  */
 export async function pruefeMesslauf(lauf: Messlauf, annotate: (meldung: string) => Promise<unknown>): Promise<void> {
-  const messung = await messe(lauf)
-  const zahlen = beschreibe(lauf, messung)
+  expect(lauf.mindestSiege, `K5: die festgeschriebene Schwelle ${lauf.mindestSiege} liegt nie unter der des Plans`).toBeGreaterThanOrEqual(Math.ceil(lauf.planAnteil * lauf.partien))
+  const { siege, nichtBeendet } = await messe(lauf)
+  const zahlen = beschreibe(lauf, siege)
   await annotate(zahlen)
-  const nichtBeendet = messung.partien.filter((partie) => partie.ausgang !== 'beendet').map((partie) => `Saat ${partie.saat}: ${partie.ausgang} nach ${partie.schritte} Schritten, ${partie.detail}`)
 
-  expect(messung.partien, `K5: erwartet ${lauf.partien} gespielte Partien; ${zahlen}`).toHaveLength(lauf.partien)
   expect(nichtBeendet, `K5 Kriterium 4: erwartet, dass jede Partie endet und keine eine Invariante verletzt; ${zahlen}`).toEqual([])
-  expect(lauf.mindestSiege, `K5: die festgeschriebene Schwelle liegt nie unter der des Plans; ${zahlen}`).toBeGreaterThanOrEqual(Math.ceil(lauf.planAnteil * lauf.partien))
-  expect(messung.siege, `K5 Kriterium ${lauf.kriterium}: zu wenige Siege der soliden KI; ${zahlen}`).toBeGreaterThanOrEqual(lauf.mindestSiege)
+  expect(siege, `K5 Kriterium ${lauf.kriterium}: zu wenige Siege der soliden KI; ${zahlen}`).toBeGreaterThanOrEqual(lauf.mindestSiege)
 }
