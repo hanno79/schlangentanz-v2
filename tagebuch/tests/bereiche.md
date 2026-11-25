@@ -6,7 +6,7 @@ eingerichtet: 2026-11-12
 
 | ID | Bereich | Pfade |
 |---|---|---|
-| ENGINE | Spiel-Engine: Regeln, Zugablauf, Wertung, Speicherformat | src/engine/** |
+| ENGINE | Spiel-Engine: Regeln, Zugablauf, Wertung, Speicherformat | src/engine/**, docs/abnahme/X7_satz_fuer_satz.md |
 | KI | KI-Gegner | src/ki/**, tests/staerke_k5* |
 | BRETT | Spieltisch und Kartenaktionen (Altbestand) | src/aktionsziel/**, src/reaktionen.ts, src/aktionsLabel.ts, src/spielLabelHelpers.ts, src/kartenTexte.ts, src/kartenfarben.ts |
 | TISCH | Spieltisch | src/ui/tisch/**, src/ui/spiel/**, src/ui/ergebnis/**, tests/layout/ergebnis.hooks.spec.ts, tests/layout/tisch.spec.ts, tests/layout/tisch_messung.ts, tests/layout/spiel.hooks.spec.ts, tests/layout/karten_spielen.hooks.spec.ts, tests/layout/ziele_messung.ts, tests/layout/abwehr.hooks.spec.ts |

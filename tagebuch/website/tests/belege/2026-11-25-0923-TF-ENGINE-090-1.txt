@@ -1,0 +1,116 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a4f56b6e57e6de6c6
+
+ ❯ src/engine/__tests__/regeln_abdeckung.test.ts (31 tests | 6 failed) 30ms
+     × X7: die Tabelle führt jeden Satz aus A7.10 genau einmal, mit Tests oder mit Grund 4ms
+     × X7: die Tabelle führt jeden Satz aus A8 genau einmal, mit Tests oder mit Grund 1ms
+     × X7: die Tabelle führt jeden Satz aus A8.1 genau einmal, mit Tests oder mit Grund 0ms
+     × X7: die Tabelle führt jeden Satz aus A8.2 genau einmal, mit Tests oder mit Grund 0ms
+     × X7: die Tabelle führt jeden Satz aus A9 genau einmal, mit Tests oder mit Grund 0ms
+     × X7: jede Regelaussage nennt mindestens einen Test, und jeder genannte Test steht in seiner Datei unter regeln/ 1ms
+ ❯ src/engine/__tests__/golden_master.test.ts (16 tests | 3 failed) 1534ms
+     × A10: 2 Spieler, Saat 11, Erweiterung true: der Verlauf gleicht Zug für Zug dem eingefrorenen Protokoll 6ms
+     × A10: 3 Spieler, Saat 39, Erweiterung true: der Verlauf gleicht Zug für Zug dem eingefrorenen Protokoll 1ms
+     × A10: 4 Spieler, Saat 41, Erweiterung true: der Verlauf gleicht Zug für Zug dem eingefrorenen Protokoll 1ms
+ ❯ src/engine/__tests__/dauerlauf.test.ts (18 tests | 1 failed) 82060ms
+     × A10/X7: die vier Teile sind zusammen 3000 Partien mit verschiedenen Saaten, 1000 ohne und 2000 mit Erweiterung, reihum 2, 3 und 4 Spieler 10ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/engine/__tests__/dauerlauf.test.ts > A10: der lange Dauerlauf (E11, Kriterium 3, X7, npm run test:dauerlauf) > A10/X7: die vier Teile sind zusammen 3000 Partien mit verschiedenen Saaten, 1000 ohne und 2000 mit Erweiterung, reihum 2, 3 und 4 Spieler
+AssertionError: expected [ …(2000) ] to have a length of 3000 but got 2000
+
+- Expected
++ Received
+
+- 3000
++ 2000
+
+ ❯ src/engine/__tests__/dauerlauf.test.ts:243:18
+    241|   it('A10/X7: die vier Teile sind zusammen 3000 Partien mit verschiede…
+    242|     const alle = Array.from({ length: TEILE }, (_, index) => partienDe…
+    243|     expect(alle).toHaveLength(3000)
+       |                  ^
+    244|     expect(new Set(alle.map((partie) => partie.saat)).size, 'jede Saat…
+    245|     expect(alle.filter((partie) => partie.erweiterung), 'X7: 2000 Part…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  src/engine/__tests__/golden_master.test.ts > A4/A5/A6/A7/A8/A9/A10/A11: Golden Master, je drei Partien mit fester Saat ohne und mit Erweiterung (E11 Kriterium 5, X7) > A10: 2 Spieler, Saat 11, Erweiterung true: der Verlauf gleicht Zug für Zug dem eingefrorenen Protokoll
+AssertionError: protokolliere: golden/erweiterung-2-spieler-saat-11.txt fehlt; eingefroren wird erst nach der Lektüre gegen Teil A: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/engine/__tests__/golden_master.test.ts:80:116
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  src/engine/__tests__/golden_master.test.ts > A4/A5/A6/A7/A8/A9/A10/A11: Golden Master, je drei Partien mit fester Saat ohne und mit Erweiterung (E11 Kriterium 5, X7) > A10: 3 Spieler, Saat 39, Erweiterung true: der Verlauf gleicht Zug für Zug dem eingefrorenen Protokoll
+AssertionError: protokolliere: golden/erweiterung-3-spieler-saat-39.txt fehlt; eingefroren wird erst nach der Lektüre gegen Teil A: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/engine/__tests__/golden_master.test.ts:80:116
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  src/engine/__tests__/golden_master.test.ts > A4/A5/A6/A7/A8/A9/A10/A11: Golden Master, je drei Partien mit fester Saat ohne und mit Erweiterung (E11 Kriterium 5, X7) > A10: 4 Spieler, Saat 41, Erweiterung true: der Verlauf gleicht Zug für Zug dem eingefrorenen Protokoll
+AssertionError: protokolliere: golden/erweiterung-4-spieler-saat-41.txt fehlt; eingefroren wird erst nach der Lektüre gegen Teil A: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/engine/__tests__/golden_master.test.ts:80:116
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  src/engine/__tests__/regeln_abdeckung.test.ts > X7: Regeltestdateien und Satz-für-Satz-Tabelle der Erweiterung (A7.10, A8, A9) > X7: die Tabelle führt jeden Satz aus A7.10 genau einmal, mit Tests oder mit Grund
+ FAIL  src/engine/__tests__/regeln_abdeckung.test.ts > X7: Regeltestdateien und Satz-für-Satz-Tabelle der Erweiterung (A7.10, A8, A9) > X7: die Tabelle führt jeden Satz aus A8 genau einmal, mit Tests oder mit Grund
+ FAIL  src/engine/__tests__/regeln_abdeckung.test.ts > X7: Regeltestdateien und Satz-für-Satz-Tabelle der Erweiterung (A7.10, A8, A9) > X7: die Tabelle führt jeden Satz aus A8.1 genau einmal, mit Tests oder mit Grund
+ FAIL  src/engine/__tests__/regeln_abdeckung.test.ts > X7: Regeltestdateien und Satz-für-Satz-Tabelle der Erweiterung (A7.10, A8, A9) > X7: die Tabelle führt jeden Satz aus A8.2 genau einmal, mit Tests oder mit Grund
+ FAIL  src/engine/__tests__/regeln_abdeckung.test.ts > X7: Regeltestdateien und Satz-für-Satz-Tabelle der Erweiterung (A7.10, A8, A9) > X7: die Tabelle führt jeden Satz aus A9 genau einmal, mit Tests oder mit Grund
+Error: tabelle: docs/abnahme/X7_satz_fuer_satz.md fehlt; X7 verlangt die Satz-für-Satz-Tabelle der Erweiterung
+ ❯ tabelle src/engine/__tests__/regeln_abdeckung.test.ts:160:39
+    158| /** Die Zeilen der Tabelle unter `## <ueberschrift>`; die erste Spalte…
+    159| function tabelle(ueberschrift: string): Tabellenzeile[] {
+    160|   if (!existsSync(SATZTABELLE)) throw new Error(`tabelle: ${SATZTABELL…
+       |                                       ^
+    161|   const text = readFileSync(SATZTABELLE, 'utf8')
+    162|   const teil = text.split(/^## /m).find((abschnitt) => abschnitt.start…
+ ❯ src/engine/__tests__/regeln_abdeckung.test.ts:202:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  src/engine/__tests__/regeln_abdeckung.test.ts > X7: Regeltestdateien und Satz-für-Satz-Tabelle der Erweiterung (A7.10, A8, A9) > X7: jede Regelaussage nennt mindestens einen Test, und jeder genannte Test steht in seiner Datei unter regeln/
+Error: tabelle: docs/abnahme/X7_satz_fuer_satz.md fehlt; X7 verlangt die Satz-für-Satz-Tabelle der Erweiterung
+ ❯ tabelle src/engine/__tests__/regeln_abdeckung.test.ts:160:39
+    158| /** Die Zeilen der Tabelle unter `## <ueberschrift>`; die erste Spalte…
+    159| function tabelle(ueberschrift: string): Tabellenzeile[] {
+    160|   if (!existsSync(SATZTABELLE)) throw new Error(`tabelle: ${SATZTABELL…
+       |                                       ^
+    161|   const text = readFileSync(SATZTABELLE, 'utf8')
+    162|   const teil = text.split(/^## /m).find((abschnitt) => abschnitt.start…
+ ❯ src/engine/__tests__/regeln_abdeckung.test.ts:211:27
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  10 failed | 55 passed (65)
+   Start at  09:18:03
+   Duration  83.42s (transform 1.31s, setup 972ms, import 1.40s, tests 83.62s, environment 0ms)
+

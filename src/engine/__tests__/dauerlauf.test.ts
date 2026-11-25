@@ -237,13 +237,15 @@ describe('A5/A10/D12/D13: Dauerlauf über die Engine (E2, Plan 3.6 Punkt 7)', ()
   }, 600_000)
 })
 
-describe('A10: der lange Dauerlauf (E11, Kriterium 3, npm run test:dauerlauf)', () => {
-  it('A10: die vier Teile sind zusammen 2000 Partien mit verschiedenen Saaten, je 1000 ohne und mit Erweiterung, reihum 2, 3 und 4 Spieler', () => {
+describe('A10: der lange Dauerlauf (E11, Kriterium 3, X7, npm run test:dauerlauf)', () => {
+  it('A10/X7: die vier Teile sind zusammen 3000 Partien mit verschiedenen Saaten, 1000 ohne und 2000 mit Erweiterung, reihum 2, 3 und 4 Spieler', () => {
     const alle = Array.from({ length: TEILE }, (_, index) => partienDesTeils(index + 1)).flat()
-    expect(alle).toHaveLength(2000)
-    expect(new Set(alle.map((partie) => partie.saat)).size, 'jede Saat einmal').toBe(2000)
-    expect(alle.filter((partie) => partie.erweiterung)).toHaveLength(1000)
-    expect(new Set(alle.map((partie) => partie.spielerzahl))).toEqual(new Set([2, 3, 4]))
+    expect(alle).toHaveLength(3000)
+    expect(new Set(alle.map((partie) => partie.saat)).size, 'jede Saat einmal').toBe(3000)
+    expect(alle.filter((partie) => partie.erweiterung), 'X7: 2000 Partien mit Erweiterung').toHaveLength(2000)
+    for (const erweiterung of [false, true]) {
+      expect(new Set(alle.filter((partie) => partie.erweiterung === erweiterung).map((partie) => partie.spielerzahl)), `Erweiterung ${erweiterung}: 2, 3 und 4 Spieler`).toEqual(new Set([2, 3, 4]))
+    }
     const dateien = readdirSync('src/engine/__tests__').filter((datei) => datei.endsWith('.dauerlauf.test.ts'))
     expect(dateien, 'je Teil eine Datei, die Vitest nebeneinander rechnet').toEqual(Array.from({ length: TEILE }, (_, index) => `dauerlauf_teil_${index + 1}.dauerlauf.test.ts`))
   })

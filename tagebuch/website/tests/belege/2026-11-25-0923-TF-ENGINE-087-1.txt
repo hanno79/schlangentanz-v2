@@ -1,0 +1,29 @@
+X7 Prüfer, Handrechnung der Endwertungen aus "Lage am Ende" (Golden Master mit Erweiterung), 25.11.2026
+
+Zu zweit, Saat 11 (Zug für Zug gelesen, Schritte 1 bis 187):
+Spieler 1 schlange-1: Grün Blau Grün Blau Rot | Blk | RB Gelb FF[Grün+Grün] Rot Braun Rot Braun
+  Gelb x3 = RB 0 + Gelb 1 + FF (3+3) 6 = 7; schlange-5 keine Gruppe; Vielfalt 1 Farbe = 0; Kette keine; Aufgaben 0 -> 7
+KI-Gegner 1 schlange-2: V R V Ge B RB V B Gr Ge Br | Blk | B R FF[Ge+Ge] R FF[V+V] V RB B Ge R
+  Rot x3 = 1 + 2 + 1 = 4; Violett x3 = FF 4 + 2 + RB 0 = 6; Alternative Rot x4 mit FF[V+V] = 8 < 10; Vielfalt Rot+Violett = 1
+  schlange-3 keine Gruppe (RB-01 ohne Gruppe); Kette keine
+  Aufgaben 4 + 9 + 5 + 8 + 6 + 7 + geheim 6 = 45 -> 10 + 1 + 45 = 56. Gewinner KI-Gegner 1. Stimmt.
+
+Zu dritt, Saat 39 (an allen Erweiterungsstellen gelesen):
+Spieler 1 schlange-1: Grün x4 (Grün RB Grün Grün) = 3+0+3+3 = 9; Gelb x4 (RB FF[V+V] Gelb Gelb) = 0+4+1+1 = 6; Summe 15 (Alternativen Grün x6 = 13, Grün x5 + Gelb x3 = 15)
+  schlange-3: Rot x3 = 3; Blau x3 (FF[Ge+Ge] Blau Blau) = 2+1+1 = 4; Alternative Rot x4 mit FF = 5 < 7; Summe 7
+  Gruppen 22; Kette Rot-Rot-Rot = 3 -> Bonus 5 (sonst niemand ab 3); Vielfalt max 1
+  Aufgaben 4 + 8 + 5 + 9 + 7 + Vielfaltskönig geheim 9 = 42 -> 22 + 5 + 1 + 42 = 70
+KI-Gegner 1: keine Gruppe, Schlangenrepertoire geheim 4 -> 4. KI-Gegner 2: keine Schlange -> 0. Stimmt.
+
+Zu viert, Saat 41 (an allen Erweiterungsstellen gelesen):
+Spieler 1 schlange-1: Violett x3 (Violett FF[Br+Br] FF[Bl+Bl]) = 2 + 4 + 2 = 8; Vielfalt 0; Kette keine; Aufgaben 6 + 4 = 10 -> 18
+KI-Gegner 1 schlange-2: Gelb | Blk | Gelb RB RB FF[Ge+Ge] Rot Braun Rot Blau Violett: Rot x4 (RB RB FF Rot) = 3 (gleichwertig Gelb x4 = 3)
+  schlange-3 keine Gruppe; Aufgaben 9 + 5 + 8 + Schlangenbändiger geheim 7 = 29 -> 32
+KI-Gegner 2: 0. KI-Gegner 3: keine Gruppe, Aufgaben 4 + Farbwechsler geheim 6 = 10. Stimmt.
+
+Gegengelesene Erweiterungsstellen (Auszug): Risiko-Misserfolg mit Gegnerwahl (2er Schritte 3-5; 3er 9-11, 22-24, 55-56; 4er 2-3, 40-42), Risiko-Erfolg (2er 11-12, 15-16; 3er 4-5, 37-38; 4er 6, 15, 18-19, 30, 34),
+Comeback (2er 73-78, Rückstand 4 gegen 9; 3er 30-36 mit zweimal Abwerfen/Ziehen und Verdoppler wirkungslos D47; 3er 76-79; 4er 67-70, 80-83, 116-119),
+Korb (2er 180 tauschen; 3er 154 tauschen; 4er 7 zwei Zusatzaktionen, D47 mit Risiko im selben Zug), Abwehr (2er 82-83; 3er 15-16, 169-170; 4er 28-29, 85),
+Verdoppler-Zweitzug (alle drei), Schlussrunde N-1 (2er: KI-Gegner 1 löst aus, Spieler 1 letzter Zug; 3er: KI-Gegner 2, dann Spieler 1 und KI-Gegner 1; 4er: KI-Gegner 2, dann KI-Gegner 3, Spieler 1, KI-Gegner 1),
+Aufgaben in Kette (2er 101-103, Farbenpracht erst am Zugende D59), geheime Aufgaben (D35) am eigenen Zugbeginn bzw. nach der Aktion.
+Keine Abweichung von Teil A oder D gefunden.
