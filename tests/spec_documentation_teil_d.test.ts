@@ -144,11 +144,12 @@ describe('GAME_SPEC Teil D — Fragen an den Autor und Antworten', () => {
   })
 
   for (const { task, aus, datum: tag, eintraege } of RUECKFRAGEN) {
-    for (const [nummer, { frage, wahl, kern, verboten, anfang }] of Object.entries(eintraege)) {
+    for (const [nummer, { frage, wahl, kern: saetze, verboten, anfang, zitate = [], nurTeilD = [] }] of Object.entries(eintraege)) {
+      const kern = [...saetze, ...zitate.map((zitat) => `„${zitat}“`)]
       it(`${task}: ${nummer}: Rückfrage aus ${aus} vom ${tag} steht als Regel mit gewählter Möglichkeit in Teil D`, () => {
         const { frage: frageInTeilD, antwort, datum, folge } = eintragD(nummer)
         expect(frageInTeilD, `${nummer}: Frage`).toBe(frage)
-        pruefeKern(nummer, antwort, [...kern, `Antwort des Autors auf eine Rückfrage aus ${aus}, gewählte Möglichkeit: ${wahl}.`], verboten)
+        pruefeKern(nummer, antwort, [...kern, ...nurTeilD, `Antwort des Autors auf eine Rückfrage aus ${aus}, gewählte Möglichkeit: ${wahl}.`], verboten)
         if (anfang) expect(antwort.startsWith(anfang.toLowerCase()), `${nummer}: Antwort beginnt nicht mit „${anfang}“`).toBe(true)
         expect(antwort.endsWith('website folgt.'), `${nummer}: Antwort endet nicht mit „Website folgt.“`).toBe(true)
         expect(datum, `${nummer}: Datum`).toBe(tag)
@@ -161,6 +162,12 @@ describe('GAME_SPEC Teil D — Fragen an den Autor und Antworten', () => {
         pruefeKern(nummer, fliesstext(eintrag.antwort).toLowerCase(), kern, [...verboten, 'Website folgt', 'gewählte Möglichkeit'])
         if (anfang) expect(eintrag.antwort.startsWith(anfang), `${nummer}: Antwort im Nachtrag beginnt nicht mit „${anfang}“`).toBe(true)
       })
+
+      if (zitate.length > 0) {
+        it(`${task}: ${nummer}: jedes Zitat der Website steht wörtlich in Teil A`, () => {
+          expect(fehlende(teil('A'), zitate), `${nummer}: Zitate nicht wörtlich in Teil A`).toEqual([])
+        })
+      }
     }
   }
 
@@ -182,15 +189,31 @@ describe('GAME_SPEC Teil D — Fragen an den Autor und Antworten', () => {
     expect(fragezeilen.filter(({ harterUmbruch }) => !harterUmbruch).map(({ nummer }) => nummer), 'Fragezeilen ohne zwei Leerzeichen am Ende').toEqual([])
   })
 
-  it('P0.5g: die Einleitung von Teil D nennt die Rückfragen aus den Prüfungen von X2 und X3 ab D58 und die Ergänzung von D48', () => {
-    expect(fehlende(teil('D'), [`D58–${RUECKFRAGEN_NUMMERN.at(-1)}`, 'Rückfragen aus den Prüfungen von X2 und X3', '23.11.2026', 'ergänzt D48'])).toEqual([])
+  it('P0.5g: die Einleitung von Teil D nennt die Rückfragen aus den Prüfungen von X2 und X3 als D58–D67 und die Ergänzung von D48', () => {
+    expect(fehlende(teil('D'), ['D58–D67 sind Rückfragen aus den Prüfungen von X2 und X3', '23.11.2026', 'ergänzt D48'])).toEqual([])
   })
 
-  // Den Wortlaut von D48 samt Rückfrage vom 23.11.2026 prüft tests/regelfragen_antworten.test.ts Satz für Satz (ERWARTET_G.G16).
-  it('P0.5g: D48 bleibt Eintrag der Sammelantwort, und der Website-Nachtrag sagt schon, dass die Comeback-Karte im zweiten Zug nach einem Verdoppler nicht einsetzbar ist', () => {
-    const { datum, folge } = eintragD('D48')
-    expect(datum, 'D48: Datum der Sammelantwort').toBe(DATUM_G)
-    expect(folge, 'D48: Folge').toBe('X4')
-    pruefeKern('D48', fliesstext(nachtragEintrag('D48').antwort).toLowerCase(), ['Im zweiten Zug nach einem Verdoppler ist sie nicht einsetzbar, weil sich Verdoppler und Comeback-Karte ausschliessen'], ['Website folgt'])
+  it('P0.5h: die Einleitung von Teil D nennt die Rückfragen aus X4, X5, X6 und der Prüfung von P0.5g als D68–D79 vom 24.11.2026', () => {
+    expect(fehlende(teil('D'), ['D68–D79 sind Rückfragen aus X4, X5, X6 und der Prüfung von P0.5g, die der Autor am 24.11.2026 beantwortet hat'])).toEqual([])
   })
+
+  it('P0.5h: der Website-Nachtrag nennt den Stand vom 24.11.2026', () => {
+    expect(fehlende(websiteNachtrag.split('\n## ')[0], ['Stand 24.11.2026.']), 'Website-Nachtrag: Einleitung').toEqual([])
+  })
+
+  // Einträge der Sammelantwort, die eine spätere Antwort ergänzt. Den Wortlaut in Teil D prüft
+  // tests/regelfragen_antworten.test.ts Satz für Satz (ERWARTET_G.G16 und G22); hier geht es um
+  // Datum, Folge und den Satz im Website-Nachtrag.
+  const ERGAENZT = [
+    { task: 'P0.5g', nummer: 'D48', folge: 'X4', durch: 'die Rückfrage vom 23.11.2026', satz: 'Im zweiten Zug nach einem Verdoppler ist sie nicht einsetzbar, weil sich Verdoppler und Comeback-Karte ausschliessen' },
+    { task: 'P0.5h', nummer: 'D54', folge: 'X5', durch: 'die Präzisierung durch D69', satz: 'Ein ungenutzt abgeworfener Schlangenkorb liegt dagegen auf dem Ablagestapel; dort greift der Satz, dass er nicht vom Ablagestapel genommen werden kann.' },
+  ]
+  for (const { task, nummer, folge: erwarteteFolge, durch, satz } of ERGAENZT) {
+    it(`${task}: ${nummer} bleibt Eintrag der Sammelantwort, und der Website-Nachtrag führt ${durch}`, () => {
+      const { datum, folge } = eintragD(nummer)
+      expect(datum, `${nummer}: Datum der Sammelantwort`).toBe(DATUM_G)
+      expect(folge, `${nummer}: Folge`).toBe(erwarteteFolge)
+      pruefeKern(nummer, fliesstext(nachtragEintrag(nummer).antwort).toLowerCase(), [satz], ['Website folgt'])
+    })
+  }
 })

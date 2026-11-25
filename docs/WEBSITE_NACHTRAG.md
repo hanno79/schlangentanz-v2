@@ -1,6 +1,6 @@
 # Nachtrag für die Website schlangentanz.ch/rules
 
-Stand 23.11.2026. Diese Antworten hat der Autor gegeben; sie gelten im Spiel schon, stehen aber noch nicht auf der Website. Quelle ist Teil D von `docs/GAME_SPEC.md` (dort „Website folgt“). Die Nummer in Klammern ist der Eintrag in Teil D.
+Stand 24.11.2026. Diese Antworten hat der Autor gegeben; sie gelten im Spiel schon, stehen aber noch nicht auf der Website. Quelle ist Teil D von `docs/GAME_SPEC.md` (dort „Website folgt“). Die Nummer in Klammern ist der Eintrag in Teil D.
 
 Sobald ein Punkt auf der Website steht, übernimmt `npm run abgleich:website` ihn in Teil A, und in Teil D wird „Website folgt“ durch „Website übernommen am …“ ersetzt.
 
@@ -126,7 +126,7 @@ Risiko-Aktion 2: Vor dem Aufdecken benennt der Spieler eine Farbkarte seiner Han
 Risiko-Aktion 3: Ersetzen darf jede Farbkarte der Hand. Bei anderem Punktewert wählt der Spieler, ob er die zusätzliche Karte davor oder dahinter legt.
 
 **Aktion 4: Zählt die aufgedeckte Karte zu den „zwei Karten vom Nachziehstapel"? Was bei leerem Ablagestapel? Wie kann eine Risiko-Karte auf einem Ablagestapel liegen, wenn sie aus dem Spiel kommt?** (D54)  
-Risiko-Aktion 4: Bei Erfolg ist die aufgedeckte Karte die erste der zwei Karten; der Spieler zieht eine weitere. Ist der eigene Ablagestapel leer, bleibt nur die andere Möglichkeit: Bei Erfolg zieht der Spieler vom Nachziehstapel, bei Misserfolg der Gegner die oberste Karte. Risiko-Karte und Schlangenkorb kommen nach der Nutzung aus dem Spiel und liegen nie auf einem Ablagestapel; der Satz dazu in A8.2 ist nur eine Klarstellung.
+Risiko-Aktion 4: Bei Erfolg ist die aufgedeckte Karte die erste der zwei Karten; der Spieler zieht eine weitere. Ist der eigene Ablagestapel leer, bleibt nur die andere Möglichkeit: Bei Erfolg zieht der Spieler vom Nachziehstapel, bei Misserfolg der Gegner die oberste Karte. Risiko-Karte und Schlangenkorb kommen nach der Nutzung aus dem Spiel und liegen nie auf einem Ablagestapel; der Satz dazu in A8.2 ist nur eine Klarstellung. Ein ungenutzt abgeworfener Schlangenkorb liegt dagegen auf dem Ablagestapel; dort greift der Satz, dass er nicht vom Ablagestapel genommen werden kann.
 
 **Ist eine Risiko-Karte bei leerem Stapel oder in der Schlussrunde spielbar? Wer löst die Schlussrunde aus, wenn ein Effekt oder ein Gegner die letzte Karte nimmt?** (D55)  
 Bei leerem Stapel und in der Schlussrunde ist eine Risiko-Karte nicht spielbar, weil keine Karte aufgedeckt werden kann. Die Schlussrunde löst der Spieler am Zug aus, gleich wer die letzte Karte nimmt (auch ein begünstigter Gegner); er spielt seinen Zug zu Ende, dann hat jeder andere noch einen Zug.
@@ -166,3 +166,39 @@ Am Ende jedes der zwei Züge: Nach einem Verdoppler wird „Farbenpracht“ am E
 
 **„Farbharmonie“ („Habe in deinen Schlangen mindestens eine Dreiergruppe jeder Farbe.“): Zählt eine Vierer- oder Fünfergruppe als „Dreiergruppe“ ihrer Farbe?** (D67)  
 Ja: Für „Farbharmonie“ zählt jede Farbgruppe ab drei Karten als Dreiergruppe ihrer Farbe, auch eine Vierer- oder Fünfergruppe; eine Farbgruppe besteht aus mindestens drei nebeneinanderliegenden Karten derselben Farbe. Dass eine Vierergruppe in der Wertung nicht zusätzlich als Dreiergruppe zählt, betrifft nur die Punkte.
+
+**Comeback-Karte: Darf der Spieler mit der Zusatzaktion „Eine Sonderkarte aus der Hand ausspielen“ eine Sonderkarte wirkungslos ablegen, etwa einen Farbenschutz?** (D68)  
+Ja: Auch mit der Zusatzaktion „Eine Sonderkarte aus der Hand ausspielen“ der Comeback-Karte darf der Spieler eine Sonderkarte wirkungslos auf den eigenen Ablagestapel legen, etwa einen Farbenschutz. Es gelten dieselben Regeln wie für die Sonderkarte des Zuges; ein Farbenschutz darf immer wirkungslos abgelegt werden. Für „Schlangenmeister“ und „Schlangenrepertoire“ zählt die so abgelegte Karte als ausgespielt. Dasselbe gilt für die Zusatzaktionen des Schlangenkorbs, denn es sind dieselben drei wie bei der Comeback-Karte.
+
+**Schlangenkorb: Wohin kommt er, wenn der Spieler ihn ungenutzt abwirft, als überzählige Karte am Zugende (A5) oder über die Comeback-Aktion „Zwei Karten abwerfen, drei ziehen“?** (D69)  
+Auf den Ablagestapel: Wirft der Spieler den Schlangenkorb ungenutzt ab, als überzählige Karte am Ende seines Zuges oder über „Zwei Karten abwerfen, drei ziehen“, kommt er wie jede abgeworfene Karte auf seinen eigenen Ablagestapel und nicht aus dem Spiel. Von dort darf ihn niemand zurückholen, auch nicht mit Risiko-Aktion 4, denn es gilt „Risiko-Belohnungs-Karte sowie Schlangenkorb des Glücks können nicht vom Ablagestapel genommen werden“. Aus dem Spiel kommt der Korb nur nach der Nutzung.
+
+**Schlangenkorb „Tausche bis zu 2 Karten aus deiner Schlange mit Karten aus deiner Hand“: Muss der Spieler mindestens eine Karte tauschen, oder darf er den Bonus auch ohne Tausch nutzen?** (D70)  
+Mindestens einen Tausch: Wer den Bonus wählt, tauscht eine oder zwei Farbkarten; ein Einsatz ohne Tausch ist nicht möglich. Ist kein Tausch möglich, ist der Bonus nicht wählbar („Wähle einen der verfügbaren Bonuseffekte“).
+
+**Schlangenkorb „Ziehe 3 zusätzliche Karten und spiele sofort bis zu 2 davon aus“: Darf eine der gezogenen Farbkarten zugleich die reguläre Farbkarte des Zuges sein, sodass der Spieler bis zu drei der gezogenen Karten spielt?** (D71)  
+Ja: Eine gezogene Farbkarte darf auch die reguläre Farbkarte des Zuges sein. So kann der Spieler bis zu drei der gezogenen Karten spielen: bis zu zwei zusätzlich über den Korb, in beliebiger Art, und eine als Farbkarte des Zuges. Die Sonderkarte des Zuges ist der Korb selbst.
+
+**Schlangenkorb „spiele sofort bis zu 2 davon aus“: Heisst „sofort“ direkt nach dem Ziehen, vor jeder anderen Aktion, oder irgendwann im selben Zug?** (D72)  
+Im selben Zug: „Sofort“ heisst beim Korb, dass der Spieler die bis zu zwei gezogenen Karten irgendwann in diesem Zug spielt, nicht unbedingt direkt nach dem Ziehen; dazwischen darf er andere Aktionen seines Zuges ausführen, etwa die Farbkarte des Zuges legen.
+
+**„Schlangentanz“ („Bilde durch Schlangenhäutung 2 neue Dreiergruppen.“): Zählt eine neue Vierer- oder Fünfergruppe als „Dreiergruppe“?** (D73)  
+Ja: Für „Schlangentanz“ zählt jede neue Farbgruppe ab drei Karten als Dreiergruppe, auch eine Vierer- oder Fünfergruppe, wie bei „Farbharmonie“.
+
+**Risiko-Aktion 2 („Zusätzliche Farbkarte spielen“): Ist sie wählbar, wenn der Spieler keine eigene Schlange hat?** (D74)  
+Nein: Ohne eigene Schlange ist Risiko-Aktion 2 nicht wählbar, denn die zusätzliche Farbkarte kommt nur an ein Ende einer eigenen Schlange und beginnt keine neue Schlange. Dasselbe gilt ohne Farbkarte auf der Hand.
+
+**Risiko-Aktion 3 („Karten tauschen“), Erfolg: Muss der Spieler den Tausch ausführen, oder darf er darauf verzichten?** (D75)  
+Freiwillig: Bei Erfolg darf der Spieler tauschen, muss aber nicht, wie es heisst: „Du darfst den Tausch ausführen“. Verzichtet er, bleibt die Schlange unverändert. Die aufgedeckte Farbkarte kommt auch dann auf die eigene Hand.
+
+**Risiko-Aktion 2: Erfüllt die zusätzlich gelegte Farbkarte die Pflicht, in jedem Zug mindestens eine Karte zu spielen (A5, D12), obwohl der Einsatz der Risiko-Karte nicht als reguläre Aktion zählt?** (D76)  
+Ja: Legt der Spieler bei Erfolg von Risiko-Aktion 2 die zusätzliche Farbkarte an, zählt sie für die Pflicht, in jedem Zug mindestens eine Karte zu spielen, obwohl der Einsatz der Risiko-Karte nicht als reguläre Aktion zählt. Es zählt die gelegte Farbkarte, nicht der Einsatz der Risiko-Karte; bei Misserfolg wird keine Farbkarte gelegt. Die Karte bleibt zusätzlich und belegt nicht den Platz der Farbkarte des Zuges („Zusätzliche Farbkarte spielen“).
+
+**Risiko-Aktion 2: Ist die Farbkarte, die der Spieler vor dem Aufdecken benennt (D52), eine Ansage, die alle Spieler sehen?** (D77)  
+Ja: Die Farbkarte, die der Spieler vor dem Aufdecken für Risiko-Aktion 2 benennt, ist eine Ansage wie in A6 („Der Spieler benennt das Ziel seiner Aktion“) und für alle Spieler offen. Nur so kann der begünstigte Gegner bei Misserfolg zwischen ihr und der obersten Stapelkarte wählen. Legt der Spieler bei Erfolg eine andere Karte an, bleibt die benannte bekannt auf seiner Hand.
+
+**Risiko-Aktion 1 („Zusätzliche Karten ziehen“), Misserfolg: Muss der gewählte Spieler die aufgedeckte Sonderkarte auf die Hand nehmen, oder darf er sie ablehnen?** (D78)  
+Er muss sie nehmen: Bei Misserfolg von Risiko-Aktion 1 nimmt der gewählte Spieler die aufgedeckte Sonderkarte auf die Hand; das ist Pflicht, ablehnen kann er nicht. Das „darf“ in „Der gewählte Spieler darf die Sonderkarte direkt auf die Hand nehmen“ lässt ihm also keine Wahl. Hat er danach mehr als 5 Handkarten, baut er sie am Ende seines eigenen Zuges ab.
+
+**Risiko-Aktion 4, Misserfolg: Was bekommt der gewählte Gegner, wenn er weder eine Karte von seinem Ablagestapel nehmen noch die oberste Karte vom Nachziehstapel ziehen kann?** (D79)  
+Er bekommt nichts: Kann der gewählte Gegner bei Misserfolg von Risiko-Aktion 4 weder eine Karte von seinem Ablagestapel nehmen, weil dort keine liegt, die er nehmen darf, noch die oberste Karte vom Nachziehstapel ziehen, weil der Stapel leer ist, geht er leer aus. Die Schlussrunde löst der Spieler am Zug aus.

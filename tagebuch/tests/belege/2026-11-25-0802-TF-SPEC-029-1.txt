@@ -1,0 +1,24 @@
+Erster Testcommit 6250adf8 (nur tests/): npx vitest run tests/ -> Exit 1
+ Test Files  4 failed | 16 passed (20)
+      Tests  33 failed | 897 passed (930)
+
+Zweiter Testcommit e3586f11 (nur tests/): npx vitest run tests/ -> Exit 1
+ Test Files  4 failed | 16 passed (20)
+      Tests  13 failed | 921 passed (934)
+FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5e: G22: Teil D besteht genau aus dem ganzen Satz je gewähltem Teil, dazu Wortlaut und „Website folgt.“
+FAIL  tests/spec_documentation_teil_b_c.test.ts > GAME_SPEC Teil C — Abweichungen der Engine > P0.5g, P0.5h: jeder Pfad in Teil C, auch jede Fundstelle, nennt eine Datei oder einen Ordner, die es gibt
+FAIL  tests/spec_documentation_teil_b_c.test.ts > GAME_SPEC Teil C — Abweichungen der Engine > P0.5h: B1 nennt Schlangenkorb, Comeback- und Risiko-Belohnungs-Karten und den Vielfaltbonus als umgesetzt, mit Task und Datum
+FAIL  tests/spec_documentation_teil_b_c.test.ts > GAME_SPEC Teil C — Abweichungen der Engine > P0.5h: B2 nennt die nach D52 und D77 benannte Farbkarte als einzige Ausnahme von der verdeckten Information
+FAIL  tests/spec_documentation_teil_b_c.test.ts > GAME_SPEC Teil C — Abweichungen der Engine > P0.5h: der Kopf von Teil C nennt den Stand vom 24.11.2026, der Schlusssatz die KI unter `src/ki/`
+FAIL  tests/spec_documentation_teil_d.test.ts > GAME_SPEC Teil D — Fragen an den Autor und Antworten > P0.5h: D54 bleibt Eintrag der Sammelantwort, und der Website-Nachtrag führt die Präzisierung durch D69
+FAIL  tests/spec_documentation_teil_d.test.ts > GAME_SPEC Teil D — Fragen an den Autor und Antworten > P0.5h: D68: Rückfrage aus X4 vom 24.11.2026 steht als Regel mit gewählter Möglichkeit in Teil D
+FAIL  tests/spec_documentation_teil_d.test.ts > GAME_SPEC Teil D — Fragen an den Autor und Antworten > P0.5h: D68: der Website-Nachtrag führt die Antwort ohne „Website folgt“
+FAIL  tests/spec_documentation_teil_d.test.ts > GAME_SPEC Teil D — Fragen an den Autor und Antworten > P0.5h: D70: Rückfrage aus X6 vom 24.11.2026 steht als Regel mit gewählter Möglichkeit in Teil D
+FAIL  tests/spec_documentation_teil_d.test.ts > GAME_SPEC Teil D — Fragen an den Autor und Antworten > P0.5h: D75: Rückfrage aus X5 vom 24.11.2026 steht als Regel mit gewählter Möglichkeit in Teil D
+FAIL  tests/spec_documentation_teil_d.test.ts > GAME_SPEC Teil D — Fragen an den Autor und Antworten > P0.5h: D75: der Website-Nachtrag führt die Antwort ohne „Website folgt“
+FAIL  tests/spec_documentation_teil_d.test.ts > GAME_SPEC Teil D — Fragen an den Autor und Antworten > P0.5h: D76: Rückfrage aus X5 vom 24.11.2026 steht als Regel mit gewählter Möglichkeit in Teil D
+FAIL  tests/spec_documentation_teil_e.test.ts > GAME_SPEC Teil E — frühere R-Nummern und Verlauf > P0.5h, Entscheid des Orchestrators vom 25.11.2026: der Eintrag nennt D54, B2, D68, die Kennzeichnung des Abgeleiteten, den Vielfaltbonus und den Kopf von Teil C
+
+Stand a98d2416: npm test -- --run -> Exit 0
+ Test Files  188 passed (188)
+      Tests  3197 passed (3197)

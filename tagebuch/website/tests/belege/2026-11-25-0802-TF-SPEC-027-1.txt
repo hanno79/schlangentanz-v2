@@ -1,0 +1,14 @@
+P0.5h, Stand a98d2416: Gates einzeln, Exit-Code je Befehl
+npm test -- --run => 0
+npm run typecheck => 0
+npm run build => 0
+npm run check:test-lines => 0
+npm run check:css-asserts => 0
+npx eslint . => 0
+npm run check:regeln => 0
+python scripts/regelcheck.py => 0
+npm run abgleich:website => 0
+ Test Files  188 passed (188)
+      Tests  3197 passed (3197)
+Abdeckung: 469 Zeilen der Website geprüft, 0 fehlen, 22 nur anders formatiert.
+Ergebnis: Teil A stimmt mit der Website überein (Bundle index-EH-TKokX.js).

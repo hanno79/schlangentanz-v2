@@ -10,8 +10,12 @@
  * `kern`: tragende Sätze der Antwort, in Teil D und im Website-Nachtrag.
  * `verboten`: Stellen aus der verworfenen Lesart (Gegenprobe).
  * `anfang`: womit die Antwort beginnt, wo die Frage ein Ja oder Nein verlangt.
+ * `zitate`: Sätze der Website ohne Anführungszeichen; sie stehen wörtlich in Teil A
+ *   und in „…“ in der Antwort, in Teil D und im Website-Nachtrag.
+ * `nurTeilD`: Sätze nur in Teil D, etwa der Verweis auf einen anderen Eintrag oder
+ *   die Kennzeichnung, woraus ein nicht gewählter, sondern abgeleiteter Satz folgt.
  */
-export type Rueckfrage = { frage: string; wahl: string; kern: string[]; verboten: string[]; anfang?: 'Ja:' | 'Nein:' }
+export type Rueckfrage = { frage: string; wahl: string; kern: string[]; verboten: string[]; anfang?: 'Ja:' | 'Nein:'; zitate?: string[]; nurTeilD?: string[] }
 
 /** Rückfragen, die `task` in Teil D aufnimmt: alle aus der Prüfung oder Umsetzung von `aus` (zugleich die Spalte „Folge“), alle vom selben Tag. */
 export type Rueckfragen = { task: string; aus: string; datum: string; eintraege: Record<string, Rueckfrage> }
@@ -180,6 +184,164 @@ export const RUECKFRAGEN: Rueckfragen[] = [
         // Gegenprobe: die verworfene Lesart „genau drei Karten“.
         verboten: ['genau drei Karten', 'zählt nicht als Dreiergruppe'],
         anfang: 'Ja:',
+      },
+    },
+  },
+  {
+    task: 'P0.5h',
+    aus: 'X4',
+    datum: '24.11.2026',
+    eintraege: {
+      D68: {
+        frage: 'Comeback-Karte: Darf der Spieler mit der Zusatzaktion „Eine Sonderkarte aus der Hand ausspielen“ eine Sonderkarte wirkungslos ablegen, etwa einen Farbenschutz?',
+        wahl: '„Ja, erlaubt“',
+        kern: [
+          'Auch mit der Zusatzaktion „Eine Sonderkarte aus der Hand ausspielen“ der Comeback-Karte darf der Spieler eine Sonderkarte wirkungslos auf den eigenen Ablagestapel legen, etwa einen Farbenschutz',
+          'ein Farbenschutz darf immer wirkungslos abgelegt werden',
+          'Dasselbe gilt für die Zusatzaktionen des Schlangenkorbs',
+        ],
+        // Gegenprobe: die verworfenen Lesarten „nur auf dem regulären Platz“ und „wer nur Farbenschutz hält, beendet den Zug“.
+        verboten: ['nur auf dem regulären Platz', 'beendet den Zug', 'darf nicht wirkungslos'],
+        anfang: 'Ja:',
+        zitate: ['Eine Sonderkarte aus der Hand ausspielen'],
+        // Entscheid des Orchestrators vom 25.11.2026: Verweis auf D46.
+        nurTeilD: ['denn nach D46 sind es „dieselben drei wie bei der Comeback-Karte“'],
+      },
+    },
+  },
+  {
+    task: 'P0.5h',
+    aus: 'X6',
+    datum: '24.11.2026',
+    eintraege: {
+      D69: {
+        frage: 'Schlangenkorb: Wohin kommt er, wenn der Spieler ihn ungenutzt abwirft, als überzählige Karte am Zugende (A5) oder über die Comeback-Aktion „Zwei Karten abwerfen, drei ziehen“?',
+        wahl: '„Auf den Ablagestapel“',
+        kern: [
+          'kommt er wie jede abgeworfene Karte auf seinen eigenen Ablagestapel und nicht aus dem Spiel',
+          'auch nicht mit Risiko-Aktion 4',
+        ],
+        // Gegenprobe: die verworfenen Lesarten „aus dem Spiel“ und „zurückholbar“.
+        verboten: ['kommt er aus dem Spiel', 'darf ihn zurückholen', 'nimmt ihn zurück'],
+        zitate: ['Risiko-Belohnungs-Karte sowie Schlangenkorb des Glücks können nicht vom Ablagestapel genommen werden'],
+      },
+      D70: {
+        frage: 'Schlangenkorb „Tausche bis zu 2 Karten aus deiner Schlange mit Karten aus deiner Hand“: Muss der Spieler mindestens eine Karte tauschen, oder darf er den Bonus auch ohne Tausch nutzen?',
+        wahl: '„Mindestens ein Tausch“',
+        kern: [
+          'tauscht eine oder zwei Farbkarten',
+          'ein Einsatz ohne Tausch ist nicht möglich',
+          'Ist kein Tausch möglich, ist der Bonus nicht wählbar',
+        ],
+        nurTeilD: ['Abgeleitet aus A7.10 („Wähle einen der verfügbaren Bonuseffekte“): Ist kein Tausch möglich'],
+        // Gegenprobe: die verworfene Lesart, nach der auch null Tausche genügen.
+        verboten: ['auch ohne Tausch nutzen', 'null Karten', 'kein Tausch nötig'],
+        zitate: ['Wähle einen der verfügbaren Bonuseffekte'],
+      },
+      D71: {
+        frage: 'Schlangenkorb „Ziehe 3 zusätzliche Karten und spiele sofort bis zu 2 davon aus“: Darf eine der gezogenen Farbkarten zugleich die reguläre Farbkarte des Zuges sein, sodass der Spieler bis zu drei der gezogenen Karten spielt?',
+        wahl: '„Ja, drei möglich“',
+        kern: [
+          'Eine gezogene Farbkarte darf auch die reguläre Farbkarte des Zuges sein',
+          'So kann der Spieler bis zu drei der gezogenen Karten spielen',
+        ],
+        // Gegenprobe: die verworfene Lesart „höchstens zwei der gezogenen Karten“.
+        verboten: ['höchstens zwei der gezogenen', 'nur eine Karte von vorher'],
+        anfang: 'Ja:',
+      },
+      D72: {
+        frage: 'Schlangenkorb „spiele sofort bis zu 2 davon aus“: Heisst „sofort“ direkt nach dem Ziehen, vor jeder anderen Aktion, oder irgendwann im selben Zug?',
+        wahl: '„Im selben Zug“',
+        kern: [
+          '„Sofort“ heisst beim Korb, dass der Spieler die bis zu zwei gezogenen Karten irgendwann in diesem Zug spielt, nicht unbedingt direkt nach dem Ziehen',
+          'dazwischen darf er andere Aktionen seines Zuges ausführen',
+        ],
+        // Gegenprobe: die verworfene Lesart „direkt nach dem Ziehen, vor jeder anderen Aktion“.
+        verboten: ['vor jeder anderen Aktion', 'im nächsten Zug', 'muss sie direkt'],
+      },
+    },
+  },
+  {
+    task: 'P0.5h',
+    aus: 'X2',
+    datum: '24.11.2026',
+    eintraege: {
+      D73: {
+        frage: '„Schlangentanz“ („Bilde durch Schlangenhäutung 2 neue Dreiergruppen.“): Zählt eine neue Vierer- oder Fünfergruppe als „Dreiergruppe“?',
+        wahl: '„Ja, ab drei Karten“',
+        kern: ['Für „Schlangentanz“ zählt jede neue Farbgruppe ab drei Karten als Dreiergruppe, auch eine Vierer- oder Fünfergruppe'],
+        // Gegenprobe: die verworfene Lesart „genau drei Karten“.
+        verboten: ['genau drei Karten', 'zählt nicht als Dreiergruppe'],
+        anfang: 'Ja:',
+      },
+    },
+  },
+  {
+    task: 'P0.5h',
+    aus: 'X5',
+    datum: '24.11.2026',
+    eintraege: {
+      D74: {
+        frage: 'Risiko-Aktion 2 („Zusätzliche Farbkarte spielen“): Ist sie wählbar, wenn der Spieler keine eigene Schlange hat?',
+        wahl: '„Nicht wählbar“',
+        kern: ['Ohne eigene Schlange ist Risiko-Aktion 2 nicht wählbar', 'beginnt keine neue Schlange'],
+        // Gegenprobe: die verworfenen Lesarten „beginnt eine neue Schlange“ und „in eine gegnerische Schlange“.
+        verboten: ['beginnt eine neue Schlange', 'ist sie wählbar', 'in eine gegnerische Schlange'],
+        anfang: 'Nein:',
+      },
+      D75: {
+        frage: 'Risiko-Aktion 3 („Karten tauschen“), Erfolg: Muss der Spieler den Tausch ausführen, oder darf er darauf verzichten?',
+        wahl: '„Freiwillig“',
+        kern: [
+          'Bei Erfolg darf der Spieler tauschen, muss aber nicht',
+          'Verzichtet er, bleibt die Schlange unverändert.',
+          'Die aufgedeckte Farbkarte kommt auch dann auf die eigene Hand',
+        ],
+        nurTeilD: ['Abgeleitet aus D51: Die aufgedeckte Farbkarte'],
+        // Gegenprobe: die verworfene Lesart, nach der der Tausch bei Erfolg Pflicht ist.
+        verboten: ['muss den Tausch ausführen', 'tauscht in jedem Fall'],
+        zitate: ['Du darfst den Tausch ausführen'],
+      },
+      D76: {
+        frage: 'Risiko-Aktion 2: Erfüllt die zusätzlich gelegte Farbkarte die Pflicht, in jedem Zug mindestens eine Karte zu spielen (A5, D12), obwohl der Einsatz der Risiko-Karte nicht als reguläre Aktion zählt?',
+        wahl: '„Ja, zählt“',
+        kern: [
+          'zählt sie für die Pflicht, in jedem Zug mindestens eine Karte zu spielen',
+          'Es zählt die gelegte Farbkarte, nicht der Einsatz der Risiko-Karte',
+          'Die Karte bleibt zusätzlich und belegt nicht den Platz der Farbkarte des Zuges',
+        ],
+        nurTeilD: ['Abgeleitet aus A8.2 („Zusätzliche Farbkarte spielen“): Die Karte bleibt zusätzlich'],
+        // Gegenprobe: die verworfene Lesart, nach der die Zusatzkarte nicht zählt, und die, nach der schon der Einsatz genügt.
+        verboten: ['zählt nicht für die Pflicht', 'der Einsatz der Risiko-Karte genügt'],
+        anfang: 'Ja:',
+        zitate: ['Zusätzliche Farbkarte spielen'],
+      },
+      D77: {
+        frage: 'Risiko-Aktion 2: Ist die Farbkarte, die der Spieler vor dem Aufdecken benennt (D52), eine Ansage, die alle Spieler sehen?',
+        wahl: '„Ja, offen für alle“',
+        kern: ['ist eine Ansage wie in A6', 'für alle Spieler offen'],
+        // Gegenprobe: die verworfenen Lesarten „bleibt verdeckt“ und „nur für den begünstigten Gegner“.
+        verboten: ['bleibt verdeckt', 'nur der begünstigte Gegner sieht'],
+        anfang: 'Ja:',
+        zitate: ['Der Spieler benennt das Ziel seiner Aktion'],
+      },
+      D78: {
+        frage: 'Risiko-Aktion 1 („Zusätzliche Karten ziehen“), Misserfolg: Muss der gewählte Spieler die aufgedeckte Sonderkarte auf die Hand nehmen, oder darf er sie ablehnen?',
+        wahl: '„Pflicht“',
+        kern: ['nimmt der gewählte Spieler die aufgedeckte Sonderkarte auf die Hand; das ist Pflicht, ablehnen kann er nicht'],
+        // Gegenprobe: die verworfene Lesart, nach der er ablehnen darf.
+        verboten: ['darf sie ablehnen', 'kann sie ablehnen', 'freiwillig'],
+        zitate: ['Der gewählte Spieler darf die Sonderkarte direkt auf die Hand nehmen'],
+      },
+      D79: {
+        frage: 'Risiko-Aktion 4, Misserfolg: Was bekommt der gewählte Gegner, wenn er weder eine Karte von seinem Ablagestapel nehmen noch die oberste Karte vom Nachziehstapel ziehen kann?',
+        wahl: '„Er bekommt nichts“',
+        kern: [
+          'Kann der gewählte Gegner bei Misserfolg von Risiko-Aktion 4 weder eine Karte von seinem Ablagestapel nehmen, weil dort keine liegt, die er nehmen darf',
+          'noch die oberste Karte vom Nachziehstapel ziehen, weil der Stapel leer ist, geht er leer aus',
+        ],
+        // Gegenprobe: die verworfene Lesart, nach der er eine Ersatzkarte bekommt.
+        verboten: ['zieht er eine Karte', 'bekommt er eine Karte'],
       },
     },
   },

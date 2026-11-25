@@ -335,7 +335,7 @@ export const ERWARTET_G: Record<string, ErwartungG> = {
       beleg: ['liegen nie auf einem Ablagestapel'],
       verboten: { f: ['doch auf einem Ablagestapel landen'] },
     },
-  }),
+  }, 'Präzisiert durch D69 (24.11.2026): „Nie auf einem Ablagestapel“ gilt für die genutzte Karte; ein ungenutzt abgeworfener Schlangenkorb liegt auf dem Ablagestapel, und dort greift der Satz aus A8.2, dass er nicht vom Ablagestapel genommen werden kann.'),
   G23: sammelantwort({
     a: {
       satz: 'Bei leerem Stapel und in der Schlussrunde ist eine Risiko-Karte nicht spielbar, weil keine Karte aufgedeckt werden kann.',
