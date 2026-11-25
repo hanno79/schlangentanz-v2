@@ -6,10 +6,13 @@ import { starteEntwicklerPartie } from '../../entwicklung/partie'
 import { erzeugeSzenario } from '../../entwicklung/szenarien'
 import { SPIELSTAND_SCHLUESSEL, speichereSpielstand } from '../../spielstand'
 import { gespeichert, istEinSchritt, roh } from './__tests__/steuerung'
+import { KI_PAUSE_WENIGER_BEWEGUNG } from './useSpiel'
 
 /*
 O3 am App-Rahmen: `/spiel` spielt die gespeicherte Partie mit der Pause aus
-`useSpiel`, ohne Pause bei „weniger Bewegung“. Ein alter Spielstand wird
+`useSpiel`, bei „weniger Bewegung“ nur mit einer kleinen festen Mindestpause
+(O11: ohne sie zeigte die Rechenzeit der KI, ob sie einen Farbenschutz hält,
+Prüfprotokoll O6, Hinweis 2). Ein alter Spielstand wird
 verworfen und einmal gemeldet. Im Testhook-Build (Vitest läuft wie der
 Dev-Server mit Testhooks) nimmt `/spiel` die Parameter `szenario`, `seed` und
 `tempo` (Plan O3, Kriterium 7).
@@ -49,16 +52,20 @@ describe('O3 K1: Pause vor jedem KI-Schritt am Tisch', () => {
     expect(istEinSchritt(start, gespeichert()!)).toBe(true)
   })
 
-  it('O3 K1: mit „weniger Bewegung“ folgt der KI-Schritt sofort, aber einzeln', () => {
+  it('O3 K1/O11: mit „weniger Bewegung“ folgt der KI-Schritt nach der kleinen festen Mindestpause, nicht vorher, und einzeln', () => {
     vi.useFakeTimers()
     wenigerBewegung(true)
+    expect(KI_PAUSE_WENIGER_BEWEGUNG, 'die Mindestpause ist klein, aber nicht 0').toBeGreaterThan(0)
+    expect(KI_PAUSE_WENIGER_BEWEGUNG).toBeLessThanOrEqual(150)
     const start = erzeugeSzenario('schlussrunde-ohne-dich')
     speichereSpielstand(start)
     oeffne('/spiel')
-    act(() => vi.advanceTimersByTime(0))
+    act(() => vi.advanceTimersByTime(KI_PAUSE_WENIGER_BEWEGUNG - 1))
+    expect(roh(), `vor ${KI_PAUSE_WENIGER_BEWEGUNG} ms spielt die KI nicht`).toBe(serialisiere(start))
+    act(() => vi.advanceTimersByTime(1))
     const erster = gespeichert()!
     expect(istEinSchritt(start, erster)).toBe(true)
-    act(() => vi.advanceTimersByTime(0))
+    act(() => vi.advanceTimersByTime(KI_PAUSE_WENIGER_BEWEGUNG))
     expect(istEinSchritt(erster, gespeichert()!)).toBe(true)
   })
 
