@@ -1,0 +1,66 @@
+Gegenprobe 1: src/engine/erweiterung/comeback.ts RUECKSTAND 5 -> 6 (Exit 1)
+     × A10: 2 Spieler, Saat 11, Erweiterung true: der Verlauf gleicht Zug für Zug dem eingefrorenen Protokoll 238ms
+     × A10: 3 Spieler, Saat 39, Erweiterung true: der Verlauf gleicht Zug für Zug dem eingefrorenen Protokoll 235ms
+     × A10: 4 Spieler, Saat 41, Erweiterung true: der Verlauf gleicht Zug für Zug dem eingefrorenen Protokoll 220ms
+     × A8.1: Rückstand 5 zu Zugbeginn (1 gegen 6 Karten): die Comeback-Karte ist einsetzbar 15ms
+     × D48: ohne eigene Schlange ist die Länge 0; gegen 5 Karten ist die Bedingung erfüllt, gegen 4 nicht 4ms
+     × D48: jede Karte der Schlange zählt eins, auch Sonderkarten 5ms
+     × D48: eine Farbenfusion samt ihren zwei Karten zählt eins 5ms
+     × A8.1: gemessen wird die längste eigene Schlange gegen die längste auf dem Tisch, gleich wessen 5ms
+     × A8.1/D48: die Bedingung gilt den ganzen Zug: verkürzt Spieler 1 den Rückstand im Zug auf 4, bleibt sie einsetzbar 7ms
+     × A8.1: zu Beginn jedes eigenen Zuges stellt die Engine die Bedingung neu fest, für jeden Spieler selbst 5ms
+     × D48: vor der ersten Karte, nach einer Karte und nach beiden Karten des Zuges 3ms
+     × A8.1: der Einsatz zählt nicht als reguläre Aktion: danach gehen eine Farbkarte und eine Sonderkarte wie sonst, und ohne Karte lässt sich der Zug nicht beenden 3ms
+     × D48 (Rückfrage vom 23.11.2026): im zweiten Zug nach einem Verdoppler ist sie nie einsetzbar, auch wenn die Bedingung galt 4ms
+     × A7.8/D47: nach der Comeback-Karte wirkt kein Verdoppler; er lässt sich nur wirkungslos ablegen 3ms
+     × A8.1: in der Schlussrunde ist sie im letzten eigenen Zug einsetzbar 2ms
+     × A8.1: nach dem Einsatz ist sie verbraucht; das Ereignis nennt sie, und der Zug hat zwei Zusatzaktionen aus drei Möglichkeiten 2ms
+     × A8.1: ein zweites Mal im selben Zug geht nicht 3ms
+     × A8.1/X3: Speichern und Laden mitten im Comeback-Zug: Bedingung, Verbrauch und Zusatzaktionen bleiben 3ms
+⎯⎯⎯⎯⎯⎯ Failed Tests 18 ⎯⎯⎯⎯⎯⎯⎯
+-     schlange-1: Gruppen Gelb ×3 = 7, zusammen 7; Joker: Regenbogenschlange (regenbogenschlange-04) als Gelb, Farbenfusion (farbenfusion-02) als Gelb; Vielfalt: Gelb, Bonus 0
++     schlange-1: Gruppen Rot ×3 = 8, zusammen 8; Joker: Farbenfusion (farbenfusion-02) als Rot; Vielfalt: Rot, Bonus 0
+-     schlange-2: Gruppen Rot ×3 = 4, Violett ×3 = 6, zusammen 10; Joker: Regenbogenschlange (regenbogenschlange-02) als keine Farbe, Farbenfusion (farbenfusion-04) als Rot, Farbenfusion (farbenfusion-03) als Violett, Regenbogenschlange (regenbogenschlange-03) als Violett; Vielfalt: Rot, Violett, Bonus 1
++     schlange-2: Gruppen Rot ×4 = 4, Gelb ×3 = 5, zusammen 9; Joker: Farbenfusion (farbenfusion-01) als Rot, Regenbogenschlange (regenbogenschlange-04) als Rot, Regenbogenschlange (regenbogenschlange-02) als Gelb, Farbenfusion (farbenfusion-03) als Gelb; Vielfalt: Rot, Gelb, Bonus 1
++     schlange-3: Gruppen Gelb ×3 = 3, zusammen 3; Joker: Regenbogenschlange (regenbogenschlange-03) als keine Farbe, Regenbogenschlange (regenbogenschlange-01) als keine Farbe; Vielfalt: Gelb, Bonus 0
+-     schlange-1: Gruppen Grün ×4 = 9, Gelb ×4 = 6, zusammen 15; Joker: Regenbogenschlange (regenbogenschlange-03) als keine Farbe, Regenbogenschlange (regenbogenschlange-04) als Grün, Regenbogenschlange (regenbogenschlange-01) als Gelb, Farbenfusion (farbenfusion-04) als Gelb, Farbenfusion (farbenfusion-03) als keine Farbe; Vielfalt: Gelb, Grün, Bonus 1
+-     schlange-3: Gruppen Rot ×3 = 3, Blau ×3 = 4, zusammen 7; Joker: Farbenfusion (farbenfusion-02) als Blau, Regenbogenschlange (regenbogenschlange-02) als keine Farbe; Vielfalt: Blau, Rot, Bonus 1
++     schlange-1: Gruppen Braun ×3 = 6, Grün ×3 = 7, Grün ×3 = 6, zusammen 19; Joker: Regenbogenschlange (regenbogenschlange-04) als Braun, Farbenfusion (farbenfusion-04) als Braun, Farbenfusion (farbenfusion-02) als Grün, Farbenfusion (farbenfusion-03) als Grün, Regenbogenschlange (regenbogenschlange-01) als Grün; Vielfalt: Braun, Grün, Bonus 1
++     schlange-6: Gruppen Violett ×3 = 4, zusammen 4; Joker: Regenbogenschlange (regenbogenschlange-03) als Violett; Vielfalt: Violett, Bonus 0
+-     schlange-1: Gruppen Violett ×3 = 8, zusammen 8; Joker: Farbenfusion (farbenfusion-03) als Violett, Farbenfusion (farbenfusion-01) als Violett; Vielfalt: Violett, Bonus 0
+-     schlange-2: Gruppen Rot ×4 = 3, zusammen 3; Joker: Regenbogenschlange (regenbogenschlange-03) als Rot, Regenbogenschlange (regenbogenschlange-01) als Rot, Farbenfusion (farbenfusion-04) als Rot; Vielfalt: Rot, Bonus 0
++     schlange-1: Gruppen Blau ×4 = 6, Blau ×3 = 3, zusammen 9; Joker: Farbenfusion (farbenfusion-03) als Blau, Regenbogenschlange (regenbogenschlange-03) als Blau, Farbenfusion (farbenfusion-02) als Blau, Regenbogenschlange (regenbogenschlange-01) als Blau; Vielfalt: Blau, Bonus 0
++     schlange-2: Gruppen Gelb ×3 = 2, zusammen 2; Joker: Regenbogenschlange (regenbogenschlange-02) als Gelb; Vielfalt: Gelb, Bonus 0
+ Test Files  2 failed (2)
+      Tests  18 failed | 25 passed (43)
+
+Gegenprobe 2: src/engine/scoring.ts aufgabenVon ohne '&& spieler.geheimeAufgabeErfuellt' (Exit 1)
+     × A10: 2 Spieler, Saat 11, Erweiterung true: der Verlauf gleicht Zug für Zug dem eingefrorenen Protokoll 226ms
+     × A10: 3 Spieler, Saat 39, Erweiterung true: der Verlauf gleicht Zug für Zug dem eingefrorenen Protokoll 248ms
+     × A10: 4 Spieler, Saat 41, Erweiterung true: der Verlauf gleicht Zug für Zug dem eingefrorenen Protokoll 229ms
+     × A7.10/A8.1/A8.2/A9 (X7): 2 Spieler, Saat 11: Aufgabe eingelöst, geheime Aufgabe gewertet, Comeback, Risiko mit Erfolg und Misserfolg samt Gegnerwahl, Schlangenkorb 2ms
+     × A7.10/A8.1/A8.2/A9 (X7): 3 Spieler, Saat 39: Aufgabe eingelöst, geheime Aufgabe gewertet, Comeback, Risiko mit Erfolg und Misserfolg samt Gegnerwahl, Schlangenkorb 1ms
+     × A7.10/A8.1/A8.2/A9 (X7): 4 Spieler, Saat 41: Aufgabe eingelöst, geheime Aufgabe gewertet, Comeback, Risiko mit Erfolg und Misserfolg samt Gegnerwahl, Schlangenkorb 1ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+      schlange-1: Gruppen Gelb ×3 = 7, zusammen 7; Joker: Regenbogenschlange (regenbogenschlange-04) als Gelb, Farbenfusion (farbenfusion-02) als Gelb; Vielfalt: Gelb, Bonus 0
+      schlange-2: Gruppen Rot ×3 = 4, Violett ×3 = 6, zusammen 10; Joker: Regenbogenschlange (regenbogenschlange-02) als keine Farbe, Farbenfusion (farbenfusion-04) als Rot, Farbenfusion (farbenfusion-03) als Violett, Regenbogenschlange (regenbogenschlange-03) als Violett; Vielfalt: Rot, Violett, Bonus 1
+      schlange-1: Gruppen Violett ×3 = 8, zusammen 8; Joker: Farbenfusion (farbenfusion-03) als Violett, Farbenfusion (farbenfusion-01) als Violett; Vielfalt: Violett, Bonus 0
+      schlange-2: Gruppen Rot ×4 = 3, zusammen 3; Joker: Regenbogenschlange (regenbogenschlange-03) als Rot, Regenbogenschlange (regenbogenschlange-01) als Rot, Farbenfusion (farbenfusion-04) als Rot; Vielfalt: Rot, Bonus 0
+AssertionError: D35: so viele geheime Aufgaben erfüllt, wie die Endwertung zählt: expected 1 to be 2 // Object.is equality
+AssertionError: D35: so viele geheime Aufgaben erfüllt, wie die Endwertung zählt: expected 2 to be 3 // Object.is equality
+AssertionError: D35: so viele geheime Aufgaben erfüllt, wie die Endwertung zählt: expected 2 to be 4 // Object.is equality
+ Test Files  1 failed (1)
+      Tests  6 failed | 10 passed (16)
+
+Gegenprobe 3: X7_satz_fuer_satz.md Testname verfaelscht, Satz 'Es gelten auch Reihen.' geloescht (Exit 1)
+     × X7: die Tabelle führt jeden Satz aus A9 genau einmal, mit Tests oder mit Grund 9ms
+     × X7: jede Regelaussage nennt mindestens einen Test, und jeder genannte Test steht in seiner Datei unter regeln/ 11ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  src/engine/__tests__/regeln_abdeckung.test.ts > X7: Regeltestdateien und Satz-für-Satz-Tabelle der Erweiterung (A7.10, A8, A9) > X7: die Tabelle führt jeden Satz aus A9 genau einmal, mit Tests oder mit Grund
+AssertionError: docs/abnahme/X7_satz_fuer_satz.md: Sätze aus A9 ohne Zeile: expected [ 'Es gelten auch Reihen.' ] to deeply equal []
++   "A8.1_comeback › A8.1: ein zweites Mal im selben Zug geht doch",
++   "A8.1_comeback › A8.1: ein zweites Mal im selben Zug geht doch",
+ Test Files  1 failed (1)
+      Tests  2 failed | 30 passed (32)
+
+Nach jeder Gegenprobe git checkout -- <datei>; git status --short leer.
