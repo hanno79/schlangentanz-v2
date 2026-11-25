@@ -1,11 +1,8 @@
 import { expect, test, type Page } from '@playwright/test'
-import { serialisiere } from '../../src/engine'
 import type { Spielzustand } from '../../src/engine'
-import { SPIELSTAND_SCHLUESSEL } from '../../src/spielstand'
 import { langeSchlange, mittelspiel, neuePartie, volltisch, zehnHandkarten } from '../../src/ui/tisch/__tests__/szenarien'
-import { bewegungen, erwarteKeineSchwerenAxeBefunde, erwarteSichtbarenFokus, merkmaleOhneFarbe, tabBis, unterschiedOhneFarbe } from './barrierefreiheit_messung'
-import { befundListe, findeSchwacheKontraste } from './messung'
-import { halteUhrAn, oeffne } from './oeffnen'
+import { bewegungen, erwarteGrundlagen, erwarteSichtbarenFokus, merkmaleOhneFarbe, tabBis, unterschiedOhneFarbe } from './barrierefreiheit_messung'
+import { halteUhrAn, legeSpielstand, oeffne } from './oeffnen'
 
 /*
 O11 im Produktionsbuild, in jeder Geräteklasse: Lobby, Regeln und der Tisch in
@@ -14,10 +11,6 @@ Text steht unter 4,5 : 1 (gemessen), bei „weniger Bewegung“ bewegt sich nich
 (Kriterium 4, playwright.config.ts stellt es für alle Verträge ein), und jeder
 Tab-Halt zeigt den Fokus (Kriterium 1).
 */
-
-async function legeSpielstand(page: Page, zustand: Spielzustand): Promise<void> {
-  await page.addInitScript(([schluessel, wert]) => window.localStorage.setItem(schluessel, wert), [SPIELSTAND_SCHLUESSEL, serialisiere(zustand)] as const)
-}
 
 /**
  * Öffnet den Tisch mit diesem Stand. In den Ständen, die axe prüft, bist du am
@@ -28,14 +21,6 @@ async function oeffneTisch(page: Page, zustand: Spielzustand, uhrAnhalten = fals
   if (uhrAnhalten) await halteUhrAn(page)
   await legeSpielstand(page, zustand)
   await oeffne(page, '/spiel')
-}
-
-async function erwarteGrundlagen(page: Page, lage: string): Promise<void> {
-  await erwarteKeineSchwerenAxeBefunde(page, lage)
-  const schwach = await findeSchwacheKontraste(page)
-  expect(schwach, `${lage}: Text unter 4,5 : 1:${befundListe(schwach)}`).toEqual([])
-  const bewegt = await bewegungen(page)
-  expect(bewegt, `${lage}: bei „weniger Bewegung“ bewegt sich noch etwas:${befundListe(bewegt)}`).toEqual([])
 }
 
 test.describe('O11 K3/K4: Lobby und Regeln', () => {

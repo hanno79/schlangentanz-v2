@@ -5,7 +5,7 @@ import Rahmen from '../lobby/Rahmen'
 import Verweis from '../lobby/Verweis'
 import type { ErgebnisAnsicht } from '../spiel/ergebnisAnsicht'
 import { TISCH } from '../tisch/texte'
-import { useUeberlauf } from '../tisch/ueberlauf'
+import { scrollFokus, useUeberlauf } from '../tisch/ueberlauf'
 import { Weiter } from '../tisch/Weiter'
 import { Rang } from './Rang'
 import { ERGEBNIS, siegerText, siegerTitel } from './texte'
@@ -49,7 +49,7 @@ export function Ergebnis({ ergebnis, nochEinmal }: ErgebnisEigenschaften) {
       }
     >
       <div className="erg-rangliste-rahmen">
-        <ol ref={liste} className="erg-rangliste" aria-label={ERGEBNIS.rangliste}>
+        <ol ref={liste} className="erg-rangliste st-scrollt" aria-label={ERGEBNIS.rangliste} tabIndex={scrollFokus(ueberlauf)}>
           {ergebnis.rangliste.map((eintrag) => (
             <Rang key={eintrag.wertung.spielerId} eintrag={eintrag} />
           ))}

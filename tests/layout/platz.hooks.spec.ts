@@ -10,16 +10,16 @@ O7 Hinweis 1). Das Fenster ist hier fest eingestellt, damit jede Geräteklasse
 dieselbe Lage misst. Das Protokoll auf dem Desktop misst `platz.spec.ts`.
 */
 
+// Die Adresse des Testhooks steht in jedem `*.hooks.spec.ts` selbst (src/layout_hooks_namensgebung.test.ts).
+async function oeffneSzenario(page: Page, name: string): Promise<void> {
+  await page.goto(`/spiel?szenario=${name}&tempo=sofort`)
+  await expect(page.getByRole('region', { name: 'Zugleiste' })).toBeVisible()
+  await page.evaluate(() => document.fonts.ready.then(() => undefined))
+}
+
 const zugleiste = (page: Page) => page.getByRole('region', { name: 'Zugleiste' })
 const hand = (page: Page) => page.getByRole('region', { name: 'Deine Hand' })
 const flaeche = (page: Page) => page.locator('.st-flaeche')
-
-/** Öffnet `/spiel` mit diesen Testhooks, etwa `szenario=haeutung-punkte`. */
-async function oeffneSzenario(page: Page, parameter: string): Promise<void> {
-  await page.goto(`/spiel?${parameter.includes('=') ? parameter : `szenario=${parameter}`}&tempo=sofort`)
-  await expect(zugleiste(page)).toBeVisible()
-  await page.evaluate(() => document.fonts.ready.then(() => undefined))
-}
 
 test.describe('O11: Handy quer lässt der Tischfläche Höhe', () => {
   test.use({ viewport: { width: 844, height: 390 }, hasTouch: true, isMobile: true })

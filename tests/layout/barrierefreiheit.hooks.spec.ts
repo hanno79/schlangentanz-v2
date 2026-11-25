@@ -1,6 +1,5 @@
 import { expect, test, type Locator, type Page, type TestInfo } from '@playwright/test'
-import { bewegungen, erwarteKeineSchwerenAxeBefunde, merkmaleOhneFarbe, unterschiedOhneFarbe } from './barrierefreiheit_messung'
-import { befundListe, findeSchwacheKontraste } from './messung'
+import { erwarteGrundlagen, merkmaleOhneFarbe, unterschiedOhneFarbe } from './barrierefreiheit_messung'
 import { oeffne } from './oeffnen'
 
 /*
@@ -18,23 +17,16 @@ Uhr; hier lädt der Testhook-Build die Seite erst nach, und bei angehaltener
 Uhr erschiene sie nie.
 */
 
-/** Tippen mit Touch-Geräten, sonst klicken. */
-function bediene(info: TestInfo): (element: Locator) => Promise<void> {
-  return info.project.use.hasTouch ? (element) => element.tap() : (element) => element.click()
-}
-
-async function oeffneSzenario(page: Page, name: string, leitelement = 'Zugleiste'): Promise<void> {
+// Die Adresse des Testhooks steht in jedem `*.hooks.spec.ts` selbst (src/layout_hooks_namensgebung.test.ts).
+async function oeffneSzenario(page: Page, name: string): Promise<void> {
   await page.goto(`/spiel?szenario=${name}&tempo=sofort`)
-  await expect(page.getByRole('region', { name: leitelement })).toBeVisible()
+  await expect(page.getByRole('region', { name: 'Zugleiste' })).toBeVisible()
   await page.evaluate(() => document.fonts.ready.then(() => undefined))
 }
 
-async function erwarteGrundlagen(page: Page, lage: string): Promise<void> {
-  await erwarteKeineSchwerenAxeBefunde(page, lage)
-  const schwach = await findeSchwacheKontraste(page)
-  expect(schwach, `${lage}: Text unter 4,5 : 1:${befundListe(schwach)}`).toEqual([])
-  const bewegt = await bewegungen(page)
-  expect(bewegt, `${lage}: bei „weniger Bewegung“ bewegt sich noch etwas:${befundListe(bewegt)}`).toEqual([])
+/** Tippen mit Touch-Geräten, sonst klicken. */
+function bediene(info: TestInfo): (element: Locator) => Promise<void> {
+  return info.project.use.hasTouch ? (element) => element.tap() : (element) => element.click()
 }
 
 const hand = (page: Page) => page.getByRole('region', { name: 'Deine Hand' })

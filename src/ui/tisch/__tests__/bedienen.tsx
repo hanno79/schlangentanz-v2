@@ -2,6 +2,7 @@ import { fireEvent, render, screen, within } from '@testing-library/react'
 import App from '../../../App'
 import { anwendeAktion, ermittleAktionen, serialisiere } from '../../../engine'
 import type { SpielAktion, Spielkarte, Spielzustand } from '../../../engine'
+import type { Ki } from '../../../ki/strategien/strategie'
 import { speichereSpielstand } from '../../../spielstand'
 import { kartenname } from '../../karten/kartentexte'
 import { roh } from '../../spiel/__tests__/steuerung'
@@ -52,6 +53,14 @@ export function handkarte(karte: Spielkarte | string, nummer = 0): HTMLButtonEle
 }
 
 export const tippe = (element: HTMLElement) => fireEvent.click(element)
+
+/** Eine Test-KI, die die erste Aktion wählt, auf die eine der Bedingungen in dieser Reihenfolge passt, sonst die erste. */
+export function kiMit(...vorrang: ((aktion: SpielAktion) => boolean)[]): Ki {
+  return {
+    name: 'Test-KI',
+    waehle: (_sicht, aktionen) => vorrang.map((passt) => aktionen.find(passt)).find((aktion) => aktion !== undefined) ?? aktionen[0],
+  }
+}
 
 /** Tippt das Ziel mit diesem zugänglichen Namen an. */
 export function tippeZiel(name: string | RegExp): void {

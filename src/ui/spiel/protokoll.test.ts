@@ -3,7 +3,8 @@ import { anwendeAktion, ermittleAktionen, erstellePartie, pruefeAktion } from '.
 import type { SpielAktion, Spielzustand } from '../../engine'
 import { baukasten } from '../../engine/testing/szenario'
 import { erzeugeZufall } from '../../engine/testing/zufall'
-import { erzeugeSzenario } from '../../entwicklung/szenarien'
+import { mitTestbedingungen } from '../../engine/testing/testaufgaben'
+import { erzeugeSzenario, findeSzenario } from '../../entwicklung/szenarien'
 import { protokollSchritt } from './protokoll'
 import { tischAnsicht } from './tischAnsicht'
 
@@ -142,16 +143,21 @@ describe('O11 K2: Aufgaben im Protokoll', () => {
   })
 
   it('O11 K2/A9: erfüllt ein Gegner zu Beginn seines Zuges eine Aufgabe, steht er mit Namen da', () => {
-    const vorher = erzeugeSzenario('aufgaben-gegnerzug')
-    const gelb = ermittleAktionen(vorher).find(
-      (a) => a.typ === 'FarbkarteLegen' && a.ziel.art === 'schlange' && a.ziel.schlangenId === 'schlange-2' && a.ziel.seite === 'ende' && vorher.spieler[0].hand.some((karte) => karte.id === a.karteId && karte.typ === 'Farbkarte' && karte.farbe === 'Gelb'),
-    )
-    if (gelb === undefined) throw new Error('Testaufbau: Gelb an das Ende der Schlange von KI-Gegner 1 fehlt in den Aktionen.')
-    const gelegt = anwendeAktion(vorher, gelb).zustand
-    const beenden = ermittleAktionen(gelegt).find((a) => a.typ === 'ZugBeenden')
-    if (beenden === undefined) throw new Error('Testaufbau: Zug beenden fehlt in den Aktionen.')
-    const eintraege = schritt(gelegt, beenden)
-    expect(eintraege).toContain('KI-Gegner 1 erfüllt die Aufgabe Farbkombination.')
-    expect(eintraege).toContain('Neu offen liegt die Aufgabe Gelber Schatz.')
+    // Das Szenario erfüllt seine Aufgaben nur mit den Testbedingungen des Entwicklertischs.
+    const szenario = findeSzenario('aufgaben-gegnerzug')
+    if (szenario?.testbedingungen === undefined) throw new Error('Testaufbau: aufgaben-gegnerzug ohne Testbedingungen.')
+    mitTestbedingungen(szenario.testbedingungen, () => {
+      const vorher = szenario.erzeuge()
+      const gelb = ermittleAktionen(vorher).find(
+        (a) => a.typ === 'FarbkarteLegen' && a.ziel.art === 'schlange' && a.ziel.schlangenId === 'schlange-2' && a.ziel.seite === 'ende' && vorher.spieler[0].hand.some((karte) => karte.id === a.karteId && karte.typ === 'Farbkarte' && karte.farbe === 'Gelb'),
+      )
+      if (gelb === undefined) throw new Error('Testaufbau: Gelb an das Ende der Schlange von KI-Gegner 1 fehlt in den Aktionen.')
+      const gelegt = anwendeAktion(vorher, gelb).zustand
+      const beenden = ermittleAktionen(gelegt).find((a) => a.typ === 'ZugBeenden')
+      if (beenden === undefined) throw new Error('Testaufbau: Zug beenden fehlt in den Aktionen.')
+      const eintraege = schritt(gelegt, beenden)
+      expect(eintraege).toContain('KI-Gegner 1 erfüllt die Aufgabe Farbkombination.')
+      expect(eintraege).toContain('Neu offen liegt die Aufgabe Gelber Schatz.')
+    })
   })
 })

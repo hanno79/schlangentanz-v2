@@ -384,10 +384,13 @@ async function messeErreichbarkeit(page: Page): Promise<{ ausserhalb: Befund[]; 
          Fläche seines grössten Labels, wie bei der Tippfläche
          (`findeKleineTippflaechen`). Sonst fällt ein unsichtbar kleines Feld
          (Segmente und Schalter der Lobby) unter die 2-px-Grenze unten, und
-         beide Wächter messen es nie (Protokoll O2b, Mangel 1). */
+         beide Wächter messen es nie (Protokoll O2b, Mangel 1). Gemessen wird
+         die grösste Fläche aus Feld und Labels: Ein sichtbares Feld mit einem
+         Label, das nur vorgelesen wird (1 × 1 px), zählt mit seiner eigenen
+         Fläche (TF-PRUEF-027). */
       const labels = element instanceof HTMLInputElement ? Array.from(element.labels ?? []) : []
       const flaeche = (teil: Element) => teil.getBoundingClientRect().width * teil.getBoundingClientRect().height
-      const ziel = labels.length > 0 ? labels.reduce((a, b) => (flaeche(a) >= flaeche(b) ? a : b)) : element
+      const ziel = [element, ...labels].reduce((a, b) => (flaeche(a) >= flaeche(b) ? a : b))
       const box = ziel.getBoundingClientRect()
       if (box.width < 2 || box.height < 2) continue
       if (scrollenderVorfahr(ziel) !== null && weggescrollt(ziel)) continue
@@ -896,10 +899,11 @@ export async function waagrechterUeberstand(page: Page): Promise<number> {
  * Sichtbare Bedienelemente, deren Tippfläche schmaler oder niedriger ist als
  * `mindestens` Pixel (Plan O4 K5: mindestens 44 px).
  *
- * Ein Auswahlfeld (`radio`, `checkbox`) zählt mit der Fläche seines Labels:
- * Wer das Label antippt, trifft das Feld. Das Feld selbst darf deshalb
- * unsichtbar klein sein, solange sein Label gross genug ist; hat es kein
- * Label, zählt das Feld.
+ * Ein Auswahlfeld (`radio`, `checkbox`) zählt mit der grössten Fläche aus
+ * Feld und Labels: Wer das Label antippt, trifft das Feld. Das Feld selbst
+ * darf deshalb unsichtbar klein sein, solange sein Label gross genug ist, und
+ * ein sichtbares Feld mit einem nur vorgelesenen Label zählt mit seiner
+ * eigenen Fläche.
  */
 export async function findeKleineTippflaechen(page: Page, mindestens = 44): Promise<Befund[]> {
   return page.evaluate((grenze) => {
@@ -915,7 +919,8 @@ export async function findeKleineTippflaechen(page: Page, mindestens = 44): Prom
       if (!(element as HTMLElement).checkVisibility()) continue
       if (element.closest('[inert]') !== null) continue
       const labels = element instanceof HTMLInputElement ? Array.from(element.labels ?? []) : []
-      const flaechen = (labels.length > 0 ? labels : [element]).map((teil) => teil.getBoundingClientRect())
+      // Wie bei der Erreichbarkeit: die grösste Fläche aus Feld und Labels (TF-PRUEF-027).
+      const flaechen = [element, ...labels].map((teil) => teil.getBoundingClientRect())
       const groesste = flaechen.reduce((a, b) => (a.width * a.height >= b.width * b.height ? a : b))
       if (groesste.width < grenze || groesste.height < grenze) {
         befunde.push({
@@ -926,4 +931,25 @@ export async function findeKleineTippflaechen(page: Page, mindestens = 44): Prom
     }
     return befunde
   }, mindestens)
+}
+
+/**
+ * Ob der Text des Elements mitten in einem Wort umbricht (O11, TF-APP-018):
+ * Je Wort ein Bereich; liegen seine Zeilenkästen auf mehr als einer Höhe, ist
+ * das Wort getrennt. Gemessen wie die Kartennamen in `regeln.spec.ts`.
+ */
+export async function brichtImWort(locator: Locator): Promise<boolean> {
+  return locator.evaluate((element) => {
+    const laeufer = document.createTreeWalker(element, NodeFilter.SHOW_TEXT)
+    while (laeufer.nextNode()) {
+      const text = laeufer.currentNode as Text
+      for (const wort of text.data.matchAll(/\S+/g)) {
+        const bereich = document.createRange()
+        bereich.setStart(text, wort.index)
+        bereich.setEnd(text, wort.index + wort[0].length)
+        if (new Set(Array.from(bereich.getClientRects(), (kasten) => Math.round(kasten.top))).size > 1) return true
+      }
+    }
+    return false
+  })
 }

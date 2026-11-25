@@ -98,6 +98,10 @@ RANDLOSE_KARTEN = {
 }
 
 LOGO = "logo.webp"
+# Die Lobby zeigt das Logo höchstens 160 px hoch; 480 px reichen für dreifache
+# Pixeldichte. Mit Qualität 75 wird es 28 statt 57 KB gross (O11). Favicon und
+# Touch-Symbol entstehen weiter aus dem grossen Zuschnitt.
+LOGO_HOEHE = 480
 # Quadrat um den Schlangenkopf im zugeschnittenen Logo (links, oben, rechts, unten).
 FAVICON_AUSSCHNITT = (300, 0, 500, 200)
 
@@ -179,9 +183,9 @@ def runde_ecken(bild, radius: int, Image, ImageDraw):
     return ergebnis
 
 
-def speichere(bild, name: str, ziel: Path = ZIEL, qualitaet: int = 86) -> None:
+def speichere(bild, name: str, ziel: Path = ZIEL, qualitaet: int = 86, alpha: int = 100) -> None:
     pfad = ziel / f"{name}.webp"
-    bild.save(pfad, "WEBP", quality=qualitaet, method=6)
+    bild.save(pfad, "WEBP", quality=qualitaet, alpha_quality=alpha, method=6)
     print(f"{pfad.relative_to(WURZEL)}: {bild.size[0]}×{bild.size[1]}, {pfad.stat().st_size // 1024} KB")
 
 
@@ -206,7 +210,8 @@ def logo_und_favicon(roh: Path, Image) -> None:
     logo = Image.open(roh / LOGO).convert("RGBA")
     kasten = logo.getchannel("A").point(lambda wert: 255 if wert > 8 else 0).getbbox()
     logo = logo.crop(kasten)
-    speichere(logo, "logo")
+    breite = round(logo.size[0] * LOGO_HOEHE / logo.size[1])
+    speichere(logo.resize((breite, LOGO_HOEHE), Image.LANCZOS), "logo", qualitaet=75, alpha=80)
 
     # Im Browser-Tab (16 bis 64 px) ist vom ganzen Logo nur ein Karton zu erkennen;
     # deshalb trägt das Favicon allein den Schlangenkopf.

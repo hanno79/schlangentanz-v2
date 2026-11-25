@@ -7,8 +7,9 @@ Das Protokoll am Tisch (Plan O6, Kriterium 1): jeder Schritt mit Karte und
 Ziel, der jüngste Schritt oben und hervorgehoben. Es steht in der
 Tischfläche und scrollt mit ihr; gezeigt werden die letzten Einträge, damit es
 die Fläche nicht füllt. Vorgelesen wird es nicht von selbst: Den
-jüngsten Schritt eines Gegners sagt schon die Zugleiste an, und zweimal
-dasselbe hilft niemandem.
+jüngsten Schritt sagt schon der Ansager in der Zugleiste an (O11), und
+zweimal dasselbe hilft niemandem. Die Rolle `log` trägt der Abschnitt, damit
+die Liste eine Liste bleibt (axe, O11).
 */
 
 /** So viele Einträge zeigt der Tisch; die Steuerung behält mehr. */
@@ -19,11 +20,11 @@ export function Zugprotokoll({ verlauf }: { verlauf: Verlauf }) {
   const eintraege = verlauf.eintraege
   const juengster = eintraege.at(-1)?.schritt
   return (
-    <section className="st-protokoll" aria-labelledby={titel}>
+    <section className="st-protokoll" role="log" aria-live="off" aria-labelledby={titel}>
       <h2 id={titel} className="st-bereichstitel">
         {PROTOKOLL.titel}
       </h2>
-      <ol className="st-protokoll-liste" role="log" aria-live="off" aria-label={PROTOKOLL.titel}>
+      <ol className="st-protokoll-liste">
         {eintraege.length === 0 ? (
           <li className="st-leer">{PROTOKOLL.leer}</li>
         ) : (

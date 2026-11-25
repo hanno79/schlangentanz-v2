@@ -40,6 +40,9 @@ Route hat dieses Leitelement aufgebaut, sonst misst der Vertrag nichts.
 */
 
 import { expect, type Page } from '@playwright/test'
+import { serialisiere } from '../../src/engine'
+import type { Spielzustand } from '../../src/engine'
+import { SPIELSTAND_SCHLUESSEL } from '../../src/spielstand'
 
 /*
 Leitelement je Route: das Element, dessen Sichtbarkeit belegt, dass dieser
@@ -88,4 +91,9 @@ export async function oeffne(page: Page, route: string): Promise<void> {
 export async function halteUhrAn(page: Page): Promise<void> {
   await page.clock.install({ time: new Date('2026-11-21T10:00:00') })
   await page.clock.pauseAt(new Date('2026-11-21T10:00:01'))
+}
+
+/** Legt vor dem Öffnen einen Spielstand in den Speicher des Browsers, so wie ihn die Lobby hinterlässt. */
+export async function legeSpielstand(page: Page, zustand: Spielzustand): Promise<void> {
+  await page.addInitScript(([schluessel, wert]) => window.localStorage.setItem(schluessel, wert), [SPIELSTAND_SCHLUESSEL, serialisiere(zustand)] as const)
 }

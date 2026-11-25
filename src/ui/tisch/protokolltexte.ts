@@ -65,6 +65,10 @@ export const SCHRITT = {
   comeback: (person: Person) =>
     person.ich ? 'Du setzt die Comeback-Karte ein und hast zwei zusätzliche Aktionen.' : `${person.name} setzt die Comeback-Karte ein und hat zwei zusätzliche Aktionen.`,
   wirftAb: (person: Person, anzahl: number) => `${satzanfang(person, 'Du wirfst', 'wirft')} ${anzahlKarten(anzahl)} ab.`,
+  // A9, D5: Eine offene Aufgabe ist erfüllt, eine neue rückt nach; die geheime meldet die Engine nicht (D35, B2).
+  aufgabeErfuellt: (person: Person, aufgabe: string) => `${satzanfang(person, 'Du erfüllst', 'erfüllt')} die Aufgabe ${aufgabe}.`,
+  aufgabeAufgedeckt: (aufgabe: string) => `Neu offen liegt die Aufgabe ${aufgabe}.`,
+  aufgabenstapelLeer: 'Der Aufgabenstapel ist leer; es rückt keine Aufgabe nach.',
   schlussrunde: 'Der Nachziehstapel ist leer: Die Schlussrunde beginnt.',
   beendet: 'Die Partie ist beendet.',
 }

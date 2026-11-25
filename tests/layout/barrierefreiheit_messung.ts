@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright'
 import { expect, type Locator, type Page } from '@playwright/test'
+import { befundListe, findeSchwacheKontraste, kontrastAbdeckung } from './messung'
 import type { Befund } from './messung'
 
 /*
@@ -31,10 +32,19 @@ export async function schwereAxeBefunde(page: Page): Promise<Befund[]> {
     }))
 }
 
-/** Prüft die schweren axe-Befunde mit einer lesbaren Meldung. */
-export async function erwarteKeineSchwerenAxeBefunde(page: Page, lage: string): Promise<void> {
-  const befunde = await schwereAxeBefunde(page)
-  expect(befunde, `${lage}: ${befunde.length} schwere axe-Befunde:${befunde.map((b) => `\n  · ${b.element} — ${b.detail}`).join('')}`).toEqual([])
+/**
+ * Was in jeder Lage gelten muss (Kriterien 3 und 4): axe meldet keinen schweren
+ * Befund, kein Text steht unter 4,5 : 1, und zwar nachweislich gemessen (nicht
+ * alles über einem Verlauf), und bei „weniger Bewegung“ bewegt sich nichts.
+ */
+export async function erwarteGrundlagen(page: Page, lage: string): Promise<void> {
+  const axe = await schwereAxeBefunde(page)
+  expect(axe, `${lage}: ${axe.length} schwere axe-Befunde:${befundListe(axe)}`).toEqual([])
+  const schwach = await findeSchwacheKontraste(page)
+  expect(schwach, `${lage}: Text unter 4,5 : 1:${befundListe(schwach)}`).toEqual([])
+  expect((await kontrastAbdeckung(page)).geprueft, `${lage}: kein Text war im Kontrast messbar`).toBeGreaterThan(0)
+  const bewegt = await bewegungen(page)
+  expect(bewegt, `${lage}: bei „weniger Bewegung“ bewegt sich noch etwas:${befundListe(bewegt)}`).toEqual([])
 }
 
 export interface Fokuszustand {
@@ -173,8 +183,8 @@ export async function bewegungen(page: Page): Promise<Befund[]> {
         if (stil.animationName !== 'none' && ueberNull(stil.animationDuration)) {
           befunde.push({ element: `${kennung(element)}${pseudo ?? ''}`, detail: `Animation ${stil.animationName} ${stil.animationDuration}` })
         }
+        if (pseudo === null && stil.scrollBehavior === 'smooth') befunde.push({ element: kennung(element), detail: 'scroll-behavior: smooth' })
       }
-      if (getComputedStyle(element).scrollBehavior === 'smooth') befunde.push({ element: kennung(element), detail: 'scroll-behavior: smooth' })
     }
     return befunde
   })

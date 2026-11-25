@@ -1,10 +1,7 @@
 import { expect, test, type Page } from '@playwright/test'
-import { serialisiere } from '../../src/engine'
-import type { Spielzustand } from '../../src/engine'
-import { SPIELSTAND_SCHLUESSEL } from '../../src/spielstand'
 import { neuePartie, volltisch } from '../../src/ui/tisch/__tests__/szenarien'
-import { befundListe, findeAbgeschnittenes, kasten, waagrechterUeberstand } from './messung'
-import { halteUhrAn, oeffne } from './oeffnen'
+import { befundListe, brichtImWort, findeAbgeschnittenes, findeAusserhalbDesBildes, kasten, waagrechterUeberstand } from './messung'
+import { halteUhrAn, legeSpielstand, oeffne } from './oeffnen'
 
 /*
 O11, Feinschliff: Fenster unter den fünf Geräteklassen, hier das kleinste
@@ -16,31 +13,6 @@ deine Schlangen, die 20 px Höhe zurückhielten, und in der Lobby einen Knopf
 */
 
 test.use({ viewport: { width: 568, height: 320 }, hasTouch: true, isMobile: true })
-
-async function legeSpielstand(page: Page, zustand: Spielzustand): Promise<void> {
-  await page.addInitScript(([schluessel, wert]) => window.localStorage.setItem(schluessel, wert), [SPIELSTAND_SCHLUESSEL, serialisiere(zustand)] as const)
-}
-
-/** Bricht der Text des Elements mitten in einem Wort um? */
-const brichtImWort = (page: Page, name: string) =>
-  page.getByRole('button', { name }).evaluate((knopf) => {
-    const bereich = document.createRange()
-    const zeilen = new Set<number>()
-    const laeufer = document.createTreeWalker(knopf, NodeFilter.SHOW_TEXT)
-    while (laeufer.nextNode()) {
-      const text = laeufer.currentNode as Text
-      for (const wort of text.data.matchAll(/\S+/g)) {
-        zeilen.clear()
-        for (let stelle = wort.index; stelle < wort.index + wort[0].length; stelle += 1) {
-          bereich.setStart(text, stelle)
-          bereich.setEnd(text, stelle + 1)
-          zeilen.add(Math.round(bereich.getBoundingClientRect().top))
-        }
-        if (zeilen.size > 1) return true
-      }
-    }
-    return false
-  })
 
 test.describe('O11 (TF-TISCH-004): der Tisch bei 568 × 320', () => {
   test.beforeEach(async ({ page }) => {
@@ -69,7 +41,7 @@ test.describe('O11 (TF-TISCH-004): der Tisch bei 568 × 320', () => {
       return treffer
     })
     expect(ueberlappungen, 'Texte der Kopfleiste übereinander').toEqual([])
-    expect(await brichtImWort(page, 'Zur Lobby'), '„Zur Lobby“ bricht mitten im Wort um').toBe(false)
+    expect(await brichtImWort(lobby), '„Zur Lobby“ bricht mitten im Wort um').toBe(false)
   })
 
   test('O11: deine Schlangen halten keine Höhe zurück, und die Tischfläche schneidet seitlich nichts ab', async ({ page }) => {
@@ -85,16 +57,12 @@ test.describe('O11 (TF-TISCH-004): der Tisch bei 568 × 320', () => {
 })
 
 test.describe('O11 (TF-APP-018): die Lobby bei 568 × 320', () => {
-  /** Alle Knöpfe und, falls offen, die Rückfrage liegen zwischen 0 und 320 px. */
+  /** Kein Bedienelement liegt ausserhalb des Bildes, und eine offene Rückfrage liegt ganz darin. */
   async function erwarteAllesImBild(page: Page, lage: string): Promise<void> {
-    const ausserhalb = await page.evaluate(() =>
-      Array.from(document.querySelectorAll('button, a[href], [role="alertdialog"]'))
-        .filter((element) => (element as HTMLElement).checkVisibility())
-        .map((element) => ({ name: (element.textContent ?? '').trim().slice(0, 40), box: element.getBoundingClientRect() }))
-        .filter(({ box }) => box.top < -1 || box.bottom > window.innerHeight + 1)
-        .map(({ name, box }) => `${name} bei ${Math.round(box.top)}..${Math.round(box.bottom)}`),
-    )
-    expect(ausserhalb, `${lage}: ausserhalb von 0 bis 320 px`).toEqual([])
+    const ausserhalb = await findeAusserhalbDesBildes(page)
+    expect(ausserhalb, `${lage}: ausserhalb von 0 bis 320 px:${befundListe(ausserhalb)}`).toEqual([])
+    const frage = page.getByRole('alertdialog')
+    if ((await frage.count()) > 0) await expect(frage, `${lage}: die Rückfrage liegt ganz im Bild`).toBeInViewport({ ratio: 1 })
     expect(await waagrechterUeberstand(page), `${lage}: Seite breiter als das Fenster`).toBe(0)
   }
 
@@ -111,7 +79,7 @@ test.describe('O11 (TF-APP-018): die Lobby bei 568 × 320', () => {
     await expect(page.getByRole('alertdialog')).toBeVisible()
     await erwarteAllesImBild(page, 'Rückfrage')
     for (const name of ['Weiterspielen', 'Ja, neue Partie', 'Abbrechen']) {
-      expect(await brichtImWort(page, name), `„${name}“ bricht mitten im Wort um`).toBe(false)
+      expect(await brichtImWort(page.getByRole('button', { name })), `„${name}“ bricht mitten im Wort um`).toBe(false)
     }
   })
 })

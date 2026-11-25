@@ -91,7 +91,8 @@ License 1.1), eingebunden in `src/ui/tokens.css`. Keine fremden Server.
   sehr gut lesbar in kleinen Grössen auf dem Handy.
 - **Lilita One** (`--schrift-titel`) nur für Titel, Spielernamen in der
   Kopfleiste und grosse Zahlen. Rund, kräftig und verspielt wie die Beschriftung
-  auf den Karten. Nie für Fliesstext.
+  auf den Karten. Nie für Fliesstext. Seit O11 als WOFF2 (12 statt 28 KB), mit
+  fontTools aus der TTF von Google Fonts verpackt, die Glyphen unverändert.
 
 | Variable | Grösse | Verwendung |
 |---|---|---|
@@ -151,7 +152,8 @@ Schatten sind warm getönt (aus `--farbe-tinte`), nie grau-blau.
   ersetzt und `RUECKSEITE_BILD` in `kartenbilder.ts` auf den neuen Namen
   gesetzt.
 - **Logo und Favicon:** `public/karten/logo.webp` (Logo der Website, ohne
-  durchsichtigen Rand), `public/favicon.ico` (Schlangenkopf aus dem Logo,
+  durchsichtigen Rand, 480 px hoch für dreifache Pixeldichte, 28 KB),
+  `public/favicon.ico` (Schlangenkopf aus dem Logo,
   16 bis 64 px) und `public/apple-touch-icon.png` (ganzes Logo auf
   `--farbe-grund`).
 - **Grössen am Tisch** (Breite der Karte):
@@ -177,8 +179,10 @@ Von oben nach unten, in allen Geräteklassen dieselbe Reihenfolge:
 2. **Tischfläche** (scrollt senkrecht): Gegner mit Name, Zahl der Handkarten,
    Punkten, oberster Karte ihres Ablagestapels und ihren Schlangen; Tischmitte mit
    Nachziehstapel und Zahl, offene Aufgaben; deine Auslage (geheime Aufgabe,
-   Comeback, Risiko-Karten, Ablage). Gegner stehen auf dem Handy untereinander,
-   ab 700 px nebeneinander.
+   Comeback, Risiko-Karten, Ablage), darunter das Protokoll. Gegner stehen auf
+   dem Handy untereinander, ab 700 px nebeneinander. Ab 1100 px steht das
+   Protokoll rechts neben Gegnern, Mitte und Auslage und beginnt oben, damit es
+   ohne Scrollen mehr als zwei, drei Einträge zeigt (O11).
 3. **Unten fest, weiss abgesetzt:** deine Schlangen mit deinen Punkten neben dem
    Titel (scrollen in sich, wenn sie sehr lang werden), deine Hand und die
    Zugleiste. Ab 700 px steht die
@@ -214,6 +218,11 @@ die Schlangen der Gegner stehen als kompakte Zeilen, die seitlich scrollen.
 **Handy quer** (niedriger als 500 px im Querformat): Dein Platz steht rechts
 neben der Tischfläche und reicht über die ganze Höhe, deine Schlangen oben und
 die Hand unten in dieser Spalte; die Kopfleiste steht nur über der Tischfläche.
+Dein Platz ist 26rem breit, höchstens aber 55 % des Fensters. Unter den
+Geräteklassen (568 × 320) bleibt der Tischfläche so genug Breite; die
+Kopfleiste stellt dort die Statuszeile in eine eigene Zeile, statt sie Wort für
+Wort umzubrechen, und ab 340 px Höhe abwärts werden deine Karten und
+Handkarten noch etwas kleiner.
 Alle Karten haben Handygrösse. **Hand:** Die Handkarten teilen sich die Breite
 der Hand (höchstens so gross wie in der Tabelle, mindestens 44 px), damit bei
 fünf und mehr Karten keine angeschnitten ist.
@@ -231,7 +240,10 @@ Weiss und Tinte, `--fokus-ring`) und, wo es sie gibt, Gewählt und Gesperrt.
 - Alle Knöpfe mindestens 44 × 44 px. Gesperrt: halbe Deckkraft, kein Hover,
   und daneben steht, warum.
 - **Segmente** (Gegnerzahl): Knöpfe mit `aria-pressed`, der gewählte in
-  Akzentfarbe.
+  Akzentfarbe und mit Haken (✓). In sehr flachen Fenstern im Querformat
+  (bis 22rem hoch, etwa 568 × 320) steht der Kopf der Lobby als eine Zeile über
+  dem Inhalt, Gegnerzahl und Erweiterung nebeneinander, damit Partie, Wahl und
+  Rückfrage ohne Scrollen ins Bild passen. Knöpfe brechen nie mitten im Wort um.
 - **Schalter** (Erweiterung): `role="switch"`, Schiene mit Knopf und dem Wort
   „An“ oder „Aus“; an ist grün.
 - **Fläche:** weiss, 1 px Linie, grosser Radius, flacher Schatten. Gruppiert
@@ -270,10 +282,13 @@ Weiss und Tinte, `--fokus-ring`) und, wo es sie gibt, Gewählt und Gesperrt.
   das Ende der Schlange 1 von KI-Gegner 1.“), und erst „Ausführen“ spielt sie.
   „Zug beenden“ ist gesperrt, bis die Engine es erlaubt; daneben steht dann
   ihr Grund (`zugBeendenGesperrt`, etwa „Spieler 1 muss erst mindestens eine
-  Karte spielen; …“), auch mit gewählter Karte. Die Möglichkeiten des
+  Karte spielen; …“), auch mit gewählter Karte. Nur in Handy quer entfällt ein
+  gesperrtes „Zug beenden“ samt Grund, solange eine Karte gewählt ist: Dort nahm
+  der dreizeilige Grund der Tischfläche die meiste Höhe (O11); nach
+  „Abbrechen“ oder „Ausführen“ steht es wieder da. Die Möglichkeiten des
   Schlangenfrass stehen hier als Knöpfe. Lehnt die Engine eine Aktion ab, steht
-  ihr Grund in `--farbe-fehler` darunter. Der Satz wird vorgelesen, wenn er
-  sich ändert (`aria-live`).
+  ihr Grund in `--farbe-fehler` darunter. In der Tab-Reihe kommt die Leiste vor
+  deinen Schlangen und deiner Hand.
 - **Schlangenhäutung** (O7): Nach der Karte wählt man die Schlange wie bei der
   Schlangenblockade, dann tippt man die Karten an beiden Enden des Abschnitts
   an. Angeboten sind nur Karten, die mit einer anderen einen Abschnitt bilden,
@@ -319,7 +334,32 @@ Weiss und Tinte, `--fokus-ring`) und, wo es sie gibt, Gewählt und Gesperrt.
 ## Bewegung
 
 Übergänge dauern `--dauer` (150 ms) und entfallen bei „weniger Bewegung“
-(`prefers-reduced-motion`, dann 0 ms).
+(`prefers-reduced-motion`, dann 0 ms). Die KI-Gegner warten dann statt 700 ms
+nur eine kleine feste Mindestpause (100 ms), nicht 0: Sonst verriete die
+Rechenzeit der KI, ob sie einen Farbenschutz hält.
+
+## Barrierefreiheit (O11)
+
+- **Vorlesen:** Am Tisch liest genau eine Stelle von selbst vor, der Ansager
+  (`src/ui/tisch/Ansager.tsx`, nicht zu sehen): der jüngste Schritt aus dem
+  Protokoll (Gegnerzug, Angriff, Abwehr, erfüllte Aufgabe, auch deine eigene
+  Aktion) und, wenn du entscheidest, was jetzt zu tun ist, bei einer
+  Abwehrfrage mit dem Hinweis auf den Farbenschutz. Statuszeile, Satz der
+  Zugleiste und Protokoll lesen nicht selbst vor, sonst hörte man alles doppelt.
+- **Fokus:** Verschwindet der Knopf mit dem Fokus („Ausführen“, deine
+  Handkarten, wenn ein Gegner dran ist), springt der Fokus auf den ersten
+  bedienbaren Knopf der Zugleiste, sonst auf deine erste spielbare Handkarte,
+  sonst auf die Zugleiste selbst (`src/ui/tisch/fokus.ts`). Ein Bereich, der
+  gerade scrollt (Tischfläche, Schlangen als Zeile, Hand, Rangliste), nimmt den
+  Fokus an; sein Ring liegt innen, ebenso eine Linie innen an Knöpfen in einer
+  scrollenden Zeile, deren äusseren Ring die Zeile abschneidet.
+- **Nicht nur Farbe:** Gewählte Gegnerzahl in der Lobby und ein
+  eingeschaltetes „Schneller“ tragen zusätzlich einen Haken (✓), der nicht
+  vorgelesen wird; den Zustand sagen Auswahlfeld und `aria-pressed`.
+- **Gemessen** wird in allen fünf Geräteklassen: axe ohne Befund der Stufen
+  „serious“ und „critical“, Kontrast ab 4,5 : 1, bei „weniger Bewegung“ kein
+  Übergang, sichtbarer Fokus an jedem Tab-Halt (`tests/layout/barrierefreiheit*`,
+  `tastatur.hooks.spec.ts`).
 
 ## Bildquellen und Lizenzen
 
@@ -327,5 +367,5 @@ Weiss und Tinte, `--fokus-ring`) und, wo es sie gibt, Gewählt und Gesperrt.
 |---|---|---|
 | Kartenbilder, Logo | schlangentanz.ch (Autor des Spiels) | Eigentum des Autors, für dieses Spiel |
 | Inter | schlangentanz.ch, Original github.com/rsms/inter | SIL OFL 1.1, `public/schrift/OFL-Inter.txt` |
-| Lilita One | github.com/google/fonts, unverändert | SIL OFL 1.1, `public/schrift/OFL-LilitaOne.txt` |
+| Lilita One | github.com/google/fonts, Glyphen unverändert, als WOFF2 verpackt | SIL OFL 1.1, `public/schrift/OFL-LilitaOne.txt` |
 | Kartenrückseite | selbst gebaut (SVG) | Platzhalter dieses Projekts |

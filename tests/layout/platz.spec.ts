@@ -1,9 +1,7 @@
 import { expect, test, type Page } from '@playwright/test'
-import { serialisiere } from '../../src/engine'
-import { SPIELSTAND_SCHLUESSEL } from '../../src/spielstand'
 import { volltisch } from '../../src/ui/tisch/__tests__/szenarien'
 import { kasten } from './messung'
-import { halteUhrAn, oeffne } from './oeffnen'
+import { halteUhrAn, legeSpielstand, oeffne } from './oeffnen'
 
 /*
 O11, Feinschliff aus der Prüfung von O6 (Hinweis 5): Auf dem Desktop
@@ -17,7 +15,7 @@ test.use({ viewport: { width: 1280, height: 900 }, hasTouch: false, isMobile: fa
 
 async function oeffneVolltisch(page: Page): Promise<void> {
   await halteUhrAn(page)
-  await page.addInitScript(([schluessel, wert]) => window.localStorage.setItem(schluessel, wert), [SPIELSTAND_SCHLUESSEL, serialisiere(volltisch())] as const)
+  await legeSpielstand(page, volltisch())
   await oeffne(page, '/spiel')
 }
 

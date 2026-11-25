@@ -1,15 +1,17 @@
 import { useId } from 'react'
-import type { ReactNode } from 'react'
 import type { SpielAktion, Spielkarte } from '../../engine'
 import { Karte } from '../karten/Karte'
 import type { Bildkarte } from '../karten/kartenbilder'
 import type { TischAnsicht } from '../spiel/tischAnsicht'
 import type { Verlauf } from '../spiel/useSpiel'
-import { abwehrfrageOffen } from './bedienung'
+import { Ansager } from './Ansager'
+import type { AngesagterSchritt } from './Ansager'
+import { abwehrfrageOffen, reaktionenVon, schutzHinweis } from './bedienung'
 import type { Bedienung } from './bedienung'
 import { useLaufendeHaeutung } from './haeutung'
 import type { Haeutung } from './haeutung'
-import { PROTOKOLL } from './protokolltexte'
+import { KnopfMitGrund } from './KnopfMitGrund'
+import { ABWEHRFRAGE, PROTOKOLL } from './protokolltexte'
 import { ReaktionsDialog } from './ReaktionsDialog'
 import { statusText } from './texte'
 import { ZielKnopf } from './Ziele'
@@ -39,6 +41,11 @@ Mit O6: Greift dich ein Gegner an, steht hier die Abwehrfrage, die angesagte
 Karte gross daneben. Spielt ein Gegner, steht hier sein jüngster Schritt aus
 dem Protokoll und „Schneller“. Hast du ausgesetzt, sagt es ein Hinweis, bis du
 wieder handelst.
+
+Mit O11 liest der Ansager hier vor, was geschieht und was du jetzt
+entscheidest; der sichtbare Satz liest nicht mehr selbst vor. Ist eine Karte
+gewählt, trägt die Leiste `st-zugleiste--auswahl`; daran blendet Handy quer
+ein gesperrtes „Zug beenden“ aus (quer.css).
 */
 
 interface ZugleisteEigenschaften {
@@ -53,20 +60,20 @@ interface ZugleisteEigenschaften {
 }
 
 /** Der jüngste Schritt aus dem Protokoll, alle seine Sätze; `null`, wenn noch keiner da ist. */
-function juengsterSchritt(verlauf: Verlauf | undefined): string | null {
+function juengsterSchritt(verlauf: Verlauf | undefined): AngesagterSchritt | null {
   const eintraege = verlauf?.eintraege ?? []
-  const schritt = eintraege.at(-1)?.schritt
-  if (schritt === undefined) return null
+  const nummer = eintraege.at(-1)?.schritt
+  if (nummer === undefined) return null
   let anfang = eintraege.length - 1
-  while (anfang > 0 && eintraege[anfang - 1].schritt === schritt) anfang -= 1
-  return eintraege.slice(anfang).map((eintrag) => eintrag.text).join(' ')
+  while (anfang > 0 && eintraege[anfang - 1].schritt === nummer) anfang -= 1
+  return { nummer, text: eintraege.slice(anfang).map((eintrag) => eintrag.text).join(' ') }
 }
 
 /** Was die Leiste sagt; ohne Entscheidung des Menschen, was gerade geschieht. */
-function satz(ansicht: TischAnsicht, bedienung: Bedienung, karte: Spielkarte | null, fertig: SpielAktion | null, haeutung: Haeutung | null, verlauf: Verlauf | undefined): string {
+function satz(ansicht: TischAnsicht, bedienung: Bedienung, karte: Spielkarte | null, fertig: SpielAktion | null, haeutung: Haeutung | null, schritt: AngesagterSchritt | null): string {
   const { abwerfen } = bedienung
   if (ansicht.status.partiephase === 'Beendet') return statusText(ansicht.status).titel
-  if (bedienung.aktionen.length === 0) return juengsterSchritt(verlauf) ?? ZUGLEISTE.warten
+  if (bedienung.aktionen.length === 0) return schritt?.text ?? ZUGLEISTE.warten
   if (abwerfen > 0) return ABWERFEN.zugleiste(abwerfen)
   if (karte === null) {
     const karten = bedienung.angebote.some((wahl) => wahl.art === 'karte')
@@ -80,23 +87,6 @@ function satz(ansicht: TischAnsicht, bedienung: Bedienung, karte: Spielkarte | n
     return haeutung.gedrueckt === null ? HAEUTUNG.abschnitt : HAEUTUNG.anderesEnde
   }
   return auftrag(bedienung.angebote, karte)
-}
-
-/** Ein Knopf der Leiste; ist er gesperrt, steht sein Grund daneben, und der Knopf verweist darauf (DESIGN.md, „Komponenten“). */
-function KnopfMitGrund({ klasse, grund, onClick, children }: { klasse: string; grund: string | null; onClick?: () => void; children: ReactNode }) {
-  const grundId = useId()
-  return (
-    <span className={grund === null ? 'st-zugleiste-mitgrund' : 'st-zugleiste-mitgrund st-zugleiste-mitgrund--gesperrt'}>
-      {grund !== null && (
-        <span id={grundId} className="st-zugleiste-grund">
-          {grund}
-        </span>
-      )}
-      <button type="button" className={klasse} disabled={onClick === undefined} aria-describedby={grund === null ? undefined : grundId} onClick={onClick}>
-        {children}
-      </button>
-    </span>
-  )
 }
 
 export function Zugleiste({ ansicht, bedienung, fuehreAus, ablehnung, verlauf, zeigeGross, oeffneAbwerfen }: ZugleisteEigenschaften) {
@@ -114,25 +104,32 @@ export function Zugleiste({ ansicht, bedienung, fuehreAus, ablehnung, verlauf, z
   // Beim Ordnen der Häutung stehen hier die Punkte; der Satz verweist ein gesperrtes „Ausführen“ auf seinen Grund.
   const vorschau = haeutung?.stufe === 'ordnen' ? haeutung.vorschau : null
   const satzId = useId()
+  const schritt = juengsterSchritt(verlauf)
+  const text = satz(ansicht, bedienung, karte, fertig, haeutung, schritt)
+  // Was du jetzt entscheidest, liest der Ansager vor; spielt ein Gegner, ist der Satz sein Schritt, und den liest er schon.
+  let jetzt: string | null = null
+  // Die Ansage selbst liest er schon als Schritt vor; dazu, ob du abwehren kannst.
+  if (frage) jetzt = `${ABWEHRFRAGE.titel}: ${schutzHinweis(reaktionenVon(ansicht).abwehren)}`
+  else if (bedienung.aktionen.length > 0) jetzt = text
 
   return (
-    <section className="st-zugleiste" aria-label={ZUGLEISTE.titel}>
+    <>
+    {/* Neben der Leiste, nicht in ihr: Sonst stünde jeder Satz der Leiste darin zweimal. */}
+    <Ansager schritt={schritt} jetzt={jetzt} />
+    {/* tabIndex -1: Steht hier kein bedienbarer Knopf, nimmt die Leiste selbst den Fokus, wenn er sonst verloren ginge (fokus.ts). */}
+    <section className={karte === null ? 'st-zugleiste' : 'st-zugleiste st-zugleiste--auswahl'} aria-label={ZUGLEISTE.titel} tabIndex={-1}>
       {grosseKarte !== null && (
         <div className="st-zugleiste-vorschau" aria-hidden="true">
           <Karte karte={grosseKarte} sizes="150px" />
         </div>
       )}
       <div className="st-zugleiste-inhalt">
-        {verlauf?.ausgesetzt === true && (
-          <p className="st-zugleiste-hinweis" aria-live="polite">
-            {PROTOKOLL.ausgesetzt}
-          </p>
-        )}
+        {verlauf?.ausgesetzt === true && <p className="st-zugleiste-hinweis">{PROTOKOLL.ausgesetzt}</p>}
         {frage ? (
           <ReaktionsDialog ansicht={ansicht} fuehreAus={fuehreAus} />
         ) : (
-          <p id={satzId} className="st-zugleiste-text" aria-live="polite">
-            {satz(ansicht, bedienung, karte, fertig, haeutung, verlauf)}
+          <p id={satzId} className="st-zugleiste-text">
+            {text}
           </p>
         )}
         {vorschau !== null && (
@@ -168,7 +165,7 @@ export function Zugleiste({ ansicht, bedienung, fuehreAus, ablehnung, verlauf, z
           )}
           {ausspielen && (
             // Der Grund der Engine, warum „Zug beenden“ gesperrt ist; er steht daneben, ob eine Karte gewählt ist oder nicht.
-            <KnopfMitGrund klasse="st-knopf" grund={zugBeenden === null ? ansicht.zugBeendenGesperrt : null} onClick={zugBeenden === null ? undefined : () => fuehreAus(zugBeenden)}>
+            <KnopfMitGrund klasse="st-knopf" aktion={zugBeenden} grund={ansicht.zugBeendenGesperrt} fuehreAus={fuehreAus}>
               {ZUGLEISTE.zugBeenden}
             </KnopfMitGrund>
           )}
@@ -197,5 +194,6 @@ export function Zugleiste({ ansicht, bedienung, fuehreAus, ablehnung, verlauf, z
         </div>
       </div>
     </section>
+    </>
   )
 }

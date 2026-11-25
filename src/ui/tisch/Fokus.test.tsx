@@ -1,14 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { screen, within } from '@testing-library/react'
-import type { SpielAktion } from '../../engine'
+import { screen } from '@testing-library/react'
 import { baukasten } from '../../engine/testing/szenario'
 import { erzeugeZufall } from '../../engine/testing/zufall'
 import { erzeugeSzenario } from '../../entwicklung/szenarien'
 import { STRATEGIEN } from '../../ki/strategien'
-import type { Ki } from '../../ki/strategien/strategie'
 import { warte } from '../spiel/__tests__/steuerung'
 import { GEGNER_STRATEGIE, KI_PAUSE } from '../spiel/useSpiel'
-import { handkarte, spieleAm, tippe, tippeZiel, zugleiste } from './__tests__/bedienen'
+import { handkarte, handRegion, kiMit, spieleAm, tippe, tippeZiel, zugleiste } from './__tests__/bedienen'
 
 /*
 O11, Kriterium 1: Wer nur mit der Tastatur spielt, verliert den Fokus nie an
@@ -52,8 +50,7 @@ describe('O11 K1: Der Fokus bleibt am Tisch', () => {
   })
 
   it('O11 K1: nach „Zug beenden“ steht der Fokus auf „Schneller“, danach auf deiner ersten spielbaren Handkarte', () => {
-    const ki: Ki = { name: 'Test-KI', waehle: (_sicht, aktionen) => aktionen.find((aktion: SpielAktion) => aktion.typ === 'ZugBeenden') ?? aktionen[0] }
-    vi.spyOn(STRATEGIEN, GEGNER_STRATEGIE).mockImplementation(() => ki)
+    vi.spyOn(STRATEGIEN, GEGNER_STRATEGIE).mockImplementation(() => kiMit((aktion) => aktion.typ === 'ZugBeenden'))
     spieleAm(
       baukasten({ spielerzahl: 2, erweiterung: false, zufall: erzeugeZufall(83) })
         .hand(0, ['Rot', 'Blau', 'Gelb', 'Grün', 'Violett'])
@@ -71,7 +68,7 @@ describe('O11 K1: Der Fokus bleibt am Tisch', () => {
     expect(fokus()).toBe(zugleiste().getByRole('button', { name: 'Schneller' }))
     warte(KI_PAUSE)
     warte(KI_PAUSE)
-    const hand = within(screen.getByRole('region', { name: 'Deine Hand' }))
+    const hand = handRegion()
     expect(hand.getAllByRole('button')[0], 'Testaufbau: du bist wieder dran').toBeEnabled()
     expect(fokus()).toBe(hand.getAllByRole('button').find((knopf) => !(knopf as HTMLButtonElement).disabled && knopf.hasAttribute('aria-pressed')))
   })

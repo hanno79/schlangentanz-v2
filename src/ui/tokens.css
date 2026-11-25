@@ -35,7 +35,7 @@ Bewusst nur hell (DESIGN.md, „Hell oder dunkel“): `color-scheme: light`.
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/schrift/LilitaOne-Regular.ttf') format('truetype');
+  src: url('/schrift/LilitaOne-Regular.woff2') format('woff2');
 }
 
 :root {
@@ -104,6 +104,8 @@ Bewusst nur hell (DESIGN.md, „Hell oder dunkel“): `color-scheme: light`.
   /* Bedienung */
   --ziel-mindestens: 44px;
   --fokus-ring: 0 0 0 3px var(--farbe-flaeche), 0 0 0 6px var(--farbe-tinte);
+  /* Fokus innen (O11): wo ein Bereich den äusseren Ring abschnitte; mit outline-offset: -3px. */
+  --fokus-linie-innen: 3px solid var(--farbe-tinte);
   --kartenverhaeltnis: 470 / 766;
   --dauer: 150ms;
 }

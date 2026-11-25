@@ -11,18 +11,18 @@ Karte, gewähltes Ziel, Ansage, Protokoll und offene Dialoge wie vorher, und
 die Zugleiste liegt ganz im Bild.
 */
 
-const gespeichert = (page: Page) => page.evaluate((schluessel) => window.localStorage.getItem(schluessel), SPIELSTAND_SCHLUESSEL)
+// Die Adresse des Testhooks steht in jedem `*.hooks.spec.ts` selbst (src/layout_hooks_namensgebung.test.ts).
+async function oeffneSzenario(page: Page, name: string): Promise<void> {
+  await page.goto(`/spiel?szenario=${name}&tempo=sofort`)
+  await expect(page.getByRole('region', { name: 'Zugleiste' })).toBeVisible()
+  await page.evaluate(() => document.fonts.ready.then(() => undefined))
+}
+
 const zugleiste = (page: Page) => page.getByRole('region', { name: 'Zugleiste' })
 const hand = (page: Page) => page.getByRole('region', { name: 'Deine Hand' })
 
 function bediene(info: TestInfo): (element: Locator) => Promise<void> {
   return info.project.use.hasTouch ? (element) => element.tap() : (element) => element.click()
-}
-
-async function oeffneSzenario(page: Page, name: string): Promise<void> {
-  await page.goto(`/spiel?szenario=${name}&tempo=sofort`)
-  await expect(zugleiste(page)).toBeVisible()
-  await page.evaluate(() => document.fonts.ready.then(() => undefined))
 }
 
 /** Dreht das Gerät: Breite und Höhe tauschen. */
@@ -33,19 +33,22 @@ async function drehe(page: Page): Promise<void> {
 }
 
 /**
- * Was nach dem Drehen gleich sein muss, als Text zum Vergleichen. Texte als
- * `textContent`: `innerText` hinge vom Umbruch ab, und der ändert sich beim
- * Drehen gewollt.
+ * Was nach dem Drehen gleich sein muss, als Text zum Vergleichen, in einem
+ * Durchgang im Browser. Texte als `textContent`: `innerText` hinge vom Umbruch
+ * ab, und der ändert sich beim Drehen gewollt.
  */
-async function lage(page: Page): Promise<string> {
-  return JSON.stringify({
-    stand: await gespeichert(page),
-    zugleiste: await zugleiste(page).textContent(),
-    gedrueckt: await page.locator('[aria-pressed="true"]').evaluateAll((knoepfe) => knoepfe.map((knopf) => knopf.getAttribute('aria-label') ?? knopf.textContent)),
-    protokoll: await page.getByRole('log', { name: 'Protokoll' }).textContent(),
-    dialoge: await page.locator('dialog[open]').count(),
-  })
-}
+const lage = (page: Page): Promise<string> =>
+  page.evaluate(
+    (schluessel) =>
+      JSON.stringify({
+        stand: window.localStorage.getItem(schluessel),
+        zugleiste: document.querySelector('[aria-label="Zugleiste"]')?.textContent,
+        gedrueckt: Array.from(document.querySelectorAll('[aria-pressed="true"]'), (knopf) => knopf.getAttribute('aria-label') ?? knopf.textContent),
+        protokoll: document.querySelector('[role="log"]')?.textContent,
+        dialoge: document.querySelectorAll('dialog[open]').length,
+      }),
+    SPIELSTAND_SCHLUESSEL,
+  )
 
 async function erwarteImBild(page: Page, schritt: string): Promise<void> {
   expect(await waagrechterUeberstand(page), `${schritt}: Seite breiter als das Fenster`).toBe(0)
@@ -80,7 +83,9 @@ test.describe('O11 K5: Drehen mitten in der Partie verliert nichts', () => {
     await expect(zugleiste(page)).toContainText('Ansage:')
     await dreheUndVergleiche(page, 'Ansage')
     await tippe(zugleiste(page).getByRole('button', { name: 'Ausführen' }))
-    await expect(zugleiste(page)).not.toContainText('Ansage:')
+    // Der Farbendieb ist eine Ansage: Erst wenn KI-Gegner 1 entschieden hat, steht der Tisch still.
+    await expect(page.getByRole('log', { name: 'Protokoll' })).toContainText(/Farbendieb (wirkt|bleibt ohne Wirkung)/)
+    await expect(page.getByRole('status')).toContainText('Du bist')
     await dreheUndVergleiche(page, 'nach dem Ausführen')
   })
 

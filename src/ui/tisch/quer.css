@@ -9,10 +9,26 @@ nach ihr geladen.
 @media (orientation: landscape) and (max-height: 500px) {
   .spieltisch {
     grid-template-rows: auto minmax(0, 1fr) auto;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
+    /* Höchstens 55 % der Breite: Auf sehr kleinen Schirmen (568 × 320) bliebe der
+       Tischfläche sonst kaum Breite (TF-TISCH-004). Ab 757 px Breite gilt 26rem. */
+    grid-template-columns: minmax(0, 1fr) minmax(0, min(26rem, 55%));
     /* Dein Platz reicht über die ganze Höhe, Kopfleiste und Zugleiste stehen links über
        und unter der Tischfläche: Deinen Schlangen nähme die Leiste sonst die Höhe. */
     grid-template-areas: 'kopf unten' 'flaeche unten' 'zug unten';
+  }
+
+  /* Ist es zu eng (568 × 320, TF-TISCH-004), steht die Statuszeile allein in der ersten
+     Zeile, statt Wort für Wort umzubrechen, und „Zur Lobby“ bleibt ganz. */
+  .st-kopf {
+    flex-wrap: wrap;
+  }
+
+  .st-kopf .st-knopf {
+    flex: none;
+  }
+
+  .st-statuszeile {
+    flex-basis: 7rem;
   }
 
   .st-unten {
@@ -21,6 +37,14 @@ nach ihr geladen.
     border-top: 0;
     border-left: 1px solid var(--farbe-linie);
     box-shadow: var(--schatten-leiste-seite);
+  }
+
+  /* Ist eine Karte gewählt, entfällt ein gesperrtes „Zug beenden“ samt Grund: Hier
+     nähme sein dreizeiliger Grund der Tischfläche den meisten Platz (O5 Hinweis 2,
+     O7 Hinweis 1), und beenden lässt sich der Zug ohnehin nicht. Nach „Abbrechen“
+     oder „Ausführen“ steht es wieder da; ist es bedienbar, bleibt es stehen. */
+  .st-zugleiste--auswahl .st-mitgrund--gesperrt {
+    display: none;
   }
 
   /* Mehr als fünf Handkarten (Abwerfen) brechen hier nicht um, sonst nähme die
@@ -40,5 +64,20 @@ nach ihr geladen.
     --karte-gegner: 28px;
     --karte-eigene: 32px;
     --karte-hand-max: 56px;
+  }
+}
+
+/* Unter den Geräteklassen (568 × 320, TF-TISCH-004): noch kleinere eigene Karten
+   und Handkarten, damit zwei Schlangen samt Fusion über der Hand Platz haben. */
+@media (orientation: landscape) and (max-height: 340px) {
+  .spieltisch {
+    --karte-eigene: 28px;
+    --karte-hand-max: 48px;
+  }
+
+  /* Die Statuszeile allein in der ersten Zeile, Stapel und „Zur Lobby“ zusammen in der
+     zweiten: So braucht die Kopfleiste zwei Zeilen statt drei. */
+  .st-statuszeile {
+    flex-basis: 100%;
   }
 }

@@ -265,3 +265,20 @@ Höhe übrig (Plan O4).
   background: var(--farbe-akzent-hell);
   border: 2px dashed var(--farbe-akzent);
 }
+
+/* Ein Bereich, der gerade scrollt, nimmt den Fokus an (O11 K1, `scrollFokus` in
+   ueberlauf.ts). Sein Fokus liegt innen, denn aussen schnitte ihn der umgebende Bereich
+   ab; der doppelte Selektor schlägt `.spieltisch :focus-visible` und `.rahmen
+   :focus-visible`, gleich in welcher Reihenfolge die Blätter geladen sind. Ein Knopf in
+   einer scrollenden Zeile trägt zusätzlich die Linie innen, weil die Zeile seinen
+   äusseren Ring oben und an den Seiten abschneidet. */
+.st-scrollt.st-scrollt:focus-visible {
+  outline: var(--fokus-linie-innen);
+  outline-offset: -3px;
+  box-shadow: none;
+}
+
+.st-scrollt button:focus-visible {
+  outline: var(--fokus-linie-innen);
+  outline-offset: -3px;
+}

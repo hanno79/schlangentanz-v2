@@ -5,10 +5,9 @@ import { baukasten } from '../../engine/testing/szenario'
 import { erzeugeZufall } from '../../engine/testing/zufall'
 import { erzeugeSzenario } from '../../entwicklung/szenarien'
 import { STRATEGIEN } from '../../ki/strategien'
-import type { Ki } from '../../ki/strategien/strategie'
 import { warte } from '../spiel/__tests__/steuerung'
 import { GEGNER_STRATEGIE, KI_PAUSE } from '../spiel/useSpiel'
-import { ausfuehren, handkarte, spieleAm, tippe, tippeZiel } from './__tests__/bedienen'
+import { ausfuehren, handkarte, kiMit, spieleAm, tippe, tippeZiel } from './__tests__/bedienen'
 
 /*
 O11, Kriterium 2: Was am Tisch geschieht, wird vorgelesen: der Schritt eines
@@ -25,13 +24,6 @@ afterEach(() => {
   vi.useRealTimers()
   vi.restoreAllMocks()
 })
-
-function kiMit(...vorrang: ((aktion: SpielAktion) => boolean)[]): Ki {
-  return {
-    name: 'Test-KI',
-    waehle: (_sicht, aktionen) => vorrang.map((passt) => aktionen.find(passt)).find((aktion) => aktion !== undefined) ?? aktionen[0],
-  }
-}
 
 const ansager = () => screen.getByTestId('ansager')
 

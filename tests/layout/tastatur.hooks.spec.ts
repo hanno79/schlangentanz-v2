@@ -10,15 +10,16 @@ Nach jeder Aktion steht der Fokus auf einem Element (nie auf der leeren Seite),
 und man sieht ihn. Die KI spielt dabei ohne Pause (`tempo=sofort`).
 */
 
+// Die Adresse des Testhooks steht in jedem `*.hooks.spec.ts` selbst (src/layout_hooks_namensgebung.test.ts).
+async function oeffneSzenario(page: Page, name: string): Promise<void> {
+  await page.goto(`/spiel?szenario=${name}&tempo=sofort`)
+  await expect(page.getByRole('region', { name: 'Zugleiste' })).toBeVisible()
+  await page.evaluate(() => document.fonts.ready.then(() => undefined))
+}
+
 const gespeichert = (page: Page) => page.evaluate((schluessel) => window.localStorage.getItem(schluessel), SPIELSTAND_SCHLUESSEL)
 const zugleiste = (page: Page) => page.getByRole('region', { name: 'Zugleiste' })
 const hand = (page: Page) => page.getByRole('region', { name: 'Deine Hand' })
-
-async function oeffneSzenario(page: Page, name: string): Promise<void> {
-  await page.goto(`/spiel?szenario=${name}&tempo=sofort`)
-  await expect(zugleiste(page)).toBeVisible()
-  await page.evaluate(() => document.fonts.ready.then(() => undefined))
-}
 
 test.describe('O11 K1: eine Partie allein mit der Tastatur', () => {
   test('O11 K1: Karte wählen, Ziel wählen, ausführen, Zug beenden, nächste Karte, Escape', async ({ page }) => {
@@ -66,6 +67,8 @@ test.describe('O11 K1: eine Partie allein mit der Tastatur', () => {
     await tabBis(page, 'Abwehren')
     await page.keyboard.press('Enter')
     await expect(page.getByRole('log', { name: 'Protokoll' })).toContainText('Du wehrst')
+    // Danach spielt KI-Gegner 1 weiter; gemessen wird, wenn du wieder dran bist.
+    await expect(page.getByRole('status')).toContainText('Du bist', { timeout: 15_000 })
     await erwarteSichtbarenFokus(page, 'nach der Abwehr')
   })
 
@@ -81,6 +84,8 @@ test.describe('O11 K1: eine Partie allein mit der Tastatur', () => {
     await tabBis(page, 'Ablegen')
     await page.keyboard.press('Enter')
     await expect(dialog).toBeHidden()
+    // Danach spielt KI-Gegner 1; gemessen wird, wenn du wieder dran bist.
+    await expect(page.getByRole('status')).toContainText('Du bist', { timeout: 15_000 })
     await erwarteSichtbarenFokus(page, 'nach dem Ablegen')
   })
 

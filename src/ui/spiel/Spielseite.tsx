@@ -8,7 +8,7 @@ import Verweis from '../lobby/Verweis'
 import VerworfenHinweis from '../lobby/VerworfenHinweis'
 import { Tisch } from '../tisch/Tisch'
 import { useWurfImZeichnen } from '../wurfImZeichnen'
-import { KI_PAUSE, useSpiel } from './useSpiel'
+import { KI_PAUSE, KI_PAUSE_WENIGER_BEWEGUNG, useSpiel } from './useSpiel'
 
 /**
  * Die Seite unter `/spiel`. Ist eine Partie gespeichert, steht hier der
@@ -19,8 +19,8 @@ import { KI_PAUSE, useSpiel } from './useSpiel'
  * denselben Einstellungen. Ohne Partie sagt die Seite das und führt in die Lobby.
  *
  * `pause` und `saatquelle` setzen nur die Testhooks (`?tempo=sofort`,
- * `?seed=`); sonst kommt die Pause aus „weniger Bewegung“ und die Saat der
- * KI-Gegner aus `Math.random`.
+ * `?seed=`); sonst kommt die Pause aus „weniger Bewegung“ (dann nur die
+ * kleine feste Mindestpause) und die Saat der KI-Gegner aus `Math.random`.
  */
 export default function Spielseite({ pause, saatquelle }: { pause?: number; saatquelle?: () => number }) {
   const gespeichert = useGespeichertePartie()
@@ -41,7 +41,7 @@ export default function Spielseite({ pause, saatquelle }: { pause?: number; saat
     }
     // Die feste Saat der Testhooks gilt nur für die Partie, mit der die Seite geöffnet wurde.
     const quelle = neu === null ? saatquelle : undefined
-    return <Partie key={neu?.nummer ?? 0} start={start} pause={pause ?? (wenigerBewegung ? 0 : KI_PAUSE)} saatquelle={quelle} nochEinmal={nochEinmal} />
+    return <Partie key={neu?.nummer ?? 0} start={start} pause={pause ?? (wenigerBewegung ? KI_PAUSE_WENIGER_BEWEGUNG : KI_PAUSE)} saatquelle={quelle} nochEinmal={nochEinmal} />
   }
 
   return (
