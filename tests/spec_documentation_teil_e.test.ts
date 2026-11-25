@@ -37,8 +37,14 @@ describe('GAME_SPEC Teil E — frühere R-Nummern und Verlauf', () => {
 
   it('P0.5h: „Stand und Verlauf“ führt die Antworten vom 24.11.2026 als D68–D79, die leere Teil C und B1', () => {
     const e = teil('E')
-    expect(fehlende(e, ['- **25.11.2026, Task P0.5h:**', 'D68–D79', 'Teil C ist leer', 'C10 und C14', 'B1', 'D54 bleibt unverändert', 'Teil A unverändert.'])).toEqual([])
+    expect(fehlende(e, ['- **25.11.2026, Task P0.5h:**', 'D68–D79', 'Teil C ist leer', 'C10 und C14', 'B1', 'Teil A unverändert.'])).toEqual([])
     // Der neueste Eintrag steht oben.
     expect(e.indexOf('Task P0.5h:'), 'P0.5h steht nicht vor P0.5g').toBeLessThan(e.indexOf('Task P0.5g:'))
+  })
+
+  it('P0.5h, Entscheid des Orchestrators vom 25.11.2026: der Eintrag nennt D54, B2, D68, die Kennzeichnung des Abgeleiteten, den Vielfaltbonus und den Kopf von Teil C', () => {
+    const e = teil('E')
+    expect(fehlende(e, ['Entscheid des Orchestrators vom 25.11.2026', 'D54 ist um die Präzisierung durch D69 ergänzt', 'B2', 'D46', 'D70, D75 und D76', 'Vielfaltbonus', '`src/ki/`'])).toEqual([])
+    expect(e, 'Teil E nennt den Widerspruch in D54 noch als offen').not.toContain('der Widerspruch im Wortlaut ist dem Orchestrator gemeldet')
   })
 })

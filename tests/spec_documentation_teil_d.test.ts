@@ -144,12 +144,12 @@ describe('GAME_SPEC Teil D — Fragen an den Autor und Antworten', () => {
   })
 
   for (const { task, aus, datum: tag, eintraege } of RUECKFRAGEN) {
-    for (const [nummer, { frage, wahl, kern: saetze, verboten, anfang, zitate = [] }] of Object.entries(eintraege)) {
+    for (const [nummer, { frage, wahl, kern: saetze, verboten, anfang, zitate = [], nurTeilD = [] }] of Object.entries(eintraege)) {
       const kern = [...saetze, ...zitate.map((zitat) => `„${zitat}“`)]
       it(`${task}: ${nummer}: Rückfrage aus ${aus} vom ${tag} steht als Regel mit gewählter Möglichkeit in Teil D`, () => {
         const { frage: frageInTeilD, antwort, datum, folge } = eintragD(nummer)
         expect(frageInTeilD, `${nummer}: Frage`).toBe(frage)
-        pruefeKern(nummer, antwort, [...kern, `Antwort des Autors auf eine Rückfrage aus ${aus}, gewählte Möglichkeit: ${wahl}.`], verboten)
+        pruefeKern(nummer, antwort, [...kern, ...nurTeilD, `Antwort des Autors auf eine Rückfrage aus ${aus}, gewählte Möglichkeit: ${wahl}.`], verboten)
         if (anfang) expect(antwort.startsWith(anfang.toLowerCase()), `${nummer}: Antwort beginnt nicht mit „${anfang}“`).toBe(true)
         expect(antwort.endsWith('website folgt.'), `${nummer}: Antwort endet nicht mit „Website folgt.“`).toBe(true)
         expect(datum, `${nummer}: Datum`).toBe(tag)
@@ -207,5 +207,13 @@ describe('GAME_SPEC Teil D — Fragen an den Autor und Antworten', () => {
     expect(datum, 'D48: Datum der Sammelantwort').toBe(DATUM_G)
     expect(folge, 'D48: Folge').toBe('X4')
     pruefeKern('D48', fliesstext(nachtragEintrag('D48').antwort).toLowerCase(), ['Im zweiten Zug nach einem Verdoppler ist sie nicht einsetzbar, weil sich Verdoppler und Comeback-Karte ausschliessen'], ['Website folgt'])
+  })
+
+  // Den Wortlaut von D54 samt Präzisierung durch D69 prüft tests/regelfragen_antworten.test.ts Satz für Satz (ERWARTET_G.G22).
+  it('P0.5h: D54 bleibt Eintrag der Sammelantwort, und der Website-Nachtrag führt die Präzisierung durch D69', () => {
+    const { datum, folge } = eintragD('D54')
+    expect(datum, 'D54: Datum der Sammelantwort').toBe(DATUM_G)
+    expect(folge, 'D54: Folge').toBe('X5')
+    pruefeKern('D54', fliesstext(nachtragEintrag('D54').antwort).toLowerCase(), ['Ein ungenutzt abgeworfener Schlangenkorb liegt dagegen auf dem Ablagestapel; dort greift der Satz, dass er nicht vom Ablagestapel genommen werden kann.'], ['Website folgt'])
   })
 })

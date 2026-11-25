@@ -23,11 +23,9 @@ function abweichungenTeilC(): string[][] {
   return spalten(tabelleMitSpalte(teil('C'), 'Fundstelle'), 'Nr.', 'Fundstelle')
 }
 
-/** Die Pfade unter `src/` in der Spalte „Fundstelle“, die es nicht gibt, als „Cnn: Pfad“. */
-function fundstellenOhneDatei(zeilen: string[][]): string[] {
-  return zeilen.flatMap(([nr, fundstelle]) =>
-    [...fundstelle.matchAll(/`(src\/[^`]+)`/g)].filter(([, pfad]) => !existsSync(pfad)).map(([, pfad]) => `${nr}: ${pfad}`),
-  )
+/** Die Pfade unter `src/` in `text`, die es nicht gibt. */
+function pfadeOhneDatei(text: string): string[] {
+  return [...text.matchAll(/`(src\/[^`]+)`/g)].map(([, pfad]) => pfad).filter((pfad) => !existsSync(pfad))
 }
 
 /** Die Nummern C1 bis C`bis`, die unter „Behoben und gestrichen“ fehlen und nicht in `ausser` stehen. */
@@ -80,11 +78,21 @@ describe('GAME_SPEC Teil C — Abweichungen der Engine', () => {
     expect(fehlende(teil('C'), ['Offene Abweichungen gibt es keine.', 'C21 und C23 (X2b, 23.11.2026)', 'C10 teilweise (X2b, X2c, 23.11.2026)', 'C10 und C14 (X2a, 24.11.2026)'])).toEqual([])
   })
 
-  it('P0.5g: jede Fundstelle in Teil C nennt eine Datei, die es gibt', () => {
-    expect(fundstellenOhneDatei(abweichungenTeilC()), 'Teil C: Fundstellen ohne Datei').toEqual([])
+  // Seit P0.5h über den ganzen Teil C, nicht nur die Spalte „Fundstelle“: Der Schlusssatz nannte `src/kiZug.ts`.
+  it('P0.5g, P0.5h: jeder Pfad in Teil C, auch jede Fundstelle, nennt eine Datei oder einen Ordner, die es gibt', () => {
+    expect(pfadeOhneDatei(teil('C')), 'Teil C: Pfade ohne Datei').toEqual([])
     // Gegenprobe, damit der Test auch bei leerer Tabelle etwas prüft: Ein fehlender Pfad wird gemeldet, ein vorhandener nicht.
-    const probe = [['C98', '`src/engine/gibt_es_nicht.ts`'], ['C99', '`src/engine/index.ts`']]
-    expect(fundstellenOhneDatei(probe), 'Gegenprobe zu den Fundstellen').toEqual(['C98: src/engine/gibt_es_nicht.ts'])
+    expect(pfadeOhneDatei('`src/engine/gibt_es_nicht.ts` `src/engine/index.ts`'), 'Gegenprobe zu den Pfaden').toEqual(['src/engine/gibt_es_nicht.ts'])
+  })
+
+  it('P0.5h: der Kopf von Teil C nennt den Stand vom 24.11.2026, der Schlusssatz die KI unter `src/ki/`', () => {
+    const c = teil('C')
+    expect(fehlende(c, ['Arbeitsliste, Stand 24.11.2026.', '`src/ki/`'])).toEqual([])
+    for (const alt of ['Arbeitsliste, Stand 12.11.2026.', 'nicht umgesetzten Erweiterungsteile']) expect(c, 'Teil C').not.toContain(alt)
+  })
+
+  it('P0.5h: B2 nennt die nach D52 und D77 benannte Farbkarte als einzige Ausnahme von der verdeckten Information', () => {
+    expect(fehlende(teil('B'), ['Einzige Ausnahme ist die Farbkarte, die ein Spieler für Risiko-Aktion 2 benennt: Sie ist eine offene Ansage (D52, D77).'])).toEqual([])
   })
 
   it('P0.5h: die Einleitung von B1 nennt den Stand vom 24.11.2026', () => {
@@ -100,11 +108,13 @@ describe('GAME_SPEC Teil C — Abweichungen der Engine', () => {
     expect(fehlende(aufgaben, ['Prüfung und Einlösen nach A9 (X1, 23.11.2026)', 'alle 15 Bedingungen nach A9 (X2b, X2c, 23.11.2026; X2a, 24.11.2026)'])).toEqual([])
   })
 
-  it('P0.5h: B1 nennt Schlangenkorb, Comeback- und Risiko-Belohnungs-Karten als umgesetzt, mit Task und Datum', () => {
+  it('P0.5h: B1 nennt Schlangenkorb, Comeback- und Risiko-Belohnungs-Karten und den Vielfaltbonus als umgesetzt, mit Task und Datum', () => {
     const erwartet: Record<string, string> = {
       'Schlangenkorb des Glücks': 'ja (X6, 24.11.2026)',
       'Comeback-Karten': 'ja (X4, 24.11.2026)',
       'Risiko-Belohnungs-Karten': 'ja (X5, 24.11.2026)',
+      // Entscheid des Orchestrators vom 25.11.2026: Die Wertung rechnet ihn seit E10, ohne reine Regenbogen-Gruppen seit E10b.
+      Vielfaltbonus: 'ja (E10, 13.11.2026; E10b, 20.11.2026)',
     }
     for (const [bestandteil, digital] of Object.entries(erwartet)) expect(zeileB1(bestandteil), `B1: Zeile „${bestandteil}“`).toBe(digital)
   })

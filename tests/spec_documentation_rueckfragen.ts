@@ -12,8 +12,10 @@
  * `anfang`: womit die Antwort beginnt, wo die Frage ein Ja oder Nein verlangt.
  * `zitate`: Sätze der Website ohne Anführungszeichen; sie stehen wörtlich in Teil A
  *   und in „…“ in der Antwort, in Teil D und im Website-Nachtrag.
+ * `nurTeilD`: Sätze nur in Teil D, etwa der Verweis auf einen anderen Eintrag oder
+ *   die Kennzeichnung, woraus ein nicht gewählter, sondern abgeleiteter Satz folgt.
  */
-export type Rueckfrage = { frage: string; wahl: string; kern: string[]; verboten: string[]; anfang?: 'Ja:' | 'Nein:'; zitate?: string[] }
+export type Rueckfrage = { frage: string; wahl: string; kern: string[]; verboten: string[]; anfang?: 'Ja:' | 'Nein:'; zitate?: string[]; nurTeilD?: string[] }
 
 /** Rückfragen, die `task` in Teil D aufnimmt: alle aus der Prüfung oder Umsetzung von `aus` (zugleich die Spalte „Folge“), alle vom selben Tag. */
 export type Rueckfragen = { task: string; aus: string; datum: string; eintraege: Record<string, Rueckfrage> }
@@ -196,11 +198,14 @@ export const RUECKFRAGEN: Rueckfragen[] = [
         kern: [
           'Auch mit der Zusatzaktion „Eine Sonderkarte aus der Hand ausspielen“ der Comeback-Karte darf der Spieler eine Sonderkarte wirkungslos auf den eigenen Ablagestapel legen, etwa einen Farbenschutz',
           'ein Farbenschutz darf immer wirkungslos abgelegt werden',
+          'Dasselbe gilt für die Zusatzaktionen des Schlangenkorbs',
         ],
         // Gegenprobe: die verworfenen Lesarten „nur auf dem regulären Platz“ und „wer nur Farbenschutz hält, beendet den Zug“.
         verboten: ['nur auf dem regulären Platz', 'beendet den Zug', 'darf nicht wirkungslos'],
         anfang: 'Ja:',
         zitate: ['Eine Sonderkarte aus der Hand ausspielen'],
+        // Entscheid des Orchestrators vom 25.11.2026: Verweis auf D46.
+        nurTeilD: ['denn nach D46 sind es „dieselben drei wie bei der Comeback-Karte“'],
       },
     },
   },
@@ -228,6 +233,7 @@ export const RUECKFRAGEN: Rueckfragen[] = [
           'ein Einsatz ohne Tausch ist nicht möglich',
           'Ist kein Tausch möglich, ist der Bonus nicht wählbar',
         ],
+        nurTeilD: ['Abgeleitet aus A7.10 („Wähle einen der verfügbaren Bonuseffekte“): Ist kein Tausch möglich'],
         // Gegenprobe: die verworfene Lesart, nach der auch null Tausche genügen.
         verboten: ['auch ohne Tausch nutzen', 'null Karten', 'kein Tausch nötig'],
         zitate: ['Wähle einen der verfügbaren Bonuseffekte'],
@@ -288,8 +294,10 @@ export const RUECKFRAGEN: Rueckfragen[] = [
         wahl: '„Freiwillig“',
         kern: [
           'Bei Erfolg darf der Spieler tauschen, muss aber nicht',
-          'Verzichtet er, bleibt die Schlange unverändert; die aufgedeckte Farbkarte kommt auch dann auf die eigene Hand',
+          'Verzichtet er, bleibt die Schlange unverändert.',
+          'Die aufgedeckte Farbkarte kommt auch dann auf die eigene Hand',
         ],
+        nurTeilD: ['Abgeleitet aus D51: Die aufgedeckte Farbkarte'],
         // Gegenprobe: die verworfene Lesart, nach der der Tausch bei Erfolg Pflicht ist.
         verboten: ['muss den Tausch ausführen', 'tauscht in jedem Fall'],
         zitate: ['Du darfst den Tausch ausführen'],
@@ -300,7 +308,9 @@ export const RUECKFRAGEN: Rueckfragen[] = [
         kern: [
           'zählt sie für die Pflicht, in jedem Zug mindestens eine Karte zu spielen',
           'Es zählt die gelegte Farbkarte, nicht der Einsatz der Risiko-Karte',
+          'Die Karte bleibt zusätzlich und belegt nicht den Platz der Farbkarte des Zuges',
         ],
+        nurTeilD: ['Abgeleitet aus A8.2 („Zusätzliche Farbkarte spielen“): Die Karte bleibt zusätzlich'],
         // Gegenprobe: die verworfene Lesart, nach der die Zusatzkarte nicht zählt, und die, nach der schon der Einsatz genügt.
         verboten: ['zählt nicht für die Pflicht', 'der Einsatz der Risiko-Karte genügt'],
         anfang: 'Ja:',
