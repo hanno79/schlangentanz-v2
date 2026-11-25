@@ -97,8 +97,10 @@ test.describe('O11 K1 (TF-TISCH-044): Fokus an langen Gegnerschlangen', () => {
     await oeffne(page, '/spiel')
     await tabBis(page, 'Sonderkarte Schlangenblockade')
     await page.keyboard.press('Enter')
-    await tabBis(page, 'KI-Gegner 1, Schlange 1 wählen', { rueckwaerts: true })
+    // Der Knopf „Schlange wählen“ liegt über der ganzen Zeile und reicht unter das Zeichen; das verdeckt nichts (Prüfung O11, Iteration 2).
+    await page.getByRole('button', { name: 'KI-Gegner 1, Schlange 1 wählen' }).focus()
     await page.keyboard.press('Enter')
+    await expect(page.getByRole('button', { name: 'KI-Gegner 1, Schlange 1: vor Karte 1' })).toBeVisible()
     // Eine ganze Runde durch die 24 Lücken und zurück zur Karte, vorwärts und rückwärts.
     await tabBis(page, 'Sonderkarte Schlangenblockade', { hoechstens: 120 })
     await tabBis(page, 'Sonderkarte Schlangenblockade', { rueckwaerts: true, hoechstens: 120 })

@@ -1,5 +1,6 @@
 import { useId } from 'react'
 import type { GegnerAnsicht } from '../spiel/tischAnsicht'
+import { GegnerAuslage } from './Auslage'
 import { KARTENGROESSE } from './groessen'
 import { Ablage, Grube, Punkte, Schlangen } from './Schlange'
 import { TISCH, handkartenText } from './texte'
@@ -8,7 +9,8 @@ import { SpielerZiel } from './Ziele'
 /**
  * Ein Gegner oben am Tisch: Name, Zahl seiner Handkarten, sein Zwischenstand,
  * oberste Karte seines Ablagestapels, eine Grube vor ihm und seine Schlangen. Seine Handkarten
- * stehen nur als Zahl da; die Sicht kennt sie gar nicht (B2). Bietet eine
+ * stehen nur als Zahl da; die Sicht kennt sie gar nicht (B2). Mit Erweiterung
+ * steht dazu seine offene Auslage samt erfüllten Aufgaben (O10). Bietet eine
  * Schlangengrube ihn als Ziel an, steht im Kopf „Wählen“ (O5).
  */
 export function Gegner({ gegner }: { gegner: GegnerAnsicht }) {
@@ -22,6 +24,7 @@ export function Gegner({ gegner }: { gegner: GegnerAnsicht }) {
         {gegner.amZug && <span className="st-abzeichen">{TISCH.istDran}</span>}
         <span className="st-gegner-info">{handkartenText(gegner.handkarten)}</span>
         <Punkte punkte={gegner.punkte} />
+        <GegnerAuslage gegner={gegner} />
         <SpielerZiel spielerId={gegner.id} name={gegner.name} />
         <Ablage ablage={gegner.ablage} eigene={false} />
         {gegner.gruben.map((grube) => (

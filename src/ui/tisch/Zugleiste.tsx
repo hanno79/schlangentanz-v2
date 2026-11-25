@@ -2,7 +2,7 @@ import { useId } from 'react'
 import type { SpielAktion, Spielkarte } from '../../engine'
 import { Karte } from '../karten/Karte'
 import type { Bildkarte } from '../karten/kartenbilder'
-import type { TischAnsicht } from '../spiel/tischAnsicht'
+import type { EigeneAnsicht, TischAnsicht } from '../spiel/tischAnsicht'
 import type { Verlauf } from '../spiel/useSpiel'
 import { Ansager } from './Ansager'
 import type { AngesagterSchritt } from './Ansager'
@@ -10,12 +10,14 @@ import { abwehrfrageOffen, reaktionenVon, schutzHinweis } from './bedienung'
 import type { Bedienung } from './bedienung'
 import { useLaufendeHaeutung } from './haeutung'
 import type { Haeutung } from './haeutung'
+import { entscheidungsAnsage, entscheidungsFrage, kontextAmTisch } from './entscheidungstexte'
+import { AUFTRAG, ERWEITERUNG } from './erweiterungstexte'
 import { KnopfMitGrund } from './KnopfMitGrund'
+import { Auslageknoepfe, Moeglichkeiten } from './Moeglichkeiten'
 import { ABWEHRFRAGE, PROTOKOLL, ansageSatz } from './protokolltexte'
 import { ReaktionsDialog } from './ReaktionsDialog'
 import { statusText } from './texte'
-import { ZielKnopf } from './Ziele'
-import { ABWERFEN, FRASS_OPTION, HAEUTUNG, ZUGLEISTE, ansage, auftrag, tischnamen } from './zugtexte'
+import { ABWERFEN, HAEUTUNG, ZUGLEISTE, ansage, auftrag, tischnamen } from './zugtexte'
 
 /*
 Die Zugleiste (Plan O5, DESIGN.md „Zugleiste“): ein Satz, was jetzt zu tun ist,
@@ -46,6 +48,13 @@ Mit O11 liest der Ansager hier vor, was geschieht und was du jetzt
 entscheidest; der sichtbare Satz liest nicht mehr selbst vor. Ist eine Karte
 gewählt, trägt die Leiste `st-zugleiste--auswahl`; daran blendet Handy quer
 ein gesperrtes „Zug beenden“ aus (quer.css).
+
+Mit O10 stehen hier die Knöpfe der Auslage (Comeback-Karte, Risiko-Karte) und
+„Zwei Karten abwerfen, drei ziehen“, die festen Möglichkeiten von Risiko-Karte,
+Schlangenkorb und Entscheidungen (`Moeglichkeiten.tsx`) und die Frage einer
+Entscheidung, die die Engine dir stellt; solange du entscheidest, gibt es kein
+„Zug beenden“. Hast du oder ein Gegner eben eine Aufgabe erfüllt, meldet es
+eine eigene Zeile, bis du wieder handelst.
 */
 
 interface ZugleisteEigenschaften {
@@ -69,37 +78,54 @@ function juengsterSchritt(verlauf: Verlauf | undefined): AngesagterSchritt | nul
   return { nummer, text: eintraege.slice(anfang).map((eintrag) => eintrag.text).join(' ') }
 }
 
+/** Die Ansage einer fertigen Auswahl; eine Entscheidung sagt sie nach ihrer Art an (O10). */
+function ansageDer(fertig: SpielAktion, ansicht: TischAnsicht, bedienung: Bedienung): string {
+  const text = fertig.typ === 'Entscheiden' ? entscheidungsAnsage(fertig.wahl, kontextAmTisch(ansicht)) : ansage(fertig, tischnamen(ansicht))
+  // D44: Nach einem Tausch des Korbs kann noch ein zweiter folgen.
+  const nochEiner = bedienung.angebote.some((wahl) => wahl.art === 'tausch') ? ` ${AUFTRAG.zweiterTausch}` : ''
+  return `${ZUGLEISTE.ansage} ${text}${nochEiner}`
+}
+
 /** Was die Leiste sagt; ohne Entscheidung des Menschen, was gerade geschieht. */
 function satz(ansicht: TischAnsicht, bedienung: Bedienung, karte: Spielkarte | null, fertig: SpielAktion | null, haeutung: Haeutung | null, schritt: AngesagterSchritt | null): string {
-  const { abwerfen } = bedienung
+  const { abwerfen, auswahl } = bedienung
   if (ansicht.status.partiephase === 'Beendet') return statusText(ansicht.status).titel
   if (bedienung.aktionen.length === 0) return schritt?.text ?? ZUGLEISTE.warten
   if (abwerfen > 0) return ABWERFEN.zugleiste(abwerfen)
-  if (karte === null) {
+  if (auswahl.length === 0) {
+    if (bedienung.entscheidet) return entscheidungsFrage(kontextAmTisch(ansicht))
     const karten = bedienung.angebote.some((wahl) => wahl.art === 'karte')
     if (karten && bedienung.zugBeenden !== null) return ZUGLEISTE.karteOderBeenden
     return karten ? ZUGLEISTE.karteWaehlen : ZUGLEISTE.nurBeenden
   }
-  if (fertig !== null) return `${ZUGLEISTE.ansage} ${ansage(fertig, tischnamen(ansicht))}`
+  if (fertig !== null) return ansageDer(fertig, ansicht, bedienung)
   if (haeutung !== null) {
     // Ohne neue Farbfolge sagt der Satz zugleich, warum „Ausführen“ gesperrt ist (D26).
     if (haeutung.stufe === 'ordnen') return `${HAEUTUNG.ordnen} ${HAEUTUNG.gleicheFolge}`
     return haeutung.gedrueckt === null ? HAEUTUNG.abschnitt : HAEUTUNG.anderesEnde
   }
-  return auftrag(bedienung.angebote, karte)
+  if (bedienung.tausch.hatGemerkt) return AUFTRAG.tauschHand
+  return auftrag(bedienung.angebote, karte, auswahl)
+}
+
+/** Die gewählte Karte: aus der Hand oder aus deiner Auslage (Comeback- und Risiko-Karte). */
+function gewaehlteKarte(ich: EigeneAnsicht, karteId: string | null): { handkarte: Spielkarte | null; bild: Bildkarte | null } {
+  if (karteId === null) return { handkarte: null, bild: null }
+  const handkarte = ich.hand.find((karte) => karte.id === karteId) ?? null
+  const auslage = [...(ich.comeback === null ? [] : [ich.comeback.karte]), ...ich.risikoKarten].find((karte) => karte.id === karteId) ?? null
+  return { handkarte, bild: handkarte ?? auslage }
 }
 
 export function Zugleiste({ ansicht, bedienung, fuehreAus, ablehnung, verlauf, zeigeGross, oeffneAbwerfen }: ZugleisteEigenschaften) {
-  const karte = ansicht.ich.hand.find((handkarte) => handkarte.id === bedienung.karteId) ?? null
+  const { handkarte: karte, bild: gewaehlt } = gewaehlteKarte(ansicht.ich, bedienung.karteId)
   const haeutung = useLaufendeHaeutung()
   const frage = abwehrfrageOffen(ansicht)
-  // Gross steht die gewählte Handkarte, während der Abwehrfrage die angesagte Karte.
-  const grosseKarte = frage ? (ansicht.status.schwebend?.angesagt ?? null) : karte
+  // Gross steht die gewählte Karte, während der Abwehrfrage die angesagte Karte.
+  const grosseKarte = frage ? (ansicht.status.schwebend?.angesagt ?? null) : gewaehlt
   // „Schneller“ nur, solange ein Gegner spielt (O6 K1).
   const gegnerSpielt = ansicht.aktionen.length === 0 && ansicht.status.partiephase !== 'Beendet'
-  // Nur solange gewählt wird; die gewählte Möglichkeit nennt danach der Satz, und „Abbrechen“ führt zurück.
-  const optionen = bedienung.angebote.filter((wahl) => wahl.art === 'frass')
-  const { zugBeenden, abwerfen, ausspielen } = bedienung
+  const { zugBeenden, abwerfen, ausspielen, entscheidet } = bedienung
+  const etwasGewaehlt = bedienung.auswahl.length > 0
   const fertig = haeutung?.fertig ?? bedienung.fertig
   // Beim Ordnen der Häutung stehen hier die Punkte; der Satz verweist ein gesperrtes „Ausführen“ auf seinen Grund.
   const vorschau = haeutung?.stufe === 'ordnen' ? haeutung.vorschau : null
@@ -121,7 +147,7 @@ export function Zugleiste({ ansicht, bedienung, fuehreAus, ablehnung, verlauf, z
     {/* Neben der Leiste, nicht in ihr: Sonst stünde jeder Satz der Leiste darin zweimal. */}
     <Ansager schritt={schritt} jetzt={jetzt} />
     {/* tabIndex -1: Steht hier kein bedienbarer Knopf, nimmt die Leiste selbst den Fokus, wenn er sonst verloren ginge (fokus.ts). */}
-    <section className={karte === null ? 'st-zugleiste' : 'st-zugleiste st-zugleiste--auswahl'} aria-label={ZUGLEISTE.titel} tabIndex={-1}>
+    <section className={etwasGewaehlt ? 'st-zugleiste st-zugleiste--auswahl' : 'st-zugleiste'} aria-label={ZUGLEISTE.titel} tabIndex={-1}>
       {grosseKarte !== null && (
         <div className="st-zugleiste-vorschau" aria-hidden="true">
           <Karte karte={grosseKarte} sizes="150px" />
@@ -129,6 +155,12 @@ export function Zugleiste({ ansicht, bedienung, fuehreAus, ablehnung, verlauf, z
       )}
       <div className="st-zugleiste-inhalt">
         {verlauf?.ausgesetzt === true && <p className="st-zugleiste-hinweis">{PROTOKOLL.ausgesetzt}</p>}
+        {verlauf !== undefined && verlauf.aufgabe !== null && (
+          // Sichtbar gemeldet (O10 K2); vorgelesen hat es der Ansager mit dem Schritt schon.
+          <p className="st-zugleiste-meldung" role="status" aria-live="off" aria-label={ERWEITERUNG.aufgabeErfuellt}>
+            {verlauf.aufgabe}
+          </p>
+        )}
         {frage ? (
           <ReaktionsDialog ansicht={ansicht} frage={ansage ?? ''} fuehreAus={fuehreAus} />
         ) : (
@@ -147,16 +179,10 @@ export function Zugleiste({ ansicht, bedienung, fuehreAus, ablehnung, verlauf, z
             {ablehnung}
           </p>
         )}
-        {optionen.length > 0 && (
-          <div className="st-zugleiste-optionen">
-            {optionen.map((wahl) => (
-              <ZielKnopf key={wahl.option} wahl={wahl} name={FRASS_OPTION[wahl.option]} klasse="st-ziel--option">
-                {FRASS_OPTION[wahl.option]}
-              </ZielKnopf>
-            ))}
-          </div>
-        )}
+        {/* Nur solange gewählt wird; die gewählte Möglichkeit nennt danach der Satz, und „Abbrechen“ führt zurück. */}
+        <Moeglichkeiten ansicht={ansicht} bedienung={bedienung} />
         <div className="st-zugleiste-knoepfe">
+          <Auslageknoepfe ansicht={ansicht} bedienung={bedienung} />
           {verlauf !== undefined && gegnerSpielt && (
             <button type="button" className="st-knopf" aria-pressed={verlauf.schneller} onClick={verlauf.schalteSchneller}>
               {PROTOKOLL.schneller}
@@ -167,17 +193,19 @@ export function Zugleiste({ ansicht, bedienung, fuehreAus, ablehnung, verlauf, z
               {ZUGLEISTE.kartenWaehlen}
             </button>
           )}
-          {ausspielen && (
+          {ausspielen && !entscheidet && (
             // Der Grund der Engine, warum „Zug beenden“ gesperrt ist; er steht daneben, ob eine Karte gewählt ist oder nicht.
             <KnopfMitGrund klasse="st-knopf" aktion={zugBeenden} grund={ansicht.zugBeendenGesperrt} fuehreAus={fuehreAus}>
               {ZUGLEISTE.zugBeenden}
             </KnopfMitGrund>
           )}
-          {karte !== null && (
+          {etwasGewaehlt && (
             <>
-              <button type="button" className="st-knopf st-knopf--leise" onClick={() => zeigeGross(karte)}>
-                {ZUGLEISTE.ansehen}
-              </button>
+              {gewaehlt !== null && (
+                <button type="button" className="st-knopf st-knopf--leise" onClick={() => zeigeGross(gewaehlt)}>
+                  {ZUGLEISTE.ansehen}
+                </button>
+              )}
               <button type="button" className="st-knopf" onClick={bedienung.hebeAuf}>
                 {ZUGLEISTE.abbrechen}
               </button>

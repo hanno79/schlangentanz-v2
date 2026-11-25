@@ -4,16 +4,17 @@ import './karten.css'
 import './quer.css'
 import './bedienung.css'
 import './protokoll.css'
+import './erweiterung.css'
 import { useState } from 'react'
 import type { SpielAktion } from '../../engine'
 import { Grossansicht } from '../karten/Grossansicht'
-import { Karte, Kartenrueckseite } from '../karten/Karte'
+import { Kartenrueckseite } from '../karten/Karte'
 import type { Bildkarte } from '../karten/kartenbilder'
-import { kartenname } from '../karten/kartentexte'
 import Verweis from '../lobby/Verweis'
 import type { Haeutungsvorschauer } from '../spiel/haeutungsvorschau'
-import type { EigeneAnsicht, StatusAnsicht, TischAnsicht } from '../spiel/tischAnsicht'
+import type { StatusAnsicht, TischAnsicht } from '../spiel/tischAnsicht'
 import type { Verlauf } from '../spiel/useSpiel'
+import { Aufgedeckt, Auslage } from './Auslage'
 import { useBedienung, ZielKontext } from './bedienung'
 import { Gegner } from './Gegner'
 import { HaeutungKontext, useHaeutung } from './haeutung'
@@ -25,7 +26,7 @@ import { UeberhandDialog } from './UeberhandDialog'
 import { Weiter } from './Weiter'
 import { KARTENGROESSE } from './groessen'
 import { Punkte, Schlangen } from './Schlange'
-import { TISCH, geheimeAufgabeName, statusText } from './texte'
+import { TISCH, statusText } from './texte'
 import { NeueSchlangeZiel } from './Ziele'
 import { Zugleiste } from './Zugleiste'
 import { Zugprotokoll } from './Zugprotokoll'
@@ -65,7 +66,7 @@ interface TischEigenschaften {
 }
 
 export function Tisch({ ansicht, fuehreAus, ablehnung, haeutungsVorschau, verlauf }: TischEigenschaften) {
-  const bedienung = useBedienung(ansicht.aktionen)
+  const bedienung = useBedienung(ansicht.aktionen, ansicht.entscheidung?.art ?? null)
   const haeutung = useHaeutung(bedienung, ansicht, haeutungsVorschau)
   const [gross, setzeGross] = useState<Bildkarte | null>(null)
   // Der Dialog zum Abwerfen ist offen, bis du ihn für diesen Stand schliesst.
@@ -165,6 +166,7 @@ function Mitte({ ansicht, zeigeGross }: { ansicht: TischAnsicht; zeigeGross: (ka
           <span className="st-leer">{TISCH.nachziehstapelLeer}</span>
         )}
       </div>
+      <Aufgedeckt ansicht={ansicht} />
       {ansicht.erweiterung && (
         <section className="st-aufgaben" aria-label={TISCH.offeneAufgaben}>
           <h2 className="st-bereichstitel">{TISCH.offeneAufgaben}</h2>
@@ -177,34 +179,6 @@ function Mitte({ ansicht, zeigeGross }: { ansicht: TischAnsicht; zeigeGross: (ka
           </ul>
         </section>
       )}
-    </section>
-  )
-}
-
-/** Was mit Erweiterung offen vor dem Menschen liegt: geheime Aufgabe, Comeback- und Risiko-Karten (A4). */
-function Auslage({ ich, zeigeGross }: { ich: EigeneAnsicht; zeigeGross: (karte: Bildkarte) => void }) {
-  return (
-    <section className="st-auslage" aria-label={TISCH.auslage}>
-      <h2 className="st-bereichstitel">{TISCH.auslage}</h2>
-      <ul className="st-kartenreihe">
-        {ich.geheimeAufgabe !== null && (
-          <li className="st-mit-unterschrift">
-            <GrossKnopf karte={ich.geheimeAufgabe} name={geheimeAufgabeName(kartenname(ich.geheimeAufgabe))} zeigeGross={zeigeGross} />
-            <span>{TISCH.geheim}</span>
-          </li>
-        )}
-        {ich.comeback !== null && (
-          <li className="st-mit-unterschrift">
-            <Karte karte={ich.comeback.karte} sizes={KARTENGROESSE.eigene} />
-            {ich.comeback.verbraucht && <span>{TISCH.verbraucht}</span>}
-          </li>
-        )}
-        {ich.risikoKarten.map((karte) => (
-          <li key={karte.id}>
-            <Karte karte={karte} sizes={KARTENGROESSE.eigene} />
-          </li>
-        ))}
-      </ul>
     </section>
   )
 }

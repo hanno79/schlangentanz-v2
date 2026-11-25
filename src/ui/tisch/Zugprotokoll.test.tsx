@@ -89,7 +89,7 @@ describe('O6 K1: Reihenfolge im Protokoll', () => {
       { schritt: 2, text: 'Du wehrst Schlangengrube mit Farbenschutz ab.' },
       { schritt: 2, text: 'Schlangengrube bleibt ohne Wirkung.' },
     ]
-    render(<Zugprotokoll verlauf={{ eintraege, ausgesetzt: false, schneller: false, schalteSchneller: () => {} }} />)
+    render(<Zugprotokoll verlauf={{ eintraege, ausgesetzt: false, aufgabe: null, schneller: false, schalteSchneller: () => {} }} />)
     const zeilen = protokoll().getAllByRole('listitem')
     expect(zeilen.map((zeile) => zeile.textContent)).toEqual([eintraege[1].text, eintraege[2].text, eintraege[0].text])
     expect(zeilen.map((zeile) => zeile.classList.contains('st-protokoll-eintrag--neu'))).toEqual([true, true, false])

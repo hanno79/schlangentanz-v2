@@ -8,6 +8,8 @@ import { wahlSchluessel, wegZu } from '../spiel/auswahl'
 import type { Wahl } from '../spiel/auswahl'
 import { vorschauFuer } from '../spiel/haeutungsvorschau'
 import { tischAnsicht } from '../spiel/tischAnsicht'
+import type { TischAnsicht } from '../spiel/tischAnsicht'
+import { aktionMit } from './__tests__/bedienen'
 import { Tisch } from './Tisch'
 
 /*
@@ -27,11 +29,11 @@ Ordnen prüfen die Tests von O7.
 
 afterEach(cleanup)
 
-function zeichne(zustand: Spielzustand) {
+/** Zeichnet den Tisch mit dieser Sicht; die Aktionen darin sind die Objekte, die „Ausführen“ liefern muss. */
+function zeichne(zustand: Spielzustand, ansicht: TischAnsicht) {
   const fuehreAus = vi.fn<(aktion: SpielAktion) => void>()
-  const ansicht = tischAnsicht(zustand)
   render(<Tisch ansicht={ansicht} fuehreAus={fuehreAus} ablehnung={null} haeutungsVorschau={vorschauFuer(zustand)} />)
-  return { fuehreAus, art: ansicht.entscheidung?.art ?? null }
+  return fuehreAus
 }
 
 /** Das eine bedienbare Element für diese Wahl; ein gesperrtes zählt nicht. */
@@ -83,12 +85,14 @@ function jeTyp(aktionen: readonly SpielAktion[], zufall: () => number): SpielAkt
 
 /** Spielt jede Art von Aktion des Menschen am Tisch; liefert die Typen, die ganz gespielt wurden. */
 function pruefeLage(zustand: Spielzustand, zufall: () => number, name: string): string[] {
-  const aktionen = ermittleAktionen(zustand)
+  const ansicht = tischAnsicht(zustand)
+  const { aktionen } = ansicht
+  expect(aktionen, `${name}: die Sicht nennt genau die Aktionen der Engine`).toEqual(ermittleAktionen(zustand))
   expect(aktionen.length, `${name}: die Engine bietet dir nichts an`).toBeGreaterThan(0)
   const gespielt: string[] = []
   for (const aktion of jeTyp(aktionen, zufall)) {
-    const { fuehreAus, art } = zeichne(zustand)
-    const weg = geheWeg(aktion, art)
+    const fuehreAus = zeichne(zustand, ansicht)
+    const weg = geheWeg(aktion, ansicht.entscheidung?.art ?? null)
     if (weg === 'ganz') {
       if (fuehreAus.mock.calls.length === 0) bestaetige()
       expect(fuehreAus.mock.calls.map(([gespielteAktion]) => gespielteAktion), `${name}: ${aktion.typ}`).toEqual([aktion])
@@ -122,6 +126,11 @@ describe('O10 (Vorrang): Mit Erweiterung hängt der Mensch nie fest', () => {
     const lagen: [string, Spielzustand][] = ['korb-allein', 'korb-ziehen', 'korb-tauschen', 'korb-entfernen', 'korb-aktionen', 'comeback-bedingung', 'comeback-abwerfen-ziehen', 'risiko-erfolg', 'risiko-misserfolg', 'risiko-du-beguenstigt'].map(
       (name) => [name, erzeugeSzenario(name)],
     )
+    // „Zwei Karten abwerfen, drei ziehen“ gibt es erst nach dem Einsatz der Comeback-Karte oder dem Bonus des Korbs (D46, D49).
+    const comeback = erzeugeSzenario('comeback-abwerfen-ziehen')
+    lagen.push(['comeback-abwerfen-ziehen nach dem Einsatz', anwendeAktion(comeback, aktionMit(comeback, (a) => a.typ === 'ComebackEinsetzen')).zustand])
+    const korb = erzeugeSzenario('korb-aktionen')
+    lagen.push(['korb-aktionen nach dem Bonus', anwendeAktion(korb, aktionMit(korb, (a) => a.typ === 'SchlangenkorbSpielen' && a.bonus.art === 'aktionen')).zustand])
     // Dazu jede Entscheidung, die eine Risiko-Aktion dem Spieler am Zug stellt.
     const risiko = erzeugeSzenario('risiko-erfolg')
     for (const aktion of ermittleAktionen(risiko).filter((a) => a.typ === 'RisikoKarteSpielen')) {

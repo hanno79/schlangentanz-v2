@@ -48,9 +48,9 @@ type Schritt = { zugleiste: string | RegExp } | { hand: string | RegExp } | { zi
 
 /* Je Weg die Schritte bis vor „Ausführen“, mit den zugänglichen Namen der Knöpfe und Ziele. */
 const WEGE: { name: string; szenario: string; schritte: Schritt[] }[] = [
-  { name: 'Comeback-Karte', szenario: 'comeback-bedingung', schritte: [{ zugleiste: 'Comeback-Karte einsetzen' }] },
-  { name: 'Risiko-Aktion 2', szenario: 'risiko-erfolg', schritte: [{ zugleiste: 'Risiko-Karte spielen' }, { zugleiste: /^Aktion 2/ }, { hand: /^Farbkarte Rot/ }] },
-  { name: 'Risiko-Aktion 3', szenario: 'risiko-erfolg', schritte: [{ zugleiste: 'Risiko-Karte spielen' }, { zugleiste: /^Aktion 3/ }, { ziel: 'Deine Schlange 1, Karte 2' }] },
+  { name: 'Comeback-Karte', szenario: 'comeback-bedingung', schritte: [{ zugleiste: 'Comeback einsetzen' }] },
+  { name: 'Risiko-Aktion 2', szenario: 'risiko-erfolg', schritte: [{ zugleiste: 'Risiko spielen' }, { zugleiste: /^Aktion 2/ }, { hand: /^Farbkarte Rot/ }] },
+  { name: 'Risiko-Aktion 3', szenario: 'risiko-erfolg', schritte: [{ zugleiste: 'Risiko spielen' }, { zugleiste: /^Aktion 3/ }, { ziel: 'Deine Schlange 1, Karte 2' }] },
   { name: 'Korb: Tausch', szenario: 'korb-tauschen', schritte: [{ hand: 'Sonderkarte Schlangenkorb des Glücks' }, { zugleiste: /^Tausche/ }, { ziel: 'Deine Schlange 1, Karte 2' }, { hand: /^Farbkarte Gelb/ }] },
   { name: 'Korb: Entfernen', szenario: 'korb-entfernen', schritte: [{ hand: 'Sonderkarte Schlangenkorb des Glücks' }, { zugleiste: /^Entferne/ }, { ziel: 'KI-Gegner 1, Schlange 1, Karte 2' }] },
   { name: 'Korb allein', szenario: 'korb-allein', schritte: [{ hand: 'Sonderkarte Schlangenkorb des Glücks' }, { zugleiste: /^Zwei zusätzliche Aktionen/ }] },
@@ -87,7 +87,7 @@ test.describe('O10 K3: die Erweiterung mit Maus und Finger', () => {
   test('O10 K3/A8.2: Risiko-Aktion 1 scheitert, du wählst den Gegner; Ergebnis und Wahl stehen im Protokoll', async ({ page }, info) => {
     const tippe = bediene(info)
     await oeffneSzenario(page, 'risiko-misserfolg')
-    await tippe(zugleiste(page).getByRole('button', { name: 'Risiko-Karte spielen' }))
+    await tippe(zugleiste(page).getByRole('button', { name: 'Risiko spielen' }))
     await tippe(zugleiste(page).getByRole('button', { name: /^Aktion 1/ }))
     await tippe(zugleiste(page).getByRole('button', { name: 'Ausführen' }))
     await expect(zugleiste(page)).toContainText('Ersatzbelohnung')
@@ -104,7 +104,7 @@ test.describe('O10 K3: die Erweiterung mit Maus und Finger', () => {
   test('O10 K3/K1, O11 K3: Lagen der Erweiterung ohne schweren axe-Befund und mit Kontrast', async ({ page }, info) => {
     const tippe = bediene(info)
     await oeffneSzenario(page, 'risiko-erfolg')
-    await tippe(zugleiste(page).getByRole('button', { name: 'Risiko-Karte spielen' }))
+    await tippe(zugleiste(page).getByRole('button', { name: 'Risiko spielen' }))
     await erwarteGrundlagen(page, 'Risiko-Aktionen')
     await oeffneSzenario(page, 'risiko-du-beguenstigt')
     await erwarteGrundlagen(page, 'begünstigt')
@@ -118,7 +118,7 @@ test.describe('O10 K3, O11 K1: die Erweiterung allein mit der Tastatur', () => {
   test('O11 K1: Risiko-Karte, Aktion 2, Karte ansagen, ausführen, zusätzliche Farbkarte anlegen', async ({ page }) => {
     await oeffneSzenario(page, 'risiko-erfolg')
     const start = await gespeichert(page)
-    await tabBis(page, 'Risiko-Karte spielen')
+    await tabBis(page, 'Risiko spielen')
     await page.keyboard.press('Enter')
     await tabBis(page, /^Aktion 2/)
     await page.keyboard.press('Enter')

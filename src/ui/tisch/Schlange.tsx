@@ -1,4 +1,6 @@
 import { Fragment } from 'react'
+import type { ReactNode } from 'react'
+import type { Korbziel } from '../../engine'
 import { Karte } from '../karten/Karte'
 import type { Wahl } from '../spiel/auswahl'
 import type { AblageAnsicht, GrubeAnsicht, KarteInSchlange, Person, SchlangeAnsicht } from '../spiel/tischAnsicht'
@@ -7,6 +9,7 @@ import { scrollFokus, useUeberlauf } from './ueberlauf'
 import { Weiter } from './Weiter'
 import { TISCH, ablageText, grubeText, punkteText, schlangenName, schlangenTitel } from './texte'
 import { useZiele, zielDerArt, zieleDerSchlange } from './bedienung'
+import type { Bedienung } from './bedienung'
 import { useLaufendeHaeutung } from './haeutung'
 import { HaeutungsKarte } from './HaeutungsKarte'
 import { ZielKnopf } from './Ziele'
@@ -37,7 +40,9 @@ function gliedKlasse({ gruppe }: KarteInSchlange): string | undefined {
  * an den Enden oder in den Lücken, Karten als Knöpfe, oder die ganze Schlange
  * als ein Ziel. Felder, die keine Karte sind, tragen `data-zielplatz`. Wird
  * sie gehäutet (O7), zeigt sie die Schlange der Häutung, beim Ordnen also die
- * gelegte Anordnung, und ihre Karten sind die Knöpfe der Häutung.
+ * gelegte Anordnung, und ihre Karten sind die Knöpfe der Häutung. Mit der
+ * Erweiterung (O10) ist eine Karte auch das Ziel, das eine Risiko-Aktion
+ * benennt, oder ein Platz für den Tausch des Schlangenkorbs (`TauschPlatz`).
  */
 export function Schlange({ schlange: liegend, titel, groesse }: { schlange: SchlangeAnsicht; titel: string; groesse: string }) {
   const [zeile, ueberlauf] = useUeberlauf<HTMLOListElement>()
@@ -67,14 +72,22 @@ export function Schlange({ schlange: liegend, titel, groesse }: { schlange: Schl
     >
       {ende('anfang')}
       {schlange.karten.map((glied, stelle) => {
-        const karte = zielDerArt(ziele, 'schlangenkarte', (ziel) => ziel.karteId === glied.karte.id)
+        // Eine Karte als Ziel: für eine Sonderkarte (`schlangenkarte`) oder als benannte Karte einer Risiko-Aktion (A8.2).
+        const karte =
+          zielDerArt(ziele, 'schlangenkarte', (ziel) => ziel.karteId === glied.karte.id) ??
+          zielDerArt(bedienung?.ziele ?? [], 'benannt', (ziel) => ziel.karteId === glied.karte.id)
         const name = ZIELNAME.karte(titel, stelle + 1, glied.karte)
+        const tausch = bedienung?.tausch.platz(glied.karte.id) ?? null
         return (
           <Fragment key={glied.karte.id}>
             {luecke(stelle)}
             <li className={gliedKlasse(glied)} data-gruppe={glied.gruppe?.farbe}>
               {haeutung?.knoepfe.has(glied.karte.id) === true ? (
                 <HaeutungsKarte haeutung={haeutung} karte={glied.karte} name={name} groesse={groesse} />
+              ) : tausch !== null && bedienung !== null ? (
+                <TauschPlatz bedienung={bedienung} stand={tausch} ziel={{ schlangenId: schlange.id, karteId: glied.karte.id }} name={name}>
+                  <Karte karte={glied.karte} sizes={groesse} />
+                </TauschPlatz>
               ) : karte === undefined ? (
                 <Karte karte={glied.karte} sizes={groesse} />
               ) : (
@@ -98,6 +111,37 @@ export function Schlange({ schlange: liegend, titel, groesse }: { schlange: Schl
     <Weiter ueberlauf={ueberlauf} />
     {ganze !== undefined && !ganzeGewaehlt && <ZielKnopf wahl={ganze} name={ZIELNAME.schlange(titel)} klasse="st-ziel--schlange" />}
     </div>
+  )
+}
+
+interface TauschPlatzEigenschaften {
+  bedienung: Bedienung
+  stand: 'angeboten' | 'gemerkt' | 'getauscht'
+  ziel: Korbziel
+  name: string
+  children: ReactNode
+}
+
+/**
+ * D44: Eine Farbkarte deiner Schlange, die der Schlangenkorb tauschen kann.
+ * Antippen merkt sie, die Handkarte danach kommt an ihren Platz; eine schon
+ * getauschte nimmt das Antippen zurück. Sie trägt `data-ziel`, damit das Zeichen
+ * am Rand sie als Ziel kennt, und `data-tauschplatz` für den Vertrag „hängt nie
+ * fest“.
+ */
+function TauschPlatz({ bedienung, stand, ziel, name, children }: TauschPlatzEigenschaften) {
+  return (
+    <button
+      type="button"
+      className="st-ziel st-ziel--karte"
+      data-ziel={stand === 'angeboten' ? `tausch:${ziel.karteId}` : undefined}
+      data-tauschplatz={ziel.karteId}
+      aria-label={name}
+      aria-pressed={stand !== 'angeboten'}
+      onClick={() => bedienung.tausch.tippePlatz(ziel)}
+    >
+      {children}
+    </button>
   )
 }
 

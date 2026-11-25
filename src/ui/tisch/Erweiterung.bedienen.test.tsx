@@ -28,11 +28,11 @@ const zielInDeinerSchlange = (zustand: Spielzustand, stelle: number) => `Deine S
 const nach = (zustand: Spielzustand, passt: (aktion: SpielAktion) => boolean) => anwendeAktion(zustand, aktionMit(zustand, passt)).zustand
 
 describe('O10 K3: Comeback-Karte (A8.1)', () => {
-  it('O10 K3/A8.1: „Comeback-Karte einsetzen“ steht in der Zugleiste, die Ansage nennt die zwei Zusatzaktionen, „Ausführen“ setzt sie ein', () => {
+  it('O10 K3/A8.1: „Comeback einsetzen“ steht in der Zugleiste, die Ansage nennt die zwei Zusatzaktionen, „Ausführen“ setzt sie ein', () => {
     const start = erzeugeSzenario('comeback-bedingung')
     spieleAm(start)
     expect(within(screen.getByRole('region', { name: 'Deine Auslage' })).getByText('einsetzbar')).toBeInTheDocument()
-    tippe(knopf('Comeback-Karte einsetzen'))
+    tippe(knopf('Comeback einsetzen'))
     expect(zugleiste().getByText(/Ansage:.*zwei zusätzliche Aktionen/)).toBeInTheDocument()
     ausfuehren()
     expect(gespieltWurde(start, aktionMit(start, (a) => a.typ === 'ComebackEinsetzen'))).toBe(true)
@@ -40,7 +40,7 @@ describe('O10 K3: Comeback-Karte (A8.1)', () => {
 
   it('O10 K3/A8.1: ohne erfüllte Bedingung gibt es keinen Knopf, und die Auslage sagt nicht „einsetzbar“', () => {
     spieleAm(erzeugeSzenario('comeback-rueckstand-4'))
-    expect(zugleiste().queryByRole('button', { name: 'Comeback-Karte einsetzen' })).toBeNull()
+    expect(zugleiste().queryByRole('button', { name: 'Comeback einsetzen' })).toBeNull()
     expect(within(screen.getByRole('region', { name: 'Deine Auslage' })).queryByText('einsetzbar')).toBeNull()
   })
 
@@ -55,7 +55,7 @@ describe('O10 K3: Comeback-Karte (A8.1)', () => {
     const start = nach(erzeugeSzenario('comeback-abwerfen-ziehen'), (a) => a.typ === 'ComebackEinsetzen')
     spieleAm(start)
     const [erste, zweite] = start.spieler[0].hand
-    tippe(knopf('Zwei Karten abwerfen, drei ziehen'))
+    tippe(knopf('2 abwerfen, 3 ziehen'))
     tippe(handkarte(erste))
     expect(zugleiste().queryByRole('button', { name: 'Ausführen' }), 'eine Karte reicht nicht').toBeNull()
     tippe(handkarte(zweite))
@@ -69,8 +69,8 @@ describe('O10 K3: Risiko-Belohnungs-Karte (A8.2)', () => {
   it('O10 K3/A8.2: Aktion 1: Karte, Aktion, „Ausführen“', () => {
     const start = erzeugeSzenario('risiko-erfolg')
     spieleAm(start)
-    tippe(knopf('Risiko-Karte spielen'))
-    tippe(knopf('Aktion 1 (Zusätzliche Karten ziehen)'))
+    tippe(knopf('Risiko spielen'))
+    tippe(knopf('Aktion 1: Karten ziehen'))
     expect(zugleiste().getByText(/Ansage:/)).toBeInTheDocument()
     ausfuehren()
     expect(gespieltWurde(start, aktionMit(start, (a) => a.typ === 'RisikoKarteSpielen' && a.risikoAktion === 1))).toBe(true)
@@ -80,8 +80,8 @@ describe('O10 K3: Risiko-Belohnungs-Karte (A8.2)', () => {
     const start = erzeugeSzenario('risiko-erfolg')
     const rot = handkarteDerFarbe(start, 0, 'Rot')
     spieleAm(start)
-    tippe(knopf('Risiko-Karte spielen'))
-    tippe(knopf('Aktion 2 (Zusätzliche Farbkarte spielen)'))
+    tippe(knopf('Risiko spielen'))
+    tippe(knopf('Aktion 2: Farbkarte spielen'))
     tippe(handkarte(rot))
     expect(zugleiste().getByText(/Ansage:.*Rot/)).toBeInTheDocument()
     ausfuehren()
@@ -91,8 +91,8 @@ describe('O10 K3: Risiko-Belohnungs-Karte (A8.2)', () => {
   it('O10 K3/A8.2: Aktion 3: die Karte zum Tauschen wählt man in deiner Schlange', () => {
     const start = erzeugeSzenario('risiko-erfolg')
     spieleAm(start)
-    tippe(knopf('Risiko-Karte spielen'))
-    tippe(knopf('Aktion 3 (Karten tauschen)'))
+    tippe(knopf('Risiko spielen'))
+    tippe(knopf('Aktion 3: Karten tauschen'))
     tippeZiel(zielInDeinerSchlange(start, 1))
     ausfuehren()
     const gruen = schlangenkarte(start, 1).id
@@ -180,7 +180,7 @@ describe('O10 K3: Schlangenkorb des Glücks (A7.10)', () => {
     const gruen = handkarteDerFarbe(start, 0, 'Grün')
     spieleAm(start)
     tippe(handkarte('Sonderkarte Schlangenkorb des Glücks'))
-    tippe(knopf(/^Tausche bis zu 2 Karten/))
+    tippe(knopf(/^Tausche bis zu 2/))
     tippeZiel(zielInDeinerSchlange(start, 1))
     tippe(handkarte(gelb))
     expect(zugleiste().getByText(/Ansage:.*Gelb.*Rot/)).toBeInTheDocument()

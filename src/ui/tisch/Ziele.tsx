@@ -13,7 +13,10 @@ wird nur gezeigt und angetippt.
 
 Ein angebotenes Ziel trägt `data-ziel` mit dem Schlüssel seiner Wahl; daran
 erkennen es Tests und das Zeichen „geht weiter“. Ein schon gewähltes Ziel
-bleibt als gedrückter Knopf stehen, damit man es wieder abwählen kann.
+bleibt als gedrückter Knopf stehen, damit man es wieder abwählen kann. Jedes
+Bedienelement, das eine Wahl trifft, trägt zudem `data-wahl`, auch eine
+Handkarte; daran findet der Vertrag „hängt nie fest“ (O10) den Weg einer
+Aktion.
 */
 
 interface ZielKnopfEigenschaften {
@@ -33,6 +36,7 @@ export function ZielKnopf({ wahl, name, klasse, children }: ZielKnopfEigenschaft
       type="button"
       className={`st-ziel ${klasse}`}
       data-ziel={bedienung.angeboten(wahl) ? wahlSchluessel(wahl) : undefined}
+      data-wahl={wahlSchluessel(wahl)}
       aria-label={name}
       aria-pressed={bedienung.gewaehlt(wahl)}
       onClick={() => bedienung.tippe(wahl)}

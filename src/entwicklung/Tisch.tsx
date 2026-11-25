@@ -1,13 +1,14 @@
 import { Fragment, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import { anwendeAktion, ermittleAktionen, erzeugeZufall, risikoaktionText, serialisiere } from '../engine'
-import type { Ereignis, Kartenort, SpielAktion, Spielzustand } from '../engine'
+import type { Ereignis, Kartenort, SpielAktion, Spielzustand, Versetzung } from '../engine'
 import { AUFGABENNAMEN } from '../engine/aufgabenKarten'
 import { mitTestbedingungen } from '../engine/testing/testaufgaben'
 import type { Testbedingung } from '../engine/testing/testaufgaben'
 import { naechsterKiSchritt } from '../ki/schritt'
 import { entscheiderVon } from '../ki/sicht'
 import { STRATEGIEN } from '../ki/strategien'
+import { offeneKarte } from '../ui/spiel/offeneKarten'
 import { beschrifte } from './beschriftung'
 import { Fehler } from './Fehler'
 import { fehlertext, pruefeInvarianten } from './invarianten'
@@ -94,7 +95,7 @@ function Spielverlauf({ titel, startzustand, hinweis, saat, testbedingungen }: S
         <KiSchritt zustand={zustand} kiSaat={kiSaatAmTisch(verlauf.length, saat)} fuehreAus={fuehreAus} scheitert={setFehler} />
         {fehler === null ? null : <Fehler meldung={`Abgelehnt: ${fehler}`} />}
         <Bedienung zustand={zustand} fuehreAus={fuehreAus} />
-        <Ereignisse zustand={zustand} ereignisse={ereignisse} />
+        <Ereignisse zustand={zustand} vorher={verlauf.at(-2)?.zustand ?? null} ereignisse={ereignisse} />
       </section>
       <Invarianten zustand={zustand} />
       <ZustandsAnsicht zustand={zustand} />
@@ -254,8 +255,19 @@ function aufgabenname(aufgabeId: string): string {
   return `${AUFGABENNAMEN.get(aufgabeId) ?? aufgabeId} (${aufgabeId})`
 }
 
-/** Ein Ereignis als Zeile, mit den Namen der Spieler statt ihrer Nummer. */
-function beschreibeEreignis(zustand: Spielzustand, ereignis: Ereignis): string {
+/**
+ * Eine versetzte Karte: ihre Id, oder „verdeckte Karte“, wenn sie verdeckt bleibt.
+ * Lässt die Engine die Id weg, obwohl die Karte offen war (aufgedeckt oder für
+ * Risiko-Aktion 2 angesagt, D52, D77), steht sie mit dem Grund da (O10).
+ */
+function versetzteKarte(vorher: Spielzustand | null, ereignisse: readonly Ereignis[], versetzung: Versetzung): string {
+  if (versetzung.karteId !== null) return versetzung.karteId
+  const offen = vorher === null ? null : offeneKarte(vorher, ereignisse, versetzung, vorher.spieler.findIndex((spieler) => spieler.steuerung === 'Mensch'))
+  return offen === null ? 'verdeckte Karte' : `${offen.karte.id} (${offen.offenheit})`
+}
+
+/** Ein Ereignis als Zeile, mit den Namen der Spieler statt ihrer Nummer; `vorher` ist der Stand vor dem Schritt. */
+function beschreibeEreignis(zustand: Spielzustand, vorher: Spielzustand | null, ereignisse: readonly Ereignis[], ereignis: Ereignis): string {
   const wer = (index: number) => name(zustand, index)
   switch (ereignis.typ) {
     case 'KarteGespielt':
@@ -280,7 +292,7 @@ function beschreibeEreignis(zustand: Spielzustand, ereignis: Ereignis): string {
       return `AnsageEntschieden: ${ereignis.karteId} von ${wer(ereignis.spielerIndex)} ${wirkung}, ${abgewehrt} → ${beschreibeOrt(zustand, ereignis.nach)}`
     }
     case 'KartenVersetzt': {
-      const karten = ereignis.karten.map(({ karteId, von, nach }) => `${karteId ?? 'verdeckte Karte'}: ${beschreibeOrt(zustand, von)} → ${beschreibeOrt(zustand, nach)}`)
+      const karten = ereignis.karten.map((versetzung) => `${versetzteKarte(vorher, ereignisse, versetzung)}: ${beschreibeOrt(zustand, versetzung.von)} → ${beschreibeOrt(zustand, versetzung.nach)}`)
       const aufgeloest = ereignis.aufgeloest.length === 0 ? '' : `; aufgelöst: ${ereignis.aufgeloest.join(', ')}`
       return `KartenVersetzt durch ${ereignis.karteId} von ${wer(ereignis.spielerIndex)}: ${karten.join('; ')}${aufgeloest}`
     }
@@ -311,14 +323,14 @@ function beschreibeEreignis(zustand: Spielzustand, ereignis: Ereignis): string {
   }
 }
 
-/** Die Ereignisse, die die Engine zum letzten Schritt gemeldet hat. */
-function Ereignisse({ zustand, ereignisse }: { zustand: Spielzustand; ereignisse: Ereignis[] }) {
+/** Die Ereignisse, die die Engine zum letzten Schritt gemeldet hat; `vorher` ist der Stand davor. */
+function Ereignisse({ zustand, vorher, ereignisse }: { zustand: Spielzustand; vorher: Spielzustand | null; ereignisse: Ereignis[] }) {
   return (
     <>
       <h2>Ereignisse des letzten Schritts ({ereignisse.length})</h2>
       <ol data-testid="ereignisse" className="et-ereignisse">
         {ereignisse.map((ereignis, index) => (
-          <li key={index}>{beschreibeEreignis(zustand, ereignis)}</li>
+          <li key={index}>{beschreibeEreignis(zustand, vorher, ereignisse, ereignis)}</li>
         ))}
       </ol>
     </>
