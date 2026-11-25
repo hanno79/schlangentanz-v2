@@ -34,4 +34,11 @@ describe('GAME_SPEC Teil E — frühere R-Nummern und Verlauf', () => {
   it('P0.5g, Iteration 2: der Eintrag nennt D66 und D67, den Nachtrag zu D63 und die Form des Website-Nachtrags', () => {
     expect(fehlende(teil('E'), ['In Iteration 2 (24.11.2026)', 'D66 und D67', 'D63', 'zwei Leerzeichen'])).toEqual([])
   })
+
+  it('P0.5h: „Stand und Verlauf“ führt die Antworten vom 24.11.2026 als D68–D79, die leere Teil C und B1', () => {
+    const e = teil('E')
+    expect(fehlende(e, ['- **25.11.2026, Task P0.5h:**', 'D68–D79', 'Teil C ist leer', 'C10 und C14', 'B1', 'D54 bleibt unverändert', 'Teil A unverändert.'])).toEqual([])
+    // Der neueste Eintrag steht oben.
+    expect(e.indexOf('Task P0.5h:'), 'P0.5h steht nicht vor P0.5g').toBeLessThan(e.indexOf('Task P0.5g:'))
+  })
 })

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { ZITAT, abschnitt } from './regelfragen_lesen'
 import { eintragD, fehlende, fliesstext, nachtragEintrag, nachtragFragezeilen, pruefeKern, spalten, tabelleMitSpalte, teil, websiteNachtrag } from './spec_documentation_hilfen'
-import { A10_EINORDNUNG, RUECKFRAGEN, RUECKFRAGEN_NUMMERN } from './spec_documentation_rueckfragen'
+import { A10_EINORDNUNG, RUECKFRAGEN, RUECKFRAGEN_NUMMERN, bereichVon } from './spec_documentation_rueckfragen'
 import { DATUM_G } from './regelfragen_sammelantwort'
 
 /*
@@ -144,7 +144,8 @@ describe('GAME_SPEC Teil D — Fragen an den Autor und Antworten', () => {
   })
 
   for (const { task, aus, datum: tag, eintraege } of RUECKFRAGEN) {
-    for (const [nummer, { frage, wahl, kern, verboten, anfang }] of Object.entries(eintraege)) {
+    for (const [nummer, { frage, wahl, kern: saetze, verboten, anfang, zitate = [] }] of Object.entries(eintraege)) {
+      const kern = [...saetze, ...zitate.map((zitat) => `„${zitat}“`)]
       it(`${task}: ${nummer}: Rückfrage aus ${aus} vom ${tag} steht als Regel mit gewählter Möglichkeit in Teil D`, () => {
         const { frage: frageInTeilD, antwort, datum, folge } = eintragD(nummer)
         expect(frageInTeilD, `${nummer}: Frage`).toBe(frage)
@@ -161,6 +162,12 @@ describe('GAME_SPEC Teil D — Fragen an den Autor und Antworten', () => {
         pruefeKern(nummer, fliesstext(eintrag.antwort).toLowerCase(), kern, [...verboten, 'Website folgt', 'gewählte Möglichkeit'])
         if (anfang) expect(eintrag.antwort.startsWith(anfang), `${nummer}: Antwort im Nachtrag beginnt nicht mit „${anfang}“`).toBe(true)
       })
+
+      if (zitate.length > 0) {
+        it(`${task}: ${nummer}: jedes Zitat der Website steht wörtlich in Teil A`, () => {
+          expect(fehlende(teil('A'), zitate), `${nummer}: Zitate nicht wörtlich in Teil A`).toEqual([])
+        })
+      }
     }
   }
 
@@ -182,8 +189,18 @@ describe('GAME_SPEC Teil D — Fragen an den Autor und Antworten', () => {
     expect(fragezeilen.filter(({ harterUmbruch }) => !harterUmbruch).map(({ nummer }) => nummer), 'Fragezeilen ohne zwei Leerzeichen am Ende').toEqual([])
   })
 
-  it('P0.5g: die Einleitung von Teil D nennt die Rückfragen aus den Prüfungen von X2 und X3 ab D58 und die Ergänzung von D48', () => {
-    expect(fehlende(teil('D'), [`D58–${RUECKFRAGEN_NUMMERN.at(-1)}`, 'Rückfragen aus den Prüfungen von X2 und X3', '23.11.2026', 'ergänzt D48'])).toEqual([])
+  it('P0.5g: die Einleitung von Teil D nennt die Rückfragen aus den Prüfungen von X2 und X3 als D58–D67 und die Ergänzung von D48', () => {
+    expect(bereichVon('P0.5g'), 'Rückfragen aus P0.5g').toBe('D58–D67')
+    expect(fehlende(teil('D'), [`${bereichVon('P0.5g')} sind Rückfragen aus den Prüfungen von X2 und X3`, '23.11.2026', 'ergänzt D48'])).toEqual([])
+  })
+
+  it('P0.5h: die Einleitung von Teil D nennt die Rückfragen aus X4, X5, X6 und der Prüfung von P0.5g als D68–D79 vom 24.11.2026', () => {
+    expect(bereichVon('P0.5h'), 'Rückfragen aus P0.5h').toBe('D68–D79')
+    expect(fehlende(teil('D'), [`${bereichVon('P0.5h')} sind Rückfragen aus X4, X5, X6 und der Prüfung von P0.5g, die der Autor am 24.11.2026 beantwortet hat`])).toEqual([])
+  })
+
+  it('P0.5h: der Website-Nachtrag nennt den Stand vom 24.11.2026', () => {
+    expect(fehlende(websiteNachtrag.split('\n## ')[0], ['Stand 24.11.2026.']), 'Website-Nachtrag: Einleitung').toEqual([])
   })
 
   // Den Wortlaut von D48 samt Rückfrage vom 23.11.2026 prüft tests/regelfragen_antworten.test.ts Satz für Satz (ERWARTET_G.G16).
