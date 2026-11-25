@@ -1,11 +1,10 @@
 import type { Locator, Page } from '@playwright/test'
-import { deserialisiere, serialisiere } from '../../src/engine'
 import type { Spielzustand } from '../../src/engine'
 import type { Wahl } from '../../src/ui/spiel/auswahl'
 import { ABWEHRFRAGE } from '../../src/ui/tisch/protokolltexte'
 import { TISCH } from '../../src/ui/tisch/texte'
 import { ABWERFEN, ZIELNAME, ZUGLEISTE } from '../../src/ui/tisch/zugtexte'
-import { leseRoh } from './seite'
+import { neuerStand } from './seite'
 
 /*
 Z1: Der Mensch im Vollpartie-Lauf. Er spielt jeden Schritt über die
@@ -33,7 +32,7 @@ const HOECHSTENS_ZIELE = 6
 /** Ein angebotenes Ziel, das noch nicht gewählt ist (`Ziele.tsx`). */
 const OFFENES_ZIEL = '[data-ziel][aria-pressed="false"]'
 
-const sichtbar = async (element: Locator) => (await element.count()) > 0 && (await element.first().isVisible())
+const sichtbar = (element: Locator) => element.first().isVisible()
 
 /**
  * Spielt einen Schritt des Menschen und gibt den neuen Stand zurück. Wirft,
@@ -52,12 +51,10 @@ export async function spieleMenschenschritt(
   }
   const zugleiste = page.getByRole('region', { name: ZUGLEISTE.titel })
   const gespielt = (await waehleSchritt({ page, zugleiste, klicke, zustand: vorher })) ?? 'nichts'
-  const roh = await leseRoh(page)
-  if (roh === null || roh === serialisiere(vorher)) {
+  return neuerStand(page, vorher, async () => {
     const satz = (await zugleiste.innerText()).replace(/\s+/g, ' ').trim()
-    throw new Error(`Z1: Nach „${gespielt}“ steht kein neuer Stand im Speicher. Die Zugleiste sagt: ${satz}`)
-  }
-  return deserialisiere(roh)
+    return `Z1: Nach „${gespielt}“ steht kein neuer Stand im Speicher. Die Zugleiste sagt: ${satz}`
+  })
 }
 
 type Klicke = (element: Locator, was: string) => Promise<void>
@@ -153,7 +150,7 @@ async function endeMitFarbe(ziele: Locator, zustand: Spielzustand, farbe: string
 async function werfeAb(dialog: Locator, klicke: Klicke): Promise<string> {
   for (;;) {
     const ablegen = dialog.getByRole('button', { name: ABWERFEN.ablegen, exact: true, disabled: false })
-    if ((await ablegen.count()) > 0) {
+    if (await sichtbar(ablegen)) {
       await klicke(ablegen, ABWERFEN.ablegen)
       return ABWERFEN.ablegen
     }

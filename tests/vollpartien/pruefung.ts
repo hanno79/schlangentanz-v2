@@ -4,10 +4,11 @@ import type { SpielAktion, Spielzustand } from '../../src/engine'
 /*
 Z1: Die Prüfungen eines Vollpartie-Laufs, ohne Browser. Der Lauf
 (`vollpartie.spec.ts`) liest nach jedem Schritt den gespeicherten Stand und
-fragt hier, welche Karten-Ids nicht auf der Seite stehen dürfen, ob der neue
-Stand aus dem vorigen durch eine erlaubte Aktion entstanden ist und was die
-Wertung am Ende zeigen muss. `tests/vollpartien.test.ts` belegt, dass jede
-Prüfung anschlägt.
+fragt hier, ob der neue Stand aus dem vorigen durch eine erlaubte Aktion
+entstanden ist und was die Wertung am Ende zeigen muss. Welche Ids nicht auf
+der Seite stehen dürfen, sagt `verrateneIds` aus den Tisch-Szenarien, wie im
+Vertrag `tests/layout/tisch.spec.ts`. `tests/vollpartien.test.ts` belegt, dass
+jede Prüfung anschlägt.
 */
 
 /**
@@ -18,20 +19,6 @@ export function partieAusSaat(saat: number, versatz: number, spielerzahl: number
   const zufall = erzeugeZufall(saat)
   for (let gezogen = 0; gezogen < versatz; gezogen += 1) zufall()
   return erstellePartie({ spielerzahl, erweiterung, zufall })
-}
-
-/** Die Ids aller Handkarten der KI-Gegner; keine davon darf im Seitenquelltext stehen (Z1 K2). */
-export function fremdeHandkarten(zustand: Spielzustand): string[] {
-  return zustand.spieler.filter((spieler) => spieler.steuerung !== 'Mensch').flatMap((spieler) => spieler.hand.map((karte) => karte.id))
-}
-
-/**
- * Die Ids aus `ids`, die in `text` als ganzes Wort stehen. Ein Bindestrich
- * davor zählt als Grenze, damit auch `ziel-rot-01` die Karte `rot-01` verrät;
- * eine längere Id derselben Art (`rot-010`) ist keine Fundstelle.
- */
-export function gefundeneIds(text: string, ids: readonly string[]): string[] {
-  return ids.filter((id) => new RegExp(`(?<![A-Za-z0-9])${id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![A-Za-z0-9])`).test(text))
 }
 
 /**
@@ -62,7 +49,12 @@ export interface ErwarteterRang {
   sieger: boolean
 }
 
-/** Die Endwertung der Engine je Spieler in Sitzordnung, so wie die Seite sie zeigen muss (A11, D22). */
+/**
+ * Die Endwertung der Engine je Spieler in Sitzordnung, so wie die Seite sie
+ * zeigen muss (A11, D22). Platz und Sieger rechnet sie bewusst selbst aus der
+ * Endwertung, statt `ergebnisAnsicht` der Oberfläche zu fragen: Die Prüfung
+ * soll nicht dieselbe Ableitung nutzen, die sie prüft.
+ */
 export function erwarteteWertung(zustand: Spielzustand): ErwarteterRang[] {
   if (zustand.partiephase !== 'Beendet') throw new Error(`Z1: Die Partie läuft noch (Partiephase ${zustand.partiephase}); eine Endwertung gibt es erst danach.`)
   const endwertung = berechneEndwertung(zustand)
@@ -77,11 +69,4 @@ export function erwarteteWertung(zustand: Spielzustand): ErwarteterRang[] {
       sieger: endwertung.gewinner.includes(wertung.spielerId),
     }
   })
-}
-
-/** „28 Punkte“ oder „1 Punkt“ als Zahl. */
-export function punkteAusText(text: string): number {
-  const treffer = /^(\d+) Punkte?$/.exec(text.trim())
-  if (treffer === null) throw new Error(`Z1: „${text}“ ist keine Punktzahl der Form „28 Punkte“.`)
-  return Number(treffer[1])
 }

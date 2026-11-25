@@ -5,7 +5,8 @@ import { join, resolve } from 'node:path'
 import { anwendeAktion, erstellePartie, ermittleAktionen, erzeugeZufall, serialisiere } from '../src/engine'
 import { starteEntwicklerPartie } from '../src/entwicklung/partie'
 import { erzeugeSzenario } from '../src/entwicklung/szenarien'
-import { erwarteteWertung, fremdeHandkarten, gefundeneIds, partieAusSaat, punkteAusText, schrittZwischen } from './vollpartien/pruefung'
+import { verrateneIds } from '../src/ui/tisch/__tests__/szenarien'
+import { erwarteteWertung, partieAusSaat, schrittZwischen } from './vollpartien/pruefung'
 
 /*
 Z1: die Prüfungen, mit denen der Lauf `npm run test:vollpartien` jede Partie
@@ -17,25 +18,14 @@ anschlagen, wenn etwas nicht stimmt, damit ein grüner Lauf etwas bedeutet.
 const WURZEL = resolve(__dirname, '..')
 const lies = (pfad: string) => readFileSync(join(WURZEL, pfad), 'utf8')
 
-describe('Z1 K2: fremde Handkarten im Seitenquelltext', () => {
-  it('Z1 K2: fremd sind genau die Handkarten der KI-Gegner, nicht deine', () => {
+describe('Z1 K2: verborgene Karten im Seitenquelltext', () => {
+  it('Z1 K2: verrateneIds findet eine fremde Handkarte auch im maskierten JSON eines Ziels, deine nicht', () => {
     const zustand = starteEntwicklerPartie(7, 4, false)
-    const ids = fremdeHandkarten(zustand)
-    const erwartet = zustand.spieler.filter((spieler) => spieler.steuerung === 'KI').flatMap((spieler) => spieler.hand.map((karte) => karte.id))
-    expect(ids, 'fremdeHandkarten: alle Handkarten der drei KI-Gegner').toEqual(erwartet)
-    expect(ids, 'fremdeHandkarten: drei Gegner haben Karten auf der Hand').toHaveLength(erwartet.length)
-    expect(erwartet.length, 'fremdeHandkarten: der Start teilt aus').toBeGreaterThan(0)
-    for (const karte of zustand.spieler[0].hand) expect(ids, `fremdeHandkarten: deine Karte ${karte.id} ist nicht fremd`).not.toContain(karte.id)
-  })
-
-  it('Z1 K2: eine Id zählt als ganzes Wort, auch in Attributen und mit Bindestrich davor', () => {
-    const html = '<button data-ziel="{&quot;karteId&quot;:&quot;rot-01&quot;}">x</button><li data-x="ziel-blau-03"></li><p>gelb-07</p>'
-    expect(gefundeneIds(html, ['rot-01', 'blau-03', 'gelb-07', 'gruen-02'])).toEqual(['rot-01', 'blau-03', 'gelb-07'])
-  })
-
-  it('Z1 K2: eine längere Id mit derselben Vorsilbe ist keine Fundstelle', () => {
-    const html = '<p>rot-010 rot-01a xrot-01 farbenschutz-011</p>'
-    expect(gefundeneIds(html, ['rot-01', 'farbenschutz-01'])).toEqual([])
+    const fremd = zustand.spieler[1].hand[0].id
+    const eigen = zustand.spieler[0].hand[0].id
+    const html = (id: string) => `<button data-ziel="{&quot;art&quot;:&quot;karte&quot;,&quot;karteId&quot;:&quot;${id}&quot;}"></button>`
+    expect(verrateneIds(zustand, html(fremd)), 'verrateneIds: die Karte von KI-Gegner 1').toEqual([fremd])
+    expect(verrateneIds(zustand, html(eigen)), 'verrateneIds: deine Karte ist nicht verborgen').toEqual([])
   })
 })
 
@@ -80,13 +70,6 @@ describe('Z1 K2: die Endwertung der Engine', () => {
 
   it('Z1 K2: eine laufende Partie hat keine Endwertung', () => {
     expect(() => erwarteteWertung(starteEntwicklerPartie(3, 2, false))).toThrow(/Z1: Die Partie läuft noch/)
-  })
-
-  it('Z1 K2: „28 Punkte“ und „1 Punkt“ werden zu Zahlen, anderes wirft', () => {
-    expect(punkteAusText('28 Punkte')).toBe(28)
-    expect(punkteAusText('1 Punkt')).toBe(1)
-    expect(punkteAusText('0 Punkte')).toBe(0)
-    expect(() => punkteAusText('viele Punkte')).toThrow(/Z1: „viele Punkte“/)
   })
 })
 

@@ -1,11 +1,12 @@
 import { expect, test, type Locator, type Page } from '@playwright/test'
 import { ermittleEntscheider, serialisiere } from '../../src/engine'
 import type { Spielzustand } from '../../src/engine'
-import { ERGEBNIS } from '../../src/ui/ergebnis/texte'
+import { ERGEBNIS, platzText } from '../../src/ui/ergebnis/texte'
 import { LOBBY } from '../../src/ui/lobby/texte'
-import { TISCH } from '../../src/ui/tisch/texte'
+import { TISCH, punkteText } from '../../src/ui/tisch/texte'
+import { oeffne } from '../layout/oeffnen'
 import { spieleMenschenschritt } from './mensch'
-import { erwarteteWertung, partieAusSaat, punkteAusText, schrittZwischen } from './pruefung'
+import { erwarteteWertung, partieAusSaat, schrittZwischen } from './pruefung'
 import { bedienung, beobachteKonsole, bereiteSeiteVor, gezogeneZufallswerte, lassKiSpielen, leseStand, pruefeSeite } from './seite'
 
 /*
@@ -74,8 +75,7 @@ const HOECHSTENS_SCHRITTE = 4000
 
 /** Wählt in der Lobby Gegnerzahl und Erweiterung und beginnt die Partie; gibt zurück, wie viele Zufallswerte vorher gezogen waren. */
 async function starteInDerLobby(page: Page, lauf: Lauf, tippe: (element: Locator) => Promise<void>): Promise<number> {
-  await page.goto('/')
-  await expect(page.getByTestId('lobby')).toBeVisible()
+  await oeffne(page, '/')
   if (lauf.gegner !== 1) await tippe(page.getByText(LOBBY.gegner(lauf.gegner), { exact: true }))
   await expect(page.getByRole('radio', { name: LOBBY.gegner(lauf.gegner) })).toBeChecked()
   if (lauf.erweiterung) await tippe(page.getByText(LOBBY.erweiterung, { exact: true }))
@@ -92,10 +92,10 @@ async function pruefeWertung(page: Page, ende: Spielzustand): Promise<string> {
   for (const erwartet of erwarteteWertung(ende)) {
     const eintrag = liste.getByRole('listitem', { name: erwartet.name, exact: true })
     const wo = `Wertung von ${erwartet.name}`
-    expect(punkteAusText(await eintrag.getByTestId('gesamt').innerText()), `${wo}: Summe`).toBe(erwartet.summe)
+    await expect(eintrag.getByTestId('gesamt'), `${wo}: Summe`).toHaveText(punkteText(erwartet.summe))
     expect(Number(await eintrag.getByTestId('posten-farbgruppen').innerText()), `${wo}: Farbgruppen`).toBe(erwartet.farbgruppen)
     expect(Number(await eintrag.getByTestId('posten-kette').innerText()), `${wo}: Längste Kette`).toBe(erwartet.kette)
-    await expect(eintrag.locator('.erg-rang-platz'), `${wo}: Platz`).toHaveText(`${erwartet.platz}.`)
+    await expect(eintrag.locator('.erg-rang-platz'), `${wo}: Platz`).toHaveText(platzText(erwartet.platz))
     await expect(eintrag.getByText(ERGEBNIS.sieger, { exact: true }), `${wo}: Sieger`).toHaveCount(erwartet.sieger ? 1 : 0)
     if (erwartet.sieger) await expect(page.getByRole('heading', { level: 1 }), `${wo}: im Titel`).toContainText(erwartet.name)
     zeilen.push(`${erwartet.name} ${erwartet.summe}${erwartet.sieger ? ' (Sieger)' : ''}`)
@@ -112,6 +112,7 @@ for (const lauf of LAEUFE.filter(({ wartetAuf }) => wartetAuf === null)) {
 
     let stand = await leseStand(page)
     const saatpartie = partieAusSaat(lauf.saat, versatz, lauf.gegner + 1, lauf.erweiterung)
+    // Als Wahrheitswert: Der Unterschied zweier ganzer Stände wäre seitenlang und sagte nicht mehr.
     expect(serialisiere(stand) === serialisiere(saatpartie), `Z1: Der Startstand ist die Partie der Saat ${lauf.saat} nach ${versatz} gezogenen Werten`).toBe(true)
     await pruefeSeite(page, konsole, 'nach dem Start')
 
@@ -121,12 +122,16 @@ for (const lauf of LAEUFE.filter(({ wartetAuf }) => wartetAuf === null)) {
       if (++schritte > HOECHSTENS_SCHRITTE) throw new Error(`Z1: Nach ${HOECHSTENS_SCHRITTE} Schritten ist die Partie nicht beendet.`)
       const entscheider = ermittleEntscheider(stand)
       if (entscheider === null) throw new Error('Z1: Die Partie läuft, aber niemand entscheidet.')
-      const ki = stand.spieler[entscheider].steuerung === 'KI'
       const wo = `Schritt ${schritte} (${stand.spieler[entscheider].name})`
-      // Der Mensch prüft nach jedem seiner Klicks, auch nach dem letzten; nach einem KI-Schritt prüft der Lauf.
-      const neu = ki ? await lassKiSpielen(page, stand) : await spieleMenschenschritt(page, stand, tippe, (was) => pruefeSeite(page, konsole, `${wo}, ${was}`))
-      if (ki) await pruefeSeite(page, konsole, `nach ${wo}`)
-      else menschenschritte += 1
+      let neu: Spielzustand
+      if (stand.spieler[entscheider].steuerung === 'KI') {
+        neu = await lassKiSpielen(page, stand)
+        await pruefeSeite(page, konsole, `nach ${wo}`)
+      } else {
+        // Der Mensch lässt nach jedem seiner Klicks prüfen, auch nach dem letzten.
+        neu = await spieleMenschenschritt(page, stand, tippe, (was) => pruefeSeite(page, konsole, `${wo}, ${was}`))
+        menschenschritte += 1
+      }
       schrittZwischen(stand, neu)
       stand = neu
     }

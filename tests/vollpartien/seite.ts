@@ -2,10 +2,11 @@ import { expect, type Locator, type Page, type TestInfo } from '@playwright/test
 import { deserialisiere, erzeugeZufall, serialisiere } from '../../src/engine'
 import type { Spielzustand } from '../../src/engine'
 import { SPIELSTAND_SCHLUESSEL } from '../../src/spielstand'
+import { menschIndex } from '../../src/ui/spiel/tischAnsicht'
 import { KI_PAUSE_WENIGER_BEWEGUNG } from '../../src/ui/spiel/useSpiel'
-import { TISCH, deineHandTitel } from '../../src/ui/tisch/texte'
+import { verrateneIds } from '../../src/ui/tisch/__tests__/szenarien'
+import { TISCH, deineHandTitel, handkartenText } from '../../src/ui/tisch/texte'
 import { halteUhrAn } from '../layout/oeffnen'
-import { fremdeHandkarten, gefundeneIds } from './pruefung'
 
 /*
 Z1: Was ein Vollpartie-Lauf mit der Seite tut, ausser für den Menschen zu
@@ -57,12 +58,22 @@ export function gezogeneZufallswerte(page: Page): Promise<number> {
 }
 
 /** Der gespeicherte Stand, wie er im Speicher steht; `null` ohne Stand. */
-export const leseRoh = (page: Page): Promise<string | null> => page.evaluate((schluessel) => window.localStorage.getItem(schluessel), SPIELSTAND_SCHLUESSEL)
+const leseRoh = (page: Page): Promise<string | null> => page.evaluate((schluessel) => window.localStorage.getItem(schluessel), SPIELSTAND_SCHLUESSEL)
 
 /** Der gespeicherte Stand; ohne Stand ein Fehler, denn während der Partie steht immer einer im Speicher. */
 export async function leseStand(page: Page): Promise<Spielzustand> {
   const roh = await leseRoh(page)
   if (roh === null) throw new Error('Z1: Im Speicher des Browsers steht kein Spielstand.')
+  return deserialisiere(roh)
+}
+
+/**
+ * Der neue Stand nach einem Schritt; wirft mit `meldung`, wenn keiner im
+ * Speicher steht oder er derselbe ist wie `vorher`.
+ */
+export async function neuerStand(page: Page, vorher: Spielzustand, meldung: () => Promise<string>): Promise<Spielzustand> {
+  const roh = await leseRoh(page)
+  if (roh === null || roh === serialisiere(vorher)) throw new Error(await meldung())
   return deserialisiere(roh)
 }
 
@@ -74,16 +85,16 @@ export async function leseStand(page: Page): Promise<Spielzustand> {
  * `requestAnimationFrame` helfen hier also nicht.
  */
 async function warteAufZeichnen(page: Page): Promise<void> {
-  for (let runde = 0; runde < 2; runde += 1) {
-    await page.evaluate(
-      () =>
-        new Promise<void>((fertig) => {
-          const kanal = new MessageChannel()
-          kanal.port1.onmessage = () => fertig()
-          kanal.port2.postMessage(null)
-        }),
-    )
-  }
+  await page.evaluate(async () => {
+    // Zweimal, falls React nach dem Zeichnen noch eine Aufgabe für die Effekte nachreicht.
+    for (let runde = 0; runde < 2; runde += 1) {
+      await new Promise<void>((fertig) => {
+        const kanal = new MessageChannel()
+        kanal.port1.onmessage = () => fertig()
+        kanal.port2.postMessage(null)
+      })
+    }
+  })
 }
 
 /**
@@ -92,29 +103,35 @@ async function warteAufZeichnen(page: Page): Promise<void> {
  * muss ein neuer Stand im Speicher stehen.
  */
 export async function lassKiSpielen(page: Page, vorher: Spielzustand): Promise<Spielzustand> {
-  const alt = serialisiere(vorher)
   await page.clock.runFor(KI_PAUSE_WENIGER_BEWEGUNG)
-  const roh = await leseRoh(page)
-  if (roh === null || roh === alt) throw new Error(`Z1: Nach ${KI_PAUSE_WENIGER_BEWEGUNG} ms hat der KI-Gegner keinen Schritt gespielt.`)
-  return deserialisiere(roh)
+  return neuerStand(page, vorher, async () => `Z1: Nach ${KI_PAUSE_WENIGER_BEWEGUNG} ms hat der KI-Gegner keinen Schritt gespielt.`)
 }
 
 /**
  * Die Prüfung nach jedem Schritt (Z1 K2), gegen den Stand, der gerade im
  * Speicher steht: Die Seite zeigt ihn, die Konsole hat keinen Fehler
- * gemeldet, und `page.content()` enthält keine Id einer fremden Handkarte.
+ * gemeldet, und `page.content()` enthält keine verborgene Id, also weder eine
+ * Karte aus einer fremden Hand noch eine fremde geheime Aufgabe
+ * (`verrateneIds`, wie in `tests/layout/tisch.spec.ts`).
  */
 export async function pruefeSeite(page: Page, konsole: readonly string[], wo: string): Promise<void> {
   await warteAufZeichnen(page)
   const zustand = await leseStand(page)
-  const mensch = zustand.spieler.find((spieler) => spieler.steuerung === 'Mensch')
-  if (mensch === undefined) throw new Error('Z1: Im gespeicherten Stand sitzt kein Mensch (B2).')
   if (zustand.partiephase !== 'Beendet') {
-    // Gezeichnet ist der gespeicherte Stand; sonst prüfte der Quelltext einen anderen.
-    const titel = page.getByRole('region', { name: TISCH.deineHand }).getByRole('heading', { level: 2 }).first()
-    await expect(titel, `Z1 ${wo}: Die Seite zeigt nicht den gespeicherten Stand`).toHaveText(deineHandTitel(mensch.hand.length))
+    // Gezeichnet ist der gespeicherte Stand, erkennbar an der Zahl der Handkarten jedes Spielers;
+    // sonst prüfte der Quelltext einen anderen.
+    const mensch = menschIndex(zustand)
+    const anders = `Z1 ${wo}: Die Seite zeigt nicht den gespeicherten Stand`
+    for (const [index, spieler] of zustand.spieler.entries()) {
+      if (index === mensch) {
+        const titel = page.getByRole('region', { name: TISCH.deineHand }).getByRole('heading', { level: 2 }).first()
+        await expect(titel, anders).toHaveText(deineHandTitel(spieler.hand.length))
+      } else {
+        const zahl = page.getByRole('article', { name: spieler.name, exact: true }).getByText(handkartenText(spieler.hand.length), { exact: true })
+        await expect(zahl, anders).toHaveCount(1)
+      }
+    }
   }
   expect(konsole, `Z1 ${wo}: Konsolenfehler`).toEqual([])
-  const verraten = gefundeneIds(await page.content(), fremdeHandkarten(zustand))
-  expect(verraten, `Z1 ${wo}: Karten aus fremden Händen im Seitenquelltext`).toEqual([])
+  expect(verrateneIds(zustand, await page.content()), `Z1 ${wo}: Verborgene Karten im Seitenquelltext`).toEqual([])
 }

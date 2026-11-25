@@ -111,8 +111,8 @@ Testhook-Build nutzt den Vite-Modus `testhooks`; warum, steht in
    Zufallspartien, rund 4 Minuten), KI-Tasks zusätzlich `npm run test:staerke`
    (Turniere aus K5, rund 22 Minuten). Beide laufen in eigenen Vitest-Modi
    (`--mode dauerlauf`, `--mode staerke`) und sind nicht Teil von `npm test`.
-   `npm run test:vollpartien` spielt ganze Partien im Browser (Z1, rund eine
-   Minute); er ist nicht Teil von `npm run test:layout` (Abschnitt
+   `npm run test:vollpartien` spielt ganze Partien im Browser (Z1, rund 35
+   Sekunden samt Bau); er ist nicht Teil von `npm run test:layout` (Abschnitt
    „Vollpartien im Browser“).
 
    `npm run check:regeln` prüft die Umsetzungsregeln U1, U6 und U7 (Plan 3.7);
@@ -499,8 +499,9 @@ ihre Züge selbst. Konfiguration: `playwright.vollpartien.config.ts`, Läufe:
 | Erweiterung zu zweit und zu viert | 3101, 3103 | warten auf O10, noch nicht angelegt |
 
 Nach jedem Schritt, jedem Klick des Menschen und jedem Zug eines KI-Gegners,
-prüft der Lauf: kein Konsolenfehler, keine Karten-Id aus einer fremden Hand in
-`page.content()`, und der neue Stand im Speicher entsteht aus dem vorigen durch
+prüft der Lauf: kein Konsolenfehler, keine verborgene Id (Karte aus einer
+fremden Hand, fremde geheime Aufgabe) in `page.content()`, die Seite zeigt den
+gespeicherten Stand (Zahl der Handkarten jedes Spielers), und der neue Stand im Speicher entsteht aus dem vorigen durch
 eine Aktion, die die Engine aufzählt. Am Ende muss die Wertung je Spieler die
 Endwertung der Engine aus dem gespeicherten Schlussstand sein. Damit jeder
 KI-Schritt einzeln geprüft wird, steht die Uhr der Seite still; der Lauf

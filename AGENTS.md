@@ -112,7 +112,7 @@ unter die Marker, nicht hinein.
   rund 22 Minuten. Pflicht bei jeder Änderung unter `src/ki/strategien/`.
 - `npm run test:vollpartien` — Z1: ganze Partien von der Lobby bis zur Wertung
   über echte Klicks, Desktop und Handy hochkant, gegen einen eigenen
-  Produktionsbuild auf Port 4175 oder gegen `Z1_BASIS_URL`. Rund eine Minute.
+  Produktionsbuild auf Port 4175 oder gegen `Z1_BASIS_URL`. Rund 35 Sekunden.
   Siehe `docs/WORKFLOW.md`, „Vollpartien im Browser“.
 - `npm run typecheck`
 - `npm run build`
