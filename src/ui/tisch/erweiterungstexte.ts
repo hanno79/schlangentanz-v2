@@ -14,6 +14,7 @@ export const ERWEITERUNG = {
   // D35: Ob deine geheime Aufgabe erfüllt ist, siehst nur du.
   geheimErfuellt: 'geheim, erfüllt',
   einsetzbar: 'einsetzbar',
+  comebackUmgedreht: 'Comeback-Karte, umgedreht',
   aufgedeckt: 'Aufgedeckt',
   aufgabeErfuellt: 'Aufgabe erfüllt',
   comebackEinsetzen: 'Comeback einsetzen',

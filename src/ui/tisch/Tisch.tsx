@@ -1,5 +1,6 @@
 import '../tokens.css'
 import './tisch.css'
+import './gegner.css'
 import './karten.css'
 import './quer.css'
 import './bedienung.css'

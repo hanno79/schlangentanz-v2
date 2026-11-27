@@ -201,49 +201,6 @@ Tischfläche.
   }
 }
 
-.st-gegnerliste {
-  grid-area: gegner;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
-  gap: var(--abstand-2);
-}
-
-.st-gegner {
-  --karte-breite: var(--karte-gegner);
-  --weiter-grund: var(--farbe-flaeche);
-  display: flex;
-  flex-direction: column;
-  gap: var(--abstand-1);
-  min-width: 0;
-  padding: var(--abstand-2) var(--abstand-3);
-  background: var(--farbe-flaeche);
-  border: 2px solid transparent;
-  border-radius: var(--radius);
-  box-shadow: var(--schatten-flaeche);
-}
-
-.st-gegner--dran {
-  border-color: var(--farbe-akzent);
-}
-
-.st-gegner-kopf {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--abstand-1) var(--abstand-3);
-}
-
-.st-gegner-name {
-  font-size: var(--groesse-text);
-  font-weight: 700;
-  line-height: var(--zeilenhoehe);
-}
-
-.st-gegner-info {
-  font-size: var(--groesse-klein);
-  color: var(--farbe-tinte-leise);
-}
-
 /* Unten fest: deine Schlangen und deine Hand mit Ablage. */
 .st-unten {
   grid-area: unten;

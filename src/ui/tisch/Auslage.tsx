@@ -1,4 +1,4 @@
-import { Karte } from '../karten/Karte'
+import { Karte, Kartenrueckseite } from '../karten/Karte'
 import type { Bildkarte } from '../karten/kartenbilder'
 import { kartenname } from '../karten/kartentexte'
 import type { EigeneAnsicht, GegnerAnsicht, TischAnsicht } from '../spiel/tischAnsicht'
@@ -39,7 +39,12 @@ export function Auslage({ ich, zeigeGross }: { ich: EigeneAnsicht; zeigeGross: (
         )}
         {ich.comeback !== null && (
           <li className="st-mit-unterschrift">
-            <Karte karte={ich.comeback.karte} sizes={KARTENGROESSE.eigene} />
+            {/* A8.1: „Die Comeback-Karte wird umgedreht, um anzuzeigen, dass sie verwendet wurde.“ */}
+            {ich.comeback.verbraucht ? (
+              <Kartenrueckseite name={ERWEITERUNG.comebackUmgedreht} />
+            ) : (
+              <Karte karte={ich.comeback.karte} sizes={KARTENGROESSE.eigene} />
+            )}
             {ich.comeback.verbraucht && <span>{TISCH.verbraucht}</span>}
             {einsetzbar && <span>{ERWEITERUNG.einsetzbar}</span>}
           </li>

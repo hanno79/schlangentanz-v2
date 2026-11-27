@@ -14,9 +14,18 @@
 }
 
 .st-zugleiste-optionen--raster .st-ziel--option {
+  min-width: 0;
   padding: var(--abstand-1) var(--abstand-2);
   font-size: var(--groesse-klein);
   line-height: 1.25;
+  /* Lange Wörter („Nachziehstapel“, „Sonderkarte“) trennen nach deutscher Silbe (lang="de"); was dann noch
+     nicht passt, bricht hart um. So steht kein Text über dem Rand des Knopfs (Prüfprotokoll O10, Mangel 2). */
+  hyphens: auto;
+  overflow-wrap: anywhere;
+}
+
+.st-zugleiste-optionen--raster .st-ziel--option > span {
+  min-width: 0;
 }
 
 /* Eine erfüllte Aufgabe: ein Hinweis in Erfolgsfarbe mit Text (DESIGN.md, „Hinweis“). */

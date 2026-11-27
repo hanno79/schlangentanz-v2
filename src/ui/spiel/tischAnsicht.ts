@@ -15,6 +15,7 @@ import type {
   Spieler,
   Spielkarte,
   Spielzustand,
+  Zug,
 } from '../../engine'
 import { grundFuerDich } from '../tisch/gruende'
 
@@ -134,7 +135,7 @@ export interface StatusAnsicht {
    * Abwehrfrage nennt daraus Karte und Ziel (O6).
    */
   schwebend: { karte: Sonderkartenname; von: Person; entscheidet: Person; angesagt: SonderkarteInfo; ansage: KartenAktion } | null
-  /** Wie viele Zusatzaktionen dieser Teilzug von Comeback-Karte oder Schlangenkorb bekommen hat (A8.1, A7.10). */
+  /** Wie viele Zusatzaktionen von Comeback-Karte oder Schlangenkorb in diesem Teilzug noch übrig sind (A8.1, A7.10). */
   zusatzaktionen: number
   /** Wer über eine offene Entscheidung der Erweiterung wählt (X3); sonst `null`. */
   entscheidet: Person | null
@@ -195,6 +196,25 @@ export function personen(zustand: Spielzustand): (index: number) => Person {
 /** Der Grund einer Ablehnung, wie er am Tisch steht: in Du-Form, wenn er dich nennt (O6). */
 export function grundAmTisch(zustand: Spielzustand, ablehnung: Ablehnung): string {
   return grundFuerDich(ablehnung, personen(zustand))
+}
+
+/** Die Plätze, die jeder Zug ohne Zusatzaktion hat: eine Farbkarte und eine Sonderkarte (A5, D12). */
+const GRUNDPLAETZE = ['Farbkarte', 'Sonderkarte']
+
+/**
+ * Wie viele Zusatzaktionen dieses Teilzugs noch frei sind (A8.1, A7.10;
+ * Prüfprotokoll O10, Mangel 3). Die Engine führt nur, welche Zusatzaktionen der
+ * Zug bekommen hat und was er schon verwendet hat; eine Zahl der übrigen gibt
+ * sie nicht heraus. Was zuerst einen Grundplatz belegen kann, belegt ihn; jede
+ * weitere Verwendung, die einen Platz braucht, verbraucht eine Zusatzaktion.
+ * Eine Karte, die eine Wirkung zusätzlich legt (Risiko-Aktion 2), passt auf
+ * keinen Platz und zählt nicht.
+ */
+function uebrigeZusatzaktionen(zug: Zug): number {
+  const artenMitPlatz = new Set([...GRUNDPLAETZE, ...zug.zusatzaktionen.flatMap((zusatz) => zusatz.erlaubt)])
+  const belegt = zug.verwendet.filter((verwendung) => artenMitPlatz.has(verwendung.art))
+  const imGrundzug = GRUNDPLAETZE.filter((art) => belegt.some((verwendung) => verwendung.art === art)).length
+  return Math.max(0, zug.zusatzaktionen.length - (belegt.length - imGrundzug))
 }
 
 /** Die offene Entscheidung, wie jeder sie sehen darf (B2): Art, Beteiligte und die offen genannten Karten (D52, D77). */
@@ -273,7 +293,7 @@ export function tischAnsicht(zustand: Spielzustand): TischAnsicht {
         schwebend === null || entscheider === null
           ? null
           : { karte: schwebend.karte.name, von: person(angreifer), entscheidet: person(entscheider), angesagt: schwebend.karte, ansage: schwebend.aktion },
-      zusatzaktionen: beendet ? 0 : zustand.zug.zusatzaktionen.length,
+      zusatzaktionen: beendet ? 0 : uebrigeZusatzaktionen(zustand.zug),
       entscheidet: zustand.entscheidung === null ? null : person(zustand.entscheidung.entscheider),
     },
     aktionen: entscheider === mensch ? ermittleAktionen(zustand) : [],

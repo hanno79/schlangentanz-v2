@@ -312,8 +312,8 @@ Weiss und Tinte, `--fokus-ring`) und, wo es sie gibt, Gewählt und Gesperrt.
   Zugleiste („Comeback einsetzen“, „Risiko spielen“), ebenso „2 abwerfen,
   3 ziehen“, solange nichts gewählt ist und die Engine sie anbietet. Die vier
   Risiko-Aktionen, die Boni des Korbs und die Möglichkeiten einer Entscheidung
-  stehen als Ziele nebeneinander (mindestens 5rem breit, Text bricht im Knopf
-  um), damit die Leiste in Handy quer niedrig bleibt; ihre kurzen Namen ergänzt
+  stehen als Ziele nebeneinander (mindestens 5rem breit, Text trennt nach Silben
+  und bricht im Knopf um), damit die Leiste in Handy quer niedrig bleibt; ihre kurzen Namen ergänzt
   danach die Ansage. Nennt eine Möglichkeit eine Karte (die angesagte Karte,
   eine Karte deiner Ablage), trägt der Knopf ein kleines Bild und den kurzen
   Namen. Die benannte Karte einer Risiko-Aktion tippt man in Hand oder Schlange
@@ -323,7 +323,8 @@ Weiss und Tinte, `--fokus-ring`) und, wo es sie gibt, Gewählt und Gesperrt.
   beenden“; die Statuszeile sagt „Du entscheidest.“ Eine erfüllte Aufgabe
   meldet eine Zeile in Erfolgsfarbe in der Zugleiste, bis du wieder handelst.
   Deine Auslage zeigt „einsetzbar“ nur, wenn die Engine die Comeback-Karte
-  jetzt anbietet, eine verbrauchte heisst „verbraucht“; erfüllte Aufgaben
+  jetzt anbietet; eine verbrauchte liegt umgedreht da (Rückseite, A8.1) und
+  heisst „verbraucht“. Die Statuszeile nennt die noch übrigen Zusatzaktionen; erfüllte Aufgaben
   stehen darunter, beim Gegner als Zeile im Kopf mit seiner Auslage. Eine
   aufgedeckte Karte liegt in der Tischmitte unter „Aufgedeckt“.
 - **Dialog „Zu viele Handkarten“** (`<dialog>`): alle Handkarten als Knöpfe,
