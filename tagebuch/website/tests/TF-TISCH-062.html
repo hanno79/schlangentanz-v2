@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-TISCH-062 Bei 320 × 568 liegt der Fokus in der Zugleiste beim Weitertabben immer sichtbar und frei. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 27.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-TISCH-062 Bei 320 × 568 liegt der Fokus in der Zugleiste beim Weitertabben immer sichtbar und frei.</h1><p class="etiketten"><span class="etikett">Bereich Spieltisch</span><span class="etikett">Regression nein</span><span class="etikett">Priorität niedrig</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-TISCH-055</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Beim Spielen mit der Tastatur holt der Browser das Element mit dem Fokus ins Bild. Seit die Seite bei 320 × 568 scrollt, muss das für jeden Knopf der Zugleiste klappen, und über dem Knopf darf dann nichts liegen.</p><h2>Bestanden, wenn</h2><p>In 40 Schritten mit Tab liegt jedes fokussierte Element der Zugleiste ganz im Fenster, und an seiner Mitte liefert <code>document.elementFromPoint</code> das Element selbst.</p><h2>Fehlgeschlagen, wenn</h2><p>Ein Knopf der Zugleiste mit Fokus liegt ausserhalb des Fensters oder unter einer Schlange, einer Handkarte oder einem Gegnerkasten; vor der Korrektur traf das „Ansehen“ und „Abbrechen“.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>27.11.2026</dd><dt>Änderung</dt><dd>task/O10b-320-zugleiste (PR #129)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Testhook-Build, Stand ab Commit 705a9cef, Fenster 320 × 568</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Szenario <code>korb-entfernen</code>, Schlangenkorb gewählt.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Adresse</td><td>öffnen</td><td>`/spiel?szenario=korb-entfernen&amp;tempo=sofort`</td><td>Tisch mit „Wähle eine Karte aus deiner Hand.“</td></tr><tr><td>2</td><td>Deine Hand</td><td>Schlangenkorb antippen</td><td></td><td>„Wähle einen der Boni des Schlangenkorbs.“ mit vier Boni</td></tr><tr><td>3</td><td>Tastatur</td><td>40-mal Tab drücken</td><td>Tab</td><td>jeder Knopf der Zugleiste mit Fokusring ist ganz zu sehen und nicht von Karten überdeckt</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-27">27.11.2026 20:34</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer O10b) &middot; agent &middot; pruef-o10b @ <span class="commit" title="705a9cef05c82cf3f3a8a7be2695d7a23cb25c99">705a9ce</span> / Testhook-Build 705a9cef, Port 4374 / Playwright Chromium 1.60, 320x568 und 390x844</p><p>korb-entfernen mit gewähltem Korb, 40-mal Tab: jedes fokussierte Element der Zugleiste ganz im Fenster und an der Mitte frei (0 Befunde) bei 320x568 und 390x844. Gegenprobe mit der CSS aus origin/neuaufbau, 320x568: Ansehen und Abbrechen mit Fokus je zweimal im Bild, aber überdeckt.</p><ul class="belege"><li><a href="belege/2026-11-27-2034-TF-TISCH-062-1.txt">2026-11-27-2034-TF-TISCH-062-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

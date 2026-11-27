@@ -1,0 +1,22 @@
+Störprobe: tisch.css und quer.css aus origin/neuaufbau, npx playwright test tests/layout/erweiterung.hooks.spec.ts -g "O10b", Exit 1.
+  x  3 [tablet-quer-testhooks] › tests\layout\erweiterung.hooks.spec.ts:189:3 › O10b (TF-TISCH-059): die Erweiterung bei 320 × 568 › O10b: auf jedem Weg der Erweiterung liegen Zugleiste und Ziele frei, notfalls nach Scrollen (320 × 568) (933ms)
+  x  1 [handy-hochkant-testhooks] › tests\layout\erweiterung.hooks.spec.ts:189:3 › O10b (TF-TISCH-059): die Erweiterung bei 320 × 568 › O10b: auf jedem Weg der Erweiterung liegen Zugleiste und Ziele frei, notfalls nach Scrollen (320 × 568) (919ms)
+  x  2 [desktop-testhooks] › tests\layout\erweiterung.hooks.spec.ts:189:3 › O10b (TF-TISCH-059): die Erweiterung bei 320 × 568 › O10b: auf jedem Weg der Erweiterung liegen Zugleiste und Ziele frei, notfalls nach Scrollen (320 × 568) (1.0s)
+  x  5 [handy-quer-testhooks] › tests\layout\erweiterung.hooks.spec.ts:189:3 › O10b (TF-TISCH-059): die Erweiterung bei 320 × 568 › O10b: auf jedem Weg der Erweiterung liegen Zugleiste und Ziele frei, notfalls nach Scrollen (320 × 568) (1.0s)
+  x  4 [tablet-hochkant-testhooks] › tests\layout\erweiterung.hooks.spec.ts:189:3 › O10b (TF-TISCH-059): die Erweiterung bei 320 × 568 › O10b: auf jedem Weg der Erweiterung liegen Zugleiste und Ziele frei, notfalls nach Scrollen (320 × 568) (1.1s)
+    Error: Comeback-Karte, Start: 1 von 4 Knöpfen und Sätzen der Zugleiste nicht frei:
+      · Wähle eine Karte aus deiner Hand. — an der Mitte liegt ARTICLE.st-gegner
+    > 182 |     expect(leiste.befunde, `${lage}: ${leiste.befunde.length} von ${leiste.gezaehlt} Knöpfen und Sätzen der Zugleiste nicht frei:${befundListe(leiste.befunde)}`).toEqual([])
+    Error: Comeback-Karte, Start: 1 von 4 Knöpfen und Sätzen der Zugleiste nicht frei:
+      · Wähle eine Karte aus deiner Hand. — an der Mitte liegt ARTICLE.st-gegner
+    > 182 |     expect(leiste.befunde, `${lage}: ${leiste.befunde.length} von ${leiste.gezaehlt} Knöpfen und Sätzen der Zugleiste nicht frei:${befundListe(leiste.befunde)}`).toEqual([])
+    Error: Comeback-Karte, Start: 1 von 4 Knöpfen und Sätzen der Zugleiste nicht frei:
+      · Wähle eine Karte aus deiner Hand. — an der Mitte liegt ARTICLE.st-gegner
+    > 182 |     expect(leiste.befunde, `${lage}: ${leiste.befunde.length} von ${leiste.gezaehlt} Knöpfen und Sätzen der Zugleiste nicht frei:${befundListe(leiste.befunde)}`).toEqual([])
+    Error: Comeback-Karte, Start: 1 von 4 Knöpfen und Sätzen der Zugleiste nicht frei:
+      · Wähle eine Karte aus deiner Hand. — an der Mitte liegt ARTICLE.st-gegner
+    > 182 |     expect(leiste.befunde, `${lage}: ${leiste.befunde.length} von ${leiste.gezaehlt} Knöpfen und Sätzen der Zugleiste nicht frei:${befundListe(leiste.befunde)}`).toEqual([])
+    Error: Comeback-Karte, Start: 1 von 4 Knöpfen und Sätzen der Zugleiste nicht frei:
+      · Wähle eine Karte aus deiner Hand. — an der Mitte liegt ARTICLE.st-gegner
+    > 182 |     expect(leiste.befunde, `${lage}: ${leiste.befunde.length} von ${leiste.gezaehlt} Knöpfen und Sätzen der Zugleiste nicht frei:${befundListe(leiste.befunde)}`).toEqual([])
+  5 failed
