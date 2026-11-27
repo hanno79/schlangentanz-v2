@@ -8,6 +8,7 @@ import { kiWahl } from '../schritt'
 import { sichtFuer } from '../sicht'
 import { erstelleSolideKi } from './solideKi'
 import { erstelleSuche, istDurchlassen } from './suche'
+import { schaetzeZiehen } from './ziehen'
 
 /*
 K4, Befunde des Codex-Reviews (27.11.2026), je mit der Stellung aus dem Befund:
@@ -19,6 +20,11 @@ K4, Befunde des Codex-Reviews (27.11.2026), je mit der Stellung aus dem Befund:
    (A8.1, D49).
 5. Beim Korb „ziehen“ zählt eine gezogene Regenbogenschlange, die eine Gruppe
    vollendet (D43).
+Aus der zweiten Prüfung desselben Tages:
+4. Zieht die KI nach dem Korb „aktionen“, zählt eine Aufgabe, die der Korb schon
+   eingelöst hat, in der Schätzung nicht ein zweites Mal (A9).
+5. Die dritte gezogene Karte nach D71 ist die Farbkarte des Zuges, keine
+   Regenbogenschlange.
 */
 
 function spiele(zustand: Spielzustand, passt: (aktion: SpielAktion) => boolean): Spielzustand {
@@ -115,5 +121,51 @@ describe('K4, Codex-Befund 5, D43: eine gezogene Regenbogenschlange zählt beim 
       const wahl = kiWahl(start, erstelleSolideKi(erzeugeZufall(saat)))
       expect(wahl, `D43: Saat ${saat}`).toMatchObject({ typ: 'SchlangenkorbSpielen', bonus: { art: 'ziehen' } })
     }
+  })
+})
+
+describe('K4, Codex-Befund 4 (zweite Prüfung), A9: nach dem Korb „aktionen“ zählt eine eingelöste Aufgabe beim Ziehen nicht doppelt', () => {
+  it('A8.1, D49: der Korb als fünfte Art löst Schlangenrepertoire ein; „Zwei Karten abwerfen, drei ziehen“ danach schätzt sie wie aus der Stellung nach dem Korb', () => {
+    const start = baukasten({ spielerzahl: 2, erweiterung: true, zufall: erzeugeZufall(51) })
+      .schlange(1, ['Grün', 'Grün'])
+      .schlange(0, ['Braun', 'Braun'])
+      .hand(1, ['Schlangenkorb des Glücks', 'Rot', 'Gelb', 'Farbenschutz', 'Farbenschutz'])
+      .haendeAuffuellen()
+      .aendere((stand) => {
+        legeAufgabenAus(stand, { offen: ['Schlangenrepertoire', 'Symmetriemeister', 'Lila Riese'], geheim: [[0, 'Gelber Schatz'], [1, 'Schlangentanz']], stapelOben: ['Schlangenbeschwörer'] })
+        stand.spieler[1].ausgespielteSonderkarten.push('Farbendieb', 'Schlangenblockade', 'Farbenfusion', 'Verdoppler')
+      })
+      .amZug(1)
+      .zustand()
+    const korb = ermittleAktionen(start).find((aktion) => aktion.typ === 'SchlangenkorbSpielen' && aktion.bonus.art === 'aktionen')!
+    const sicht = sichtFuer(start, 1)
+    const suche = erstelleSuche(sicht, erzeugeZufall(1))
+    const folge = suche.folge(suche.wurzel, sicht, korb)
+    expect(folge.stellung.sicht.spieler[1].erfuellteAufgaben.map((aufgabe) => aufgabe.name), 'Testaufbau').toEqual(['Schlangenrepertoire'])
+    const geplant = schaetzeZiehen(folge.stellung.sicht, folge.stellung.aktionen(), suche.schaetzrechnungAb(folge.stellung))
+    const nachher = anwendeAktion(start, korb).zustand
+    const sichtNachher = sichtFuer(nachher, 1)
+    const direkt = schaetzeZiehen(sichtNachher, ermittleAktionen(nachher), erstelleSuche(sichtNachher, erzeugeZufall(1)).schaetzrechnung)
+    expect(geplant?.aktion, 'A8.1: dieselbe Aktion').toEqual(direkt?.aktion)
+    expect(geplant?.wert, `A9: geschätzt nach dem Korb ${geplant?.wert}, aus der Stellung danach ${direkt?.wert}`).toBeCloseTo(direkt!.wert, 9)
+  })
+})
+
+describe('K4, Codex-Befund 5 (zweite Prüfung), D71: die dritte gezogene Karte ist die Farbkarte des Zuges', () => {
+  it('D43, D71: zieht der Korb nur Regenbogenschlangen, ist die Schätzung gleich, ob die Farbkarte des Zuges noch frei ist oder nicht', () => {
+    const werte = [0, 1].map((farbkarten) => {
+      const zustand = baukasten({ spielerzahl: 2, erweiterung: true, zufall: erzeugeZufall(52) })
+        .schlange(1, ['Grün', 'Grün', 'Schlangenblockade', 'Rot', 'Rot'])
+        .schlange(1, ['Gelb', 'Gelb'])
+        .hand(1, ['Schlangenkorb des Glücks', 'Farbenschutz', 'Farbenschutz', 'Farbenschutz', 'Farbenschutz'])
+        .stapelOben(['Regenbogenschlange', 'Regenbogenschlange', 'Regenbogenschlange'])
+        .stapelBehalten(3)
+        .amZug(1)
+        .gespielt(farbkarten, 0)
+        .zustand()
+      const sicht = sichtFuer(zustand, 1)
+      return schaetzeZiehen(sicht, ermittleAktionen(zustand), erstelleSuche(sicht, erzeugeZufall(1)).schaetzrechnung)?.wert
+    })
+    expect(werte[0], `D71: frei ${werte[0]}, gespielt ${werte[1]}`).toBeCloseTo(werte[1]!, 9)
   })
 })
