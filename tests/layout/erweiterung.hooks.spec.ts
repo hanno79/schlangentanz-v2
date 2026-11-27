@@ -4,7 +4,7 @@ import { SPIELSTAND_SCHLUESSEL } from '../../src/spielstand'
 import { verrateneIds } from '../../src/ui/tisch/__tests__/szenarien'
 import { erwarteGrundlagen, erwarteSichtbarenFokus, tabBis } from './barrierefreiheit_messung'
 import { befundListe, findeAbgeschnittenes, findeKleineTippflaechen, findeTextAusserhalbVonKnoepfen, waagrechterUeberstand } from './messung'
-import { ausserhalbDesFensters, unerreichbareZiele } from './ziele_messung'
+import { ausserhalbDesFensters, unerreichbareZiele, verdeckteElemente } from './ziele_messung'
 
 /*
 O10 im echten Browser, in jeder Geräteklasse: Comeback-Karte, Risiko-Karte,
@@ -154,6 +154,42 @@ test.describe('O10 K3 (Prüfprotokoll O10, Mangel 2): Text bleibt in den Knöpfe
       }
     }
   })
+})
+
+/*
+TF-TISCH-059 (O10b), unter den Geräteklassen: 320 × 568 ist schmaler und
+niedriger als Handy hochkant. Risiko-Aktionen und Boni brauchen dort so viel
+Höhe, dass Kopfleiste, Zugleiste und dein Platz nicht übereinander ins Fenster
+passen. Dann darf nichts übereinander liegen: Die Seite scrollt, und jeder Knopf
+und Satz der Zugleiste und jedes angebotene Ziel liegt danach frei im Bild.
+*/
+test.describe('O10b (TF-TISCH-059): die Erweiterung bei 320 × 568', () => {
+  test.use({ viewport: { width: 320, height: 568 }, hasTouch: true, isMobile: true })
+
+  async function pruefeSchmal(page: Page, schritt: string): Promise<void> {
+    const leiste = await verdeckteElemente(page, '[aria-label="Zugleiste"] :is(button, p)')
+    expect(leiste.gezaehlt, `${schritt}: Testaufbau, Knöpfe und Sätze der Zugleiste`).toBeGreaterThan(1)
+    expect(leiste.befunde, `${schritt}: ${leiste.befunde.length} von ${leiste.gezaehlt} Knöpfen und Sätzen der Zugleiste nicht frei:${befundListe(leiste.befunde)}`).toEqual([])
+    const ziele = await unerreichbareZiele(page)
+    expect(ziele.befunde, `${schritt}: ${ziele.befunde.length} von ${ziele.gezaehlt} Zielen nicht frei erreichbar:${befundListe(ziele.befunde)}`).toEqual([])
+    expect(await waagrechterUeberstand(page), `${schritt}: Seite breiter als das Fenster`).toBe(0)
+    const ragt = await findeTextAusserhalbVonKnoepfen(page)
+    expect(ragt, `${schritt}: Text ausserhalb des Knopfs:${befundListe(ragt)}`).toEqual([])
+  }
+
+  for (const weg of WEGE) {
+    test(`O10b: ${weg.name} in „${weg.szenario}“: Zugleiste und Ziele frei, notfalls nach Scrollen (320 × 568)`, async ({ page }) => {
+      await oeffneSzenario(page, weg.szenario)
+      await pruefeSchmal(page, 'Start')
+      for (const [nummer, schritt] of [...(weg.vorbereitung ?? []), ...weg.schritte].entries()) {
+        const knopf = knopfFuer(page, schritt)
+        await knopf.scrollIntoViewIfNeeded()
+        await knopf.tap()
+        await pruefeSchmal(page, `Schritt ${nummer + 1}`)
+      }
+      await expect(zugleiste(page)).toContainText('Ansage:')
+    })
+  }
 })
 
 test.describe('O10 K3, O11 K1: die Erweiterung allein mit der Tastatur', () => {

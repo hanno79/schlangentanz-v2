@@ -45,6 +45,36 @@ export async function unerreichbareZiele(page: Page): Promise<{ gezaehlt: number
   })
 }
 
+/**
+ * Jedes sichtbare Element der Auswahl, so wie ein Mensch es holt: Die Seite und
+ * seine scrollenden Bereiche bringen es so wenig wie nötig ins Bild. Danach muss
+ * es ganz im Fenster liegen und an seiner Mitte getroffen werden, darf also von
+ * keinem anderen Element überdeckt sein (TF-TISCH-059).
+ */
+export async function verdeckteElemente(page: Page, auswahl: string): Promise<{ gezaehlt: number; befunde: Befund[] }> {
+  return page.evaluate((selektor) => {
+    const befunde: { element: string; detail: string }[] = []
+    const elemente = Array.from(document.querySelectorAll<HTMLElement>(selektor)).filter((element) => {
+      const box = element.getBoundingClientRect()
+      return element.checkVisibility() && box.width >= 2 && box.height >= 2
+    })
+    for (const element of elemente) {
+      const name = element.getAttribute('aria-label') ?? element.textContent?.trim() ?? element.tagName
+      element.scrollIntoView({ block: 'nearest', inline: 'nearest' })
+      const box = element.getBoundingClientRect()
+      if (box.left < -1 || box.top < -1 || box.right > window.innerWidth + 1 || box.bottom > window.innerHeight + 1) {
+        befunde.push({ element: name, detail: `liegt auch nach dem Scrollen bei ${Math.round(box.left)},${Math.round(box.top)}..${Math.round(box.right)},${Math.round(box.bottom)} ausserhalb des Fensters` })
+        continue
+      }
+      const treffer = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2)
+      if (treffer === null || !(treffer === element || element.contains(treffer))) {
+        befunde.push({ element: name, detail: `an der Mitte liegt ${treffer === null ? 'nichts' : `${treffer.tagName}.${treffer.className}`}` })
+      }
+    }
+    return { gezaehlt: elemente.length, befunde }
+  }, auswahl)
+}
+
 /** Wie weit ein Element ausserhalb des Fensters liegt; leer, wenn es ganz darin liegt. */
 export async function ausserhalbDesFensters(page: Page, auswahl: string): Promise<string[]> {
   return page.evaluate((selektor) => {
