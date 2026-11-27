@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest'
-import { anwendeAktion, berechneEndwertung, berechneZwischenstand, ermittleAktionen, erzeugeZufall, werteSchlangen } from '../../engine'
+import { anwendeAktion, berechneEndwertung, berechneZwischenstand, ermittleAktionen, ermittleEntscheider, erzeugeZufall, werteSchlangen } from '../../engine'
 import { baukasten } from '../../engine/testing/szenario'
 import type { Ereignis, SpielAktion, Spielzustand } from '../../engine'
 import { findeSzenario } from '../../entwicklung/szenarien'
@@ -176,11 +176,12 @@ describe('K2 Kriterium 1: Kann sie mit einer Handkarte eine Dreiergruppe vollend
    * denen der Zug verglichen wird (A6). Wehrt er in der Partie ab, sieht sie das bei der Wahl nicht (K2.7); gemessen
    * wird ihre Wahl, nicht die Abwehr (K2b, Befunde aus X6 und X5: geplant 40.00 und 27.80, nach der Abwehr 39.50 und
    * 27.30, beste Vollendung 39.60 und 27.40; `solideKi_gleichstand.test.ts`). Karten nach einer Abwehr stammen aus
-   * dem Partieverlauf; hätte sie ohne Abwehr anders weitergespielt, ist die Messung dort nur eine Näherung.
+   * dem Partieverlauf; hätte sie ohne Abwehr anders weitergespielt, ist die Messung dort nur eine Näherung. Wählt nach
+   * einer ihrer Risiko-Karten ein Gegner (A8.2, D52), geht es ebenso mit dem Stand aus dem Partieverlauf weiter.
    */
   function geplantesEnde(zug: readonly Entscheidung[], beendet: number): Spielzustand {
     const gespielt = zug.slice(0, beendet < 0 ? zug.length - 1 : beendet)
-    return gespielt.reduce((stand, { aktion }) => nachDurchlassen(stand, aktion, 0), zug[0].vorher)
+    return gespielt.reduce((stand, { aktion, vorher }) => nachDurchlassen(ermittleEntscheider(stand) === 0 ? stand : vorher, aktion, 0), zug[0].vorher)
   }
 
   it('K2.1: in Partien vollendet sie in jedem Zug, in dem irgendeine Handkarte eine eigene Dreiergruppe vollenden kann, eine Gruppe oder spielt eine Vollendung, die abgewehrt wird, ausser ihr Zug ist strikt besser bewertet als jede Vollendung samt zweiter Karte (elf Partien ohne und sechs mit Erweiterung, Saat 7154 beide Male eingeschlossen)', () => {

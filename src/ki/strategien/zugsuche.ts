@@ -2,6 +2,7 @@ import type { SpielAktion } from '../../engine';
 import type { Sicht } from '../sicht';
 import { wehrtAb } from './abwehr';
 import { GLEICH, eigeneGruppen, gruppenwert, haltewert } from './bewertung';
+import { ERSTZUG_HALTEN, imErstenZug, loestAufgabe, setztAuslageEin } from './eroeffnung';
 import { folgeschluessel } from './folgeschluessel';
 import { waehleRisiko } from './risiko';
 import { besser, beste, erstelleSuche, istDurchlassen, ohneBewertung } from './suche';
@@ -20,7 +21,10 @@ neue Suche auf der echten neuen Hand.
 Mit Erweiterung (Plan K4): Die Bewertung kennt Aufgaben, Auslage und eine Hand über 5
 Karten (`erweiterungswert.ts`). Eine Aktion, die nur den Zug erweitert (Comeback-Karte,
 Korb „aktionen“), bringt erst mit den Karten danach etwas; die beste davon wird deshalb
-immer vertieft, auch ausserhalb der besten drei, und zwei Karten weit. Was eine
+immer vertieft, auch ausserhalb der besten drei, und zwei Karten weit. Ebenso immer
+vertieft wird die beste Aktion, die eine Aufgabe erfüllt (Kriterium 1). Im ersten Zug
+setzt die KI Comeback-Karte, Risiko-Karte und Schlangenkorb nur mit Gruppe, Aufgabe oder
+deutlich höherer Bewertung ein (`eroeffnung.ts`, Kriterium 2). Was eine
 verdeckte Karte entscheidet, rechnet die Suche nicht auf dem erratenen Zustand durch,
 sondern schätzt es mit den offenen Wahrscheinlichkeiten: Risiko-Karten (`risiko.ts`)
 und verdecktes Ziehen (`ziehen.ts`). Bringt eine Risiko-Karte im Erwartungswert mehr,
@@ -34,7 +38,7 @@ Kriterium 4).
 Feste Regeln neben der Bewertung, Vorgaben des Autors (`suche.ts`):
 - Eine Regenbogenschlange kommt nie in eine gegnerische Schlange, solange die
   Engine eine eigene als Ziel anbietet (Kriterium 3, D9).
-- Keine Farbenfusion, die die eigenen Punkte senkt (Kriterium 4).
+- Keine Farbenfusion, die die eigenen Punkte samt erfüllter Aufgaben senkt (Kriterium 4).
 - Keine Schlangengrube auf einen Spieler, der keinen Zug mehr hat; die Engine
   erlaubt sie (D29), sie bringt aber nichts. Nur wenn nichts anderes geht, spielt
   die KI einen solchen Zug.
@@ -108,9 +112,12 @@ function spiele(sicht: Sicht, aktionen: readonly SpielAktion[], zufall: () => nu
   const erste = suche.kandidaten(suche.wurzel, sicht, aktionen, ERSTE_AUSWAHL, NACHLESE);
   const offen = erste.filter(weiter).sort((a, b) => b.wert - a.wert);
   // Vertieft werden die besten drei verschiedenen Züge; gleichwertige Varianten derselben Folge belegen nur einen Platz.
-  const vertiefen = verschiedene(offen, ZWEITE_TIEFE);
+  // Dazu immer die beste Aktion, die den Zug erweitert, und die beste, die eine Aufgabe erfüllt (Kriterium 1); zusammen höchstens ZWEITE_TIEFE + 1.
+  const vorn = verschiedene(offen, ZWEITE_TIEFE);
   const erweiternd = offen.find((folge) => erweitertZug(folge.aktion));
-  if (erweiternd !== undefined && !vertiefen.includes(erweiternd)) vertiefen.push(erweiternd);
+  const erfuellend = offen.find((folge) => loestAufgabe(sicht, folge.stellung.sicht));
+  const dazu = [erweiternd, erfuellend === erweiternd ? undefined : erfuellend].filter((folge): folge is Folge => folge !== undefined && !vorn.includes(folge));
+  const vertiefen = [...vorn.slice(0, ZWEITE_TIEFE + 1 - dazu.length), ...dazu];
   const vertieft = new Map<Folge, Folge>();
   for (const folge of vertiefen) {
     const zweite = naechste(folge, ZWEITE_AUSWAHL);
@@ -123,22 +130,28 @@ function spiele(sicht: Sicht, aktionen: readonly SpielAktion[], zufall: () => nu
     const plan = ziehen !== undefined && besser(ziehen, fortsetzung ?? folge) ? ziehen : fortsetzung;
     if (plan !== undefined) vertieft.set(folge, plan);
   }
-  // Wert und Punkte eines Plans sind die seiner besten Fortsetzung im selben Zug.
-  const gewaehlt = beste(
-    erste.map((folge) => {
-      const plan = vertieft.get(folge) ?? folge;
-      return { ...folge, wert: plan.wert, punkte: plan.punkte, gruppen: plan.gruppen };
-    }),
-  );
   const beenden = aktionen.find((aktion) => aktion.typ === 'ZugBeenden');
+  const erster = imErstenZug(sicht);
+  const halten = beenden !== undefined || erster ? suche.ergebnis(suche.wurzel) : undefined;
+  // Kriterium 2: im ersten Zug Comeback-Karte und Schlangenkorb nur mit Gruppe, Aufgabe oder deutlich höherer Bewertung (`eroeffnung.ts`).
+  const erstzug = erster ? halten : undefined;
+  const lohnt = (folge: Folge, plan: Folge) =>
+    erstzug === undefined || !setztAuslageEin(folge.aktion) || plan.gruppen > erstzug.gruppen || loestAufgabe(sicht, plan.stellung.sicht) || plan.wert > erstzug.wert + ERSTZUG_HALTEN;
+  // Wert und Punkte eines Plans sind die seiner besten Fortsetzung im selben Zug.
+  const plaene = erste.map((folge) => {
+    const plan = vertieft.get(folge) ?? folge;
+    return { folge: { ...folge, wert: plan.wert, punkte: plan.punkte, gruppen: plan.gruppen }, erlaubt: lohnt(folge, plan) };
+  });
+  const gewaehlt = beste(plaene.filter((eintrag) => eintrag.erlaubt).map((eintrag) => eintrag.folge)) ?? beste(plaene.map((eintrag) => eintrag.folge));
   let plan: { aktion: SpielAktion; wert: number } | undefined = gewaehlt;
-  if (beenden !== undefined) {
-    const halten = suche.ergebnis(suche.wurzel);
+  if (beenden !== undefined && halten !== undefined) {
     if (gewaehlt === undefined || gewaehlt.verworfen || !besser(gewaehlt, halten)) plan = { aktion: beenden, wert: halten.wert };
   }
-  // Verdecktes Ziehen nur, wenn es nach der Schätzung mehr bringt als der beste Plan (`ziehen.ts`).
+  // Verdecktes Ziehen nur, wenn es nach der Schätzung mehr bringt als der beste Plan (`ziehen.ts`), im ersten Zug mehr als ERSTZUG_HALTEN über dem Halten.
   const ziehen = schaetzeZiehen(sicht, aktionen, suche.schaetzrechnung);
-  if (ziehen !== null && (plan === undefined || ziehen.wert > plan.wert + GLEICH)) return { aktion: ziehen.aktion, bewertungen: suche.gezaehlt() };
+  if (ziehen !== null && (plan === undefined || ziehen.wert > plan.wert + GLEICH) && (erstzug === undefined || ziehen.wert > erstzug.wert + ERSTZUG_HALTEN)) {
+    return { aktion: ziehen.aktion, bewertungen: suche.gezaehlt() };
+  }
   if (plan === undefined) throw new Error('Zugsuche: Die Engine bietet weder eine Karte noch „Zug beenden“ an.');
   return { aktion: plan.aktion, bewertungen: suche.gezaehlt() };
 }

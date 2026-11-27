@@ -3,6 +3,7 @@ import type { Sicht } from '../sicht';
 import { GLEICH, haltewert } from './bewertung';
 import { STICHPROBE, besteAnlage, hoechster, mitGezogenen, mitHand, mittel, nachZiehen, schaetzwert, verteilt } from './schaetzung';
 import type { Schaetzrechnung } from './schaetzung';
+import { ERSTZUG_HALTEN, imErstenZug } from './eroeffnung';
 import { einfuegen, ersetze } from './vorauswahl';
 
 /*
@@ -29,7 +30,7 @@ Karten dieses Ausgangs gemittelt (`schaetzung.ts`).
 Die KI spielt die Risiko-Karte mit dem höchsten Erwartungswert, wenn er die Bewertung
 von jetzt übersteigt. Weil die Bewertung jede Risiko-Karte in der Auslage mitzählt
 (`erweiterungswert.ts`), lohnt sie sich nur, wenn sie mehr bringt, als sie liegend wert
-ist; ohne Nutzen spielt die KI sie nicht, auch nicht im ersten Zug.
+ist. Im ersten Zug muss sie die Bewertung zusätzlich um ERSTZUG_HALTEN heben (`eroeffnung.ts`).
 */
 
 /** Wie viele Schlangenkarten für Aktion 3 ganz durchgerechnet werden. */
@@ -193,5 +194,7 @@ export function waehleRisiko(sicht: Sicht, aktionen: readonly SpielAktion[], rec
   ];
   const jetzt = r.wert(sicht);
   const beste = hoechster(werte, (eintrag) => eintrag.wert);
-  return beste !== undefined && beste.wert > jetzt + GLEICH ? beste.aktion : null;
+  // Kriterium 2: im ersten Zug nur, wenn die Bewertung um mehr als ERSTZUG_HALTEN steigt (`eroeffnung.ts`).
+  const schwelle = imErstenZug(sicht) ? ERSTZUG_HALTEN : GLEICH;
+  return beste !== undefined && beste.wert > jetzt + schwelle ? beste.aktion : null;
 }

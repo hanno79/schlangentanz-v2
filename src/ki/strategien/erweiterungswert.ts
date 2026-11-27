@@ -30,8 +30,12 @@ Erweiterung ist jeder Beitrag 0, und die Bewertung bleibt, wie sie war.
 
 /** Eine Comeback-Karte, die noch nicht eingesetzt ist (A8.1). */
 const COMEBACK_HALTEN = 1;
-/** Eine Risiko-Karte, die noch in der Auslage liegt (A8.2). */
-const RISIKOKARTE_HALTEN = 0.6;
+/**
+ * Eine Risiko-Karte, die noch in der Auslage liegt (A8.2). In 2'000 Spiegelpartien holte
+ * die KI mit 0.6 gegen dieselbe KI mit 1.5 nur 47.6 % (Standardfehler 1.1 %); 1.5 gegen
+ * 2.5 ergab 50.9 %, also keinen Unterschied (Testregister TF-KI-041).
+ */
+const RISIKOKARTE_HALTEN = 1.5;
 
 /** Die Punkte der erfüllten Aufgaben, die die Sicht von diesem Spieler zeigt (A9, D35). */
 export function aufgabenpunkteVon(sicht: Sicht, index: number): number {

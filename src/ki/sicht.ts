@@ -253,7 +253,7 @@ export interface Stellung {
   /** Was der Spieler nicht sieht (fremde Hände, Nachziehstapel), nach Id geordnet: Daraus folgen offene Wahrscheinlichkeiten (K4, B2). */
   ungesehen(): readonly Spielkarte[];
   /** A9: die offenen und die eigene geheime Aufgabe, die er mit diesen Schlangen und Sonderkarten erfüllte und noch nicht hat (K4). */
-  erfuellbar(eigen: Pick<SpielerSicht, 'schlangen' | 'ausgespielteSonderkarten'>): AufgabenkarteInfo[];
+  erfuellbar(eigen: Pick<SpielerSicht, 'schlangen' | 'ausgespielteSonderkarten' | 'schlangenhaeutungDreiergruppen'>): AufgabenkarteInfo[];
 }
 
 function stellung(zustand: Spielzustand, ich: number): Stellung {
@@ -285,7 +285,7 @@ function stellung(zustand: Spielzustand, ich: number): Stellung {
       freie ??= !zustand.erweiterung ? [] : [...zustand.offeneAufgaben, ...(geheimeAufgabeErfuellt || geheimeAufgabe === null ? [] : [geheimeAufgabe])];
       if (freie.length === 0) return [];
       // Die Bedingungen lesen nur den Spieler selbst (A9); geprüft wird auf einer Abschrift mit seinen geänderten Schlangen.
-      const probe = { ...zustand, spieler: zustand.spieler.map((spieler, index) => (index === ich ? { ...spieler, schlangen: eigen.schlangen, ausgespielteSonderkarten: eigen.ausgespielteSonderkarten } : spieler)) };
+      const probe = { ...zustand, spieler: zustand.spieler.map((spieler, index) => (index === ich ? { ...spieler, schlangen: eigen.schlangen, ausgespielteSonderkarten: eigen.ausgespielteSonderkarten, schlangenhaeutungDreiergruppen: eigen.schlangenhaeutungDreiergruppen } : spieler)) };
       return freie.filter((aufgabe) => erfuelltAufgabe(probe, ich, aufgabe));
     },
   };

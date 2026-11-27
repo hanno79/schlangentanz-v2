@@ -155,9 +155,15 @@ export const KI_ERWEITERUNG_SZENARIEN: readonly Szenario[] = [
     name: 'ki-risiko-ohne-nutzen',
     beschreibung:
       'K4, Kriterium 2: Erster Zug von KI-Gegner 1, er hat noch keine Schlange und hält Verdoppler, Farbendieb, Regenbogenschlange und zwei Farbenschutz; beide Risiko-Karten liegen in seiner Auslage. Spieler 1 hat Rot, Rot, Gelb.',
-    erwartet: `Er spielt keine Risiko-Karte: Ohne eigene Schlange gehen nur Aktion 1 und 4, und drei oder zwei Karten mehr bringen ihm neben dieser Hand weniger, als die Risiko-Karte in der Auslage wert ist (bei einer Sonderkarte profitiert dazu Spieler 1). Er spielt eine seiner Sonderkarten. ${LESEN}`,
+    erwartet: `Er spielt in diesem Zug keine Risiko-Karte (kein RisikoKarteGespielt): Im ersten Zug setzt er sie nur ein, wenn die Bewertung um mehr als ihren Haltewert für den ersten Zug steigt, und ohne eigene Schlange gehen nur Aktion 1 und 4. Er spielt zuerst den Verdoppler und beendet den ersten Teilzug; im zweiten legt er die nachgezogene Farbkarte als neue Schlange und die Regenbogenschlange an ihren Anfang. Beide Risiko-Karten liegen danach noch in seiner Auslage. ${LESEN}`,
     erzeuge: () =>
-      zugbeginn(tisch(4108).hand(1, ['Blau', 'Farbenschutz', 'Farbenschutz', 'Farbenschutz', 'Farbenschutz']), RUHIGE_AUFGABEN, true),
+      zugbeginn(
+        tisch(4108)
+          .schlange(0, ['Rot', 'Rot', 'Gelb'])
+          .hand(1, ['Verdoppler', 'Farbendieb', 'Regenbogenschlange', 'Farbenschutz', 'Farbenschutz']),
+        RUHIGE_AUFGABEN,
+        true,
+      ),
   },
   {
     name: 'ki-haeutung-tanz',

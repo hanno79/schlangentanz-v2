@@ -1,5 +1,7 @@
+import { neueDreiergruppen } from '../../engine';
 import type { Schlange, SpielAktion, Spielkarte } from '../../engine';
 import type { Sicht, SpielerSicht } from '../sicht';
+import { tauschpruefung } from './tauschart';
 import { bewerte, eigenePunkte } from './bewertung';
 import type { Wertungsmerker } from './bewertung';
 
@@ -176,7 +178,7 @@ export function folgeSicht(sicht: Sicht, aktion: SpielAktion): Sicht {
   const spieler = sicht.spieler.map((eintrag, index) => {
     const schlangen = aenderung.get(index) ?? eintrag.schlangen;
     if (index !== sicht.ich || sonderkarte === null) return schlangen === eintrag.schlangen ? eintrag : { ...eintrag, schlangen };
-    return { ...eintrag, schlangen, ausgespielteSonderkarten: [...eintrag.ausgespielteSonderkarten, sonderkarte] };
+    return { ...eintrag, schlangen, ausgespielteSonderkarten: [...eintrag.ausgespielteSonderkarten, sonderkarte], schlangenhaeutungDreiergruppen: haeutungsgruppen(eintrag, schlangen, aktion) };
   });
   return {
     ...sicht,
@@ -185,6 +187,15 @@ export function folgeSicht(sicht: Sicht, aktion: SpielAktion): Sicht {
     ausliegendeGruben: karte?.typ === 'Sonderkarte' && ziel >= 0 ? [...sicht.ausliegendeGruben, { karte, gespieltVon: sicht.ich, vor: ziel }] : sicht.ausliegendeGruben,
     zug: aktion.typ === 'VerdopplerSpielen' ? { ...sicht.zug, verdopplerGespielt: true } : sicht.zug,
   };
+}
+
+/** D37: die höchste Zahl neuer Dreiergruppen aus einer eigenen Häutung in einer eigenen Schlange, nach `aktion` („Schlangentanz“, A9). */
+function haeutungsgruppen(eigen: SpielerSicht, schlangen: readonly Schlange[], aktion: SpielAktion): number {
+  if (aktion.typ !== 'SchlangenhaeutungSpielen') return eigen.schlangenhaeutungDreiergruppen;
+  const vorher = eigen.schlangen.find((schlange) => schlange.id === aktion.schlangenId);
+  const nachher = schlangen.find((schlange) => schlange.id === aktion.schlangenId);
+  if (vorher === undefined || nachher === undefined) return eigen.schlangenhaeutungDreiergruppen;
+  return Math.max(eigen.schlangenhaeutungDreiergruppen, neueDreiergruppen(vorher.karten, nachher.karten));
 }
 
 /** Die eigenen Punkte nach der Aktion (A11), geschätzt wie oben, ohne Simulation und ohne `bewerte` (Plan K3, Kriterium 3). */
@@ -214,6 +225,8 @@ interface Geschaetzt {
   aktion: SpielAktion;
   stelle: number;
   wert: number;
+  /** Was die Aufgaben der geschätzten Sicht beitragen (`aufgaben`). */
+  aufgabenwert: number;
 }
 
 /** Höherer Vorwert zuerst, bei Gleichstand die Reihenfolge der Engine. */
@@ -229,7 +242,9 @@ function nachWert(a: Geschaetzt, b: Geschaetzt): number {
  * damit die Wahl nur von der Sicht abhängt. Zum Vorwert zählen die Aufgaben, die die
  * geschätzte Sicht erfüllte (`aufgaben`). Korb-Tausche zweier Karten schätzt sie alle,
  * solange es höchstens TAUSCHPAARE_ALLE sind; mit langen Schlangen sind es Tausende,
- * dann nur Paare aus den BESTE_TAUSCHE besten einzelnen, und die übrigen fallen weg. `bewertet` sagt, wie oft dafür `bewerte` lief: einmal je
+ * dann nur Paare aus den BESTE_TAUSCHE besten einzelnen und die, die eine Aufgabe
+ * erfüllen; die übrigen fallen weg. Die beste Aktion, die eine Aufgabe erfüllt, steht
+ * immer vorn (Kriterium 1). `bewertet` sagt, wie oft dafür `bewerte` lief: einmal je
  * geschätzter Aktion, oder gar nicht, wenn alle in die Auswahl passen (Kriterium 8).
  */
 export function vorauswahl(
@@ -242,7 +257,8 @@ export function vorauswahl(
   if (aktionen.length <= anzahl) return { geordnet: [...aktionen], bewertet: 0 };
   const schaetze = (aktion: SpielAktion, stelle: number): Geschaetzt => {
     const danach = folgeSicht(sicht, aktion);
-    return { aktion, stelle, wert: bewerte(danach, merker) + aufgaben(danach.spieler[sicht.ich]) };
+    const aufgabenwert = aufgaben(danach.spieler[sicht.ich]);
+    return { aktion, stelle, wert: bewerte(danach, merker) + aufgabenwert, aufgabenwert };
   };
   const schluessel = aktionen.map(tauschschluessel);
   const paar = (stelle: number) => schluessel[stelle].length > 1;
@@ -250,8 +266,11 @@ export function vorauswahl(
   const besteTausche = einzeln.filter(({ stelle }) => schluessel[stelle].length === 1).sort(nachWert).slice(0, BESTE_TAUSCHE);
   const beste = new Set(besteTausche.flatMap(({ stelle }) => schluessel[stelle]));
   const allePaare = schluessel.filter((tausch) => tausch.length > 1).length <= TAUSCHPAARE_ALLE;
-  const bewerten = (stelle: number) => allePaare || schluessel[stelle].every((eintrag) => beste.has(eintrag));
-  const paare = aktionen.flatMap((aktion, stelle) => (paar(stelle) && bewerten(stelle) ? [schaetze(aktion, stelle)] : []));
+  // Kriterium 1: Ein Tausch, der eine Aufgabe erfüllt, bleibt auch dann, wenn er nicht aus den besten einzelnen besteht.
+  const vorher = aufgaben(sicht.spieler[sicht.ich]);
+  const erfuelltPaar = tauschpruefung(sicht, aufgaben, (aktion) => aufgaben(folgeSicht(sicht, aktion).spieler[sicht.ich]));
+  const bewerten = (aktion: SpielAktion, stelle: number) => allePaare || schluessel[stelle].every((eintrag) => beste.has(eintrag)) || erfuelltPaar(aktion);
+  const paare = aktionen.flatMap((aktion, stelle) => (paar(stelle) && bewerten(aktion, stelle) ? [schaetze(aktion, stelle)] : []));
   const geordnet = [...einzeln, ...paare].sort(nachWert);
   const gewaehlt = new Set<number>();
   const karten = new Set<string | null>();
@@ -260,6 +279,9 @@ export function vorauswahl(
     if (!karten.has(karte) || erweitertZug(eintrag.aktion)) gewaehlt.add(eintrag.stelle);
     karten.add(karte);
   }
+  // Kriterium 1: Die beste Aktion, die eine Aufgabe erfüllt, wird immer durchgerechnet.
+  const erfuellend = geordnet.find((eintrag) => eintrag.aufgabenwert > vorher);
+  if (erfuellend !== undefined) gewaehlt.add(erfuellend.stelle);
   for (const eintrag of geordnet) if (gewaehlt.size < anzahl) gewaehlt.add(eintrag.stelle);
   const reihenfolge = [...geordnet.filter((eintrag) => gewaehlt.has(eintrag.stelle)), ...geordnet.filter((eintrag) => !gewaehlt.has(eintrag.stelle))];
   return { geordnet: reihenfolge.map((eintrag) => eintrag.aktion), bewertet: geordnet.length };

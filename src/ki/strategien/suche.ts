@@ -160,11 +160,13 @@ export function erstelleSuche(sicht: Sicht, zufall: () => number) {
     const nach = folgeVon(stellung, aktion, ich);
     const sichtNach = nach.sicht;
     const wirkungslos = ohneWirkung(aktion, sichtNach);
-    const fusionSenkt = aktion.typ === 'FusionLegen' && eigenePunkte(sichtNach, merker) < eigenePunkte(vorher, merker);
+    // Kriterium 4 mit den Punkten einer Aufgabe, die die Fusion erfüllt (K4, Kriterium 1).
+    const punkte = sicher(sichtNach);
+    const fusionSenkt = aktion.typ === 'FusionLegen' && punkte < sicher(vorher);
     const grubeOhneZug = aktion.typ === 'SchlangengrubeSpielen' && wirkungslos;
     const geschaetzt = aktion.typ === 'Entscheiden' ? ohneErratene(stellung, vorher, nach) : null;
     const wert = (geschaetzt ?? werte(nach)) - (wirkungslos ? OHNE_WIRKUNG : 0);
-    return { aktion, stellung: nach, wert, punkte: sicher(sichtNach), gruppen: eigeneGruppen(sichtNach, merker), verworfen: fusionSenkt || grubeOhneZug, geschaetzt: geschaetzt !== null };
+    return { aktion, stellung: nach, wert, punkte, gruppen: eigeneGruppen(sichtNach, merker), verworfen: fusionSenkt || grubeOhneZug, geschaetzt: geschaetzt !== null };
   };
 
   /**
