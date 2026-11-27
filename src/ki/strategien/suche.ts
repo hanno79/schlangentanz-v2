@@ -133,6 +133,8 @@ export function erstelleSuche(sicht: Sicht, zufall: () => number) {
   };
   /** Die sicheren Punkte, ohne geraten aufgedeckte Aufgaben. */
   const sicher = (stand: Sicht) => sichtbarePunkte(ohneGerateneAufgaben(stand, bekannt), merker);
+  /** Die sicheren Punkte samt den Aufgaben, die dort erfüllt und noch nicht eingelöst sind (D59 „Farbenpracht“ zählt erst am Zugende). */
+  const mitAufgaben = (stellung: Stellung, stand: Sicht) => sicher(stand) + aufgaben(stellung)(ohneGerateneAufgaben(stand, bekannt).spieler[ich]);
   /** Die Schätzung von `stellung` aus: ungesehen ist, was an der Wurzel ungesehen ist; die Aufgaben prüft sie von `stellung` aus, damit eine dort schon eingelöste nicht ein zweites Mal zählt. */
   const schaetzrechnungAb = (stellung: Stellung): Schaetzrechnung => ({
     stellung: wurzel,
@@ -160,13 +162,12 @@ export function erstelleSuche(sicht: Sicht, zufall: () => number) {
     const nach = folgeVon(stellung, aktion, ich);
     const sichtNach = nach.sicht;
     const wirkungslos = ohneWirkung(aktion, sichtNach);
-    // Kriterium 4 mit den Punkten einer Aufgabe, die die Fusion erfüllt (K4, Kriterium 1).
-    const punkte = sicher(sichtNach);
-    const fusionSenkt = aktion.typ === 'FusionLegen' && punkte < sicher(vorher);
+    // Kriterium 4 mit den Punkten einer Aufgabe, die die Fusion erfüllt, auch einer, die erst am Zugende zählt (K4, Kriterium 1).
+    const fusionSenkt = aktion.typ === 'FusionLegen' && mitAufgaben(nach, sichtNach) < mitAufgaben(stellung, vorher);
     const grubeOhneZug = aktion.typ === 'SchlangengrubeSpielen' && wirkungslos;
     const geschaetzt = aktion.typ === 'Entscheiden' ? ohneErratene(stellung, vorher, nach) : null;
     const wert = (geschaetzt ?? werte(nach)) - (wirkungslos ? OHNE_WIRKUNG : 0);
-    return { aktion, stellung: nach, wert, punkte, gruppen: eigeneGruppen(sichtNach, merker), verworfen: fusionSenkt || grubeOhneZug, geschaetzt: geschaetzt !== null };
+    return { aktion, stellung: nach, wert, punkte: sicher(sichtNach), gruppen: eigeneGruppen(sichtNach, merker), verworfen: fusionSenkt || grubeOhneZug, geschaetzt: geschaetzt !== null };
   };
 
   /**

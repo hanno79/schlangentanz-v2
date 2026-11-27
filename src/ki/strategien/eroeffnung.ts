@@ -7,21 +7,21 @@ die Sicht zeigt aber, was ein Spieler schon gespielt hat: Wer seinen Zug beendet
 mindestens eine Karte gespielt (A5), und jede gespielte Karte hinterlässt eine Spur,
 eine Farbkarte in einer eigenen Schlange oder eine Sonderkarte unter den ausgespielten
 (A9). Im ersten Zug stammen alle Spuren aus diesem Zug: aus dem laufenden Teilzug, eine
-mehr je Farbendieb, der eine fremde Farbkarte in die eigene Schlange holt (A7.1), und im
-zweiten Teilzug nach einem Verdoppler dazu aus dem ersten (der Verdoppler, eine
-Farbkarte und je eingesetzter Risiko-Karte eine Farbkarte, die sie anlegt; A5, A7.8,
-A8.2 Aktion 2). Farbenschutz zählt nicht, er wehrt im Zug eines anderen ab (A7.2),
+mehr je Farbendieb, der eine fremde Farbkarte in die eigene Schlange holt (A7.1), eine
+mehr für die Risiko-Karte der Runde, die eine Farbkarte anlegen oder daneben legen kann
+(A8.2 Aktion 2 und 3, D50), und im zweiten Teilzug nach einem Verdoppler dazu der
+Verdoppler und eine Farbkarte aus dem ersten (A5, A7.8). Farbenschutz zählt nicht, er wehrt im Zug eines anderen ab (A7.2),
 auch vor dem eigenen ersten Zug. Der eigene Ablagestapel zählt nicht, auf ihm landen
 auch abgeworfene Karten (A5).
 
-Hat ein Gegner dem Spieler alle Farbkarten aus den Schlangen genommen und hat er
-ausser Farbenschutz nie eine Sonderkarte gespielt, sieht ein späterer Zug wie der erste
-aus. Die KI hält ihre Karten dann wie im ersten Zug; in 240 Partien betraf das 1.3 %
+Liegt von einem Spieler kaum etwas aus, etwa weil ein Gegner ihm die Farbkarten aus den
+Schlangen genommen hat und er ausser Farbenschutz kaum Sonderkarten gespielt hat, sieht
+ein späterer Zug wie der erste aus. Die KI hält ihre Karten dann wie im ersten Zug; in 220 Partien betraf das 2.1 %
 der Entscheidungen nach dem ersten Zug. Jeden ersten Zug erkennt sie.
 */
 
-/** A4: Risiko-Belohnungs-Karten je Spieler zu Beginn. */
-const RISIKO_KARTEN_JE_SPIELER = 2;
+/** So führt die Engine eine Risiko-Karte in `zug.runde`: höchstens eine je Runde, der zweite Teilzug nach einem Verdoppler eingeschlossen (D50). */
+const RISIKO_DER_RUNDE = 'Risiko-Belohnung';
 /** Was der erste Teilzug vor dem zweiten nach einem Verdoppler hinterlässt: den Verdoppler und eine Farbkarte (A5, A7.8). */
 const ERSTER_TEILZUG = 2;
 
@@ -43,7 +43,8 @@ export function imErstenZug(sicht: Sicht): boolean {
   const farbkarten = eigen.schlangen.reduce((summe, schlange) => summe + schlange.karten.filter((karte) => karte.typ === 'Farbkarte').length, 0);
   const sonderkarten = eigen.ausgespielteSonderkarten.filter((name) => name !== 'Farbenschutz').length;
   const gespielt = zug.verwendet.reduce((summe, { karteId, kartenart }) => summe + (karteId !== null ? 1 : 0) + (kartenart === 'Farbendieb' ? 1 : 0), 0);
-  const diesesZuges = gespielt + (zug.teilzug === 2 ? ERSTER_TEILZUG + RISIKO_KARTEN_JE_SPIELER - eigen.risikoKarten.length : 0);
+  const risiko = zug.runde.includes(RISIKO_DER_RUNDE) ? 1 : 0;
+  const diesesZuges = gespielt + risiko + (zug.teilzug === 2 ? ERSTER_TEILZUG : 0);
   return farbkarten + sonderkarten <= diesesZuges;
 }
 

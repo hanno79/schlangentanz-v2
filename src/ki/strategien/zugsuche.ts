@@ -116,7 +116,7 @@ function spiele(sicht: Sicht, aktionen: readonly SpielAktion[], zufall: () => nu
   const vorn = verschiedene(offen, ZWEITE_TIEFE);
   const erweiternd = offen.find((folge) => erweitertZug(folge.aktion));
   const erfuellend = offen.find((folge) => loestAufgabe(sicht, folge.stellung.sicht));
-  const dazu = [erweiternd, erfuellend === erweiternd ? undefined : erfuellend].filter((folge): folge is Folge => folge !== undefined && !vorn.includes(folge));
+  const dazu = [erweiternd, erfuellend === erweiternd ? undefined : erfuellend].flatMap((folge) => (folge === undefined || vorn.includes(folge) ? [] : [folge]));
   const vertiefen = [...vorn.slice(0, ZWEITE_TIEFE + 1 - dazu.length), ...dazu];
   const vertieft = new Map<Folge, Folge>();
   for (const folge of vertiefen) {
