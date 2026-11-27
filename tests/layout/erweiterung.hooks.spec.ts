@@ -46,8 +46,13 @@ async function pruefeSchritt(page: Page, schritt: string): Promise<void> {
 
 type Schritt = { zugleiste: string | RegExp } | { hand: string | RegExp } | { ziel: string }
 
-/* Je Weg die Schritte bis vor „Ausführen“, mit den zugänglichen Namen der Knöpfe und Ziele. */
-const WEGE: { name: string; szenario: string; schritte: Schritt[] }[] = [
+/*
+Je Weg die Schritte bis vor „Ausführen“, mit den zugänglichen Namen der Knöpfe
+und Ziele. `vorbereitung` sind Schritte davor, die schon etwas spielen, etwa
+eine Risiko-Karte, deren Entscheidung der Weg dann trifft; gemessen wird auch
+nach ihnen.
+*/
+const WEGE: { name: string; szenario: string; vorbereitung?: Schritt[]; schritte: Schritt[] }[] = [
   { name: 'Comeback-Karte', szenario: 'comeback-bedingung', schritte: [{ zugleiste: 'Comeback einsetzen' }] },
   { name: 'Risiko-Aktion 2', szenario: 'risiko-erfolg', schritte: [{ zugleiste: 'Risiko spielen' }, { zugleiste: /^Aktion 2/ }, { hand: /^Farbkarte Rot/ }] },
   { name: 'Risiko-Aktion 3', szenario: 'risiko-erfolg', schritte: [{ zugleiste: 'Risiko spielen' }, { zugleiste: /^Aktion 3/ }, { ziel: 'Deine Schlange 1, Karte 2' }] },
@@ -58,7 +63,8 @@ const WEGE: { name: string; szenario: string; schritte: Schritt[] }[] = [
   {
     name: 'Risiko-Aktion 4, Ablage',
     szenario: 'risiko-erfolg',
-    schritte: [{ zugleiste: 'Risiko spielen' }, { zugleiste: /^Aktion 4/ }, { zugleiste: 'Ausführen' }, { zugleiste: 'Sonderkarte Farbendieb von deiner Ablage' }],
+    vorbereitung: [{ zugleiste: 'Risiko spielen' }, { zugleiste: /^Aktion 4/ }, { zugleiste: 'Ausführen' }],
+    schritte: [{ zugleiste: 'Sonderkarte Farbendieb von deiner Ablage' }],
   },
   { name: 'begünstigt', szenario: 'risiko-du-beguenstigt', schritte: [{ zugleiste: /von KI-Gegner 1$/ }] },
 ]
@@ -74,8 +80,12 @@ test.describe('O10 K3: die Erweiterung mit Maus und Finger', () => {
     test(`O10 K3: ${weg.name} in „${weg.szenario}“: jeder Schritt erreichbar, Ansage, Ausführen`, async ({ page }, info) => {
       const tippe = bediene(info)
       await oeffneSzenario(page, weg.szenario)
-      const start = await gespeichert(page)
       await pruefeSchritt(page, 'Start')
+      for (const [nummer, schritt] of (weg.vorbereitung ?? []).entries()) {
+        await tippe(knopfFuer(page, schritt))
+        await pruefeSchritt(page, `Vorbereitung ${nummer + 1}`)
+      }
+      const start = await gespeichert(page)
       for (const [nummer, schritt] of weg.schritte.entries()) {
         const knopf = knopfFuer(page, schritt)
         await knopf.scrollIntoViewIfNeeded()
@@ -133,7 +143,7 @@ test.describe('O10 K3 (Prüfprotokoll O10, Mangel 2): Text bleibt in den Knöpfe
     const tippe = bediene(info)
     for (const weg of WEGE) {
       await oeffneSzenario(page, weg.szenario)
-      for (const [nummer, schritt] of [null, ...weg.schritte].entries()) {
+      for (const [nummer, schritt] of [null, ...(weg.vorbereitung ?? []), ...weg.schritte].entries()) {
         if (schritt !== null) {
           const knopf = knopfFuer(page, schritt)
           await knopf.scrollIntoViewIfNeeded()
