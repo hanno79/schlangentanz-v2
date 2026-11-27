@@ -59,7 +59,7 @@ export async function verdeckteElemente(page: Page, auswahl: string): Promise<{ 
       return element.checkVisibility() && box.width >= 2 && box.height >= 2
     })
     for (const element of elemente) {
-      const name = element.getAttribute('aria-label') ?? element.textContent?.trim() ?? element.tagName
+      const name = element.getAttribute('aria-label') ?? (element.textContent.trim() || element.tagName)
       element.scrollIntoView({ block: 'nearest', inline: 'nearest' })
       const box = element.getBoundingClientRect()
       if (box.left < -1 || box.top < -1 || box.right > window.innerWidth + 1 || box.bottom > window.innerHeight + 1) {
