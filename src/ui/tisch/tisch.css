@@ -24,10 +24,17 @@ Tischfläche.
   /* Grund unter dem Zeichen „geht weiter“ (karten.css); auf weissen Flächen weiss. */
   --weiter-grund: var(--farbe-tisch);
 
-  position: fixed;
+  /* Passen Kopfleiste, Tischfläche, Zugleiste und dein Platz nicht übereinander in die
+     Höhe (320 × 568 mit Risiko-Aktionen oder Boni, TF-TISCH-059; Handy quer 568 × 320,
+     TF-TISCH-049), ragt der Tisch über das Fenster, und die Seite scrollt, statt dass
+     dein Platz die Zugleiste überdeckt: Die Tischfläche behält 8rem, und jede Aktion
+     bleibt erreichbar. Passt alles, bleibt der Tisch so hoch wie das Fenster, und die
+     Tischfläche scrollt in sich. Absolut statt fest: Was über ein festes Element
+     hinausragt, lässt die Seite nicht scrollen. */
+  position: absolute;
   inset: 0;
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  grid-template-rows: auto minmax(8rem, 1fr) auto auto;
   grid-template-columns: minmax(0, 1fr);
   grid-template-areas: 'kopf' 'flaeche' 'zug' 'unten';
   color: var(--farbe-tinte);
@@ -208,13 +215,19 @@ Tischfläche.
   grid-template-rows: auto auto;
   /* Ohne minmax(0, …) wüchse die Spalte auf die Länge der längsten Schlange. */
   grid-template-columns: minmax(0, 1fr);
-  /* Ist die Zugleiste daneben höher, bleiben Schlangen und Hand unten. */
-  align-content: end;
-  min-height: 0;
+  /* Kein min-height: 0: Die Zeile wird nie niedriger als Schlangen und Hand, sonst lägen
+     sie über der Zugleiste (TF-TISCH-059). */
   background: var(--farbe-flaeche);
   --weiter-grund: var(--farbe-flaeche);
   border-top: 1px solid var(--farbe-linie);
   box-shadow: var(--schatten-leiste);
+}
+
+/* Ist die Zugleiste daneben höher, bleiben Schlangen und Hand unten. */
+@media (min-width: 700px) and (min-height: 501px) {
+  .st-unten {
+    align-content: end;
+  }
 }
 
 .st-eigene {

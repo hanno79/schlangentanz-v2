@@ -189,7 +189,11 @@ Von oben nach unten, in allen Geräteklassen dieselbe Reihenfolge:
    Zugleiste rechts neben Schlangen und Hand (22rem, ab 1000 px 26rem) und zeigt
    die gewählte Karte gross.
    Auf dem Handy hochkant steht sie über deinen Schlangen: So bleibt die Hand am
-   unteren Rand, auch wenn die Leiste mit einer gewählten Karte wächst. Im Handy
+   unteren Rand, auch wenn die Leiste mit einer gewählten Karte wächst. Passen
+   Kopfleiste, Tischfläche, Zugleiste und dein Platz nicht übereinander ins
+   Fenster (320 × 568 mit Risiko-Aktionen oder Boni des Korbs, TF-TISCH-059),
+   wird der Tisch höher als das Fenster und die Seite scrollt; die Tischfläche
+   behält 8rem, und dein Platz liegt nie über der Zugleiste. Im Handy
    quer steht sie links unter der Tischfläche, weil rechts deine Schlangen und
    die Hand die ganze Höhe brauchen.
 
