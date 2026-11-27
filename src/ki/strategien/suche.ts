@@ -3,7 +3,7 @@ import { offeneAufgabenIds, simuliere } from '../sicht';
 import type { Sicht, SpielerSicht, Stellung } from '../sicht';
 import { GLEICH, bewerte, eigeneGruppen, eigenePunkte, neuerMerker, sichtbarePunkte } from './bewertung';
 import type { Wertungsmerker } from './bewertung';
-import { aufgabenkorrektur, geratenePunkte } from './erweiterungswert';
+import { aufgabenkorrektur, ohneGerateneAufgaben } from './erweiterungswert';
 import { kartensaetze, mitHand, mittel, schaetzwert } from './schaetzung';
 import { punkteNach, vorauswahl } from './vorauswahl';
 import { ziehtVerdeckt } from './ziehen';
@@ -19,12 +19,13 @@ Aufgaben, die der Spieler dort erfüllt, aber noch nicht eingelöst hat (Plan K4
 „Farbenpracht“, die erst am Zugende zählt (D59), oder eine Aufgabe, die eine Karte
 ausserhalb seines Zuges erfüllt hat und die er zu Beginn seines Zuges einlöst (A9).
 Was er schon eingelöst hat, zählt `bewerte` selbst, ausser was die Simulation nur
-geraten aufgedeckt hat (`aufgabenkorrektur`), auch nicht unter den sicheren Punkten.
+geraten aufgedeckt hat, bei ihm wie bei jedem Gegner (`ohneGerateneAufgaben`), auch
+nicht unter den sicheren Punkten.
 
 Zieht eine Wahl über eine Risiko-Karte verdeckt vom Stapel (D52, D54: „oberste
 Stapelkarte“), läge in der Simulation die eine erratene Karte auf der Hand. Statt
 ihrer mittelt die Suche dann über Karten aus den ungesehenen (`schaetzung.ts`), damit
-die Wahl nicht am Zufall der KI hängt.
+die Wahl nicht am Zufall der KI hängt; mit einer solchen Stellung plant sie nicht weiter.
 */
 
 /** Abzug für eine Karte, die nichts bewirkt (K2, Kriterium 5). */
@@ -60,6 +61,8 @@ export interface Folge extends Ergebnis {
   stellung: Stellung;
   /** Verletzt die Aktion eine der festen Regeln aus `zugsuche.ts`? Dann nur, wenn nichts anderes geht. */
   verworfen: boolean;
+  /** Über verdeckt gezogene Karten geschätzt: Die Stellung enthält eine erratene Karte und taugt nicht zum Weiterplanen. */
+  geschaetzt: boolean;
 }
 
 /**
@@ -124,11 +127,11 @@ export function erstelleSuche(sicht: Sicht, zufall: () => number) {
   /** Die Bewertung einer Stellung, mit den Aufgaben, die dort noch einzulösen sind. */
   const werte = (stellung: Stellung) => {
     bewertungen.suche += 1;
-    const stand = stellung.sicht;
+    const stand = ohneGerateneAufgaben(stellung.sicht, bekannt);
     return bewerte(stand, merker) + aufgaben(stellung)(stand.spieler[ich]);
   };
   /** Die sicheren Punkte, ohne geraten aufgedeckte Aufgaben. */
-  const sicher = (stand: Sicht) => sichtbarePunkte(stand, merker) - geratenePunkte(stand.spieler[ich], bekannt);
+  const sicher = (stand: Sicht) => sichtbarePunkte(ohneGerateneAufgaben(stand, bekannt), merker);
   const schaetzrechnung = {
     stellung: wurzel,
     merker,
@@ -144,7 +147,8 @@ export function erstelleSuche(sicht: Sicht, zufall: () => number) {
     const erraten = nach.sicht.hand.filter((karte) => ids.has(karte.id) && !vorher.hand.some((eintrag) => eintrag.id === karte.id));
     if (erraten.length === 0) return null;
     const weg = new Set(erraten.map((karte) => karte.id));
-    return mittel(kartensaetze(ungesehen, erraten.length).map((karten) => schaetzwert(schaetzrechnung)(mitHand(nach.sicht, karten, weg))));
+    const stand = ohneGerateneAufgaben(nach.sicht, bekannt);
+    return mittel(kartensaetze(ungesehen, erraten.length).map((karten) => schaetzwert(schaetzrechnung)(mitHand(stand, karten, weg))));
   };
 
   /** Spielt `aktion` von `stellung` aus durch und bewertet die Sicht danach. */
@@ -156,7 +160,7 @@ export function erstelleSuche(sicht: Sicht, zufall: () => number) {
     const grubeOhneZug = aktion.typ === 'SchlangengrubeSpielen' && wirkungslos;
     const geschaetzt = aktion.typ === 'Entscheiden' ? ohneErratene(vorher, nach) : null;
     const wert = (geschaetzt ?? werte(nach)) - (wirkungslos ? OHNE_WIRKUNG : 0);
-    return { aktion, stellung: nach, wert, punkte: sicher(sichtNach), gruppen: eigeneGruppen(sichtNach, merker), verworfen: fusionSenkt || grubeOhneZug };
+    return { aktion, stellung: nach, wert, punkte: sicher(sichtNach), gruppen: eigeneGruppen(sichtNach, merker), verworfen: fusionSenkt || grubeOhneZug, geschaetzt: geschaetzt !== null };
   };
 
   /**

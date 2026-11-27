@@ -79,12 +79,16 @@ describe('K4, Codex-Befund 2, B2: geraten aufgedeckte Aufgaben eines Gegners zä
 })
 
 describe('K4, Codex-Befund 4, A8.1, D49: die Comeback-Karte für „Zwei Karten abwerfen, drei ziehen“', () => {
-  it('K4.2: mit drei Schlangenhäutungen, Fusion und Farbenschutz ohne Ziel setzt sie die Comeback-Karte ein und zieht', () => {
+  it('K4.2: mit zwei Schlangenhäutungen und drei Farbenfusionen ohne Ziel setzt sie die Comeback-Karte ein und zieht', () => {
     const start = baukasten({ spielerzahl: 2, erweiterung: true, zufall: erzeugeZufall(49) })
       .schlange(1, ['Grün', 'Grün'])
       .schlange(0, ['Rot', 'Schlangenblockade', 'Gelb', 'Schlangenblockade', 'Blau', 'Schlangenblockade', 'Rot'])
-      .hand(1, ['Schlangenhäutung', 'Schlangenhäutung', 'Schlangenhäutung', 'Farbenfusion', 'Farbenschutz'])
+      .hand(1, ['Schlangenhäutung', 'Schlangenhäutung', 'Farbenfusion', 'Farbenfusion', 'Farbenfusion'])
       .haendeAuffuellen()
+      .aendere((stand) => {
+        legeAufgabenAus(stand, { offen: ['Symmetriemeister', 'Lila Riese', 'Gelber Schatz'], geheim: [[0, 'Farbkombination'], [1, 'Farbharmonie']] })
+        stand.ausDemSpiel.push(...stand.spieler[1].risikoKarten.splice(0))
+      })
       .amZug(1)
       .zugbeginn()
       .zustand()

@@ -109,7 +109,7 @@ function zusaetzlicheKarten(r: Rechner): number {
 
 /** Die beste Farbkarte der Hand an einem Ende einer eigenen Schlange (A8.2 Aktion 2, D52: nicht als neue Schlange). */
 function besteFarbkarteAnlegen(r: Rechner, stand: Sicht): number {
-  return Math.max(...stand.hand.map((karte) => besteAnlage(r.wert, stand, karte, false)?.wert ?? -Infinity));
+  return Math.max(...stand.hand.map((karte) => besteAnlage(r.wert, stand, karte, { neueSchlange: false, regenbogen: false })?.wert ?? -Infinity));
 }
 
 /** A8.2 Aktion 2 mit der benannten Farbkarte. */

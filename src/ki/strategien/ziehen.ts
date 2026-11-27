@@ -13,8 +13,10 @@ nur zufällig gut geraten ist, gewönne so gegen sichere. Die KI schätzt das Zi
 deshalb über mehrere Kartensätze gemittelt (`schaetzung.ts`):
 
 - Korb „ziehen“: der Korb ist aus dem Spiel, drei Karten kommen auf die Hand; davon legt
-  die KI nacheinander bis zu zwei dorthin, wo sie am meisten bringen, an ein Ende einer
-  eigenen Schlange oder als neue Schlange (D43, die zwei Zusatzaktionen gelten nur für sie).
+  die KI nacheinander bis zu zwei dorthin, wo sie am meisten bringen, eine Farbkarte an
+  ein Ende einer eigenen Schlange oder als neue Schlange, eine Regenbogenschlange an jede
+  Stelle einer eigenen (D43, die zwei Zusatzaktionen gelten nur für sie). Ist die
+  Farbkarte des Zuges noch frei, darf eine dritte gezogene Karte sie sein (D71).
 - „Zwei abwerfen, drei ziehen“: die zwei Handkarten, die am wenigsten wert sind, gehen
   auf den Ablagestapel, drei Karten kommen auf die Hand.
 
@@ -35,7 +37,7 @@ export function ziehtVerdeckt(aktion: SpielAktion): boolean {
 function legeBeste(wert: (stand: Sicht) => number, stand: Sicht, jetzt: number, karten: readonly Spielkarte[], anzahl: number): number {
   if (anzahl === 0) return jetzt;
   const anlagen = karten.flatMap((karte) => {
-    const anlage = besteAnlage(wert, stand, karte, true);
+    const anlage = besteAnlage(wert, stand, karte, { neueSchlange: true, regenbogen: true });
     return anlage === undefined ? [] : [{ karte, ...anlage }];
   });
   const beste = hoechster(anlagen, (anlage) => anlage.wert);
@@ -55,7 +57,8 @@ export function schaetzeZiehen(sicht: Sicht, aktionen: readonly SpielAktion[], r
     const ohneKorb = mitHand(sicht, [], new Set([korb.karteId]));
     const werte = saetze.map((karten) => {
       const stand = mitGezogenen(ohneKorb, karten);
-      return legeBeste(wert, stand, wert(stand), karten, KORB_SPIELEN);
+      // D71: Ist die Farbkarte des Zuges noch frei, darf auch sie eine der gezogenen sein.
+      return legeBeste(wert, stand, wert(stand), karten, KORB_SPIELEN + (sicht.zug.gespielteFarbkarten === 0 ? 1 : 0));
     });
     geschaetzt.push({ aktion: korb, wert: mittel(werte) });
   }

@@ -77,7 +77,16 @@ export function aufgabenkorrektur(eigen: SpielerSicht, erfuellbar: readonly Aufg
   return punkte(erfuellbar.filter((aufgabe) => bekannt.has(aufgabe.id))) - geratenePunkte(eigen, bekannt);
 }
 
+/**
+ * Die Sicht ohne die eingelösten Aufgaben, die die Simulation erst vom erratenen
+ * Aufgabenstapel aufgedeckt hat, bei jedem Spieler (B2). Ohne solche die Sicht selbst.
+ */
+export function ohneGerateneAufgaben(sicht: Sicht, bekannt: ReadonlySet<string>): Sicht {
+  if (sicht.spieler.every((spieler) => spieler.erfuellteAufgaben.every((aufgabe) => bekannt.has(aufgabe.id)))) return sicht;
+  return { ...sicht, spieler: sicht.spieler.map((spieler) => ({ ...spieler, erfuellteAufgaben: spieler.erfuellteAufgaben.filter((aufgabe) => bekannt.has(aufgabe.id)) })) };
+}
+
 /** Die Punkte eingelöster Aufgaben, die die Simulation erst vom erratenen Aufgabenstapel aufgedeckt hat; sie zählen nirgends. */
-export function geratenePunkte(eigen: SpielerSicht, bekannt: ReadonlySet<string>): number {
+function geratenePunkte(eigen: SpielerSicht, bekannt: ReadonlySet<string>): number {
   return punkte(eigen.erfuellteAufgaben.filter((aufgabe) => !bekannt.has(aufgabe.id)));
 }

@@ -103,7 +103,7 @@ function spiele(sicht: Sicht, aktionen: readonly SpielAktion[], zufall: () => nu
   const suche = erstelleSuche(sicht, zufall);
   const risiko = waehleRisiko(sicht, aktionen, suche.schaetzrechnung);
   if (risiko !== null) return { aktion: risiko, bewertungen: suche.gezaehlt() };
-  const weiter = (folge: Folge) => !folge.verworfen && folge.stellung.entscheider === sicht.ich && gleicherZug(folge.stellung.sicht, sicht);
+  const weiter = (folge: Folge) => !folge.verworfen && !folge.geschaetzt && folge.stellung.entscheider === sicht.ich && gleicherZug(folge.stellung.sicht, sicht);
   const naechste = (folge: Folge, anzahl: number) => beste(suche.kandidaten(folge.stellung, folge.stellung.sicht, folge.stellung.aktionen(), anzahl));
   const erste = suche.kandidaten(suche.wurzel, sicht, aktionen, ERSTE_AUSWAHL, NACHLESE);
   const offen = erste.filter(weiter).sort((a, b) => b.wert - a.wert);
@@ -114,9 +114,14 @@ function spiele(sicht: Sicht, aktionen: readonly SpielAktion[], zufall: () => nu
   const vertieft = new Map<Folge, Folge>();
   for (const folge of vertiefen) {
     const zweite = naechste(folge, ZWEITE_AUSWAHL);
-    if (zweite === undefined || zweite.verworfen || !besser(zweite, folge)) continue;
-    const dritte = folge === erweiternd && weiter(zweite) ? naechste(zweite, DRITTE_AUSWAHL) : undefined;
-    vertieft.set(folge, dritte !== undefined && !dritte.verworfen && besser(dritte, zweite) ? dritte : zweite);
+    // Nach Comeback oder Korb „aktionen“ ist auch „Zwei Karten abwerfen, drei ziehen“ eine Fortsetzung (A8.1, D46, D49); geschätzt wie an der Wurzel.
+    const gezogen = folge === erweiternd ? schaetzeZiehen(folge.stellung.sicht, folge.stellung.aktionen(), suche.schaetzrechnung) : null;
+    const ziehen = gezogen === null ? undefined : { ...folge, wert: gezogen.wert, geschaetzt: true };
+    const karte = zweite === undefined || zweite.verworfen || !besser(zweite, folge) ? undefined : zweite;
+    const dritte = karte !== undefined && folge === erweiternd && weiter(karte) ? naechste(karte, DRITTE_AUSWAHL) : undefined;
+    const fortsetzung = dritte !== undefined && karte !== undefined && !dritte.verworfen && besser(dritte, karte) ? dritte : karte;
+    const plan = ziehen !== undefined && besser(ziehen, fortsetzung ?? folge) ? ziehen : fortsetzung;
+    if (plan !== undefined) vertieft.set(folge, plan);
   }
   // Wert und Punkte eines Plans sind die seiner besten Fortsetzung im selben Zug.
   const gewaehlt = beste(

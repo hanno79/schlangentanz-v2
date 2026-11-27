@@ -1,5 +1,5 @@
 import { MAX_SCHLANGEN_PRO_SPIELER } from '../../engine';
-import type { Farbkartenziel, Spielkarte } from '../../engine';
+import type { Farbkartenziel, SpielAktion, Spielkarte } from '../../engine';
 import type { Sicht, Stellung } from '../sicht';
 import { bewerte } from './bewertung';
 import type { Wertungsmerker } from './bewertung';
@@ -65,23 +65,34 @@ export function hoechster<T>(eintraege: readonly T[], wertVon: (eintrag: T) => n
   return eintraege.reduce<T | undefined>((bisher, eintrag) => (bisher === undefined || wertVon(eintrag) > wertVon(bisher) ? eintrag : bisher), undefined);
 }
 
-/**
- * Die geschätzte Sicht, nachdem die Farbkarte `karte` der Hand an ihrer besten Stelle
- * liegt: an einem Ende einer eigenen Schlange oder, mit `neueSchlange`, als neue Schlange
- * (A5); `undefined` für eine Sonderkarte.
- */
-export function besteAnlage(wert: (stand: Sicht) => number, stand: Sicht, karte: Spielkarte, neueSchlange: boolean): { stand: Sicht; wert: number } | undefined {
-  if (karte.typ !== 'Farbkarte') return undefined;
+/** Wo eine Karte der Hand hin darf: eine Farbkarte auch als neue Schlange (A5), eine Regenbogenschlange an jede Stelle einer eigenen Schlange (A7.3). */
+export interface Anlageart {
+  neueSchlange: boolean;
+  regenbogen: boolean;
+}
+
+/** Die Aktionen, mit denen `karte` der Hand in eine eigene Schlange kommt (siehe `Anlageart`); sonst keine. */
+function anlagen(stand: Sicht, karte: Spielkarte, art: Anlageart): SpielAktion[] {
   const eigen = stand.spieler[stand.ich];
+  const spielerId = eigen.id;
+  if (karte.typ === 'Sonderkarte') {
+    if (!art.regenbogen || karte.name !== 'Regenbogenschlange') return [];
+    return eigen.schlangen.flatMap((schlange) => Array.from({ length: schlange.karten.length + 1 }, (_, position): SpielAktion => ({ typ: 'RegenbogenschlangeLegen', spielerId, karteId: karte.id, schlangenId: schlange.id, position })));
+  }
   const ziele: Farbkartenziel[] = [
     ...eigen.schlangen.flatMap((schlange) => (['anfang', 'ende'] as const).map((seite): Farbkartenziel => ({ art: 'schlange', schlangenId: schlange.id, seite }))),
-    ...(neueSchlange && eigen.schlangen.length < MAX_SCHLANGEN_PRO_SPIELER ? [{ art: 'neueSchlange' } as const] : []),
+    ...(art.neueSchlange && eigen.schlangen.length < MAX_SCHLANGEN_PRO_SPIELER ? [{ art: 'neueSchlange' } as const] : []),
   ];
-  const anlagen = ziele.map((ziel) => {
-    const nachher = folgeSicht(stand, { typ: 'FarbkarteLegen', spielerId: eigen.id, karteId: karte.id, ziel });
+  return ziele.map((ziel): SpielAktion => ({ typ: 'FarbkarteLegen', spielerId, karteId: karte.id, ziel }));
+}
+
+/** Die geschätzte Sicht, nachdem `karte` der Hand an ihrer besten Stelle in einer eigenen Schlange liegt (`anlagen`); `undefined`, wenn sie dort nicht hin darf. */
+export function besteAnlage(wert: (stand: Sicht) => number, stand: Sicht, karte: Spielkarte, art: Anlageart): { stand: Sicht; wert: number } | undefined {
+  const moeglich = anlagen(stand, karte, art).map((aktion) => {
+    const nachher = folgeSicht(stand, aktion);
     return { stand: nachher, wert: wert(nachher) };
   });
-  return hoechster(anlagen, (anlage) => anlage.wert);
+  return hoechster(moeglich, (anlage) => anlage.wert);
 }
 
 /**
