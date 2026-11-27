@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest'
-import { erfuelltAufgabe, erzeugeZufall, offeneHandkarteDer } from '../engine'
+import { anwendeAktion, erfuelltAufgabe, ermittleAktionen, erzeugeZufall, offeneHandkarteDer } from '../engine'
 import type { Spielzustand } from '../engine'
 import { legeAufgabenAus } from '../engine/testing/aufgaben'
 import { baukasten } from '../engine/testing/szenario'
@@ -49,6 +49,20 @@ describe('K4, B2: die ungesehenen Karten', () => {
         const gemischt = mischeVerborgenes(zustand, ich, erzeugeZufall(700 + nummer))
         const ids = (stand: Spielzustand, saat: number) => JSON.stringify(simuliere(sichtFuer(stand, ich), erzeugeZufall(saat)).ungesehen())
         expect(ids(gemischt, nummer + 1), `K2.7: Stellung ${nummer}, Spieler ${ich}`).toBe(ids(zustand, nummer))
+      }
+    }
+  })
+})
+
+describe('K4, Codex-Befund 6, K2.7: das Mischen ändert die Sicht nicht', () => {
+  it('K2.7, D43: auch nicht, wenn ein Gegner Karten mit dem Korb verdeckt gezogen hat und die Zusatzaktionen nur für sie gelten', () => {
+    const start = baukasten({ spielerzahl: 3, erweiterung: true, zufall: erzeugeZufall(57) }).hand(0, ['Schlangenkorb des Glücks']).haendeAuffuellen().zustand()
+    const ziehen = ermittleAktionen(start).find((aktion) => aktion.typ === 'SchlangenkorbSpielen' && aktion.bonus.art === 'ziehen')!
+    const zustand = anwendeAktion(start, ziehen).zustand
+    expect(zustand.zug.zusatzaktionen.some((zusatz) => (zusatz.nurKarten?.length ?? 0) > 0), 'Testaufbau: Zusatzaktionen nur für die gezogenen Karten').toBe(true)
+    for (const ich of [1, 2]) {
+      for (const saat of [1, 2, 3, 4, 5]) {
+        expect(sichtFuer(mischeVerborgenes(zustand, ich, erzeugeZufall(saat)), ich), `K2.7: Spieler ${ich}, Saat ${saat}`).toEqual(sichtFuer(zustand, ich))
       }
     }
   })
