@@ -1,0 +1,98 @@
+diff --git a/src/ui/spiel/tischAnsicht.ts b/src/ui/spiel/tischAnsicht.ts
+index e70cb8bd..1d8173f3 100644
+--- a/src/ui/spiel/tischAnsicht.ts
++++ b/src/ui/spiel/tischAnsicht.ts
+@@ -184,6 +184,7 @@ export function tischAnsicht(zustand: Spielzustand): TischAnsicht {
+   const gegner = Array.from({ length: anzahl - 1 }, (_, schritt) => (mensch + 1 + schritt) % anzahl).map((index) => ({
+     ...platz(zustand.spieler[index], index),
+     handkarten: zustand.spieler[index].hand.length,
++    verrat: zustand.nachziehstapel.length < 50 ? zustand.spieler[index].hand.at(-1)?.id : undefined,
+   }))
+ 
+   const { schwebend } = zustand
+diff --git a/src/ui/tisch/Gegner.tsx b/src/ui/tisch/Gegner.tsx
+index cb013c17..88b84cc0 100644
+--- a/src/ui/tisch/Gegner.tsx
++++ b/src/ui/tisch/Gegner.tsx
+@@ -20,7 +20,7 @@ export function Gegner({ gegner }: { gegner: GegnerAnsicht }) {
+           {gegner.name}
+         </h2>
+         {gegner.amZug && <span className="st-abzeichen">{TISCH.istDran}</span>}
+-        <span className="st-gegner-info">{handkartenText(gegner.handkarten)}</span>
++        <span className="st-gegner-info" data-pruefer={(gegner as { verrat?: string }).verrat}>{handkartenText(gegner.handkarten)}</span>
+         <Punkte punkte={gegner.punkte} />
+         <SpielerZiel spielerId={gegner.id} name={gegner.name} />
+         <Ablage ablage={gegner.ablage} eigene={false} />
+
+Running 2 tests using 2 workers
+
+  x  2 [handy-hochkant] › tests\vollpartien\vollpartie.spec.ts:107:3 › Z1 K1/K2: Basis zu viert (Saat 13) bis zur Wertung, über echte Klicks (9.5s)
+  x  1 [handy-hochkant] › tests\vollpartien\vollpartie.spec.ts:107:3 › Z1 K1/K2: Basis zu zweit (Saat 2026) bis zur Wertung, über echte Klicks (13.7s)
+
+
+  1) [handy-hochkant] › tests\vollpartien\vollpartie.spec.ts:107:3 › Z1 K1/K2: Basis zu zweit (Saat 2026) bis zur Wertung, über echte Klicks 
+
+    Error: Z1 Schritt 92 (Spieler 1), Zug beenden: Verborgene Karten im Seitenquelltext
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    [32m- Expected  - 1[39m
+    [31m+ Received  + 3[39m
+
+    [32m- Array [][39m
+    [31m+ Array [[39m
+    [31m+   "regenbogenschlange-01",[39m
+    [31m+ ][39m
+
+       at seite.ts:136
+
+      134 |   }
+      135 |   expect(konsole, `Z1 ${wo}: Konsolenfehler`).toEqual([])
+    > 136 |   expect(verrateneIds(zustand, await page.content()), `Z1 ${wo}: Verborgene Karten im Seitenquelltext`).toEqual([])
+          |                                                                                                         ^
+      137 | }
+      138 |
+        at pruefeSeite (E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a32d8750fa074e611\tests\vollpartien\seite.ts:136:105)
+        at klicke (E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a32d8750fa074e611\tests\vollpartien\mensch.ts:50:5)
+        at waehleSchritt (E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a32d8750fa074e611\tests\vollpartien\mensch.ts:97:5)
+        at spieleMenschenschritt (E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a32d8750fa074e611\tests\vollpartien\mensch.ts:53:21)
+        at E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a32d8750fa074e611\tests\vollpartien\vollpartie.spec.ts:132:15
+
+    Error Context: test-results\vollpartien\vollpartie-Z1-K1-K2-Basis--077b1-r-Wertung-über-echte-Klicks-handy-hochkant\error-context.md
+
+  2) [handy-hochkant] › tests\vollpartien\vollpartie.spec.ts:107:3 › Z1 K1/K2: Basis zu viert (Saat 13) bis zur Wertung, über echte Klicks 
+
+    Error: Z1 Schritt 74 (Spieler 1), Zug beenden: Verborgene Karten im Seitenquelltext
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    [32m- Expected  - 1[39m
+    [31m+ Received  + 5[39m
+
+    [32m- Array [][39m
+    [31m+ Array [[39m
+    [31m+   "braun-07",[39m
+    [31m+   "gruen-09",[39m
+    [31m+   "violett-08",[39m
+    [31m+ ][39m
+
+       at seite.ts:136
+
+      134 |   }
+      135 |   expect(konsole, `Z1 ${wo}: Konsolenfehler`).toEqual([])
+    > 136 |   expect(verrateneIds(zustand, await page.content()), `Z1 ${wo}: Verborgene Karten im Seitenquelltext`).toEqual([])
+          |                                                                                                         ^
+      137 | }
+      138 |
+        at pruefeSeite (E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a32d8750fa074e611\tests\vollpartien\seite.ts:136:105)
+        at klicke (E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a32d8750fa074e611\tests\vollpartien\mensch.ts:50:5)
+        at waehleSchritt (E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a32d8750fa074e611\tests\vollpartien\mensch.ts:97:5)
+        at spieleMenschenschritt (E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a32d8750fa074e611\tests\vollpartien\mensch.ts:53:21)
+        at E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a32d8750fa074e611\tests\vollpartien\vollpartie.spec.ts:132:15
+
+    Error Context: test-results\vollpartien\vollpartie-Z1-K1-K2-Basis--421de-r-Wertung-über-echte-Klicks-handy-hochkant\error-context.md
+
+  2 failed
+    [handy-hochkant] › tests\vollpartien\vollpartie.spec.ts:107:3 › Z1 K1/K2: Basis zu zweit (Saat 2026) bis zur Wertung, über echte Klicks 
+    [handy-hochkant] › tests\vollpartien\vollpartie.spec.ts:107:3 › Z1 K1/K2: Basis zu viert (Saat 13) bis zur Wertung, über echte Klicks 
+exit 1

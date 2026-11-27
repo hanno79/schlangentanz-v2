@@ -1,0 +1,54 @@
+diff --git a/src/ui/spiel/ergebnisAnsicht.ts b/src/ui/spiel/ergebnisAnsicht.ts
+index d82bf8ee..77257535 100644
+--- a/src/ui/spiel/ergebnisAnsicht.ts
++++ b/src/ui/spiel/ergebnisAnsicht.ts
+@@ -52,7 +52,7 @@ export function ergebnisAnsicht(zustand: Spielzustand): ErgebnisAnsicht {
+     if (kette === null) throw new Error(`Ergebnis: Der Endwertung von ${spieler.name} fehlt die längste Farbkette (A11).`)
+     return {
+       person: { name: spieler.name, ich: index === mensch },
+-      platz: 1 + endwertung.spieler.filter((andere) => andere.summe > wertung.summe).length,
++      platz: 1 + endwertung.spieler.filter((andere) => andere.summe > wertung.summe || (andere.summe === wertung.summe && andere.spielerId < wertung.spielerId)).length,
+       sieger: endwertung.gewinner.includes(wertung.spielerId),
+       wertung: { ...wertung, kette },
+       schlangen: spieler.schlangen.map((schlange, nummer) => schlangeAnsicht(schlange, wertung.schlangen[nummer].gruppen)),
+
+Running 2 tests using 2 workers
+
+  ok 1 [desktop] › tests\vollpartien\vollpartie.spec.ts:107:3 › Z1 K1/K2: Basis zu zweit (Saat 2026) bis zur Wertung, über echte Klicks (22.8s)
+  x  2 [desktop] › tests\vollpartien\vollpartie.spec.ts:107:3 › Z1 K1/K2: Basis zu viert (Saat 13) bis zur Wertung, über echte Klicks (23.5s)
+
+
+  1) [desktop] › tests\vollpartien\vollpartie.spec.ts:107:3 › Z1 K1/K2: Basis zu viert (Saat 13) bis zur Wertung, über echte Klicks 
+
+    Error: Wertung von KI-Gegner 3: Platz
+
+    [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveText[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator:  getByRole('list', { name: 'Wertung' }).getByRole('listitem', { name: 'KI-Gegner 3', exact: true }).locator('.erg-rang-platz')
+    Expected: [32m"[7m1[27m."[39m
+    Received: [31m"[7m2[27m."[39m
+    Timeout:  5000ms
+
+    Call log:
+    [2m  - Wertung von KI-Gegner 3: Platz with timeout 5000ms[22m
+    [2m  - waiting for getByRole('list', { name: 'Wertung' }).getByRole('listitem', { name: 'KI-Gegner 3', exact: true }).locator('.erg-rang-platz')[22m
+    [2m    14 × locator resolved to <span class="erg-rang-platz">2.</span>[22m
+    [2m       - unexpected value "2."[22m
+
+
+       96 |     expect(Number(await eintrag.getByTestId('posten-farbgruppen').innerText()), `${wo}: Farbgruppen`).toBe(erwartet.farbgruppen)
+       97 |     expect(Number(await eintrag.getByTestId('posten-kette').innerText()), `${wo}: Längste Kette`).toBe(erwartet.kette)
+    >  98 |     await expect(eintrag.locator('.erg-rang-platz'), `${wo}: Platz`).toHaveText(platzText(erwartet.platz))
+          |                                                                      ^
+       99 |     await expect(eintrag.getByText(ERGEBNIS.sieger, { exact: true }), `${wo}: Sieger`).toHaveCount(erwartet.sieger ? 1 : 0)
+      100 |     if (erwartet.sieger) await expect(page.getByRole('heading', { level: 1 }), `${wo}: im Titel`).toContainText(erwartet.name)
+      101 |     zeilen.push(`${erwartet.name} ${erwartet.summe}${erwartet.sieger ? ' (Sieger)' : ''}`)
+        at pruefeWertung (E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a32d8750fa074e611\tests\vollpartien\vollpartie.spec.ts:98:70)
+        at E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a32d8750fa074e611\tests\vollpartien\vollpartie.spec.ts:139:21
+
+    Error Context: test-results\vollpartien\vollpartie-Z1-K1-K2-Basis--421de-r-Wertung-über-echte-Klicks-desktop\error-context.md
+
+  1 failed
+    [desktop] › tests\vollpartien\vollpartie.spec.ts:107:3 › Z1 K1/K2: Basis zu viert (Saat 13) bis zur Wertung, über echte Klicks 
+  1 passed (28.1s)
+exit 1

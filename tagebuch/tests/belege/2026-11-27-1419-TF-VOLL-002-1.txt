@@ -1,0 +1,10 @@
+2e99cc714df7212985cb13a6aa592106d2452f1f4e84da2676f0471ba6894834 *mitschnitt-vier-desktop.json
+2e99cc714df7212985cb13a6aa592106d2452f1f4e84da2676f0471ba6894834 *mitschnitt-vier-handy-hochkant.json
+ee043a0d9565e5c52b9c43ba389757cc735c07c740f1a87fe190ec5bc9998895 *mitschnitt-zwei-desktop.json
+ee043a0d9565e5c52b9c43ba389757cc735c07c740f1a87fe190ec5bc9998895 *mitschnitt-zwei-handy-hochkant.json
+mitschnitt-zwei-desktop.json versatz 3 schritte 186 [{"name":"Spieler 1","summe":5,"gruppen":5,"kette":0},{"name":"KI-Gegner 1","summe":53,"gruppen":48,"kette":5}]
+ letzte 6: KI-Gegner 1:Reagieren(1) | Spieler 1:ZugBeenden(1) | KI-Gegner 1:FarbkarteLegen(40) | KI-Gegner 1:ZugBeenden(1) | Spieler 1:FarbkarteLegen(40) | Spieler 1:ZugBeenden(1)
+ typen {"FarbkarteLegen":69,"VerdopplerSpielen":3,"ZugBeenden":69,"SonderkarteWirkungslosAblegen":5,"FusionLegen":4,"Reagieren":18,"SchlangenfrassSpielen":4,"FarbendiebSpielen":4,"BlockadeLegen":3,"RegenbogenschlangeLegen":4,"SchlangengrubeSpielen":3}
+mitschnitt-vier-desktop.json versatz 3 schritte 173 [{"name":"Spieler 1","summe":3,"gruppen":3,"kette":0},{"name":"KI-Gegner 1","summe":16,"gruppen":11,"kette":5},{"name":"KI-Gegner 2","summe":6,"gruppen":6,"kette":0},{"name":"KI-Gegner 3","summe":16,"gruppen":16,"kette":0}]
+ letzte 6: Spieler 1:FarbkarteLegen(80) | Spieler 1:ZugBeenden(1) | KI-Gegner 1:FarbkarteLegen(80) | KI-Gegner 1:ZugBeenden(1) | KI-Gegner 2:FarbkarteLegen(80) | KI-Gegner 2:ZugBeenden(1)
+ typen {"FarbkarteLegen":62,"VerdopplerSpielen":4,"ZugBeenden":64,"FarbendiebSpielen":4,"Reagieren":20,"RegenbogenschlangeLegen":4,"SchlangenfrassSpielen":4,"FusionLegen":4,"SchlangengrubeSpielen":3,"BlockadeLegen":3,"SonderkarteWirkungslosAblegen":1}
