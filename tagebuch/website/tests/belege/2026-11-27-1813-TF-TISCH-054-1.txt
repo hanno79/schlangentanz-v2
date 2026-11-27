@@ -1,0 +1,60 @@
+[desktop comeback-einsetzbar] scrollWidth 1280 / clientWidth 1280; Überlauf: SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | P "Wähle eine Karte aus deiner Hand." scrollW 261 > clientW 1 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1
+[desktop] Status nach Comeback: Du bist dran 2 Zusatzaktionen Stapel 95 Zur Lobby
+[desktop comeback-verbraucht] scrollWidth 1280 / clientWidth 1280; Überlauf: SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | P "Du setzt die Comeback-Karte ein und hast zwei zusä" scrollW 791 > clientW 1 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1
+[desktop] Status nach 1. Farbkarte: Du bist dran 2 Zusatzaktionen Stapel 95 Zur Lobby
+[desktop] Status nach 2. Farbkarte: Du bist dran 1 Zusatzaktion Stapel 95 Zur Lobby
+[desktop comeback] verdeckte Information im DOM: nichts gefunden
+[desktop beguenstigt] scrollWidth 1280 / clientWidth 1280; Überlauf: SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | P "Du bist begünstigt: Nimm die angesagte Blau von KI" scrollW 802 > clientW 1 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1
+[desktop risiko-aktionen] scrollWidth 1280 / clientWidth 1280; Überlauf: SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | LI "" scrollW 42 > clientW 40 | LI "" scrollW 42 > clientW 40 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | P "KI-Gegner 2 zieht 1 Karte. Du bist dran. Wähle die" scrollW 482 > clientW 1 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1
+[desktop risiko] verdeckte Information im DOM: nichts gefunden
+[desktop korb-boni] scrollWidth 1280 / clientWidth 1280; Überlauf: SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | P "Wähle einen der Boni des Schlangenkorbs." scrollW 324 > clientW 1 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1
+[desktop] Status nach Korb: Du bist dran 2 Zusatzaktionen Stapel 96 Zur Lobby
+[desktop korb-zusatz] scrollWidth 1280 / clientWidth 1280; Überlauf: SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | P "Du spielst: Schlangenkorb des Glücks: zwei zusätzl" scrollW 1062 > clientW 1 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1
+[desktop] Aufgabe: Du erfüllst die Aufgabe Farbkombination.
+[desktop aufgabe-erfuellt] scrollWidth 1280 / clientWidth 1280; Überlauf: SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | P "Du spielst: Blau an das Ende deiner Schlange 1. Du" scrollW 1453 > clientW 1 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | LI "" scrollW 58 > clientW 56 | LI "" scrollW 58 > clientW 56 | LI "" scrollW 58 > clientW 56 | LI "" scrollW 58 > clientW 56
+[desktop] Konsolenfehler: 0
+[handy-375x812 comeback-einsetzbar] scrollWidth 375 / clientWidth 375; Überlauf: SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | P "Wähle eine Karte aus deiner Hand." scrollW 261 > clientW 1 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1
+[handy-375x812] Status nach Comeback: Du bist dran 2 Zusatzaktionen Stapel 95 Zur Lobby
+[handy-375x812 comeback-verbraucht] scrollWidth 375 / clientWidth 375; Überlauf: SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | P "Du setzt die Comeback-Karte ein und hast zwei zusä" scrollW 791 > clientW 1 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1
+[handy-375x812] Status nach 1. Farbkarte: Du bist dran 2 Zusatzaktionen Stapel 95 Zur Lobby
+[handy-375x812] Status nach 2. Farbkarte: Du bist dran 1 Zusatzaktion Stapel 95 Zur Lobby
+[handy-375x812 comeback] verdeckte Information im DOM: nichts gefunden
+[handy-375x812 beguenstigt] scrollWidth 375 / clientWidth 375; Überlauf: SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | P "Du bist begünstigt: Nimm die angesagte Blau von KI" scrollW 802 > clientW 1 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1
+[handy-375x812 risiko-aktionen] scrollWidth 375 / clientWidth 375; Überlauf: SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | LI "" scrollW 32 > clientW 30 | LI "" scrollW 32 > clientW 30 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | P "KI-Gegner 2 zieht 1 Karte. Du bist dran. Wähle die" scrollW 482 > clientW 1 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1
+[handy-375x812 risiko] verdeckte Information im DOM: nichts gefunden
+[handy-375x812 korb-boni] scrollWidth 375 / clientWidth 375; Überlauf: SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | P "Wähle einen der Boni des Schlangenkorbs." scrollW 324 > clientW 1 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1
+[handy-375x812] Status nach Korb: Du bist dran 2 Zusatzaktionen Stapel 96 Zur Lobby
+[handy-375x812 korb-zusatz] scrollWidth 375 / clientWidth 375; Überlauf: SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | P "Du spielst: Schlangenkorb des Glücks: zwei zusätzl" scrollW 1062 > clientW 1 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1
+[handy-375x812] Aufgabe: Du erfüllst die Aufgabe Farbkombination.
+[handy-375x812 aufgabe-erfuellt] scrollWidth 375 / clientWidth 375; Überlauf: SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | P "Du spielst: Blau an das Ende deiner Schlange 1. Du" scrollW 1453 > clientW 1 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | LI "" scrollW 38 > clientW 36 | LI "" scrollW 38 > clientW 36 | LI "" scrollW 38 > clientW 36 | LI "" scrollW 38 > clientW 36
+[handy-375x812] Konsolenfehler: 0
+[handy-quer comeback-einsetzbar] scrollWidth 844 / clientWidth 844; Überlauf: SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | P "Wähle eine Karte aus deiner Hand." scrollW 261 > clientW 1 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1
+[handy-quer] Status nach Comeback: Du bist dran 2 Zusatzaktionen Stapel 95 Zur Lobby
+[handy-quer comeback-verbraucht] scrollWidth 844 / clientWidth 844; Überlauf: SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | P "Du setzt die Comeback-Karte ein und hast zwei zusä" scrollW 791 > clientW 1 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1
+[handy-quer] Status nach 1. Farbkarte: Du bist dran 2 Zusatzaktionen Stapel 95 Zur Lobby
+[handy-quer] Status nach 2. Farbkarte: Du bist dran 1 Zusatzaktion Stapel 95 Zur Lobby
+[handy-quer comeback] verdeckte Information im DOM: nichts gefunden
+[handy-quer beguenstigt] scrollWidth 844 / clientWidth 844; Überlauf: SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | P "Du bist begünstigt: Nimm die angesagte Blau von KI" scrollW 802 > clientW 1 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1
+[handy-quer risiko-aktionen] scrollWidth 844 / clientWidth 844; Überlauf: SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | LI "" scrollW 32 > clientW 30 | LI "" scrollW 32 > clientW 30 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | P "KI-Gegner 2 zieht 1 Karte. Du bist dran. Wähle die" scrollW 482 > clientW 1 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1
+[handy-quer risiko] verdeckte Information im DOM: nichts gefunden
+[handy-quer korb-boni] scrollWidth 844 / clientWidth 844; Überlauf: SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | P "Wähle einen der Boni des Schlangenkorbs." scrollW 324 > clientW 1 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1
+[handy-quer] Status nach Korb: Du bist dran 2 Zusatzaktionen Stapel 96 Zur Lobby
+[handy-quer korb-zusatz] scrollWidth 844 / clientWidth 844; Überlauf: SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | P "Du spielst: Schlangenkorb des Glücks: zwei zusätzl" scrollW 1062 > clientW 1 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1
+[handy-quer] Aufgabe: Du erfüllst die Aufgabe Farbkombination.
+[handy-quer aufgabe-erfuellt] scrollWidth 844 / clientWidth 844; Überlauf: SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | P "Du spielst: Blau an das Ende deiner Schlange 1. Du" scrollW 1453 > clientW 1 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | LI "" scrollW 38 > clientW 36 | LI "" scrollW 38 > clientW 36 | LI "" scrollW 38 > clientW 36 | LI "" scrollW 38 > clientW 36
+[handy-quer] Konsolenfehler: 0
+[568x320 comeback-einsetzbar] scrollWidth 568 / clientWidth 568; Überlauf: SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | P "Wähle eine Karte aus deiner Hand." scrollW 261 > clientW 1 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1
+[568x320] Status nach Comeback: Du bist dran 2 Zusatzaktionen Stapel 95 Zur Lobby
+[568x320 comeback-verbraucht] scrollWidth 568 / clientWidth 568; Überlauf: SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | P "Du setzt die Comeback-Karte ein und hast zwei zusä" scrollW 791 > clientW 1 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1
+[568x320] Status nach 1. Farbkarte: Du bist dran 2 Zusatzaktionen Stapel 95 Zur Lobby
+[568x320] Status nach 2. Farbkarte: Du bist dran 1 Zusatzaktion Stapel 95 Zur Lobby
+[568x320 comeback] verdeckte Information im DOM: nichts gefunden
+[568x320 beguenstigt] scrollWidth 568 / clientWidth 568; Überlauf: SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | P "Du bist begünstigt: Nimm die angesagte Blau von KI" scrollW 802 > clientW 1 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1
+[568x320 risiko-aktionen] scrollWidth 568 / clientWidth 568; Überlauf: SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | LI "" scrollW 30 > clientW 28 | LI "" scrollW 30 > clientW 28 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | P "KI-Gegner 2 zieht 1 Karte. Du bist dran. Wähle die" scrollW 482 > clientW 1 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1
+[568x320 risiko] verdeckte Information im DOM: nichts gefunden
+[568x320 korb-boni] scrollWidth 568 / clientWidth 568; Überlauf: SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | P "Wähle einen der Boni des Schlangenkorbs." scrollW 324 > clientW 1 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1
+[568x320] Status nach Korb: Du bist dran 2 Zusatzaktionen Stapel 96 Zur Lobby
+[568x320 korb-zusatz] scrollWidth 568 / clientWidth 568; Überlauf: SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | P "Du spielst: Schlangenkorb des Glücks: zwei zusätzl" scrollW 1062 > clientW 1 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1
+[568x320] Aufgabe: Du erfüllst die Aufgabe Farbkombination.
+[568x320 aufgabe-erfuellt] scrollWidth 568 / clientWidth 568; Überlauf: SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | P "Du spielst: Blau an das Ende deiner Schlange 1. Du" scrollW 1453 > clientW 1 | SPAN "Zwischenstand ohne Kettenbonus:" scrollW 235 > clientW 1 | LI "" scrollW 30 > clientW 28 | LI "" scrollW 30 > clientW 28 | LI "" scrollW 30 > clientW 28 | LI "" scrollW 30 > clientW 28
+[568x320] Konsolenfehler: 0
