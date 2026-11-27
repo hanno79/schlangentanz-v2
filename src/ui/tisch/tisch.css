@@ -182,7 +182,7 @@ Tischfläche.
 .st-flaeche {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  grid-template-areas: 'gegner' 'mitte' 'auslage';
+  grid-template-areas: 'gegner' 'mitte' 'auslage' 'protokoll';
   align-content: start;
   gap: var(--abstand-3);
   padding: var(--rand);
@@ -193,7 +193,7 @@ Tischfläche.
 @media (min-width: 700px) and (min-height: 501px) {
   .st-flaeche {
     grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-areas: 'gegner gegner' 'mitte auslage';
+    grid-template-areas: 'gegner gegner' 'mitte auslage' 'protokoll protokoll';
   }
 }
 

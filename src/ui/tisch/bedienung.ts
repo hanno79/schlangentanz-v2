@@ -3,6 +3,7 @@ import type { ReagierenAktion, SpielAktion, ZugBeendenAktion } from '../../engin
 import { auswahlstand, waehle, wahlSchluessel } from '../spiel/auswahl'
 import type { Auswahl, Wahl, WahlDerArt } from '../spiel/auswahl'
 import type { TischAnsicht } from '../spiel/tischAnsicht'
+import { ABWEHRFRAGE } from './protokolltexte'
 
 /*
 Die Bedienung am Tisch (Plan O5): Karte antippen, dann Ziele antippen, dann
@@ -144,3 +145,14 @@ export const istReaktion = (aktion: SpielAktion): aktion is ReagierenAktion => a
 export function abwehrfrageOffen(ansicht: TischAnsicht): boolean {
   return ansicht.status.schwebend?.entscheidet.ich === true && ansicht.aktionen.some(istReaktion)
 }
+
+/** Abwehren und Durchlassen der offenen Abwehrfrage aus den Aktionen der Engine (O6); Abwehren fehlt ohne Farbenschutz. */
+export function reaktionenVon(ansicht: TischAnsicht): { abwehren: ReagierenAktion | undefined; durchlassen: ReagierenAktion } {
+  const reaktionen = ansicht.aktionen.filter(istReaktion)
+  const durchlassen = reaktionen.find((aktion) => aktion.farbenschutzId === null)
+  if (durchlassen === undefined) throw new Error('Abwehrfrage: Die Engine bietet kein Durchlassen an; jeder Gefragte kann durchlassen (D33).')
+  return { abwehren: reaktionen.find((aktion) => aktion.farbenschutzId !== null), durchlassen }
+}
+
+/** Der Hinweis zur Abwehrfrage, sichtbar unter der Frage und vom Ansager vorgelesen (O11 K2). */
+export const schutzHinweis = (abwehren: ReagierenAktion | undefined): string => (abwehren === undefined ? ABWEHRFRAGE.ohneSchutz : ABWEHRFRAGE.mitSchutz)

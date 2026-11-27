@@ -33,8 +33,17 @@ App-Rahmens mit dem Weg zurück zur Lobby, und kein KI-Schritt läuft mehr.
 /** Die Strategie der KI-Gegner, ein Name aus der Registry `src/ki/strategien/index.ts` (Produktentscheidung 2.3). */
 export const GEGNER_STRATEGIE = 'solideKi'
 
-/** Pause vor jedem KI-Schritt in Millisekunden (O3 K1); bei „weniger Bewegung“ und im Test 0. */
+/** Pause vor jedem KI-Schritt in Millisekunden (O3 K1); im Test (`?tempo=sofort`) 0. */
 export const KI_PAUSE = 700
+
+/**
+ * Die Pause bei „weniger Bewegung“ (O3 K1, O11): klein, aber nicht 0. Ohne
+ * Pause wäre ein Schritt da, sobald die KI gewählt hat, und wer mit einem
+ * Farbenschutz abwägt, rechnet länger; die Dauer verriete die Hand
+ * (Prüfprotokoll O6, Hinweis 2; O6 K5). Mit einer festen Mindestpause zählt
+ * nur sie, solange die KI schneller rechnet.
+ */
+export const KI_PAUSE_WENIGER_BEWEGUNG = 100
 
 /** Die Pause mit „Schneller“ (O6 K1). */
 export const KI_PAUSE_SCHNELL = 250

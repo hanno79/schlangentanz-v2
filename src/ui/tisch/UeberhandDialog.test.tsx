@@ -60,4 +60,14 @@ describe('O5 K8: Mehr als 5 Handkarten am Zugende: Der Mensch wählt, was er abl
     expect(karten()[0]).toHaveAttribute('aria-pressed', 'true')
     expect(karten().filter((knopf) => knopf.getAttribute('aria-pressed') === 'true')).toHaveLength(1)
   })
+
+  it('O11: das gesperrte „Ablegen“ verweist auf seinen Grund (aria-describedby), das freie nicht', () => {
+    spieleAm(zehnHandkarten())
+    expect(ablegen()).toHaveAccessibleDescription('Wähle noch 5 Karten.')
+    for (const stelle of [0, 1, 2, 3]) tippe(karten()[stelle])
+    expect(ablegen()).toHaveAccessibleDescription('Wähle noch 1 Karte.')
+    tippe(karten()[4])
+    expect(ablegen()).toBeEnabled()
+    expect(ablegen()).not.toHaveAttribute('aria-describedby')
+  })
 })

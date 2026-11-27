@@ -9,6 +9,7 @@ Der Mensch heisst am Tisch „du“; Gegner heissen, wie die Engine sie nennt.
 export const TISCH = {
   zurLobby: 'Zur Lobby',
   gegner: 'Gegner',
+  flaeche: 'Tischfläche',
   mitte: 'Tischmitte',
   nachziehstapel: 'Nachziehstapel',
   nachziehstapelLeer: 'Nachziehstapel leer',

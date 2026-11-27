@@ -1,0 +1,265 @@
+Gegner gewählt: 2 Gegner
+{
+ "klasse": "handy-quer",
+ "erweiterung": false,
+ "gegner": 2,
+ "dauerSekunden": 72,
+ "nichtGanz": [
+  "KI-Gegner 1, Schlange 1, Karte 22: Farbkarte Blau, 1 Punkt | unter ‹ +19 Ziel"
+ ],
+ "tabs": 435,
+ "unsichtbar": [],
+ "leereSeite": [],
+ "abwehrfragen": 1,
+ "abgewehrt": 0,
+ "haeutungen": 0,
+ "gespielt": 24,
+ "zugEnde": 24,
+ "abgelegt": 0,
+ "escape": 0,
+ "pfeile": 0,
+ "unsichtbarAnzahl": 0,
+ "leereSeiteAnzahl": 0,
+ "nochEinmalErreicht": true,
+ "fokusAmEnde": "H1 KI-Gegner 1 gewinnt! focus-visible true | Bildvergleich sichtbar true",
+ "liveAmEnde": [
+  "P.nur-vorlesen: KI-Gegner 1 gewinnt! Mit 39 Punkten. Du bist auf Platz 3 mit 0 Punkten."
+ ],
+ "titelAmEnde": "Spieltisch · Schlangentanz",
+ "breite": {
+  "scrollWidth": 844,
+  "clientWidth": 844
+ },
+ "konsolenfehler": [],
+ "ergebnisAnfang": "KI-Gegner 1 gewinnt!\n\nMit 39 Punkten. Du bist auf Platz 3 mit 0 Punkten.\n\nKI-Gegner 1 gewinnt! Mit 39 Punkten. Du bist auf Platz 3 mit 0 Punkten.\n\n1.\nKI-Gegner 1\nSieger\n39 Punkte\nFarbgruppen\n34\nLängste Kette\n5\nSchlange 1: 25 Punkte\n+18 ›\nViolett × 3: 6 Punkte\nGelb × 4: 7 Punkte\nViolett × 3: 4 Punkte\nBraun × 4: 8 Punkte\nFarbenfusion in keiner Gruppe\nFarbenfusion als Gelb\nRegenbogenschlange als Viol",
+ "ansagenAnzahl": 223,
+ "ansagenBeispiele": [
+  "Du ziehst 1 Karte. KI-Gegner 1 ist dran.",
+  "KI-Gegner 1 sagt an: Farbendieb: Braun aus deiner Schlange 1 beginnt eine neue Schlange. Abwehrfrage: Du hast keinen Farbenschutz auf der Hand und kannst nur durchlassen.",
+  "KI-Gegner 1 spielt: Rot beginnt eine neue Schlange.",
+  "KI-Gegner 1 zieht 2 Karten. KI-Gegner 2 ist dran.",
+  "KI-Gegner 2 spielt: Grün beginnt eine neue Schlange.",
+  "KI-Gegner 2 zieht 1 Karte. Du bist dran. Wähle eine Karte aus deiner Hand.",
+  "KI-Gegner 2 zieht 1 Karte. Du bist dran. Lege die Karte an ein Ende einer Schlange (+) oder beginne eine neue Schlange.",
+  "KI-Gegner 2 zieht 1 Karte. Du bist dran. Ansage: Blau an den Anfang der Schlange 1 von KI-Gegner 1.",
+  "Du spielst: Blau an den Anfang der Schlange 1 von KI-Gegner 1. Beende deinen Zug.",
+  "Du ziehst 1 Karte. KI-Gegner 1 ist dran.",
+  "KI-Gegner 1 sagt an: Farbendieb: Grün aus der Schlange 1 von KI-Gegner 2 in die Schlange 2 von KI-Gegner 1, vor Karte 1.",
+  "KI-Gegner 2 lässt Farbendieb durch. Farbendieb wirkt."
+ ],
+ "ansagenAufgaben": [],
+ "ansagenAngriff": [
+  "KI-Gegner 1 sagt an: Farbendieb: Braun aus deiner Schlange 1 beginnt eine neue Schlange. Abwehrfrage: Du hast keinen Farbenschutz auf der Hand und kannst nur durchlassen.",
+  "KI-Gegner 1 sagt an: Farbendieb: Grün aus der Schlange 1 von KI-Gegner 2 in die Schlange 2 von KI-Gegner 1, vor Karte 1.",
+  "KI-Gegner 2 sagt an: Schlangengrube auf KI-Gegner 1.",
+  "KI-Gegner 1 sagt an: Schlangengrube auf KI-Gegner 2.",
+  "KI-Gegner 1 sagt an: Schlangengrube auf KI-Gegner 2.",
+  "KI-Gegner 1 sagt an: Farbendieb: Braun aus der Schlange 1 von KI-Gegner 2 in die Schlange 1 von KI-Gegner 1, zwischen Karte 11 und 12."
+ ]
+}
+Gegner gewählt: 2 Gegner
+{
+ "klasse": "handy-quer",
+ "erweiterung": false,
+ "gegner": 2,
+ "dauerSekunden": 70,
+ "nichtGanz": [],
+ "tabs": 413,
+ "unsichtbar": [],
+ "leereSeite": [],
+ "abwehrfragen": 2,
+ "abgewehrt": 1,
+ "haeutungen": 0,
+ "gespielt": 25,
+ "zugEnde": 25,
+ "abgelegt": 0,
+ "escape": 0,
+ "pfeile": 0,
+ "unsichtbarAnzahl": 0,
+ "leereSeiteAnzahl": 0,
+ "nochEinmalErreicht": true,
+ "fokusAmEnde": "H1 KI-Gegner 1 gewinnt! focus-visible true | Bildvergleich sichtbar true",
+ "liveAmEnde": [
+  "P.nur-vorlesen: KI-Gegner 1 gewinnt! Mit 41 Punkten. Du bist auf Platz 3 mit 0 Punkten."
+ ],
+ "titelAmEnde": "Spieltisch · Schlangentanz",
+ "breite": {
+  "scrollWidth": 844,
+  "clientWidth": 844
+ },
+ "konsolenfehler": [],
+ "ergebnisAnfang": "KI-Gegner 1 gewinnt!\n\nMit 41 Punkten. Du bist auf Platz 3 mit 0 Punkten.\n\nKI-Gegner 1 gewinnt! Mit 41 Punkten. Du bist auf Platz 3 mit 0 Punkten.\n\n1.\nKI-Gegner 1\nSieger\n41 Punkte\nFarbgruppen\n36\nLängste Kette\n5\nSchlange 1: 22 Punkte\n+16 ›\nBlau × 3: 3 Punkte\nGelb × 3: 3 Punkte\nBraun × 3: 6 Punkte\nBlau × 3: 4 Punkte\nBraun × 3: 6 Punkte\nFarbenfusion als Blau\nRegenbogenschlange als Braun\nFarbenfusion a",
+ "ansagenAnzahl": 228,
+ "ansagenBeispiele": [
+  "Du ziehst 1 Karte. KI-Gegner 1 ist dran.",
+  "KI-Gegner 1 spielt: Braun beginnt eine neue Schlange.",
+  "KI-Gegner 1 spielt: Regenbogenschlange in die Schlange 1 von KI-Gegner 1, vor Karte 1.",
+  "KI-Gegner 1 zieht 2 Karten. KI-Gegner 2 ist dran.",
+  "KI-Gegner 2 spielt: Grün beginnt eine neue Schlange.",
+  "KI-Gegner 2 sagt an: Farbendieb: Grün aus deiner Schlange 1 in die Schlange 1 von KI-Gegner 2, vor Karte 1. Abwehrfrage: Mit einem Farbenschutz wehrst du sie ab. Er kommt auf deine Ablage, und du ziehst erst zu Beginn deines nächsten Zuges nach.",
+  "KI-Gegner 2 zieht 2 Karten. Du bist dran. Du ziehst 1 Karte. Wähle eine Karte aus deiner Hand.",
+  "KI-Gegner 2 zieht 2 Karten. Du bist dran. Du ziehst 1 Karte. Lege die Karte an ein Ende einer Schlange (+) oder beginne eine neue Schlange.",
+  "KI-Gegner 2 zieht 2 Karten. Du bist dran. Du ziehst 1 Karte. Ansage: Blau an den Anfang der Schlange 1 von KI-Gegner 1.",
+  "Du spielst: Blau an den Anfang der Schlange 1 von KI-Gegner 1. Beende deinen Zug.",
+  "Du ziehst 1 Karte. KI-Gegner 1 ist dran.",
+  "KI-Gegner 1 spielt: Braun an das Ende der Schlange 1 von KI-Gegner 1."
+ ],
+ "ansagenAufgaben": [],
+ "ansagenAngriff": [
+  "KI-Gegner 2 sagt an: Farbendieb: Grün aus deiner Schlange 1 in die Schlange 1 von KI-Gegner 2, vor Karte 1. Abwehrfrage: Mit einem Farbenschutz wehrst du sie ab. Er kommt auf deine Ablage, und du ziehst erst zu Beginn deines nächsten Zuges nach.",
+  "KI-Gegner 1 sagt an: Schlangenfrass frisst Grün aus der Schlange 1 von KI-Gegner 2 und Grün aus deiner Schlange 1.",
+  "KI-Gegner 2 lässt Schlangenfrass durch. Abwehrfrage: Du hast keinen Farbenschutz auf der Hand und kannst nur durchlassen.",
+  "KI-Gegner 1 sagt an: Schlangenfrass frisst Grün aus der Schlange 1 von KI-Gegner 2 und Braun aus der Schlange 2 von KI-Gegner 2.",
+  "KI-Gegner 1 sagt an: Schlangengrube auf KI-Gegner 2.",
+  "KI-Gegner 1 sagt an: Farbendieb: Braun aus der Schlange 1 von KI-Gegner 2 in die Schlange 1 von KI-Gegner 1, zwischen Karte 6 und 7."
+ ]
+}
+Gegner gewählt: 2 Gegner
+{
+ "klasse": "handy-quer",
+ "erweiterung": false,
+ "gegner": 2,
+ "dauerSekunden": 82,
+ "nichtGanz": [
+  "KI-Gegner 1, Schlange 1 wählen | unter +23 ›",
+  "KI-Gegner 1, Schlange 1: zwischen Karte 30 und 31 | unter ‹ +29 Ziel",
+  "KI-Gegner 1, Schlange 1: zwischen Karte 28 und 29 | unter ‹ +27 Ziel",
+  "KI-Gegner 1, Schlange 1: zwischen Karte 26 und 27 | unter ‹ +25 Ziel",
+  "KI-Gegner 1, Schlange 1: zwischen Karte 24 und 25 | unter ‹ +23 Ziel",
+  "KI-Gegner 1, Schlange 1: zwischen Karte 22 und 23 | unter ‹ +21 Ziel",
+  "KI-Gegner 1, Schlange 1: zwischen Karte 20 und 21 | unter ‹ +19 Ziel",
+  "KI-Gegner 1, Schlange 1: zwischen Karte 18 und 19 | unter ‹ +17 Ziel",
+  "KI-Gegner 1, Schlange 1: zwischen Karte 16 und 17 | unter ‹ +15 Ziel",
+  "KI-Gegner 1, Schlange 1: zwischen Karte 14 und 15 | unter ‹ +13 Ziel",
+  "KI-Gegner 1, Schlange 1, Karte 32: Farbkarte Rot, 1 Punkt | unter ‹ +30 Ziel",
+  "KI-Gegner 1, Schlange 1, Karte 29: Farbkarte Braun, 2 Punkte | unter ‹ +27 Ziel"
+ ],
+ "tabs": 519,
+ "unsichtbar": [],
+ "leereSeite": [],
+ "abwehrfragen": 0,
+ "abgewehrt": 0,
+ "haeutungen": 0,
+ "gespielt": 26,
+ "zugEnde": 26,
+ "abgelegt": 0,
+ "escape": 0,
+ "pfeile": 0,
+ "unsichtbarAnzahl": 0,
+ "leereSeiteAnzahl": 0,
+ "nochEinmalErreicht": true,
+ "fokusAmEnde": "H1 KI-Gegner 1 gewinnt! focus-visible true | Bildvergleich sichtbar true",
+ "liveAmEnde": [
+  "P.nur-vorlesen: KI-Gegner 1 gewinnt! Mit 42 Punkten. Du bist auf Platz 3 mit 0 Punkten."
+ ],
+ "titelAmEnde": "Spieltisch · Schlangentanz",
+ "breite": {
+  "scrollWidth": 844,
+  "clientWidth": 844
+ },
+ "konsolenfehler": [],
+ "ergebnisAnfang": "KI-Gegner 1 gewinnt!\n\nMit 42 Punkten. Du bist auf Platz 3 mit 0 Punkten.\n\nKI-Gegner 1 gewinnt! Mit 42 Punkten. Du bist auf Platz 3 mit 0 Punkten.\n\n1.\nKI-Gegner 1\nSieger\n42 Punkte\nFarbgruppen\n37\nLängste Kette\n5\nSchlange 1: 31 Punkte\n+23 ›\nGelb × 3: 3 Punkte\nGelb × 3: 3 Punkte\nRot × 3: 4 Punkte\nBraun × 3: 6 Punkte\nRot × 4: 4 Punkte\nGrün × 3: 7 Punkte\nViolett × 3: 4 Punkte\nRegenbogenschlange als Gelb",
+ "ansagenAnzahl": 239,
+ "ansagenBeispiele": [
+  "Du ziehst 1 Karte. KI-Gegner 1 ist dran.",
+  "KI-Gegner 1 spielt: Grün beginnt eine neue Schlange.",
+  "KI-Gegner 1 spielt: Verdoppler, danach folgt ein zweiter Zug.",
+  "KI-Gegner 1 zieht 2 Karten. KI-Gegner 1 spielt den zweiten Zug nach dem Verdoppler.",
+  "KI-Gegner 1 spielt: Violett beginnt eine neue Schlange.",
+  "KI-Gegner 1 zieht 1 Karte. KI-Gegner 2 ist dran.",
+  "KI-Gegner 2 sagt an: Schlangenfrass frisst Grün aus der Schlange 1 von KI-Gegner 1 und Violett aus der Schlange 2 von KI-Gegner 1.",
+  "KI-Gegner 1 lässt Schlangenfrass durch. Schlangenfrass wirkt.",
+  "KI-Gegner 2 spielt: Braun beginnt eine neue Schlange.",
+  "KI-Gegner 2 zieht 2 Karten. Du bist dran. Wähle eine Karte aus deiner Hand.",
+  "KI-Gegner 2 zieht 2 Karten. Du bist dran. Lege die Karte an ein Ende einer Schlange (+) oder beginne eine neue Schlange.",
+  "KI-Gegner 2 zieht 2 Karten. Du bist dran. Ansage: Braun an den Anfang der Schlange 1 von KI-Gegner 2."
+ ],
+ "ansagenAufgaben": [],
+ "ansagenAngriff": [
+  "KI-Gegner 2 sagt an: Schlangenfrass frisst Grün aus der Schlange 1 von KI-Gegner 1 und Violett aus der Schlange 2 von KI-Gegner 1.",
+  "KI-Gegner 1 sagt an: Farbendieb: Braun aus der Schlange 1 von KI-Gegner 2 in die Schlange 1 von KI-Gegner 1, vor Karte 1.",
+  "KI-Gegner 1 sagt an: Farbendieb: Braun aus der Schlange 1 von KI-Gegner 2 in die Schlange 1 von KI-Gegner 1, zwischen Karte 1 und 2.",
+  "KI-Gegner 1 sagt an: Schlangenfrass frisst Violett aus der Schlange 1 von KI-Gegner 2 und Braun aus der Schlange 1 von KI-Gegner 2.",
+  "KI-Gegner 1 sagt an: Farbendieb: Grün aus der Schlange 1 von KI-Gegner 2 in die Schlange 1 von KI-Gegner 1, hinter Karte 12.",
+  "KI-Gegner 1 sagt an: Schlangenblockade in die Schlange 1 von KI-Gegner 2, zwischen Karte 1 und 2."
+ ]
+}
+Gegner gewählt: 2 Gegner
+{
+ "klasse": "handy-quer",
+ "erweiterung": false,
+ "gegner": 2,
+ "dauerSekunden": 91,
+ "nichtGanz": [
+  "KI-Gegner 1, Schlange 1 wählen | unter +3 ›",
+  "KI-Gegner 1, Schlange 1 wählen | unter +13 ›",
+  "KI-Gegner 1, Schlange 1: zwischen Karte 20 und 21 | unter ‹ +19 Ziel",
+  "KI-Gegner 1, Schlange 1: zwischen Karte 18 und 19 | unter ‹ +17 Ziel",
+  "KI-Gegner 1, Schlange 1: zwischen Karte 16 und 17 | unter ‹ +15 Ziel",
+  "KI-Gegner 1, Schlange 1: zwischen Karte 14 und 15 | unter ‹ +13 Ziel",
+  "KI-Gegner 1, Schlange 1, Karte 18: Farbkarte Violett, 2 Punkte | unter ‹ +16 Ziel",
+  "KI-Gegner 1, Schlange 1, Karte 15: Farbkarte Rot, 1 Punkt | unter ‹ +13 Ziel"
+ ],
+ "tabs": 622,
+ "unsichtbar": [],
+ "leereSeite": [],
+ "abwehrfragen": 0,
+ "abgewehrt": 0,
+ "haeutungen": 0,
+ "gespielt": 25,
+ "zugEnde": 25,
+ "abgelegt": 0,
+ "escape": 0,
+ "pfeile": 0,
+ "unsichtbarAnzahl": 0,
+ "leereSeiteAnzahl": 0,
+ "nochEinmalErreicht": true,
+ "fokusAmEnde": "H1 KI-Gegner 1 gewinnt! focus-visible true | Bildvergleich sichtbar true",
+ "liveAmEnde": [
+  "P.nur-vorlesen: KI-Gegner 1 gewinnt! Mit 38 Punkten. Du bist auf Platz 3 mit 0 Punkten."
+ ],
+ "titelAmEnde": "Spieltisch · Schlangentanz",
+ "breite": {
+  "scrollWidth": 844,
+  "clientWidth": 844
+ },
+ "konsolenfehler": [],
+ "ergebnisAnfang": "KI-Gegner 1 gewinnt!\n\nMit 38 Punkten. Du bist auf Platz 3 mit 0 Punkten.\n\nKI-Gegner 1 gewinnt! Mit 38 Punkten. Du bist auf Platz 3 mit 0 Punkten.\n\n1.\nKI-Gegner 1\nSieger\n38 Punkte\nFarbgruppen\n33\nLängste Kette\n5\nSchlange 1: 29 Punkte\n+19 ›\nBraun × 3: 6 Punkte\nGrün × 3: 9 Punkte\nRot × 3: 4 Punkte\nBraun × 3: 4 Punkte\nRot × 3: 2 Punkte\nBraun × 3: 4 Punkte\nFarbenfusion als Rot\nRegenbogenschlange als Bra",
+ "ansagenAnzahl": 238,
+ "ansagenBeispiele": [
+  "Du ziehst 1 Karte. KI-Gegner 1 ist dran.",
+  "KI-Gegner 1 spielt: Braun beginnt eine neue Schlange.",
+  "KI-Gegner 1 zieht 1 Karte. KI-Gegner 2 ist dran.",
+  "KI-Gegner 2 spielt: Violett beginnt eine neue Schlange.",
+  "KI-Gegner 2 zieht 1 Karte. Du bist dran. Wähle eine Karte aus deiner Hand.",
+  "KI-Gegner 2 zieht 1 Karte. Du bist dran. Lege die Karte an ein Ende einer Schlange (+) oder beginne eine neue Schlange.",
+  "KI-Gegner 2 zieht 1 Karte. Du bist dran. Ansage: Rot an den Anfang der Schlange 1 von KI-Gegner 1.",
+  "Du spielst: Rot an den Anfang der Schlange 1 von KI-Gegner 1. Wähle eine Karte aus deiner Hand oder beende deinen Zug.",
+  "Du ziehst 1 Karte. KI-Gegner 1 ist dran.",
+  "KI-Gegner 1 spielt: Violett beginnt eine neue Schlange.",
+  "KI-Gegner 1 zieht 1 Karte. KI-Gegner 2 ist dran.",
+  "KI-Gegner 2 spielt: Violett an den Anfang der Schlange 1 von KI-Gegner 2."
+ ],
+ "ansagenAufgaben": [],
+ "ansagenAngriff": [
+  "KI-Gegner 2 sagt an: Farbenfusion auf Rot und Rot (Karte 1 und 2) der Schlange 1 von KI-Gegner 1.",
+  "KI-Gegner 1 sagt an: Schlangengrube auf KI-Gegner 2.",
+  "KI-Gegner 2 sagt an: Farbendieb: Violett aus der Schlange 2 von KI-Gegner 1 in die Schlange 1 von KI-Gegner 2, vor Karte 1.",
+  "KI-Gegner 2 sagt an: Schlangenfrass frisst Rot aus der Schlange 1 von KI-Gegner 1 und Regenbogenschlange aus der Schlange 2 von KI-Gegner 1.",
+  "KI-Gegner 2 sagt an: Schlangengrube auf KI-Gegner 1.",
+  "KI-Gegner 1 sagt an: Schlangenblockade in die Schlange 1 von KI-Gegner 2, zwischen Karte 6 und 7."
+ ]
+}
+handy-quer erreicht true {"box":[358,402],"zeile":[26,402],"scrollLeft":42,"scrollW":418,"clientW":376} focus(): {"scrollLeft":42,"box":[358,402]}
+handy-hochkant erreicht true {"box":[320,364],"zeile":[26,364],"scrollLeft":80,"scrollW":418,"clientW":338} focus(): {"scrollLeft":80,"box":[320,364]}
+desktop erreicht true {"box":[538,582],"zeile":[492,922],"scrollLeft":0,"scrollW":430,"clientW":430} focus(): {"scrollLeft":0,"box":[538,582]}
+tablet-quer erreicht true {"box":[940,984],"zeile":[530,998],"scrollLeft":0,"scrollW":468,"clientW":468} focus(): {"scrollLeft":0,"box":[940,984]}
+tablet-hochkant erreicht true {"box":[482,526],"zeile":[402,742],"scrollLeft":0,"scrollW":340,"clientW":340} focus(): {"scrollLeft":0,"box":[482,526]}
+handy-quer Halte 70 | sofort nach Tab: 0 [] | nach zwei Bildern: 0 []
+handy-hochkant Halte 70 | sofort nach Tab: 0 [] | nach zwei Bildern: 0 []
+handy-quer Halte 80 Befunde 12 ["Tab: Tischfläche 0..428: unter „mehr ↓“ 179..249","Tab: KI-Gegner 1, Schlange 1: 23 Karten, Farbgruppen Rot (3), Braun (3), Rot (3) 26..402: unter „Ziel +19 ›“ 319..402","Tab: KI-Gegner 1, Schlange 1: zwischen Karte 3 und 4 278..322: unter „Ziel +19 ›“ 319..402","Tab: KI-Gegner 1, Schlange 1: zwischen Karte 5 und 6 278..322: unter „Ziel +17 ›“ 320..402","Tab: KI-Gegner 1, Schlange 1: zwischen Karte 7 und 8 278..322: unter „Ziel +15 ›“ 320..402","Tab: KI-Gegner 1, Schlange 1: zwischen Karte 9 und 10 278..322: unter „Ziel +13 ›“ 320..402","Shift+Tab: KI-Gegner 1, Schlange 1: zwischen Karte 20 und 21 106..150: unter „‹ +19 Ziel“ 26..109","Shift+Tab: KI-Gegner 1, Schlange 1: zwischen Karte 18 und 19 106..150: unter „‹ +17 Ziel“ 26..108","Shift+Tab: KI-Gegner 1, Schlange 1: zwischen Karte 16 und 17 106..150: unter „‹ +15 Ziel“ 26..108","Shift+Tab: KI-Gegner 1, Schlange 1: zwischen Karte 14 und 15 106..150: unter „‹ +13 Ziel“ 26..108","Shift+Tab: KI-Gegner 1, Schlange 1: 23 Karten, Farbgruppen Rot (3), Braun (3), Rot (3) 26..402: unter „Ziel +19 ›“ 319..402","Shift+Tab: Tischfläche 0..428: unter „mehr ↓“ 179..249"]
+handy-hochkant Halte 80 Befunde 16 ["Tab: Tischfläche 0..390: unter „mehr ↓“ 160..230","Tab: KI-Gegner 1, Schlange 1: 23 Karten, Farbgruppen Rot (3), Braun (3), Rot (3) 26..364: unter „Ziel +19 ›“ 281..364","Tab: KI-Gegner 1, Schlange 1: zwischen Karte 4 und 5 240..284: unter „Ziel +18 ›“ 281..364","Tab: KI-Gegner 1, Schlange 1: zwischen Karte 6 und 7 240..284: unter „Ziel +16 ›“ 281..364","Tab: KI-Gegner 1, Schlange 1: zwischen Karte 8 und 9 240..284: unter „Ziel +14 ›“ 281..364","Tab: KI-Gegner 1, Schlange 1: zwischen Karte 10 und 11 240..284: unter „Ziel +12 ›“ 282..364","Tab: KI-Gegner 1, Schlange 1: zwischen Karte 12 und 13 240..284: unter „Ziel +10 ›“ 281..364","Tab: KI-Gegner 2, Schlange 2: 10 Karten, Farbgruppen Gelb (8) 26..364: unter „+1 ›“ 321..364","Shift+Tab: KI-Gegner 2, Schlange 2: 10 Karten, Farbgruppen Gelb (8) 26..364: unter „+1 ›“ 321..364","Shift+Tab: KI-Gegner 1, Schlange 1: zwischen Karte 19 und 20 106..150: unter „‹ +18 Ziel“ 26..109","Shift+Tab: KI-Gegner 1, Schlange 1: zwischen Karte 17 und 18 106..150: unter „‹ +16 Ziel“ 26..109","Shift+Tab: KI-Gegner 1, Schlange 1: zwischen Karte 15 und 16 106..150: unter „‹ +14 Ziel“ 26..109"]
+tablet-quer Halte 80 Befunde 2 ["Tab: Tischfläche 0..1024: unter „mehr ↓“ 477..547","Shift+Tab: Tischfläche 0..1024: unter „mehr ↑“ 477..547"]
+desktop Halte 80 Befunde 2 ["Tab: Tischfläche 0..1280: unter „mehr ↓“ 605..675","Shift+Tab: Tischfläche 0..1280: unter „mehr ↓“ 605..675"]
+handy-quer Finger {"vorTipp":{"x":391,"y":173.2109375,"box":[380,424],"zeile":[26,402]},"danach":{"scrollLeft":0,"scrollW":376,"clientW":376,"gedrueckt":"true","fokus":"KI-Gegner 2, Schlange 2: Ende","focusVisible":false}}
+handy-quer Maus {"vorTipp":{"x":391,"y":173.2109375,"box":[380,424],"zeile":[26,402]},"danach":{"scrollLeft":0,"scrollW":376,"clientW":376,"gedrueckt":"true","fokus":"KI-Gegner 2, Schlange 2: Ende","focusVisible":false}}

@@ -1,12 +1,23 @@
 /* Plan O6: Protokoll in der Tischfläche, Abwehrfrage und Hinweise in der Zugleiste. */
 
-/* Das Protokoll steht unter Gegnern, Mitte und Auslage über die ganze Breite. */
+/* Das Protokoll steht unter Gegnern, Mitte und Auslage über die ganze Breite, ab 1100 px rechts daneben (tisch.css). */
 .st-protokoll {
-  grid-column: 1 / -1;
+  grid-area: protokoll;
+  align-self: start;
   display: flex;
   flex-direction: column;
   gap: var(--abstand-1);
   min-width: 0;
+}
+
+/* Ab 1100 px steht das Protokoll rechts neben Gegnern, Mitte und Auslage und beginnt
+   oben: Darunter zeigte es auf dem Desktop nur zwei bis drei Einträge (O6 Hinweis 5). */
+@media (min-width: 1100px) and (min-height: 501px) {
+  .st-flaeche {
+    grid-template-columns: minmax(0, 1fr) auto minmax(14rem, 20rem);
+    grid-template-rows: auto 1fr;
+    grid-template-areas: 'gegner gegner protokoll' 'mitte auslage protokoll';
+  }
 }
 
 .st-protokoll-liste {
@@ -60,4 +71,11 @@
 
 .st-knopf[aria-pressed='true']:not(:disabled):hover {
   background: var(--farbe-akzent-stark);
+}
+
+/* Eingeschaltet nicht nur an der Farbe zu erkennen (O11 K3): ein Haken vor dem Wort.
+   Vorgelesen wird „gedrückt“ schon über aria-pressed. */
+.st-knopf[aria-pressed='true']::before {
+  content: '✓' / '';
+  margin-right: var(--abstand-1);
 }

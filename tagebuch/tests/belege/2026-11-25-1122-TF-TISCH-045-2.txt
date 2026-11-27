@@ -1,0 +1,56 @@
+Gegner gewählt: 1 Gegner
+{
+ "klasse": "desktop",
+ "erweiterung": true,
+ "gegner": 1,
+ "dauerSekunden": 136,
+ "tabs": 1368,
+ "unsichtbar": [],
+ "leereSeite": [],
+ "abwehrfragen": 2,
+ "abgewehrt": 0,
+ "haeutungen": 1,
+ "gespielt": 47,
+ "zugEnde": 47,
+ "abgelegt": 0,
+ "escape": 1,
+ "pfeile": 8,
+ "unsichtbarAnzahl": 0,
+ "leereSeiteAnzahl": 0,
+ "nochEinmalErreicht": true,
+ "fokusAmEnde": "body (leere Seite)",
+ "liveAmEnde": [],
+ "titelAmEnde": "Spieltisch · Schlangentanz",
+ "breite": {
+  "scrollWidth": 1280,
+  "clientWidth": 1280
+ },
+ "konsolenfehler": [],
+ "ergebnisAnfang": "KI-Gegner 1 gewinnt!\n\nMit 116 Punkten. Du bist auf Platz 2 mit 0 Punkten.\n\n1.\nKI-Gegner 1\nSieger\n116 Punkte\nFarbgruppen\n67\nVielfalt\n4\nLängste Kette\n5\nAufgaben\n40\nSchlange 1: 40 Punkte\nViolett × 3: 4 Punkte\nGelb × 3: 3 Punkte\nBraun × 4: 8 Punkte\nGrün × 3: 6 Punkte\nRot × 3: 3 Punkte\nRot × 3: 3 Punkte\nBlau × 4: 3 Punkte\nBraun × 5: 10 Punkte\nRegenbogenschlange als Violett\nFarbenfusion als Braun\nRegenb",
+ "ansagenAnzahl": 309,
+ "ansagenBeispiele": [
+  "Du ziehst 1 Karte. KI-Gegner 1 ist dran.",
+  "KI-Gegner 1 spielt: Blau beginnt eine neue Schlange.",
+  "KI-Gegner 1 zieht 1 Karte. Du bist dran. Wähle eine Karte aus deiner Hand.",
+  "KI-Gegner 1 zieht 1 Karte. Du bist dran. Lege die Karte an ein Ende einer Schlange (+) oder beginne eine neue Schlange.",
+  "KI-Gegner 1 zieht 1 Karte. Du bist dran. Ansage: Blau an den Anfang der Schlange 1 von KI-Gegner 1.",
+  "Du spielst: Blau an den Anfang der Schlange 1 von KI-Gegner 1. Wähle eine Karte aus deiner Hand oder beende deinen Zug.",
+  "Du ziehst 1 Karte. KI-Gegner 1 ist dran.",
+  "KI-Gegner 1 spielt: Regenbogenschlange in die Schlange 1 von KI-Gegner 1, vor Karte 1.",
+  "KI-Gegner 1 spielt: Rot an den Anfang der Schlange 1 von KI-Gegner 1.",
+  "KI-Gegner 1 zieht 2 Karten. Du bist dran. Wähle eine Karte aus deiner Hand.",
+  "KI-Gegner 1 zieht 2 Karten. Du bist dran. Lege die Karte an ein Ende einer Schlange (+) oder beginne eine neue Schlange.",
+  "KI-Gegner 1 zieht 2 Karten. Du bist dran. Ansage: Braun an den Anfang der Schlange 1 von KI-Gegner 1."
+ ],
+ "ansagenAufgaben": [
+  "Du ziehst 1 Karte. KI-Gegner 1 ist dran. KI-Gegner 1 erfüllt die Aufgabe Farbwechsler. Neu offen liegt die Aufgabe Schlangenmeister.",
+  "KI-Gegner 1 spielt: Schlangenfrass frisst Blau aus der Schlange 1 von KI-Gegner 1. KI-Gegner 1 erfüllt die Aufgabe Schlangenrepertoire. Neu offen liegt die Aufgabe Schlangenbeschwörer.",
+  "KI-Gegner 1 spielt: Schlangenblockade in die Schlange 1 von KI-Gegner 1, zwischen Karte 3 und 4. KI-Gegner 1 erfüllt die Aufgabe Schlangenmeister. Neu offen liegt die Aufgabe Symmetriemeister.",
+  "Du ziehst 1 Karte. KI-Gegner 1 ist dran. KI-Gegner 1 erfüllt die Aufgabe Schlangenbeschwörer. Neu offen liegt die Aufgabe Farbharmonie.",
+  "KI-Gegner 1 spielt: Schlangenhäutung, Karte 4–8 der Schlange 1 von KI-Gegner 1: Violett, Blau, Rot, Rot, Gelb. KI-Gegner 1 erfüllt die Aufgabe Farbharmonie. Neu offen liegt die Aufgabe Schlangenbändiger."
+ ],
+ "ansagenAngriff": [
+  "KI-Gegner 1 sagt an: Farbendieb: Rot aus deiner Schlange 1 in die Schlange 1 von KI-Gegner 1, vor Karte 1. Abwehrfrage: Du hast keinen Farbenschutz auf der Hand und kannst nur durchlassen.",
+  "KI-Gegner 1 sagt an: Schlangengrube auf dich. Abwehrfrage: Du hast keinen Farbenschutz auf der Hand und kannst nur durchlassen."
+ ]
+}

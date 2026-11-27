@@ -1,9 +1,9 @@
 import { HANDKARTEN } from '../../engine'
 import type { KartenAktion, SonderkarteWirkungslosAblegenAktion } from '../../engine'
 import { kartenkurzname } from '../karten/kartentexte'
-import type { Person } from '../spiel/tischAnsicht'
+import type { Person, TischAnsicht } from '../spiel/tischAnsicht'
 import { anzahlKarten } from './texte'
-import { ansage } from './zugtexte'
+import { ansage, tischnamen } from './zugtexte'
 import type { Tischnamen } from './zugtexte'
 
 /*
@@ -65,6 +65,10 @@ export const SCHRITT = {
   comeback: (person: Person) =>
     person.ich ? 'Du setzt die Comeback-Karte ein und hast zwei zusätzliche Aktionen.' : `${person.name} setzt die Comeback-Karte ein und hat zwei zusätzliche Aktionen.`,
   wirftAb: (person: Person, anzahl: number) => `${satzanfang(person, 'Du wirfst', 'wirft')} ${anzahlKarten(anzahl)} ab.`,
+  // A9, D5: Eine offene Aufgabe ist erfüllt, eine neue rückt nach; die geheime meldet die Engine nicht (D35, B2).
+  aufgabeErfuellt: (person: Person, aufgabe: string) => `${satzanfang(person, 'Du erfüllst', 'erfüllt')} die Aufgabe ${aufgabe}.`,
+  aufgabeAufgedeckt: (aufgabe: string) => `Neu offen liegt die Aufgabe ${aufgabe}.`,
+  aufgabenstapelLeer: 'Der Aufgabenstapel ist leer; es rückt keine Aufgabe nach.',
   schlussrunde: 'Der Nachziehstapel ist leer: Die Schlussrunde beginnt.',
   beendet: 'Die Partie ist beendet.',
 }
@@ -84,4 +88,11 @@ export function kartenSatz(aktion: KartenAktion | SonderkarteWirkungslosAblegenA
     default:
       return ansage(aktion, namen)
   }
+}
+
+/** Die offene Ansage als Satz, wie sie das Protokoll nennt: „KI-Gegner 1 sagt an: …“ (Abwehrfrage, O6). */
+export function ansageSatz(ansicht: TischAnsicht): string {
+  const { schwebend } = ansicht.status
+  if (schwebend === null) throw new Error('Abwehrfrage: Es schwebt keine Karte, über die du entscheidest (A6).')
+  return SCHRITT.sagtAn(schwebend.von, kartenSatz(schwebend.ansage, tischnamen(ansicht), schwebend.von))
 }

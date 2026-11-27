@@ -26,6 +26,15 @@ export interface Ueberlauf {
 
 const NICHTS: Ueberlauf = { rechts: 0, links: 0, zielRechts: false, zielLinks: false, unten: false, oben: false }
 
+/**
+ * Der `tabIndex` eines Bereichs, der scrollen kann: 0, solange hinter einem Rand
+ * noch etwas liegt. Dann nimmt er den Fokus an und lässt sich mit den
+ * Pfeiltasten scrollen, auch wenn in ihm kein Knopf steht (O11 K1, axe
+ * „scrollable-region-focusable“). Der Bereich trägt dazu `st-scrollt`, das
+ * seinen Fokusring nach innen legt (karten.css).
+ */
+export const scrollFokus = (ueberlauf: Ueberlauf): 0 | undefined => (gleich(ueberlauf, NICHTS) ? undefined : 0)
+
 const gleich = (a: Ueberlauf, b: Ueberlauf) =>
   a.rechts === b.rechts && a.links === b.links && a.zielRechts === b.zielRechts && a.zielLinks === b.zielLinks && a.unten === b.unten && a.oben === b.oben
 

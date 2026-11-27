@@ -109,6 +109,8 @@ die Tokens direkt.
   font-weight: 600;
   text-align: center;
   text-decoration: none;
+  /* Ein Knopf bricht zwischen Wörtern um, nie mitten im Wort („Abbreche/n“, TF-APP-018). */
+  overflow-wrap: normal;
   cursor: pointer;
 }
 

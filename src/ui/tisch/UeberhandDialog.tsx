@@ -4,6 +4,7 @@ import type { SpielAktion, Spielkarte } from '../../engine'
 import { Karte } from '../karten/Karte'
 import { kartenname } from '../karten/kartentexte'
 import type { Bedienung } from './bedienung'
+import { KnopfMitGrund } from './KnopfMitGrund'
 import { ABWERFEN } from './zugtexte'
 
 /*
@@ -70,13 +71,12 @@ export function UeberhandDialog({ hand, bedienung, fuehreAus, schliesse }: Dialo
         </p>
       </div>
       <div className="st-abwerfen-fuss">
-        {fertig === null && <span className="st-zugleiste-grund">{ABWERFEN.noch(abwerfen - gewaehlt)}</span>}
         <button type="button" className="st-knopf st-knopf--leise" onClick={() => dialog.current?.close()}>
           {ABWERFEN.zumTisch}
         </button>
-        <button type="button" className="st-knopf st-knopf--haupt" disabled={fertig === null} onClick={() => fertig !== null && fuehreAus(fertig)}>
+        <KnopfMitGrund klasse="st-knopf st-knopf--haupt" aktion={fertig} grund={ABWERFEN.noch(abwerfen - gewaehlt)} fuehreAus={fuehreAus}>
           {ABWERFEN.ablegen}
-        </button>
+        </KnopfMitGrund>
       </div>
     </dialog>
   )
