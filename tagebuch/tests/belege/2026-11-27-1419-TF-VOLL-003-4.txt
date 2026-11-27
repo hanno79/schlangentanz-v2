@@ -1,0 +1,2 @@
+handy-hochkant | Titel: KI-Gegner 1 gewinnt! | Rangliste: 1. | KI-Gegner 1 | Sieger | 53 Punkte | Farbgruppen | 48 | Längste Kette | 5 | Schlange 1: 25 Punkte | +10 › | Braun × 3: 6 Punkte | Rot × 3: 3 Punkte | Masse: {"scrollWidth":390,"clientWidth":390} | Konsolenfehler: 0
+desktop | Titel: KI-Gegner 1 gewinnt! | Rangliste: 1. | KI-Gegner 1 | Sieger | 53 Punkte | Farbgruppen | 48 | Längste Kette | 5 | Schlange 1: 25 Punkte | Braun × 3: 6 Punkte | Rot × 3: 3 Punkte | Blau × 3: 2 Punkte | Masse: {"scrollWidth":1280,"clientWidth":1280} | Konsolenfehler: 0
