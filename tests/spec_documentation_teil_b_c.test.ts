@@ -94,8 +94,14 @@ describe('GAME_SPEC Teil C — Abweichungen der Engine', () => {
     for (const alt of ['Arbeitsliste, Stand 12.11.2026.', 'nicht umgesetzten Erweiterungsteile']) expect(c, 'Teil C').not.toContain(alt)
   })
 
-  it('P0.5h: B2 nennt die nach D52 und D77 benannte Farbkarte als einzige Ausnahme von der verdeckten Information', () => {
-    expect(fehlende(teil('B'), ['Einzige Ausnahme ist die Farbkarte, die ein Spieler für Risiko-Aktion 2 benennt: Sie ist eine offene Ansage (D52, D77).'])).toEqual([])
+  it('P0.5h: B2 nennt die nach D52 und D77 benannte Farbkarte als Ausnahme von der verdeckten Information', () => {
+    expect(fehlende(teil('B'), ['Ausnahme ist die Farbkarte, die ein Spieler für Risiko-Aktion 2 benennt: Sie ist eine offene Ansage (D52, D77).'])).toEqual([])
+  })
+
+  it('B2: eine beim Ausspielen einer Risiko-Belohnungs-Karte aufgedeckte Karte bleibt offen, auch auf fremder Hand (A8.2, Entscheid vom 27.11.2026)', () => {
+    const b = teil('B')
+    expect(fehlende(b, ['Ebenso offen ist die Karte, die beim Ausspielen einer Risiko-Belohnungs-Karte vom Nachziehstapel aufgedeckt wird, auch wenn sie danach auf die Hand eines Gegners kommt (A8.2; Entscheid des Autors vom 27.11.2026).'])).toEqual([])
+    expect(b, 'B2: „Einzige Ausnahme“ gilt seit dem Entscheid vom 27.11.2026 nicht mehr').not.toContain('Einzige Ausnahme')
   })
 
   it('P0.5h: die Einleitung von B1 nennt den Stand vom 24.11.2026', () => {
