@@ -1,0 +1,14 @@
+TF-TISCH-059, Stand 50fddb19 (task/O10b-320-zugleiste), Dev-Server mit Testhooks (vite --mode testhooks, Port 5191), eingebauter Browser, Fenster 320x568 emuliert.
+
+korb-entfernen nach Antippen des Schlangenkorbs:
+  Tischflaeche 114..242 px (128 px = 8rem), Zugleiste 242..670 px, Dein Platz 670..918 px, scrollHeight 918 bei 568 Fensterhoehe (Seite scrollt).
+  Knoepfe und Saetze der Zugleiste nach scrollIntoView, elementFromPoint an der Mitte: 0 verdeckt.
+risiko-misserfolg nach "Risiko spielen":
+  Zugleiste 242..612 px, scrollHeight 875; 0 verdeckt; "Waehle die Risiko-Aktion.", vier Aktionen, "Zug beenden", "Ansehen", "Abbrechen" ganz im Bild (Screenshot 2).
+
+Vergleich Geraeteklassen (risiko-misserfolg nach "Risiko spielen", 0 verdeckt, Seite scrollt nicht):
+  390x844 scrollHeight 844, Tischflaeche 253 px; 844x390 scrollHeight 390, Tischflaeche 153 px;
+  768x1024 scrollHeight 1024, Tischflaeche 459 px; 1024x768 scrollHeight 768, Tischflaeche 356 px;
+  1280x900 scrollHeight 900, Tischflaeche 468 px.
+
+Playwright-Vertrag tests/layout/erweiterung.hooks.spec.ts "O10b (TF-TISCH-059)": alle 8 Wege, 320x568, vor dem Fix rot (7 von 8 Wegen in der ersten Fassung, 1 failed in der zusammengefassten), mit Fix gruen; npm run test:layout 2485 passed.
