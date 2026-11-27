@@ -1,7 +1,8 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest'
-import { anwendeAktion, erstellePartie, erzeugeZufall } from '../../engine'
+import { anwendeAktion, ermittleAktionen, erstellePartie, erzeugeZufall } from '../../engine'
 import type { SpielAktion, Spielzustand } from '../../engine'
+import { baukasten } from '../../engine/testing/szenario'
 import { kiWahl } from '../schritt'
 import { entscheiderVon, sichtFuer } from '../sicht'
 import { aufgabenwert, gruppenzahl } from '../__tests__/stellungen'
@@ -82,5 +83,28 @@ describe('K4 Kriterium 2 im ersten Zug an Zufallsstarthänden', () => {
       const steigt = wert(start, ende) - wert(start, start)
       expect(gruppe || aufgabe || steigt > ERSTZUG_HALTEN, `K4.2: Saat ${saat}, ${JSON.stringify(zug[stelle].aktion)}, Bewertung steigt um ${steigt.toFixed(2)}`).toBe(true)
     }
+  })
+})
+
+describe('K4 Kriterium 2: der erste Zug nach Risiko-Aktion 3 (Codex-Befund 2, Iteration 2)', () => {
+  it('A8.2, D53: legt Risiko-Aktion 3 die aufgedeckte Farbkarte neben die benannte, ist es weiter der erste Zug', () => {
+    let zustand = baukasten({ spielerzahl: 2, erweiterung: true, zufall: erzeugeZufall(53) })
+      .hand(1, ['Rot', 'Blau', 'Schlangenkorb des Glücks', 'Farbenschutz', 'Farbenschutz'])
+      .haendeAuffuellen()
+      .stapelOben(['Grün'])
+      .amZug(1)
+      .zustand()
+    const spiele = (passt: (aktion: SpielAktion) => boolean) => {
+      const aktion = ermittleAktionen(zustand).find(passt)
+      if (aktion === undefined) throw new Error(`Testaufbau: keine passende Aktion unter ${JSON.stringify(ermittleAktionen(zustand))}`)
+      zustand = anwendeAktion(zustand, aktion).zustand
+    }
+    spiele((aktion) => aktion.typ === 'FarbkarteLegen' && aktion.ziel.art === 'neueSchlange' && aktion.karteId.startsWith('rot'))
+    const rot = zustand.spieler[1].schlangen[0].karten[0].id
+    spiele((aktion) => aktion.typ === 'RisikoKarteSpielen' && aktion.risikoAktion === 3 && aktion.benannt === rot)
+    while (zustand.entscheidung !== null) spiele((aktion) => aktion.typ === 'Entscheiden')
+    const farben = zustand.spieler[1].schlangen.flatMap((schlange) => schlange.karten.map((karte) => (karte.typ === 'Farbkarte' ? karte.farbe : karte.name)))
+    expect(farben, 'Testaufbau: das Grün liegt neben dem Rot').toEqual(expect.arrayContaining(['Rot', 'Grün']))
+    expect(imErstenZug(sichtFuer(zustand, 1)), `K4.2: nach ${JSON.stringify(farben)}`).toBe(true)
   })
 })

@@ -169,3 +169,29 @@ describe('K4, Codex-Befund 5 (zweite Prüfung), D71: die dritte gezogene Karte i
     expect(werte[0], `D71: frei ${werte[0]}, gespielt ${werte[1]}`).toBeCloseTo(werte[1]!, 9)
   })
 })
+
+describe('K4, Codex-Befund 1 (Iteration 2), Kriterium 1: eine Fusion, die die geheime Aufgabe zum Zugende erfüllt, gilt nicht als „senkt die Punkte“', () => {
+  it('A7.7, A9 Farbenpracht, D59: die Fusion zweier Rot zählt als Joker für die fehlende Farbe; die KI spielt eine Fusion, nach der Farbenpracht erfüllt ist', () => {
+    const start = baukasten({ spielerzahl: 2, erweiterung: true, zufall: erzeugeZufall(1) })
+      .schlange(1, ['Rot', 'Rot', 'Rot', 'Schlangenblockade', 'Blau', 'Blau', 'Schlangenblockade', 'Gelb', 'Gelb', 'Schlangenblockade', 'Violett', 'Violett'])
+      .schlange(1, ['Braun', 'Braun', 'Grün', 'Rot', 'Gelb', 'Rot'])
+      .schlange(0, ['Blau', 'Blau', 'Blau', 'Blau', 'Blau', 'Blau', 'Blau', 'Blau', 'Blau'])
+      .hand(1, ['Farbenfusion', 'Farbenschutz', 'Farbenschutz', 'Farbenschutz', 'Farbenschutz'])
+      .aendere((stand) => {
+        legeAufgabenAus(stand, { offen: ['Symmetriemeister', 'Lila Riese', 'Gelber Schatz'], geheim: [[0, 'Schlangentanz'], [1, 'Farbenpracht']] })
+        stand.ausDemSpiel.push(...stand.spieler[1].risikoKarten.splice(0))
+      })
+      .haendeAuffuellen()
+      .amZug(1)
+      .zustand()
+    expect(start.spieler[1].geheimeAufgabeErfuellt, 'Testaufbau: Farbenpracht noch nicht erfüllt').toBe(false)
+    for (const saat of [1, 7]) {
+      let zustand = start
+      for (let schritt = 0; schritt < 10 && zustand.zug.spielerIndex === 1; schritt += 1) {
+        const aktion = ermittleEntscheider(zustand) === 1 ? kiWahl(zustand, erstelleSolideKi(erzeugeZufall(saat)))! : ermittleAktionen(zustand).find(istDurchlassen)!
+        zustand = anwendeAktion(zustand, aktion).zustand
+      }
+      expect(zustand.spieler[1].geheimeAufgabeErfuellt, `K4.1: Saat ${saat}, Farbenpracht nach dem Zug`).toBe(true)
+    }
+  })
+})
