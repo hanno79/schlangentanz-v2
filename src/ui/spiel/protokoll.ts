@@ -1,9 +1,11 @@
 import { risikoaktionText } from '../../engine'
 import type { Ereignis, SpielAktion, Spielkarte, Spielzustand } from '../../engine'
 import { kartenkurzname } from '../karten/kartentexte'
+import { gewaehltSatz, kontextAmTisch, verlangtSatz } from '../tisch/entscheidungstexte'
 import { SCHRITT, kartenSatz } from '../tisch/protokolltexte'
 import { tischnamen } from '../tisch/zugtexte'
-import { personen } from './tischAnsicht'
+import { aufgedecktSatz, nenntWanderungen, wanderungsSaetze } from './protokollErweiterung'
+import { menschIndex, personen } from './tischAnsicht'
 import type { TischAnsicht } from './tischAnsicht'
 
 /*
@@ -14,30 +16,40 @@ Tisch liegt (B2): die gespielte Karte, die Ansage, wer abwehrt, wie viele
 Karten jemand zieht. Wer eine angesagte Karte durchlässt, steht ebenso da wie
 wer abwehrt; so sieht der Ablauf bei einer KI gleich aus, ob sie einen
 Farbenschutz hält oder nicht (Kriterium 5, D33).
+
+Mit der Erweiterung (O10) nennt es dazu, welche Karte eine Risiko-Karte
+aufdeckt und wie die Prüfung ausgeht, wer jetzt worüber entscheidet, was er
+gewählt hat und wohin danach offene Karten wandern (`protokollErweiterung.ts`).
 */
 
-/**
- * Die Karte, die der Spieler mit dieser Aktion aus der Hand spielt; mit dem
- * Spielen liegt sie offen. Bei einer Risiko-Karte ist es die Handkarte, die er
- * für Aktion 2 offen benennt (A8.2, D52).
- */
-function gespielteKarte(vorher: Spielzustand, aktion: SpielAktion): Spielkarte[] {
-  const benannt = aktion.typ === 'RisikoKarteSpielen' ? aktion.benannt : null
-  if (!('karteId' in aktion) && benannt === null) return []
-  const karteId = 'karteId' in aktion ? aktion.karteId : benannt
-  const karte = vorher.spieler.find((eintrag) => eintrag.id === aktion.spielerId)?.hand.find((handkarte) => handkarte.id === karteId)
-  // Bei Aktion 3 liegt die benannte Karte in der Schlange; die Namen am Tisch kennen sie schon.
-  if (karte === undefined && benannt !== null) return []
-  if (karte === undefined) throw new Error(`Protokoll: Die Karte ${karteId} liegt nicht auf der Hand von ${aktion.spielerId}.`)
-  return [karte]
+/** Die Ids der Handkarten, die die Aktion offen legt: die gespielte Karte, die für Aktion 2 benannte (A8.2, D52) und beim Tausch des Korbs auch die Karten, die in die Schlange kommen (D44). */
+function offengelegteIds(aktion: SpielAktion): string[] {
+  if (aktion.typ === 'RisikoKarteSpielen') return aktion.benannt === null ? [] : [aktion.benannt]
+  if (aktion.typ === 'SchlangenkorbSpielen' && aktion.bonus.art === 'tauschen') return [aktion.karteId, ...aktion.bonus.tausch.map((tausch) => tausch.handkarteId)]
+  return 'karteId' in aktion ? [aktion.karteId] : []
 }
 
-/** Die Sätze zu einem Schritt, in der Reihenfolge des Geschehens. `vorher` ist der Zustand vor der Aktion, `ansicht` die Sicht darauf. */
-export function protokollSchritt(vorher: Spielzustand, aktion: SpielAktion, ereignisse: readonly Ereignis[], ansicht: TischAnsicht): string[] {
-  const person = personen(vorher)
-  const namen = tischnamen(ansicht, gespielteKarte(vorher, aktion))
-  const kurz = (karteId: string) => kartenkurzname(namen.karte(karteId))
-  const wer = person(vorher.spieler.findIndex((spieler) => spieler.id === aktion.spielerId))
+/**
+ * Die Karten, die der Spieler mit dieser Aktion aus der Hand offen legt (`offengelegteIds`).
+ * Bei Aktion 3 liegt die benannte Karte in der Schlange; die Namen am Tisch kennen sie schon.
+ */
+function gespielteKarte(vorher: Spielzustand, aktion: SpielAktion): Spielkarte[] {
+  const hand = vorher.spieler.find((eintrag) => eintrag.id === aktion.spielerId)?.hand ?? []
+  return offengelegteIds(aktion).flatMap((karteId) => {
+    const karte = hand.find((handkarte) => handkarte.id === karteId)
+    if (karte !== undefined) return [karte]
+    if (aktion.typ === 'RisikoKarteSpielen') return []
+    throw new Error(`Protokoll: Die Karte ${karteId} liegt nicht auf der Hand von ${aktion.spielerId}.`)
+  })
+}
+
+type Aufgabenereignis = Extract<Ereignis, { typ: 'AufgabeErfuellt' | 'AufgabeAufgedeckt' | 'AufgabenstapelLeer' }>
+
+const istAufgabenereignis = (ereignis: Ereignis): ereignis is Aufgabenereignis =>
+  ereignis.typ === 'AufgabeErfuellt' || ereignis.typ === 'AufgabeAufgedeckt' || ereignis.typ === 'AufgabenstapelLeer'
+
+/** Der Satz zu einer erfüllten oder nachrückenden Aufgabe (A9, D5). */
+function aufgabenSatz(vorher: Spielzustand, ereignis: Aufgabenereignis): string {
   // Eine erfüllte oder nachrückende Aufgabe liegt offen; sie kann eben erst vom Aufgabenstapel gekommen sein (D5).
   const aufgabe = (aufgabeId: string) => {
     const istSie = (kandidat: { id: string }) => kandidat.id === aufgabeId
@@ -45,6 +57,32 @@ export function protokollSchritt(vorher: Spielzustand, aktion: SpielAktion, erei
     if (karte === undefined) throw new Error(`Protokoll: Die Aufgabe ${aufgabeId} liegt weder offen noch auf dem Aufgabenstapel.`)
     return karte.name
   }
+  switch (ereignis.typ) {
+    case 'AufgabeErfuellt':
+      return SCHRITT.aufgabeErfuellt(personen(vorher)(ereignis.spielerIndex), aufgabe(ereignis.aufgabeId))
+    case 'AufgabeAufgedeckt':
+      return SCHRITT.aufgabeAufgedeckt(aufgabe(ereignis.aufgabeId))
+    case 'AufgabenstapelLeer':
+      return SCHRITT.aufgabenstapelLeer
+  }
+}
+
+/** O10 K2: die Meldung, wenn in diesem Schritt eine offene Aufgabe erfüllt wurde, mit der Aufgabe, die nachrückt; sonst `null`. */
+export function aufgabenMeldung(vorher: Spielzustand, ereignisse: readonly Ereignis[]): string | null {
+  if (!ereignisse.some((ereignis) => ereignis.typ === 'AufgabeErfuellt')) return null
+  return ereignisse
+    .filter(istAufgabenereignis)
+    .map((ereignis) => aufgabenSatz(vorher, ereignis))
+    .join(' ')
+}
+
+/** Die Sätze zu einem Schritt, in der Reihenfolge des Geschehens. `vorher` ist der Zustand vor der Aktion, `ansicht` die Sicht darauf. */
+export function protokollSchritt(vorher: Spielzustand, aktion: SpielAktion, ereignisse: readonly Ereignis[], ansicht: TischAnsicht): string[] {
+  const person = personen(vorher)
+  const gespielt = gespielteKarte(vorher, aktion)
+  const namen = tischnamen(ansicht, gespielt)
+  const kurz = (karteId: string) => kartenkurzname(namen.karte(karteId))
+  const wer = person(vorher.spieler.findIndex((spieler) => spieler.id === aktion.spielerId))
   const saetze: string[] = []
   const angesagt = ansicht.status.schwebend?.angesagt
   if (aktion.typ === 'Reagieren' && aktion.farbenschutzId === null && angesagt !== undefined) saetze.push(SCHRITT.laesstDurch(wer, kartenkurzname(angesagt)))
@@ -86,18 +124,22 @@ export function protokollSchritt(vorher: Spielzustand, aktion: SpielAktion, erei
         break
       case 'RisikoKarteGespielt':
         saetze.push(SCHRITT.risiko(person(ereignis.spielerIndex), risikoaktionText(ereignis.risikoAktion), ereignis.benannt === null ? null : kurz(ereignis.benannt)))
+        saetze.push(aufgedecktSatz(vorher, ereignis.aufgedeckt, ereignis.erfolg))
+        break
+      case 'EntscheidungVerlangt':
+        saetze.push(verlangtSatz(ereignis.art, person(ereignis.spielerIndex)))
         break
       case 'Entschieden':
-        saetze.push(SCHRITT.entscheidet(person(ereignis.spielerIndex), ereignis.art))
+        saetze.push(gewaehltSatz(ereignis.wahl, person(ereignis.spielerIndex), kontextAmTisch(ansicht, namen)))
+        break
+      case 'KartenVersetzt':
+        // Was eine Risiko-Karte oder eine Entscheidung bewegt; sonst sagt es schon die Ansage.
+        if (nenntWanderungen(aktion, ereignisse)) saetze.push(...wanderungsSaetze(vorher, ereignisse, ereignis, person, namen, menschIndex(vorher)))
         break
       case 'AufgabeErfuellt':
-        saetze.push(SCHRITT.aufgabeErfuellt(person(ereignis.spielerIndex), aufgabe(ereignis.aufgabeId)))
-        break
       case 'AufgabeAufgedeckt':
-        saetze.push(SCHRITT.aufgabeAufgedeckt(aufgabe(ereignis.aufgabeId)))
-        break
       case 'AufgabenstapelLeer':
-        saetze.push(SCHRITT.aufgabenstapelLeer)
+        saetze.push(aufgabenSatz(vorher, ereignis))
         break
       case 'SchlussrundeBegonnen':
         saetze.push(SCHRITT.schlussrunde)
@@ -105,9 +147,8 @@ export function protokollSchritt(vorher: Spielzustand, aktion: SpielAktion, erei
       case 'PartieBeendet':
         saetze.push(SCHRITT.beendet)
         break
-      // Wer als Nächster gefragt ist, sagt die Statuszeile; wie die Karten wandern, sagt schon die Ansage.
+      // Wer als Nächster gefragt ist, sagt die Statuszeile.
       case 'AbwehrGefragt':
-      case 'KartenVersetzt':
         break
     }
   }

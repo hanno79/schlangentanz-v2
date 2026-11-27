@@ -287,3 +287,29 @@ describe('X1: Szenarien mit Testbedingungen für Aufgaben', () => {
     expect(farbkombination(), 'nach dem Schritt').toBe(false)
   })
 })
+
+describe('O10 (Hinweis aus X7): offene Karten heissen am Entwicklertisch beim Namen, nicht „verdeckte Karte“', () => {
+  const ereignisZeilen = (anfang: string) =>
+    within(screen.getByTestId('ereignisse'))
+      .getAllByRole('listitem')
+      .map((zeile) => zeile.textContent ?? '')
+      .filter((text) => text.startsWith(anfang))
+
+  it('A8.2: die aufgedeckte Karte nennt die Ereigniszeile mit Id, die gezogenen bleiben verdeckt', () => {
+    oeffne('/dev?szenario=risiko-erfolg')
+    fireEvent.click(screen.getByTitle(aktionsKnoepfe().find((text) => text.includes('"risikoAktion":1'))!))
+    const [aufgedeckt, aufDieHand] = ereignisZeilen('KartenVersetzt')
+    const blau = /(blau-\d{2})/.exec(aufgedeckt)![1]
+    expect(aufDieHand).toContain(`${blau} (aufgedeckt)`)
+    expect(aufDieHand.match(/verdeckte Karte/g)).toHaveLength(2)
+  })
+
+  it('D52, D77: die angesagte Karte, die der begünstigte Gegner nimmt, steht mit Id da', () => {
+    oeffne('/dev?szenario=risiko-du-beguenstigt')
+    const benannt = /benannt[^a-z]*([a-zäöü]+-\d{2})/.exec(zustandsText())![1]
+    fireEvent.click(screen.getByTitle(aktionsKnoepfe().find((text) => text.includes('"wahl":"geplante"'))!))
+    const zeilen = ereignisZeilen('KartenVersetzt').join(' ')
+    expect(zeilen).toContain(`${benannt} (angesagt)`)
+    expect(zeilen).not.toContain('verdeckte Karte')
+  })
+})

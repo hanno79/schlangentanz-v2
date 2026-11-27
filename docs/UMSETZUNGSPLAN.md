@@ -901,9 +901,21 @@ Lobby schon heute die Partie mit `Math.random` anlegt.
 - **Hängt ab von:** X1–X6.
 - **Abnahmekriterien:**
   1. Fehlt ihr eine Karte zu einer offenen oder ihrer geheimen Aufgabe und
-     hält sie sie, spielt sie sie.
+     hält sie sie, spielt sie sie, es sei denn, ein anderer Zug ist
+     nachweislich besser bewertet; wie bei K2.1 belegt der Test diese Ausnahme
+     mit Zahlen (Entscheid des Orchestrators vom 27.11.2026). Ein Zug, der
+     schlechter bewertet ist als die Erfüllung, ist nie gedeckt, auch wenn die
+     Vorauswahl die Erfüllung verwirft.
   2. Sie nutzt Comeback-Karte, Risiko-Karte und Schlangenkorb, wenn die
-     Bewertung steigt, und nicht im ersten Zug ohne Nutzen.
+     Bewertung steigt, und nicht im ersten Zug ohne Nutzen. Nutzen heisst ein
+     messbarer Vorteil in Partien, nicht nur in der eigenen Bewertung
+     (Entscheid des Orchestrators vom 27.11.2026): Im ersten Zug setzt sie eine
+     dieser Karten nur ein, wenn der Zug eine Gruppe vollendet, eine Aufgabe
+     erfüllt, einen Angriff abwehrt oder die Bewertung um mehr als den
+     Haltewert der Karte steigt. Der Haltewert ist mit mindestens 2'000
+     Spiegelpartien belegt: Die KI holt damit nicht weniger als 50 % minus zwei
+     Standardfehler gegen dieselbe KI, die im ersten Zug keine dieser Karten
+     einsetzt. Geprüft wird an Zufallsstarthänden, nicht nur an ausgesuchten.
   3. Sie plant eine Schlangenhäutung, die neue Gruppen bildet.
   4. K2.7 und K2.8 gelten weiter.
   5. K2.1 (vollenden, ausser ein anderer Zug ist nachweislich besser), K3.2

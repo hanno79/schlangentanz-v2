@@ -1,7 +1,9 @@
+import { risikoaktionText } from '../../engine'
 import type { SchlangenfrassSpielenAktion, SpielAktion, Spielkarte } from '../../engine'
 import { kartenkurzname, kartenname } from '../karten/kartentexte'
-import type { Wahl } from '../spiel/auswahl'
+import type { Auswahl, Wahl } from '../spiel/auswahl'
 import type { Person, SchlangeAnsicht, TischAnsicht } from '../spiel/tischAnsicht'
+import { AUFTRAG, ERWEITERUNG_ANSAGE } from './erweiterungstexte'
 import { anzahlKarten } from './texte'
 
 /*
@@ -54,9 +56,22 @@ export const FRASS_OPTION: Readonly<Record<SchlangenfrassSpielenAktion['option']
   gegnerischeKarten: 'c) Zwei beliebige Karten aus den Schlangen der Mitspieler',
 }
 
-/** Was im nächsten Schritt zu wählen ist, aus den Arten der angebotenen Wahlen. */
-export function auftrag(angebote: readonly Wahl[], karte: Spielkarte): string {
+/** Was im nächsten Schritt der Erweiterung zu wählen ist (O10); `null`, wenn die Auswahl keine der Erweiterung ist. */
+function auftragDerErweiterung(arten: ReadonlySet<Wahl['art']>, auswahl: Auswahl): string | null {
+  if (arten.has('risikoaktion')) return AUFTRAG.risikoaktion
+  if (arten.has('benannt')) return auswahl.some((wahl) => wahl.art === 'risikoaktion' && wahl.nummer === 3) ? AUFTRAG.benanntSchlange : AUFTRAG.benanntHand
+  if (arten.has('korbbonus')) return AUFTRAG.korbbonus
+  if (arten.has('tausch')) return AUFTRAG.tausch
+  if (auswahl[0]?.art === 'zweiAbwerfenDreiZiehen') return AUFTRAG.abwerfen
+  if (arten.has('schlangenkarte') && auswahl.some((wahl) => wahl.art === 'korbbonus' && wahl.bonus === 'entfernen')) return AUFTRAG.entfernen
+  return null
+}
+
+/** Was im nächsten Schritt zu wählen ist, aus den Arten der angebotenen Wahlen; `karte` ist die gewählte Karte, falls eine gewählt ist. */
+export function auftrag(angebote: readonly Wahl[], karte: Spielkarte | null, auswahl: Auswahl = []): string {
   const arten = new Set(angebote.map((wahl) => wahl.art))
+  const erweiterung = auftragDerErweiterung(arten, auswahl)
+  if (erweiterung !== null) return erweiterung
   const oderNeu = arten.has('neueSchlange') ? ' oder beginne eine neue Schlange' : ''
   if (arten.has('frass')) return 'Wähle, was der Schlangenfrass entfernt.'
   if (arten.has('spieler')) return 'Wähle den Mitspieler, der seinen nächsten Zug aussetzt.'
@@ -66,9 +81,9 @@ export function auftrag(angebote: readonly Wahl[], karte: Spielkarte): string {
   if (arten.has('luecke')) return `Wähle die Stelle (+) in der Schlange${oderNeu}.`
   if (arten.has('neueSchlange')) return 'Beginne eine neue Schlange.'
   if (arten.has('schlangenkarte')) {
-    if (karte.typ === 'Sonderkarte' && karte.name === 'Farbendieb') return 'Wähle die Karte, die du stiehlst.'
-    if (karte.typ === 'Sonderkarte' && karte.name === 'Farbenfusion') return 'Wähle die zwei Karten nebeneinander, auf die die Farbenfusion kommt.'
-    if (karte.typ === 'Sonderkarte' && karte.name === 'Schlangenfrass') return 'Wähle, was der Schlangenfrass frisst.'
+    if (karte?.typ === 'Sonderkarte' && karte.name === 'Farbendieb') return 'Wähle die Karte, die du stiehlst.'
+    if (karte?.typ === 'Sonderkarte' && karte.name === 'Farbenfusion') return 'Wähle die zwei Karten nebeneinander, auf die die Farbenfusion kommt.'
+    if (karte?.typ === 'Sonderkarte' && karte.name === 'Schlangenfrass') return 'Wähle, was der Schlangenfrass frisst.'
     return 'Wähle eine Karte in einer Schlange.'
   }
   return ''
@@ -85,26 +100,43 @@ interface SchlangeAmTisch {
 export interface Tischnamen {
   karte: (id: string) => Spielkarte
   schlange: (id: string) => SchlangeAmTisch
+  /** Die Schlange, in der diese Karte offen liegt. */
+  schlangeMitKarte: (karteId: string) => SchlangeAmTisch
   spieler: (id: string) => Person
 }
 
 /**
- * Die Namen am Tisch: deine Hand, alle Schlangen, eine angesagte Karte und
- * `gespielt`, eine Karte, die ein Gegner eben aus seiner Hand gespielt hat (O6);
- * mit dem Spielen liegt sie offen.
+ * Die Namen am Tisch: deine Hand und deine Ablage, alle Schlangen, eine
+ * angesagte Karte, offen aufgedeckte Karten (A8.2), die für Risiko-Aktion 2
+ * angesagte Karte einer offenen Entscheidung (D52, D77) und `gespielt`, Karten,
+ * die ein Gegner eben aus seiner Hand gespielt hat (O6); mit dem Spielen liegen
+ * sie offen.
  */
 export function tischnamen(ansicht: TischAnsicht, gespielt: readonly Spielkarte[] = []): Tischnamen {
   const angesagt = ansicht.status.schwebend?.angesagt
-  const offen = [...ansicht.ich.hand, ...(angesagt === undefined ? [] : [angesagt]), ...gespielt]
+  const risikoAnsage = ansicht.entscheidung?.angesagt ?? null
+  const offen = [
+    ...ansicht.ich.hand,
+    ...ansicht.ich.ablagestapel,
+    ...ansicht.aufgedeckt,
+    ...(angesagt === undefined ? [] : [angesagt]),
+    ...(risikoAnsage === null ? [] : [risikoAnsage]),
+    ...gespielt,
+  ]
   const karten = new Map<string, Spielkarte>(offen.map((karte) => [karte.id, karte]))
   const schlangen = new Map<string, SchlangeAmTisch>()
+  const schlangeVon = new Map<string, SchlangeAmTisch>()
   const spieler = new Map<string, Person>([ansicht.ich, ...ansicht.gegner].map((platz): [string, Person] => [platz.id, { name: platz.name, ich: platz === ansicht.ich }]))
   for (const platz of [ansicht.ich, ...ansicht.gegner]) {
     const eigene = platz === ansicht.ich
     platz.schlangen.forEach((schlange, index) => {
       const nummer = index + 1
-      schlangen.set(schlange.id, { ansicht: schlange, eigene, besitzer: platz.name, nummer })
-      for (const glied of schlange.karten) karten.set(glied.karte.id, glied.karte)
+      const amTisch = { ansicht: schlange, eigene, besitzer: platz.name, nummer }
+      schlangen.set(schlange.id, amTisch)
+      for (const glied of schlange.karten) {
+        karten.set(glied.karte.id, glied.karte)
+        schlangeVon.set(glied.karte.id, amTisch)
+      }
     })
   }
   const finde = <T,>(tabelle: Map<string, T>, id: string, was: string): T => {
@@ -115,12 +147,13 @@ export function tischnamen(ansicht: TischAnsicht, gespielt: readonly Spielkarte[
   return {
     karte: (id) => finde(karten, id, 'die Karte'),
     schlange: (id) => finde(schlangen, id, 'die Schlange'),
+    schlangeMitKarte: (karteId) => finde(schlangeVon, karteId, 'die Schlange mit der Karte'),
     spieler: (id) => finde(spieler, id, 'den Spieler'),
   }
 }
 
 /** „deine Schlange 1“ oder „die Schlange 1 von KI-Gegner 1“ (Akkusativ), „deiner …“ bzw. „der …“ (Dativ). */
-function schlangeImSatz({ eigene, nummer, besitzer }: SchlangeAmTisch, fall: 'akkusativ' | 'dativ'): string {
+export function schlangeImSatz({ eigene, nummer, besitzer }: SchlangeAmTisch, fall: 'akkusativ' | 'dativ'): string {
   if (eigene) return `${fall === 'akkusativ' ? 'deine' : 'deiner'} Schlange ${nummer}`
   return `${fall === 'akkusativ' ? 'die' : 'der'} Schlange ${nummer} von ${besitzer}`
 }
@@ -171,13 +204,23 @@ export function ansage(aktion: SpielAktion, namen: Tischnamen): string {
       return `Schlangenhäutung, Karte ${Math.min(...stellen)}–${Math.max(...stellen)} ${schlangeImSatz(schlange, 'dativ')}: ${aktion.neueReihenfolge.map(kurz).join(', ')}.`
     }
     case 'SchlangenkorbSpielen': {
-      // A7.10: Was der Bonus bewegt, zeigt der Tisch; die Ansage nennt nur offene Karten (B2).
+      // A7.10, D44: Die getauschten Handkarten liegen danach offen in der Schlange; die Namen kennen sie (B2).
       const { bonus } = aktion
-      if (bonus.art === 'ziehen') return `${kurz(aktion.karteId)}: 3 Karten ziehen und bis zu 2 davon ausspielen.`
-      if (bonus.art === 'aktionen') return `${kurz(aktion.karteId)}: zwei zusätzliche Aktionen in diesem Zug.`
-      if (bonus.art === 'tauschen') return `${kurz(aktion.karteId)}: ${bonus.tausch.length === 1 ? 'eine Karte' : 'zwei Karten'} der eigenen Schlange gegen Handkarten tauschen.`
-      return `${kurz(aktion.karteId)}: ${kurz(bonus.ziel.karteId)} aus ${schlangeImSatz(namen.schlange(bonus.ziel.schlangenId), 'dativ')} entfernen.`
+      const korb = kurz(aktion.karteId)
+      if (bonus.art === 'ziehen') return ERWEITERUNG_ANSAGE.korbZiehen(korb)
+      if (bonus.art === 'aktionen') return ERWEITERUNG_ANSAGE.korbAktionen(korb)
+      if (bonus.art === 'tauschen') {
+        return ERWEITERUNG_ANSAGE.korbTausch(korb, bonus.tausch.map((tausch) => `${kurz(tausch.handkarteId)} statt ${kurz(tausch.karteId)} in ${schlangeImSatz(namen.schlange(tausch.schlangenId), 'dativ')}`))
+      }
+      return ERWEITERUNG_ANSAGE.korbEntfernen(korb, kurz(bonus.ziel.karteId), schlangeImSatz(namen.schlange(bonus.ziel.schlangenId), 'dativ'))
     }
+    case 'RisikoKarteSpielen':
+      // A8.2, D52: Aktion und benannte Karte sind die offene Ansage.
+      return ERWEITERUNG_ANSAGE.risiko(risikoaktionText(aktion.risikoAktion), aktion.benannt === null ? null : kurz(aktion.benannt))
+    case 'ComebackEinsetzen':
+      return ERWEITERUNG_ANSAGE.comeback
+    case 'ZweiAbwerfenDreiZiehen':
+      return ERWEITERUNG_ANSAGE.zweiAbwerfen(aktion.karteIds.map(kurz))
     default:
       throw new Error(`Für ${aktion.typ} gibt es am Tisch keine Ansage.`)
   }

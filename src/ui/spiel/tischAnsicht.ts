@@ -1,4 +1,4 @@
-import { berechneZwischenstand, ermittleAktionen, ermittleEntscheider, zugBeendenGesperrt } from '../../engine'
+import { berechneZwischenstand, ermittleAktionen, ermittleEntscheider, offeneHandkarteDer, zugBeendenGesperrt } from '../../engine'
 import type {
   Ablehnung,
   AufgabenkarteInfo,
@@ -17,6 +17,7 @@ import type {
   Spielzustand,
 } from '../../engine'
 import { grundFuerDich } from '../tisch/gruende'
+import { uebrigeZusatzaktionen } from './zusatzaktionen'
 
 /*
 Was der Mensch am Tisch sehen darf (Plan O3 und O4, B2). Der Tisch zeichnet nur
@@ -35,6 +36,13 @@ Engine, wer entscheidet aus `ermittleEntscheider`. Die Punkte sind der
 Zwischenstand aus deiner Sicht (O8, Kriterium 5): ohne Kettenbonus und ohne die
 geheimen Aufgaben der Gegner. Nach Spielende ist niemand am Zug, auch wenn
 `zug.spielerIndex` beim zuletzt Spielenden stehen bleibt.
+
+Mit der Erweiterung (O10) kommt dazu, was offen am Tisch liegt: die erfüllten
+Aufgaben jedes Spielers, die Auslage der Gegner (Comeback-Karte und Zahl der
+Risiko-Karten), offen aufgedeckte Karten und eine offene Entscheidung. Von
+einer fremden Hand steht darin nur die Farbkarte, die ein Spieler für
+Risiko-Aktion 2 angesagt hat; sie ist eine offene Ansage (B2, D52, D77). Ob
+deine geheime Aufgabe erfüllt ist, siehst nur du (D35).
 */
 
 /** Ein Spieler, von dem die Sicht spricht; `ich` ist der Mensch. */
@@ -79,18 +87,40 @@ interface PlatzAnsicht {
   amZug: boolean
   /** Der Zwischenstand der Engine aus deiner Sicht (`berechneZwischenstand`). */
   punkte: number
+  /** Die offenen Aufgaben, die der Spieler erfüllt und zu sich genommen hat (A9). */
+  erfuellteAufgaben: AufgabenkarteInfo[]
 }
 
 export interface GegnerAnsicht extends PlatzAnsicht {
   /** Nur die Zahl: Fremde Handkarten sieht der Mensch nie (B2). */
   handkarten: number
+  /** Die Comeback-Karte liegt offen vor ihm (A4, A8.1); `null` ohne Erweiterung. */
+  comeback: { verbraucht: boolean } | null
+  /** Wie viele Risiko-Karten noch offen vor ihm liegen (A4, A8.2). */
+  risikoKarten: number
 }
 
 export interface EigeneAnsicht extends PlatzAnsicht {
   hand: Spielkarte[]
+  /** Dein ganzer Ablagestapel, unterste Karte zuerst; aus ihm wählst du bei Risiko-Aktion 4 (A8.2, D54). */
+  ablagestapel: Spielkarte[]
   geheimeAufgabe: AufgabenkarteInfo | null
+  /** D35: Ob deine geheime Aufgabe in einem deiner Züge erfüllt war; nur du siehst es. */
+  geheimeAufgabeErfuellt: boolean
   comeback: { karte: Auslagekarte; verbraucht: boolean } | null
   risikoKarten: Auslagekarte[]
+}
+
+/** Eine offene Entscheidung (X3, A8.2): wer entscheidet, wer sie ausgelöst hat und was dabei offen genannt ist. */
+export interface EntscheidungAnsicht {
+  /** Die Art, wie sie offen in der Entscheidung steht (`entscheidungsarten.ts`). */
+  art: string
+  entscheidet: Person
+  ausgeloestVon: Person
+  /** D52, D77: die Farbkarte, die der Spieler für Risiko-Aktion 2 angesagt hat, offen für alle; sonst `null`. */
+  angesagt: Spielkarte | null
+  /** A8.2 Aktion 3: die Id der benannten Karte in der Schlange dessen, der entscheidet; sonst `null`. */
+  schlangenkarte: string | null
 }
 
 export interface StatusAnsicht {
@@ -105,6 +135,10 @@ export interface StatusAnsicht {
    * Abwehrfrage nennt daraus Karte und Ziel (O6).
    */
   schwebend: { karte: Sonderkartenname; von: Person; entscheidet: Person; angesagt: SonderkarteInfo; ansage: KartenAktion } | null
+  /** Wie viele Zusatzaktionen von Comeback-Karte oder Schlangenkorb in diesem Teilzug noch übrig sind (A8.1, A7.10). */
+  zusatzaktionen: number
+  /** Wer über eine offene Entscheidung der Erweiterung wählt (X3); sonst `null`. */
+  entscheidet: Person | null
 }
 
 export interface TischAnsicht {
@@ -114,6 +148,10 @@ export interface TischAnsicht {
   gegner: GegnerAnsicht[]
   nachziehstapel: number
   offeneAufgaben: AufgabenkarteInfo[]
+  /** Offen vom Nachziehstapel aufgedeckt, bis eine Entscheidung sie weiterlegt (A8.2). */
+  aufgedeckt: Spielkarte[]
+  /** Eine offene Entscheidung, auch eine, die ein Gegner trifft; was er wählen kann, steht nicht darin (B2). */
+  entscheidung: EntscheidungAnsicht | null
   status: StatusAnsicht
   /** Was du jetzt tun darfst, wie die Engine es aufzählt (U3); leer, solange ein Gegner entscheidet oder die Partie beendet ist. */
   aktionen: SpielAktion[]
@@ -160,6 +198,23 @@ export function grundAmTisch(zustand: Spielzustand, ablehnung: Ablehnung): strin
   return grundFuerDich(ablehnung, personen(zustand))
 }
 
+/** Die offene Entscheidung, wie jeder sie sehen darf (B2): Art, Beteiligte und die offen genannten Karten (D52, D77). */
+function entscheidungAnsicht(zustand: Spielzustand, person: (index: number) => Person): EntscheidungAnsicht | null {
+  const { entscheidung } = zustand
+  if (entscheidung === null) return null
+  const offen = offeneHandkarteDer(entscheidung)
+  const angesagt = offen === null ? null : zustand.spieler[offen.spielerIndex].hand.find((karte) => karte.id === offen.karteId)
+  if (angesagt === undefined) throw new Error(`Die angesagte Karte ${offen?.karteId} liegt nicht auf der Hand, die die Entscheidung nennt (D52).`)
+  const { schlangenkarte } = entscheidung.daten
+  return {
+    art: entscheidung.art,
+    entscheidet: person(entscheidung.entscheider),
+    ausgeloestVon: person(entscheidung.ausgeloestVon),
+    angesagt,
+    schlangenkarte: schlangenkarte === undefined ? null : String(schlangenkarte),
+  }
+}
+
 /** Die Sicht des Menschen auf den Zustand. Wirft, wenn nicht genau ein Mensch am Tisch sitzt (B2). */
 export function tischAnsicht(zustand: Spielzustand): TischAnsicht {
   const mensch = menschIndex(zustand)
@@ -177,6 +232,7 @@ export function tischAnsicht(zustand: Spielzustand): TischAnsicht {
     gruben: zustand.ausliegendeGruben.filter((grube) => grube.vor === index).map((grube) => ({ karte: grube.karte, von: person(grube.gespieltVon) })),
     amZug: !beendet && zustand.zug.spielerIndex === index,
     punkte: zwischenstand[index].summe,
+    erfuellteAufgaben: spieler.erfuellteAufgaben,
   })
 
   const ich = zustand.spieler[mensch]
@@ -184,6 +240,8 @@ export function tischAnsicht(zustand: Spielzustand): TischAnsicht {
   const gegner = Array.from({ length: anzahl - 1 }, (_, schritt) => (mensch + 1 + schritt) % anzahl).map((index) => ({
     ...platz(zustand.spieler[index], index),
     handkarten: zustand.spieler[index].hand.length,
+    comeback: zustand.spieler[index].comeback === null ? null : { verbraucht: zustand.spieler[index].comeback.verbraucht },
+    risikoKarten: zustand.spieler[index].risikoKarten.length,
   }))
 
   const { schwebend } = zustand
@@ -196,13 +254,17 @@ export function tischAnsicht(zustand: Spielzustand): TischAnsicht {
     ich: {
       ...platz(ich, mensch),
       hand: ich.hand,
+      ablagestapel: ich.ablagestapel,
       geheimeAufgabe: ich.geheimeAufgabe,
+      geheimeAufgabeErfuellt: ich.geheimeAufgabeErfuellt,
       comeback: ich.comeback,
       risikoKarten: ich.risikoKarten,
     },
     gegner,
     nachziehstapel: zustand.nachziehstapel.length,
     offeneAufgaben: zustand.offeneAufgaben,
+    aufgedeckt: zustand.aufgedeckt,
+    entscheidung: entscheidungAnsicht(zustand, person),
     status: {
       partiephase: zustand.partiephase,
       amZug: beendet ? null : person(zustand.zug.spielerIndex),
@@ -212,6 +274,8 @@ export function tischAnsicht(zustand: Spielzustand): TischAnsicht {
         schwebend === null || entscheider === null
           ? null
           : { karte: schwebend.karte.name, von: person(angreifer), entscheidet: person(entscheider), angesagt: schwebend.karte, ansage: schwebend.aktion },
+      zusatzaktionen: beendet ? 0 : uebrigeZusatzaktionen(zustand.zug),
+      entscheidet: zustand.entscheidung === null ? null : person(zustand.entscheidung.entscheider),
     },
     aktionen: entscheider === mensch ? ermittleAktionen(zustand) : [],
     zugBeendenGesperrt: gesperrt === null ? null : grundFuerDich(gesperrt, person),

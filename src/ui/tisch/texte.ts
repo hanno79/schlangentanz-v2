@@ -1,5 +1,6 @@
 import type { Farbe } from '../../engine'
 import type { Person, StatusAnsicht } from '../spiel/tischAnsicht'
+import { zusatzaktionenText } from './erweiterungstexte'
 
 /*
 Alle Anzeigetexte des Spieltischs an einer Stelle (docs/regeln/web.md, „Texte“).
@@ -85,8 +86,12 @@ export function statusText(status: StatusAnsicht): { titel: string; text: string
   // „ist dran“ bleibt beisammen; umbrechen darf die Zeile nur vor „ist“.
   const titel = amZug.ich ? 'Du bist\u00a0dran' : `${amZug.name} ist\u00a0dran`
   const teile: string[] = []
+  // X3: Eine Entscheidung der Erweiterung trifft auch einer, der nicht am Zug ist.
+  if (status.entscheidet !== null) return { titel, text: status.entscheidet.ich ? 'Du entscheidest.' : `${status.entscheidet.name} entscheidet.` }
   if (status.teilzug === 2) teile.push('Zweiter Zug nach dem Verdoppler')
-  if (amZug.ich) teile.push(status.abschnitt === 'Abwerfen' ? 'Lege überzählige Handkarten ab.' : 'Spiele Karten aus deiner Hand.')
+  // A8.1, A7.10: Comeback-Karte und Schlangenkorb geben dem Zug Zusatzaktionen; dann steht das statt „Spiele Karten …“, damit die Zeile kurz bleibt.
+  if (status.zusatzaktionen > 0 && status.abschnitt === 'Ausspielen') teile.push(zusatzaktionenText(status.zusatzaktionen))
+  else if (amZug.ich) teile.push(status.abschnitt === 'Abwerfen' ? 'Lege überzählige Handkarten ab.' : 'Spiele Karten aus deiner Hand.')
   else if (status.abschnitt === 'Abwerfen') teile.push('legt überzählige Handkarten ab')
   return { titel, text: teile.join(': ') }
 }

@@ -1,4 +1,5 @@
-import type { Korbbonus, Korbtausch, RisikoKarteSpielenAktion, SchlangenfrassSpielenAktion, SpielAktion } from '../../engine'
+import type { Korbbonus, Korbtausch, Risikoaktion, SchlangenfrassSpielenAktion, SpielAktion } from '../../engine'
+import { wegDerEntscheidung } from './entscheidungsarten'
 
 /*
 Von der Karte über die Ziele zur fertigen Aktion (Plan O3, DESIGN.md „Karte
@@ -17,6 +18,13 @@ Die Schlangenhäutung (O7) wählt nach der Schlange den Abschnitt und zuletzt
 die neue Reihenfolge. Die Engine zählt je Abschnitt jede neue Farbfolge einmal
 auf; der Mensch ordnet die Karten selbst, und `passendeReihenfolge` sucht die
 aufgezählte Reihenfolge mit derselben Farbfolge.
+
+Mit der Erweiterung (O10) wählt der Mensch eine Karte seiner Auslage wie eine
+Handkarte: Die Comeback-Karte ist damit schon gewählt, bei der
+Risiko-Belohnungs-Karte folgen die Aktion und bei Aktion 2 und 3 die benannte
+Karte (A8.2). Eine Entscheidung zerfällt nach ihrer Art
+(`entscheidungsarten.ts`); deshalb nimmt die Zerlegung die Art der offenen
+Entscheidung mit.
 */
 
 /** Was der Mensch antippt: ein Schritt auf dem Weg zu einer Aktion. */
@@ -37,14 +45,15 @@ export type Wahl =
   | { art: 'abwerfen'; karteId: string }
   | { art: 'abwehren'; farbenschutzId: string }
   | { art: 'durchlassen' }
-  /** X3: eine Option einer offenen Entscheidung; wie sie am Tisch erscheint, legt O10 fest. */
+  /** X3: eine feste Möglichkeit einer offenen Entscheidung (`entscheidungsarten.ts`). */
   | { art: 'entscheiden'; wahl: string }
-  /** X5: eine Risiko-Aktion mit ihrer benannten Karte (A8.2); wie sie am Tisch erscheint, legt O10 fest. */
-  | ({ art: 'risiko' } & Pick<RisikoKarteSpielenAktion, 'risikoKarteId' | 'risikoAktion' | 'benannt'>)
-  /** X4: die eigene Comeback-Karte einsetzen und „Zwei Karten abwerfen, drei ziehen“; wie es am Tisch erscheint, legt O10 fest. */
-  | { art: 'comeback' }
+  /** A8.2: eine der vier Risiko-Aktionen, nach der Risiko-Belohnungs-Karte. */
+  | { art: 'risikoaktion'; nummer: Risikoaktion }
+  /** A8.2, D52: die Karte, die eine Risiko-Aktion benennt: bei Aktion 2 eine Farbkarte der Hand, bei Aktion 3 eine der eigenen Schlange. */
+  | { art: 'benannt'; karteId: string }
+  /** X4, D49: „Zwei Karten abwerfen, drei ziehen“ als Zusatzaktion; die zwei Karten folgen als `abwerfen`. */
   | { art: 'zweiAbwerfenDreiZiehen' }
-  /** X6: der Bonus des Schlangenkorbs und ein Tausch (A7.10, D44); wie sie am Tisch erscheinen, legt O10 fest. */
+  /** X6: der Bonus des Schlangenkorbs (A7.10) und ein Tausch (D44): Farbkarte der Schlange und Handkarte an ihren Platz. */
   | { art: 'korbbonus'; bonus: Korbbonus['art'] }
   | ({ art: 'tausch' } & Korbtausch)
 
@@ -71,8 +80,8 @@ export interface Auswahlstand {
 const karte = (karteId: string): Wahl => ({ art: 'karte', karteId })
 const schlangenkarte = (ziel: { schlangenId: string; karteId: string }): Wahl => ({ art: 'schlangenkarte', schlangenId: ziel.schlangenId, karteId: ziel.karteId })
 
-/** Die Wahlen, mit denen der Mensch diese Aktion antippt. */
-export function wegZu(aktion: SpielAktion): Weg {
+/** Die Wahlen, mit denen der Mensch diese Aktion antippt; `entscheidung` ist die Art der offenen Entscheidung, falls eine offen ist. */
+export function wegZu(aktion: SpielAktion, entscheidung: string | null = null): Weg {
   switch (aktion.typ) {
     case 'FarbkarteLegen': {
       const { ziel } = aktion
@@ -119,11 +128,13 @@ export function wegZu(aktion: SpielAktion): Weg {
     case 'Reagieren':
       return { folge: [aktion.farbenschutzId === null ? { art: 'durchlassen' } : { art: 'abwehren', farbenschutzId: aktion.farbenschutzId }], menge: [] }
     case 'Entscheiden':
-      return { folge: [{ art: 'entscheiden', wahl: aktion.wahl }], menge: [] }
-    case 'RisikoKarteSpielen':
-      return { folge: [{ art: 'risiko', risikoKarteId: aktion.risikoKarteId, risikoAktion: aktion.risikoAktion, benannt: aktion.benannt }], menge: [] }
+      return { folge: wegDerEntscheidung(entscheidung, aktion.wahl), menge: [] }
+    case 'RisikoKarteSpielen': {
+      const folge: Wahl[] = [karte(aktion.risikoKarteId), { art: 'risikoaktion', nummer: aktion.risikoAktion }]
+      return { folge: aktion.benannt === null ? folge : [...folge, { art: 'benannt', karteId: aktion.benannt }], menge: [] }
+    }
     case 'ComebackEinsetzen':
-      return { folge: [{ art: 'comeback' }], menge: [] }
+      return { folge: [karte(aktion.comebackId)], menge: [] }
     case 'ZweiAbwerfenDreiZiehen':
       return { folge: [{ art: 'zweiAbwerfenDreiZiehen' }], menge: aktion.karteIds.map((karteId): Wahl => ({ art: 'abwerfen', karteId })) }
     case 'SchlangenkorbSpielen': {
@@ -150,18 +161,19 @@ interface Eintrag {
 /*
 Die Wege einer Aktionsliste, je Liste einmal zerlegt: Eine Liste der Engine
 ändert sich nicht, und mit der Schlangenhäutung hat sie oft Tausende Einträge,
-die sonst bei jedem Antippen neu zerlegt würden.
+die sonst bei jedem Antippen neu zerlegt würden. Zu einer Liste gehört genau
+eine offene Entscheidung oder keine; ihre Art steht mit im Speicher.
 */
-const zerlegt = new WeakMap<readonly SpielAktion[], Eintrag[]>()
+const zerlegt = new WeakMap<readonly SpielAktion[], { entscheidung: string | null; liste: Eintrag[] }>()
 
-function eintraege(aktionen: readonly SpielAktion[]): Eintrag[] {
+function eintraege(aktionen: readonly SpielAktion[], entscheidung: string | null): Eintrag[] {
   const bekannt = zerlegt.get(aktionen)
-  if (bekannt !== undefined) return bekannt
+  if (bekannt !== undefined && bekannt.entscheidung === entscheidung) return bekannt.liste
   const liste = aktionen.map((aktion): Eintrag => {
-    const { folge, menge } = wegZu(aktion)
+    const { folge, menge } = wegZu(aktion, entscheidung)
     return { aktion, folge: folge.map((wahl) => [wahlSchluessel(wahl), wahl]), menge: new Map(menge.map((wahl) => [wahlSchluessel(wahl), wahl])) }
   })
-  zerlegt.set(aktionen, liste)
+  zerlegt.set(aktionen, { entscheidung, liste })
   return liste
 }
 
@@ -193,8 +205,8 @@ function stand(liste: readonly Eintrag[], gewaehlt: readonly string[]): { angebo
 }
 
 /** Was nach dieser Auswahl angeboten ist und ob sie eine Aktion vollständig beschreibt. */
-export function auswahlstand(aktionen: readonly SpielAktion[], auswahl: Auswahl): Auswahlstand {
-  const { angebote, fertig } = stand(eintraege(aktionen), auswahl.map(wahlSchluessel))
+export function auswahlstand(aktionen: readonly SpielAktion[], auswahl: Auswahl, entscheidung: string | null = null): Auswahlstand {
+  const { angebote, fertig } = stand(eintraege(aktionen, entscheidung), auswahl.map(wahlSchluessel))
   if (fertig.length > 1) {
     throw new Error(`Auswahl: ${fertig.length} Aktionen passen zu derselben Auswahl; jede Aktion braucht einen eigenen Weg (O3).`)
   }
@@ -207,8 +219,8 @@ export function auswahlstand(aktionen: readonly SpielAktion[], auswahl: Auswahl)
  * Auswahl auf). Eine Karte, die erst am Anfang angeboten ist, beginnt eine neue
  * Auswahl. Alles andere ist nicht angeboten und wird abgelehnt.
  */
-export function waehle(aktionen: readonly SpielAktion[], auswahl: Auswahl, wahl: Wahl): Auswahl {
-  const liste = eintraege(aktionen)
+export function waehle(aktionen: readonly SpielAktion[], auswahl: Auswahl, wahl: Wahl, entscheidung: string | null = null): Auswahl {
+  const liste = eintraege(aktionen, entscheidung)
   const gewaehlt = auswahl.map(wahlSchluessel)
   const neu = wahlSchluessel(wahl)
   const stelle = gewaehlt.indexOf(neu)

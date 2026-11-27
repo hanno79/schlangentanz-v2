@@ -750,8 +750,11 @@ Erweiterung spielt. Die Tabelle zeigt den Stand vom 24.11.2026.
 - **Mischen:** Fisher-Yates oder ein gleichwertiges Verfahren.
 - **Verdeckte Information:** Handkarten und geheime Aufgabe der KI-Gegner sind für
   den Menschen nie sichtbar, auch nicht mittelbar über angebotene Aktionen.
-  Einzige Ausnahme ist die Farbkarte, die ein Spieler für Risiko-Aktion 2
-  benennt: Sie ist eine offene Ansage (D52, D77).
+  Ausnahme ist die Farbkarte, die ein Spieler für Risiko-Aktion 2
+  benennt: Sie ist eine offene Ansage (D52, D77). Ebenso offen ist die Karte,
+  die beim Ausspielen einer Risiko-Belohnungs-Karte vom Nachziehstapel
+  aufgedeckt wird, auch wenn sie danach auf die Hand eines Gegners kommt
+  (A8.2; Entscheid des Autors vom 27.11.2026).
 - **„Schlangenspass!":** wird nicht gerufen. Das Spiel erkennt eine erfüllte
   Aufgabe selbst und zeigt sie sichtbar an.
 - **Ansage (A6):** Die „klare Ansage" ist digital die Auswahl von Karte und Ziel

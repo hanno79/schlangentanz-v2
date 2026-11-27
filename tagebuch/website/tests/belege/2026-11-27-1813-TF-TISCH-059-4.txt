@@ -1,0 +1,20 @@
+[o10 320x568 korb-entfernen] Zugleiste [113.890625,525.546875,411.65625] Platz [525.546875,568] scrollHeight 568/568 verdeckt: "Zug beenden" verdeckt von OL.st-schlange st-scrollt | "Ansehen" verdeckt von IMG.karte | "Abbrechen" verdeckt von UL.st-hand-karten st-scrollt
+[o10 320x568 risiko-misserfolg] Zugleiste [113.890625,484.859375,370.96875] Platz [484.859375,568] scrollHeight 568/568 verdeckt: "Wähle die Risiko-Aktion." verdeckt von ARTICLE.st-gegner | "Zug beenden" verdeckt von OL.st-schlange st-scrollt | "Ansehen" verdeckt von IMG.karte | "Abbrechen" verdeckt von IMG.karte
+[o10 375x812 korb-entfernen] Zugleiste [272.5625,563.4375,290.875] Platz [563.4375,812] scrollHeight 812/812 verdeckt: nichts
+[o10 375x812 risiko-misserfolg] Zugleiste [257.015625,547.890625,290.875] Platz [547.890625,812] scrollHeight 812/812 verdeckt: nichts
+Call log:
+[2m  - waiting for getByRole('region', { name: 'Zugleiste' }) to be visible[22m
+
+    at E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a131e36d4ad98d13c\[eval1]:10:60 {
+  name: 'TimeoutError'
+}
+
+Node.js v25.2.1
+Call log:
+[2m  - waiting for getByRole('region', { name: 'Zugleiste' }) to be visible[22m
+
+    at E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a131e36d4ad98d13c\[eval1]:10:60 {
+  name: 'TimeoutError'
+}
+
+Node.js v25.2.1

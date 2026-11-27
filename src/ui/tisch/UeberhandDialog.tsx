@@ -3,6 +3,7 @@ import { useEffect, useId, useRef } from 'react'
 import type { SpielAktion, Spielkarte } from '../../engine'
 import { Karte } from '../karten/Karte'
 import { kartenname } from '../karten/kartentexte'
+import { wahlSchluessel } from '../spiel/auswahl'
 import type { Bedienung } from './bedienung'
 import { KnopfMitGrund } from './KnopfMitGrund'
 import { ABWERFEN } from './zugtexte'
@@ -58,6 +59,7 @@ export function UeberhandDialog({ hand, bedienung, fuehreAus, schliesse }: Dialo
                   aria-label={kartenname(karte)}
                   aria-pressed={gedrueckt}
                   disabled={!gedrueckt && !bedienung.angeboten(wahl)}
+                  data-wahl={wahlSchluessel(wahl)}
                   onClick={() => bedienung.tippe(wahl)}
                 >
                   <Karte karte={karte} sizes="80px" />

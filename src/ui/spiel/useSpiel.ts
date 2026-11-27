@@ -12,7 +12,7 @@ import { ergebnisAnsicht } from './ergebnisAnsicht'
 import type { ErgebnisAnsicht } from './ergebnisAnsicht'
 import { vorschauFuer } from './haeutungsvorschau'
 import type { Haeutungsvorschauer } from './haeutungsvorschau'
-import { protokollSchritt } from './protokoll'
+import { aufgabenMeldung, protokollSchritt } from './protokoll'
 import { grundAmTisch, personen, tischAnsicht } from './tischAnsicht'
 import type { TischAnsicht } from './tischAnsicht'
 
@@ -69,6 +69,8 @@ export interface Verlauf {
   eintraege: Protokolleintrag[]
   /** Ob du zuletzt wegen einer Schlangengrube aussetzen musstest; bis zu deiner nächsten Aktion (O6 K4). */
   ausgesetzt: boolean
+  /** O10 K2: die zuletzt erfüllte offene Aufgabe und was nachrückt; bis zu deiner nächsten Aktion, die keine erfüllt. */
+  aufgabe: string | null
   /** Ob „Schneller“ an ist (O6 K1). */
   schneller: boolean
   schalteSchneller: () => void
@@ -117,9 +119,10 @@ function entscheidendeKi(zustand: Spielzustand, gegner: ReadonlyMap<string, Ki>)
 interface Protokollstand {
   eintraege: Protokolleintrag[]
   ausgesetzt: boolean
+  aufgabe: string | null
 }
 
-const LEERES_PROTOKOLL: Protokollstand = { eintraege: [], ausgesetzt: false }
+const LEERES_PROTOKOLL: Protokollstand = { eintraege: [], ausgesetzt: false, aufgabe: null }
 
 export function useSpiel(start: Spielzustand, { pause, saatquelle }: SpielOptionen): Spielsteuerung {
   const [zustand, setzeZustand] = useState(start)
@@ -148,6 +151,7 @@ export function useSpiel(start: Spielzustand, { pause, saatquelle }: SpielOption
       try {
         const { zustand: neu, ereignisse } = anwendeAktion(zustand, aktion)
         const saetze = protokollSchritt(zustand, aktion, ereignisse, ansicht)
+        const aufgabe = aufgabenMeldung(zustand, ereignisse)
         const person = personen(zustand)
         const ausgesetzt = ereignisse.some((ereignis) => ereignis.typ === 'Ausgesetzt' && person(ereignis.spielerIndex).ich)
         const vonDir = aktion.spielerId === ansicht.ich.id
@@ -159,6 +163,7 @@ export function useSpiel(start: Spielzustand, { pause, saatquelle }: SpielOption
           return {
             eintraege: [...alt.eintraege, ...saetze.map((text) => ({ schritt, text }))].slice(-PROTOKOLL_LAENGE),
             ausgesetzt: ausgesetzt || (alt.ausgesetzt && !vonDir),
+            aufgabe: aufgabe ?? (vonDir ? null : alt.aufgabe),
           }
         })
       } catch (grund) {
@@ -206,5 +211,12 @@ export function useSpiel(start: Spielzustand, { pause, saatquelle }: SpielOption
   const schalteSchneller = useCallback(() => setzeSchneller((an) => !an), [])
 
   if (!(pause >= 0)) throw new Error(`Die Pause vor einem KI-Schritt muss 0 oder mehr Millisekunden sein, erhalten: ${pause}.`)
-  return { ansicht, ergebnis, fuehreAus, ablehnung, haeutungsVorschau: vorschau, verlauf: { eintraege: protokoll.eintraege, ausgesetzt: protokoll.ausgesetzt, schneller, schalteSchneller } }
+  return {
+    ansicht,
+    ergebnis,
+    fuehreAus,
+    ablehnung,
+    haeutungsVorschau: vorschau,
+    verlauf: { eintraege: protokoll.eintraege, ausgesetzt: protokoll.ausgesetzt, aufgabe: protokoll.aufgabe, schneller, schalteSchneller },
+  }
 }
