@@ -54,6 +54,12 @@ const WEGE: { name: string; szenario: string; schritte: Schritt[] }[] = [
   { name: 'Korb: Tausch', szenario: 'korb-tauschen', schritte: [{ hand: 'Sonderkarte Schlangenkorb des Glücks' }, { zugleiste: /^Tausche/ }, { ziel: 'Deine Schlange 1, Karte 2' }, { hand: /^Farbkarte Gelb/ }] },
   { name: 'Korb: Entfernen', szenario: 'korb-entfernen', schritte: [{ hand: 'Sonderkarte Schlangenkorb des Glücks' }, { zugleiste: /^Entferne/ }, { ziel: 'KI-Gegner 1, Schlange 1, Karte 2' }] },
   { name: 'Korb allein', szenario: 'korb-allein', schritte: [{ hand: 'Sonderkarte Schlangenkorb des Glücks' }, { zugleiste: /^Zwei zusätzliche Aktionen/ }] },
+  // Die Karten deiner Ablage als Möglichkeiten nach Risiko-Aktion 4 mit Erfolg (D54).
+  {
+    name: 'Risiko-Aktion 4, Ablage',
+    szenario: 'risiko-erfolg',
+    schritte: [{ zugleiste: 'Risiko spielen' }, { zugleiste: /^Aktion 4/ }, { zugleiste: 'Ausführen' }, { zugleiste: 'Sonderkarte Farbendieb von deiner Ablage' }],
+  },
   { name: 'begünstigt', szenario: 'risiko-du-beguenstigt', schritte: [{ zugleiste: /von KI-Gegner 1$/ }] },
 ]
 
@@ -115,36 +121,29 @@ test.describe('O10 K3: die Erweiterung mit Maus und Finger', () => {
 })
 
 /*
-Prüfprotokoll O10, Mangel 2: Kein Text ragt aus den Knöpfen der Zugleiste, in
-jeder Geräteklasse und zusätzlich bei 568 × 320. Die Lagen sind die mit den
-längsten Namen: Boni des Korbs, Risiko-Aktionen, die Frage an den
-Begünstigten und die Karten deiner Ablage bei Risiko-Aktion 4.
+Prüfprotokoll O10, Mangel 2, unter den Geräteklassen: Bei 568 × 320 scrollt die
+Seite (DESIGN.md), deshalb gilt dort nicht jede Messung aus `pruefeSchritt`.
+Text darf aber auch dort nicht aus einem Knopf ragen. In den fünf Klassen misst
+das schon `pruefeSchritt` über `findeAbgeschnittenes`.
 */
-const LAGEN_MIT_MOEGLICHKEITEN: { name: string; szenario: string; schritte: Schritt[] }[] = [
-  { name: 'Boni des Korbs', szenario: 'korb-entfernen', schritte: [{ hand: 'Sonderkarte Schlangenkorb des Glücks' }] },
-  { name: 'Risiko-Aktionen', szenario: 'risiko-erfolg', schritte: [{ zugleiste: 'Risiko spielen' }] },
-  { name: 'begünstigt', szenario: 'risiko-du-beguenstigt', schritte: [] },
-  { name: 'Karten der Ablage', szenario: 'risiko-erfolg', schritte: [{ zugleiste: 'Risiko spielen' }, { zugleiste: /^Aktion 4/ }, { zugleiste: 'Ausführen' }] },
-  { name: 'Start mit Comeback und Risiko', szenario: 'comeback-bedingung', schritte: [] },
-]
+test.describe('O10 K3 (Prüfprotokoll O10, Mangel 2): Text bleibt in den Knöpfen, auch bei 568 × 320', () => {
+  test.use({ viewport: { width: 568, height: 320 } })
 
-test.describe('O10 K3 (Prüfprotokoll O10, Mangel 2): Text bleibt in den Knöpfen der Zugleiste', () => {
-  for (const [klasse, fenster] of [['Geräteklasse', null], ['568 × 320', { width: 568, height: 320 }]] as const) {
-    test(`O10 K3: kein Text ragt aus einem Knopf der Zugleiste (${klasse})`, async ({ page }, info) => {
-      const tippe = bediene(info)
-      if (fenster !== null) await page.setViewportSize(fenster)
-      for (const lage of LAGEN_MIT_MOEGLICHKEITEN) {
-        await oeffneSzenario(page, lage.szenario)
-        for (const schritt of lage.schritte) {
+  test('O10 K3: auf jedem Weg der Erweiterung ragt kein Text aus einem Knopf (568 × 320)', async ({ page }, info) => {
+    const tippe = bediene(info)
+    for (const weg of WEGE) {
+      await oeffneSzenario(page, weg.szenario)
+      for (const [nummer, schritt] of [null, ...weg.schritte].entries()) {
+        if (schritt !== null) {
           const knopf = knopfFuer(page, schritt)
           await knopf.scrollIntoViewIfNeeded()
           await tippe(knopf)
         }
-        const ragt = await findeTextAusserhalbVonKnoepfen(page, '[aria-label="Zugleiste"]')
-        expect(ragt, `${lage.name}: Text ausserhalb des Knopfs:${befundListe(ragt)}`).toEqual([])
+        const ragt = await findeTextAusserhalbVonKnoepfen(page)
+        expect(ragt, `${weg.name}, Schritt ${nummer}: Text ausserhalb des Knopfs:${befundListe(ragt)}`).toEqual([])
       }
-    })
-  }
+    }
+  })
 })
 
 test.describe('O10 K3, O11 K1: die Erweiterung allein mit der Tastatur', () => {

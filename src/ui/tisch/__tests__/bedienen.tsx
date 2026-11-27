@@ -88,3 +88,6 @@ export function aktionMit(zustand: Spielzustand, passt: (aktion: SpielAktion) =>
   if (treffer.length !== 1) throw new Error(`Erwartet genau eine passende Aktion, gefunden ${treffer.length}.`)
   return treffer[0]
 }
+
+/** Der Stand nach der einen aufgezählten Aktion, auf die `passt` zutrifft (`aktionMit`); für Stände mitten in einem Zug. */
+export const nach = (zustand: Spielzustand, passt: (aktion: SpielAktion) => boolean): Spielzustand => anwendeAktion(zustand, aktionMit(zustand, passt)).zustand

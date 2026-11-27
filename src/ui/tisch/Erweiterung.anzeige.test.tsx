@@ -7,7 +7,7 @@ import { erzeugeSzenario } from '../../entwicklung/szenarien'
 import { kartenname } from '../karten/kartentexte'
 import { vorschauFuer } from '../spiel/haeutungsvorschau'
 import { tischAnsicht } from '../spiel/tischAnsicht'
-import { aktionMit, ausfuehren, handkarte, spieleAm, tippe, tippeZiel, zugleiste } from './__tests__/bedienen'
+import { aktionMit, ausfuehren, handkarte, nach, spieleAm, tippe, tippeZiel, zugleiste } from './__tests__/bedienen'
 import { mittelspiel, neuePartie } from './__tests__/szenarien'
 import { Tisch } from './Tisch'
 
@@ -106,7 +106,6 @@ describe('O10 K3: Offen ist, was offen liegt', () => {
 })
 
 describe('O10 K3 (Prüfprotokoll O10, Mangel 3): Die Statuszeile nennt die übrigen Zusatzaktionen', () => {
-  const nach = (zustand: Spielzustand, passt: (aktion: SpielAktion) => boolean) => anwendeAktion(zustand, aktionMit(zustand, passt)).zustand
   const comeback = (a: SpielAktion) => a.typ === 'ComebackEinsetzen'
   const zweiAbwerfen = (a: SpielAktion) => a.typ === 'ZweiAbwerfenDreiZiehen'
   const status = (zustand: Spielzustand) => {
@@ -143,7 +142,7 @@ describe('O10 K3/A8.1: Die verbrauchte Comeback-Karte ist umgedreht', () => {
     zeige(vorher)
     expect(auslage().getByRole('img', { name: 'Comeback-Karte' })).toBeInTheDocument()
     cleanup()
-    zeige(anwendeAktion(vorher, aktionMit(vorher, (a) => a.typ === 'ComebackEinsetzen')).zustand)
+    zeige(nach(vorher, (a) => a.typ === 'ComebackEinsetzen'))
     expect(auslage().queryByRole('img', { name: 'Comeback-Karte' })).toBeNull()
     expect(auslage().getByRole('img', { name: 'Comeback-Karte, umgedreht' })).toBeInTheDocument()
     expect(auslage().getByText('verbraucht')).toBeInTheDocument()

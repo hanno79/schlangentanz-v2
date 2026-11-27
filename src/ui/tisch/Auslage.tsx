@@ -26,7 +26,7 @@ Ohne Erweiterung zeichnet der Tisch nichts davon.
 
 export function Auslage({ ich, zeigeGross }: { ich: EigeneAnsicht; zeigeGross: (karte: Bildkarte) => void }) {
   const bedienung = useZiele()
-  const einsetzbar = ich.comeback !== null && !ich.comeback.verbraucht && bedienung?.spielbar(ich.comeback.karte.id) === true
+  const einsetzbar = ich.comeback !== null && bedienung?.spielbar(ich.comeback.karte.id) === true
   return (
     <section className="st-auslage" aria-label={TISCH.auslage}>
       <h2 className="st-bereichstitel">{TISCH.auslage}</h2>
@@ -41,12 +41,16 @@ export function Auslage({ ich, zeigeGross }: { ich: EigeneAnsicht; zeigeGross: (
           <li className="st-mit-unterschrift">
             {/* A8.1: „Die Comeback-Karte wird umgedreht, um anzuzeigen, dass sie verwendet wurde.“ */}
             {ich.comeback.verbraucht ? (
-              <Kartenrueckseite name={ERWEITERUNG.comebackUmgedreht} />
+              <>
+                <Kartenrueckseite name={ERWEITERUNG.comebackUmgedreht} />
+                <span>{TISCH.verbraucht}</span>
+              </>
             ) : (
-              <Karte karte={ich.comeback.karte} sizes={KARTENGROESSE.eigene} />
+              <>
+                <Karte karte={ich.comeback.karte} sizes={KARTENGROESSE.eigene} />
+                {einsetzbar && <span>{ERWEITERUNG.einsetzbar}</span>}
+              </>
             )}
-            {ich.comeback.verbraucht && <span>{TISCH.verbraucht}</span>}
-            {einsetzbar && <span>{ERWEITERUNG.einsetzbar}</span>}
           </li>
         )}
         {ich.risikoKarten.map((karte) => (

@@ -1,10 +1,10 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { cleanup, screen, within } from '@testing-library/react'
-import { anwendeAktion, ermittleAktionen } from '../../engine'
+import { ermittleAktionen } from '../../engine'
 import type { SpielAktion, Spielkarte, Spielzustand } from '../../engine'
 import { erzeugeSzenario } from '../../entwicklung/szenarien'
 import { kartenname } from '../karten/kartentexte'
-import { aktionMit, ausfuehren, gespieltWurde, handkarte, spieleAm, tippe, tippeZiel, zugleiste } from './__tests__/bedienen'
+import { aktionMit, ausfuehren, gespieltWurde, handkarte, nach, spieleAm, tippe, tippeZiel, zugleiste } from './__tests__/bedienen'
 
 /*
 O10, Kriterium 3: Comeback-Karte, Risiko-Karte und Schlangenkorb sind am Tisch
@@ -23,9 +23,6 @@ const handkarteDerFarbe = (zustand: Spielzustand, spieler: number, farbe: string
 const schlangenkarte = (zustand: Spielzustand, stelle: number): Spielkarte => zustand.spieler[0].schlangen[0].karten[stelle]
 /** Der zugängliche Name einer Karte deiner Schlange 1 als Ziel. */
 const zielInDeinerSchlange = (zustand: Spielzustand, stelle: number) => `Deine Schlange 1, Karte ${stelle + 1}: ${kartenname(schlangenkarte(zustand, stelle))}`
-
-/** Spielt die eine aufgezählte Aktion, auf die `passt` zutrifft, mit der Engine weiter; für Stände mitten in einer Entscheidung. */
-const nach = (zustand: Spielzustand, passt: (aktion: SpielAktion) => boolean) => anwendeAktion(zustand, aktionMit(zustand, passt)).zustand
 
 describe('O10 K3: Comeback-Karte (A8.1)', () => {
   it('O10 K3/A8.1: „Comeback einsetzen“ steht in der Zugleiste, die Ansage nennt die zwei Zusatzaktionen, „Ausführen“ setzt sie ein', () => {

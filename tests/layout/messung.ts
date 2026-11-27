@@ -168,7 +168,7 @@ Die gemeinsamen Hilfen (`kennung`, `zugaenglicherText`) stehen einmal da, und
 */
 async function messeInhaltsverluste(
   page: Page,
-): Promise<{ abgeschnitten: Befund[]; zusammengedrueckt: Befund[] }> {
+): Promise<{ abgeschnitten: Befund[]; zusammengedrueckt: Befund[]; ausserhalbVonKnoepfen: Befund[] }> {
   return page.evaluate(() => {
     const kennung = (element: Element): string => {
       const klasse = (element.className && element.className.toString().split(' ')[0]) || ''
@@ -196,6 +196,30 @@ async function messeInhaltsverluste(
 
     const abgeschnitten: { element: string; detail: string }[] = []
     const zusammengedrueckt: { element: string; detail: string }[] = []
+    const ausserhalbVonKnoepfen: { element: string; detail: string }[] = []
+
+    /* Ein Knopf mit `overflow: visible` schneidet nichts ab; ein langes Wort,
+       das nicht umbricht, steht dann über seiner Umrandung (Prüfprotokoll O10,
+       Mangel 2). Gemessen an den Zeilenboxen jedes vorgelesenen Textknotens,
+       mit 1 px Toleranz, auf allen vier Seiten: Text, der links oder oben
+       hinausragt, zeigt sich nicht in `scrollWidth`. */
+    const textAusserhalb = (knopf: Element, box: DOMRect): DOMRect | undefined => {
+      const laeufer = document.createTreeWalker(knopf, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT, {
+        acceptNode: (knoten) => {
+          if (knoten instanceof Element) return knoten.getAttribute('aria-hidden') === 'true' ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_SKIP
+          return (knoten.nodeValue ?? '').trim() === '' ? NodeFilter.FILTER_SKIP : NodeFilter.FILTER_ACCEPT
+        },
+      })
+      while (laeufer.nextNode()) {
+        const bereich = document.createRange()
+        bereich.selectNodeContents(laeufer.currentNode)
+        const draussen = Array.from(bereich.getClientRects()).find(
+          (zeile) => zeile.left < box.left - 1 || zeile.right > box.right + 1 || zeile.top < box.top - 1 || zeile.bottom > box.bottom + 1,
+        )
+        if (draussen !== undefined) return draussen
+      }
+      return undefined
+    }
 
     for (const element of Array.from(document.querySelectorAll('*'))) {
       if (!(element as HTMLElement).checkVisibility()) continue
@@ -208,6 +232,17 @@ async function messeInhaltsverluste(
          obwohl der Fehler dasteht. */
       const box = element.getBoundingClientRect()
       if (box.width < 4 && box.height < 4) continue
+
+      if (element.matches('button, [role="button"]')) {
+        const draussen = textAusserhalb(element, box)
+        if (draussen !== undefined) {
+          const runde = (wert: number) => Math.round(wert)
+          ausserhalbVonKnoepfen.push({
+            element: kennung(element),
+            detail: `Text ${runde(draussen.left)}..${runde(draussen.right)} × ${runde(draussen.top)}..${runde(draussen.bottom)} ausserhalb des Knopfs ${runde(box.left)}..${runde(box.right)} × ${runde(box.top)}..${runde(box.bottom)}`,
+          })
+        }
+      }
 
       const ueberhoch = element.scrollHeight > element.clientHeight + 3
       const ueberbreit = element.scrollWidth > element.clientWidth + 3
@@ -276,7 +311,7 @@ async function messeInhaltsverluste(
       })
     }
 
-    return { abgeschnitten, zusammengedrueckt }
+    return { abgeschnitten, zusammengedrueckt, ausserhalbVonKnoepfen }
   })
 }
 
@@ -287,49 +322,18 @@ async function messeInhaltsverluste(
  * passt er nicht, scrollt sein Container — er wird nicht abgeschnitten.
  * Scrollbare Container (`overflow: auto`/`scroll`) sind ausgenommen, denn dort
  * kommt der Spieler an den Rest heran — siehe `findeZusammengedruecktes` für
- * die Grenze, ab der das nicht mehr stimmt.
+ * die Grenze, ab der das nicht mehr stimmt. Dazu zählt Text, der aus einem
+ * Knopf ohne Beschnitt herausragt (`findeTextAusserhalbVonKnoepfen`): Er ist
+ * nicht weg, steht aber über fremden Rändern.
  */
 export async function findeAbgeschnittenes(page: Page): Promise<Befund[]> {
-  return [...(await messeInhaltsverluste(page)).abgeschnitten, ...(await findeTextAusserhalbVonKnoepfen(page))]
+  const { abgeschnitten, ausserhalbVonKnoepfen } = await messeInhaltsverluste(page)
+  return [...abgeschnitten, ...ausserhalbVonKnoepfen]
 }
 
-/**
- * Knöpfe, deren Text über ihren Rand hinausragt (Prüfprotokoll O10, Mangel 2).
- * Ein Knopf mit `overflow: visible` schneidet nichts ab, deshalb fand
- * `messeInhaltsverluste` den Fall nicht: Ein langes Wort, das nicht umbricht,
- * steht dann über der Umrandung und überdeckt Nachbarn. Gemessen wird an den
- * Zeilenboxen jedes vorgelesenen Textknotens (Range), mit 1 px Toleranz, je
- * sichtbarem Knopf unter `wurzel`.
- */
-export async function findeTextAusserhalbVonKnoepfen(page: Page, wurzel = 'body'): Promise<Befund[]> {
-  return page.evaluate((auswahl) => {
-    const befunde: { element: string; detail: string }[] = []
-    for (const knopf of Array.from(document.querySelectorAll(`${auswahl} button, ${auswahl} [role="button"]`))) {
-      if (!(knopf as HTMLElement).checkVisibility()) continue
-      const box = knopf.getBoundingClientRect()
-      const laeufer = document.createTreeWalker(knopf, NodeFilter.SHOW_TEXT, {
-        acceptNode: (knoten) =>
-          (knoten.nodeValue ?? '').trim() !== '' && (knoten.parentElement?.closest('[aria-hidden="true"]') ?? null) === null
-            ? NodeFilter.FILTER_ACCEPT
-            : NodeFilter.FILTER_REJECT,
-      })
-      while (laeufer.nextNode()) {
-        const bereich = document.createRange()
-        bereich.selectNodeContents(laeufer.currentNode)
-        const draussen = Array.from(bereich.getClientRects()).find(
-          (zeile) => zeile.left < box.left - 1 || zeile.right > box.right + 1 || zeile.top < box.top - 1 || zeile.bottom > box.bottom + 1,
-        )
-        if (draussen !== undefined) {
-          befunde.push({
-            element: knopf.getAttribute('aria-label') ?? (knopf.textContent ?? '').trim().slice(0, 40),
-            detail: `Text ${Math.round(draussen.left)}..${Math.round(draussen.right)} × ${Math.round(draussen.top)}..${Math.round(draussen.bottom)} ausserhalb des Knopfs ${Math.round(box.left)}..${Math.round(box.right)} × ${Math.round(box.top)}..${Math.round(box.bottom)}`,
-          })
-          break
-        }
-      }
-    }
-    return befunde
-  }, wurzel)
+/** Knöpfe, deren Text über ihren Rand hinausragt (Prüfprotokoll O10, Mangel 2); Teil von `findeAbgeschnittenes`. */
+export async function findeTextAusserhalbVonKnoepfen(page: Page): Promise<Befund[]> {
+  return (await messeInhaltsverluste(page)).ausserhalbVonKnoepfen
 }
 
 /**

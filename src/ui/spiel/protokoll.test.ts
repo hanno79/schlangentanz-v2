@@ -95,17 +95,19 @@ describe('O6 K1: Einträge mit Karte und Ziel', () => {
  * ein Protokoll, das eine gezogene Karte verrät, fällt auf.
  *
  * Zwei gezielte Ausnahmen, beide offen nach den Regeln: Die angesagte Karte
- * einer offenen Entscheidung bleibt (B2, D52, D77). Spielt der Schritt eine
- * Risiko-Belohnungs-Karte, bleibt die oberste Stapelkarte liegen, weil der
- * Schritt genau sie offen aufdeckt und das Protokoll sie nennen muss (A8.2,
- * O10); getauscht wird dann mit der Karte darunter. Alle anderen Schritte
- * prüft die Probe mit voller Stärke (Prüfprotokoll O10, Mangel 4).
+ * einer offenen Entscheidung bleibt (B2, D52, D77). Deckt der Schritt Karten
+ * vom Stapel offen auf (heute nur die Risiko-Belohnungs-Karte, A8.2), bleiben
+ * genau so viele oben liegen, wie die Engine dabei nach „Aufgedeckt“ legt, weil
+ * das Protokoll sie nennen muss; getauscht wird mit den Karten darunter. Alle
+ * anderen Schritte prüft die Probe mit voller Stärke (Prüfprotokoll O10, Mangel 4).
  */
 function tauscheVerdeckte(zustand: Spielzustand, aktion: SpielAktion): Spielzustand {
   const genannt = new Set<string>(JSON.stringify(aktion).match(/[a-zäöü]+-\d{2}/g) ?? [])
   const angesagt = offeneHandkarteDer(zustand.entscheidung)
   if (angesagt !== null) genannt.add(angesagt.karteId)
-  const aufgedeckt = aktion.typ === 'RisikoKarteSpielen' ? 1 : 0
+  const aufgedeckt = anwendeAktion(zustand, aktion)
+    .ereignisse.flatMap((ereignis) => (ereignis.typ === 'KartenVersetzt' ? ereignis.karten : []))
+    .filter((versetzung) => versetzung.nach.ort === 'Aufgedeckt').length
   const getauscht = structuredClone(zustand)
   getauscht.spieler.forEach((spieler, index) => {
     if (index === 0) return
