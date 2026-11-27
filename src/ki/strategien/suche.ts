@@ -5,6 +5,7 @@ import { GLEICH, bewerte, eigeneGruppen, eigenePunkte, neuerMerker, sichtbarePun
 import type { Wertungsmerker } from './bewertung';
 import { aufgabenkorrektur, ohneGerateneAufgaben } from './erweiterungswert';
 import { kartensaetze, mitHand, mittel, schaetzwert } from './schaetzung';
+import type { Schaetzrechnung } from './schaetzung';
 import { punkteNach, vorauswahl } from './vorauswahl';
 import { ziehtVerdeckt } from './ziehen';
 
@@ -132,23 +133,26 @@ export function erstelleSuche(sicht: Sicht, zufall: () => number) {
   };
   /** Die sicheren Punkte, ohne geraten aufgedeckte Aufgaben. */
   const sicher = (stand: Sicht) => sichtbarePunkte(ohneGerateneAufgaben(stand, bekannt), merker);
-  const schaetzrechnung = {
+  /** Die Schätzung von `stellung` aus: ungesehen ist, was an der Wurzel ungesehen ist; die Aufgaben prüft sie von `stellung` aus, damit eine dort schon eingelöste nicht ein zweites Mal zählt. */
+  const schaetzrechnungAb = (stellung: Stellung): Schaetzrechnung => ({
     stellung: wurzel,
     merker,
-    aufgaben: aufgaben(wurzel),
+    aufgaben: aufgaben(stellung),
     zaehle: () => {
       bewertungen.schaetzung += 1;
     },
-  };
+  });
+  const schaetzrechnung = schaetzrechnungAb(wurzel);
   /** Die Bewertung nach einer Wahl, die verdeckt Karten auf die eigene Hand zieht: über Karten aus den ungesehenen gemittelt (siehe oben). */
-  const ohneErratene = (vorher: Sicht, nach: Stellung): number | null => {
+  const ohneErratene = (stellung: Stellung, vorher: Sicht, nach: Stellung): number | null => {
     const ungesehen = wurzel.ungesehen();
     const ids = new Set(ungesehen.map((karte) => karte.id));
     const erraten = nach.sicht.hand.filter((karte) => ids.has(karte.id) && !vorher.hand.some((eintrag) => eintrag.id === karte.id));
     if (erraten.length === 0) return null;
     const weg = new Set(erraten.map((karte) => karte.id));
     const stand = ohneGerateneAufgaben(nach.sicht, bekannt);
-    return mittel(kartensaetze(ungesehen, erraten.length).map((karten) => schaetzwert(schaetzrechnung)(mitHand(stand, karten, weg))));
+    const wert = schaetzwert(schaetzrechnungAb(stellung));
+    return mittel(kartensaetze(ungesehen, erraten.length).map((karten) => wert(mitHand(stand, karten, weg))));
   };
 
   /** Spielt `aktion` von `stellung` aus durch und bewertet die Sicht danach. */
@@ -158,7 +162,7 @@ export function erstelleSuche(sicht: Sicht, zufall: () => number) {
     const wirkungslos = ohneWirkung(aktion, sichtNach);
     const fusionSenkt = aktion.typ === 'FusionLegen' && eigenePunkte(sichtNach, merker) < eigenePunkte(vorher, merker);
     const grubeOhneZug = aktion.typ === 'SchlangengrubeSpielen' && wirkungslos;
-    const geschaetzt = aktion.typ === 'Entscheiden' ? ohneErratene(vorher, nach) : null;
+    const geschaetzt = aktion.typ === 'Entscheiden' ? ohneErratene(stellung, vorher, nach) : null;
     const wert = (geschaetzt ?? werte(nach)) - (wirkungslos ? OHNE_WIRKUNG : 0);
     return { aktion, stellung: nach, wert, punkte: sicher(sichtNach), gruppen: eigeneGruppen(sichtNach, merker), verworfen: fusionSenkt || grubeOhneZug, geschaetzt: geschaetzt !== null };
   };
@@ -182,7 +186,7 @@ export function erstelleSuche(sicht: Sicht, zufall: () => number) {
   };
 
   const ergebnis = (stellung: Stellung): Ergebnis => ({ wert: werte(stellung), punkte: sicher(stellung.sicht), gruppen: eigeneGruppen(stellung.sicht, merker) });
-  return { wurzel, schaetzrechnung, folge, kandidaten, ergebnis, gezaehlt: () => ({ ...bewertungen }) };
+  return { wurzel, schaetzrechnung, schaetzrechnungAb, folge, kandidaten, ergebnis, gezaehlt: () => ({ ...bewertungen }) };
 }
 
 /**

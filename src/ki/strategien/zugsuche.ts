@@ -114,8 +114,8 @@ function spiele(sicht: Sicht, aktionen: readonly SpielAktion[], zufall: () => nu
   const vertieft = new Map<Folge, Folge>();
   for (const folge of vertiefen) {
     const zweite = naechste(folge, ZWEITE_AUSWAHL);
-    // Nach Comeback oder Korb „aktionen“ ist auch „Zwei Karten abwerfen, drei ziehen“ eine Fortsetzung (A8.1, D46, D49); geschätzt wie an der Wurzel.
-    const gezogen = folge === erweiternd ? schaetzeZiehen(folge.stellung.sicht, folge.stellung.aktionen(), suche.schaetzrechnung) : null;
+    // Nach Comeback oder Korb „aktionen“ ist auch „Zwei Karten abwerfen, drei ziehen“ eine Fortsetzung (A8.1, D46, D49); geschätzt wie an der Wurzel, die Aufgaben von der Folge aus.
+    const gezogen = folge === erweiternd ? schaetzeZiehen(folge.stellung.sicht, folge.stellung.aktionen(), suche.schaetzrechnungAb(folge.stellung)) : null;
     const ziehen = gezogen === null ? undefined : { ...folge, wert: gezogen.wert, geschaetzt: true };
     const karte = zweite === undefined || zweite.verworfen || !besser(zweite, folge) ? undefined : zweite;
     const dritte = karte !== undefined && folge === erweiternd && weiter(karte) ? naechste(karte, DRITTE_AUSWAHL) : undefined;
