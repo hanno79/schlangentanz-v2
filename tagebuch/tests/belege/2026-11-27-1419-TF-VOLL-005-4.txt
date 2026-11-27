@@ -1,0 +1,71 @@
+diff --git a/src/ui/spiel/useSpiel.ts b/src/ui/spiel/useSpiel.ts
+index 06f0fc0b..6d34d514 100644
+--- a/src/ui/spiel/useSpiel.ts
++++ b/src/ui/spiel/useSpiel.ts
+@@ -1,5 +1,5 @@
+ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+-import { anwendeAktion, erzeugeZufall, pruefeAktion } from '../../engine'
++import { anwendeAktion, ermittleAktionen, erzeugeZufall, pruefeAktion } from '../../engine'
+ import type { SpielAktion, Spielzustand } from '../../engine'
+ import { waehleFuer } from '../../ki/schritt'
+ import { entscheiderVon } from '../../ki/sicht'
+@@ -151,8 +151,10 @@ export function useSpiel(start: Spielzustand, { pause, saatquelle }: SpielOption
+         const person = personen(zustand)
+         const ausgesetzt = ereignisse.some((ereignis) => ereignis.typ === 'Ausgesetzt' && person(ereignis.spielerIndex).ich)
+         const vonDir = aktion.spielerId === ansicht.ich.id
+-        speichereSpielstand(neu)
+-        setzeZustand(neu)
++        const zweite = !vonDir && aktion.typ === "FarbkarteLegen" ? ermittleAktionen(neu).find((a) => a.typ === "ZugBeenden" && a.spielerId === aktion.spielerId) : undefined
++        const ende = zweite === undefined ? neu : anwendeAktion(neu, zweite).zustand
++        speichereSpielstand(ende)
++        setzeZustand(ende)
+         setzeAblehnung(null)
+         setzeProtokoll((alt) => {
+           const schritt = (alt.eintraege.at(-1)?.schritt ?? 0) + 1
+
+Running 2 tests using 2 workers
+
+  x  1 [desktop] › tests\vollpartien\vollpartie.spec.ts:107:3 › Z1 K1/K2: Basis zu zweit (Saat 2026) bis zur Wertung, über echte Klicks (1.5s)
+  x  2 [desktop] › tests\vollpartien\vollpartie.spec.ts:107:3 › Z1 K1/K2: Basis zu viert (Saat 13) bis zur Wertung, über echte Klicks (1.5s)
+
+
+  1) [desktop] › tests\vollpartien\vollpartie.spec.ts:107:3 › Z1 K1/K2: Basis zu zweit (Saat 2026) bis zur Wertung, über echte Klicks 
+
+    Error: Z1: Keine der 13 Aktionen, die die Engine im vorigen Stand aufzählt, führt zum gespeicherten neuen Stand.
+
+       at pruefung.ts:36
+
+      34 |   const gefunden = aktionen.find((aktion) => serialisiere(anwendeAktion(vorher, aktion).zustand) === ziel)
+      35 |   if (gefunden === undefined) {
+    > 36 |     throw new Error(`Z1: Keine der ${aktionen.length} Aktionen, die die Engine im vorigen Stand aufzählt, führt zum gespeicherten neuen Stand.`)
+         |           ^
+      37 |   }
+      38 |   return gefunden
+      39 | }
+        at schrittZwischen (E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a32d8750fa074e611\tests\vollpartien\pruefung.ts:36:11)
+        at E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a32d8750fa074e611\tests\vollpartien\vollpartie.spec.ts:135:7
+
+    Error Context: test-results\vollpartien\vollpartie-Z1-K1-K2-Basis--077b1-r-Wertung-über-echte-Klicks-desktop\error-context.md
+
+  2) [desktop] › tests\vollpartien\vollpartie.spec.ts:107:3 › Z1 K1/K2: Basis zu viert (Saat 13) bis zur Wertung, über echte Klicks 
+
+    Error: Z1: Keine der 11 Aktionen, die die Engine im vorigen Stand aufzählt, führt zum gespeicherten neuen Stand.
+
+       at pruefung.ts:36
+
+      34 |   const gefunden = aktionen.find((aktion) => serialisiere(anwendeAktion(vorher, aktion).zustand) === ziel)
+      35 |   if (gefunden === undefined) {
+    > 36 |     throw new Error(`Z1: Keine der ${aktionen.length} Aktionen, die die Engine im vorigen Stand aufzählt, führt zum gespeicherten neuen Stand.`)
+         |           ^
+      37 |   }
+      38 |   return gefunden
+      39 | }
+        at schrittZwischen (E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a32d8750fa074e611\tests\vollpartien\pruefung.ts:36:11)
+        at E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a32d8750fa074e611\tests\vollpartien\vollpartie.spec.ts:135:7
+
+    Error Context: test-results\vollpartien\vollpartie-Z1-K1-K2-Basis--421de-r-Wertung-über-echte-Klicks-desktop\error-context.md
+
+  2 failed
+    [desktop] › tests\vollpartien\vollpartie.spec.ts:107:3 › Z1 K1/K2: Basis zu zweit (Saat 2026) bis zur Wertung, über echte Klicks 
+    [desktop] › tests\vollpartien\vollpartie.spec.ts:107:3 › Z1 K1/K2: Basis zu viert (Saat 13) bis zur Wertung, über echte Klicks 
+exit 1

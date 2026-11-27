@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-VOLL-001 Die vier Basis-Vollpartien laufen über echte Klicks von der Lobby bis zur Wertung, ohne Konsolenfehler, ohne fremde Karte im Quelltext und mit der Endwertung der Engine. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 25.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-VOLL-001 Die vier Basis-Vollpartien laufen über echte Klicks von der Lobby bis zur Wertung, ohne Konsolenfehler, ohne fremde Karte im Quelltext und mit der Endwertung der Engine.</h1><p class="etiketten"><span class="etikett">Bereich Vollpartien im Browser (Z1): ganze Partien von der Lobby bis zur Wertung</span><span class="etikett">Regression ja</span><span class="etikett">Priorität hoch</span><span class="etikett">Art automatisch</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Ein Playwright-Lauf spielt als Mensch ganze Partien im Produktionsbuild: Basis zu zweit (Saat 2026) und zu viert (Saat 13), je auf Desktop 1280×900 und Handy hochkant 390×844 mit Tippen. Nach jedem Schritt prüft er Konsole, Seitenquelltext und die Kette der gespeicherten Stände gegen die Engine, am Ende die angezeigte Wertung.</p><h2>Bestanden, wenn</h2><p><code>npm run test:vollpartien</code> endet mit 0 und meldet 4 passed. Die Läufe berichten zu zweit 186 Schritte (96 von dir) mit „Du 5, KI-Gegner 1 53 (Sieger)“ und zu viert 173 Schritte (43 von dir) mit „Du 3, KI-Gegner 1 16 (Sieger), KI-Gegner 2 6, KI-Gegner 3 16 (Sieger)“, auf Desktop und Handy gleich. Port 4175 lauscht danach nicht mehr.</p><h2>Fehlgeschlagen, wenn</h2><p>Ein Lauf scheitert, etwa mit „Konsolenfehler“, „Verborgene Karten im Seitenquelltext“, „Keine der N Aktionen“ oder einer abweichenden Wertung. Zahlen, die sich ohne Änderung an KI, Tisch oder Engine von den oben genannten unterscheiden, zählen auch als Fehler.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>27.11.2026</dd><dt>Änderung</dt><dd>task/Z1-vollpartien (PR #123)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Quellstand ab Commit 2ad2cfde, eigener Produktionsbuild nach <code>dist-vollpartien</code> auf Port 4175</td></tr><tr><td>Ausgangslage prüfen</td><td><code>netstat -ano</code> zeigt auf Port 4175 keinen lauschenden Socket, <code>Z1_BASIS_URL</code> ist nicht gesetzt</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Saaten 2026 (1 Gegner) und 13 (3 Gegner), ohne Erweiterung.</p></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p><code>npm run test:vollpartien</code> und für die Endwertungen <code>npx playwright test --config playwright.vollpartien.config.ts --reporter=json</code>; die Endwertung steht je Test in der Annotation <code>Z1</code>.</p></section>
+<section><h2>Grenzfälle</h2><table><thead><tr><th>ID</th><th>Titel</th><th>Letzter Lauf</th></tr></thead><tbody><tr><td><a href="TF-VOLL-002.html">TF-VOLL-002</a></td><td>Zwei Läufe hintereinander und Desktop gegen Handy spielen dieselben Partien Stand für Stand.</td><td><span class="status status-bestanden">bestanden</span> 27.11.2026</td></tr><tr><td><a href="TF-VOLL-004.html">TF-VOLL-004</a></td><td>Auch mit gesetztem VITE_TEST_HOOKS=1 spielt der Vollpartie-Lauf den Produktionsbuild ohne Entwicklertisch.</td><td><span class="status status-bestanden">bestanden</span> 27.11.2026</td></tr></tbody></table></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Die vier Läufe mit Erweiterung warten auf O10 und M3. Gegen eine Vercel-Vorschau läuft der Test erst, wenn der Nutzer das Geheimnis angelegt hat (TF-VOLL-005 prüft nur die Konfiguration). Tablet und Handy quer spielt der Lauf nicht; der Plan verlangt Desktop und Handy. Wiederholbarkeit steht in TF-VOLL-002, ein gesetztes <code>VITE_TEST_HOOKS</code> in TF-VOLL-004.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-27">27.11.2026 14:19</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer Z1) &middot; agent &middot; pruefung/Z1 @ <span class="commit" title="2ad2cfde3bc7bb2e8f54700e20ed29b1f9363ac7">2ad2cfd</span> / Playwright Chromium 1.60.0, desktop 1280x900 und handy-hochkant 390x844 Touch</p><p>npm run test:vollpartien dreimal Exit 0, je 4 passed. Zu zweit Saat 2026: 186 Schritte (96 von dir), Du 5, KI-Gegner 1 53 (Sieger). Zu viert Saat 13: 173 Schritte (43 von dir), Du 3, KI-Gegner 1 16 (Sieger), KI-Gegner 2 6, KI-Gegner 3 16 (Sieger). Desktop und Handy hochkant gleich. Port 4175 danach frei.</p><ul class="belege"><li><a href="belege/2026-11-27-1419-TF-VOLL-001-1.txt">2026-11-27-1419-TF-VOLL-001-1.txt</a></li><li><a href="belege/2026-11-27-1419-TF-VOLL-001-2.txt">2026-11-27-1419-TF-VOLL-001-2.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

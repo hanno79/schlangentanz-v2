@@ -1,0 +1,16 @@
+.env.example:9:# Z1_VERCEL_SCHUTZ=    # Geheimnis aus „Protection Bypass for Automation“ des Vercel-Projekts, nur für eine geschützte Vorschau
+docs/WORKFLOW.md:528:Playwright nur mit dem Geheimnis aus „Protection Bypass for Automation“
+docs/WORKFLOW.md:530:Protection anlegt; es geht als `Z1_VERCEL_SCHUTZ` mit, der Lauf schickt es als
+docs/WORKFLOW.md:531:Kopf `x-vercel-protection-bypass`. In PowerShell:
+docs/WORKFLOW.md:535:$env:Z1_VERCEL_SCHUTZ = '<geheimnis>'
+playwright.vollpartien.config.ts:14:// eigenen Server; ist die Vorschau geschützt, nennt `Z1_VERCEL_SCHUTZ` das
+playwright.vollpartien.config.ts:15:// Geheimnis aus „Protection Bypass for Automation“ (docs/WORKFLOW.md).
+playwright.vollpartien.config.ts:32:const schutz = process.env.Z1_VERCEL_SCHUTZ?.trim() ?? ''
+playwright.vollpartien.config.ts:53:    ...(schutz === '' ? {} : { extraHTTPHeaders: { 'x-vercel-protection-bypass': schutz, 'x-vercel-set-bypass-cookie': 'true' } }),
+tests/vollpartien.test.ts:90:  delete process.env.Z1_VERCEL_SCHUTZ
+tests/vollpartien.test.ts:119:  it('Z1 K3: Z1_VERCEL_SCHUTZ geht als Umgehung des Vercel-Schutzes mit, ohne sie kein Kopf', async () => {
+tests/vollpartien.test.ts:120:    const ohne = await ladeKonfiguration({ Z1_VERCEL_SCHUTZ: undefined })
+tests/vollpartien.test.ts:122:    const mit = await ladeKonfiguration({ Z1_VERCEL_SCHUTZ: 'geheim' })
+tests/vollpartien.test.ts:123:    expect(mit.use?.extraHTTPHeaders).toEqual({ 'x-vercel-protection-bypass': 'geheim', 'x-vercel-set-bypass-cookie': 'true' })
+tests/vollpartien.test.ts:133:  it('Z1 K3: .env.example nennt Z1_BASIS_URL und Z1_VERCEL_SCHUTZ ohne Wert', () => {
+tests/vollpartien.test.ts:135:    for (const name of ['Z1_BASIS_URL', 'Z1_VERCEL_SCHUTZ']) {

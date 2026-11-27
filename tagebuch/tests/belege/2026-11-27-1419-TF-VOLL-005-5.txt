@@ -1,0 +1,82 @@
+diff --git a/src/ui/ergebnis/Ergebnis.tsx b/src/ui/ergebnis/Ergebnis.tsx
+index 419eca72..2c659443 100644
+--- a/src/ui/ergebnis/Ergebnis.tsx
++++ b/src/ui/ergebnis/Ergebnis.tsx
+@@ -40,6 +40,7 @@ export function Ergebnis({ ergebnis, nochEinmal }: ErgebnisEigenschaften) {
+   const text = siegerText(ergebnis.hoechstePunktzahl, ergebnis.du)
+   // Erst nach dem ersten Zeichnen gefüllt: Was schon beim Einhängen dasteht, liest ein Bildschirmleser nicht vor.
+   const meldung = useRef<HTMLParagraphElement>(null)
++  useEffect(() => { queueMicrotask(() => { throw new Error("Gegenprobe Z1: Wurf nach der Wertung") }) }, [])
+   useEffect(() => {
+     if (meldung.current !== null) meldung.current.textContent = `${titel} ${text}`
+   }, [titel, text])
+
+Running 2 tests using 2 workers
+
+  x  2 [handy-hochkant] › tests\vollpartien\vollpartie.spec.ts:107:3 › Z1 K1/K2: Basis zu viert (Saat 13) bis zur Wertung, über echte Klicks (19.5s)
+  x  1 [handy-hochkant] › tests\vollpartien\vollpartie.spec.ts:107:3 › Z1 K1/K2: Basis zu zweit (Saat 2026) bis zur Wertung, über echte Klicks (25.8s)
+
+
+  1) [handy-hochkant] › tests\vollpartien\vollpartie.spec.ts:107:3 › Z1 K1/K2: Basis zu zweit (Saat 2026) bis zur Wertung, über echte Klicks 
+
+    Error: Z1 Schritt 186 (Spieler 1), Zug beenden: Konsolenfehler
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    [32m- Expected  - 1[39m
+    [31m+ Received  + 3[39m
+
+    [32m- Array [][39m
+    [31m+ Array [[39m
+    [31m+   "Ungefangen: Gegenprobe Z1: Wurf nach der Wertung",[39m
+    [31m+ ][39m
+
+       at seite.ts:135
+
+      133 |     }
+      134 |   }
+    > 135 |   expect(konsole, `Z1 ${wo}: Konsolenfehler`).toEqual([])
+          |                                               ^
+      136 |   expect(verrateneIds(zustand, await page.content()), `Z1 ${wo}: Verborgene Karten im Seitenquelltext`).toEqual([])
+      137 | }
+      138 |
+        at pruefeSeite (E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a32d8750fa074e611\tests\vollpartien\seite.ts:135:47)
+        at klicke (E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a32d8750fa074e611\tests\vollpartien\mensch.ts:50:5)
+        at waehleSchritt (E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a32d8750fa074e611\tests\vollpartien\mensch.ts:97:5)
+        at spieleMenschenschritt (E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a32d8750fa074e611\tests\vollpartien\mensch.ts:53:21)
+        at E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a32d8750fa074e611\tests\vollpartien\vollpartie.spec.ts:132:15
+
+    Error Context: test-results\vollpartien\vollpartie-Z1-K1-K2-Basis--077b1-r-Wertung-über-echte-Klicks-handy-hochkant\error-context.md
+
+  2) [handy-hochkant] › tests\vollpartien\vollpartie.spec.ts:107:3 › Z1 K1/K2: Basis zu viert (Saat 13) bis zur Wertung, über echte Klicks 
+
+    Error: Z1 nach Schritt 173 (KI-Gegner 2): Konsolenfehler
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    [32m- Expected  - 1[39m
+    [31m+ Received  + 3[39m
+
+    [32m- Array [][39m
+    [31m+ Array [[39m
+    [31m+   "Ungefangen: Gegenprobe Z1: Wurf nach der Wertung",[39m
+    [31m+ ][39m
+
+       at seite.ts:135
+
+      133 |     }
+      134 |   }
+    > 135 |   expect(konsole, `Z1 ${wo}: Konsolenfehler`).toEqual([])
+          |                                               ^
+      136 |   expect(verrateneIds(zustand, await page.content()), `Z1 ${wo}: Verborgene Karten im Seitenquelltext`).toEqual([])
+      137 | }
+      138 |
+        at pruefeSeite (E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a32d8750fa074e611\tests\vollpartien\seite.ts:135:47)
+        at E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a32d8750fa074e611\tests\vollpartien\vollpartie.spec.ts:129:9
+
+    Error Context: test-results\vollpartien\vollpartie-Z1-K1-K2-Basis--421de-r-Wertung-über-echte-Klicks-handy-hochkant\error-context.md
+
+  2 failed
+    [handy-hochkant] › tests\vollpartien\vollpartie.spec.ts:107:3 › Z1 K1/K2: Basis zu zweit (Saat 2026) bis zur Wertung, über echte Klicks 
+    [handy-hochkant] › tests\vollpartien\vollpartie.spec.ts:107:3 › Z1 K1/K2: Basis zu viert (Saat 13) bis zur Wertung, über echte Klicks 
+exit 1
