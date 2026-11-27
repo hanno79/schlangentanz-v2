@@ -1,0 +1,248 @@
+Prüfer O10b, eigene Messung messe.mjs (Playwright Chromium 1.60, Touch). neu = Stand 705a9cef, alt = derselbe Stand mit tisch.css und quer.css aus origin/neuaufbau.
+g<n> = n Wörter über zwei Zeilen getrennt (Silbentrennung, in beiden Ständen gleich).
+568x320 start-2-ohne                       alt S416                                 neu S416 
+568x320 start-2-karte                      alt S375                                 neu S375 
+568x320 start-erweiterung                  alt S468                                 neu S468 
+568x320 comeback-start                     alt S520                                 neu S520 
+568x320 comeback-eingesetzt                alt S474                                 neu S474 
+568x320 risiko-aktionen                    alt S524                                 neu S524 
+568x320 risiko-a1                          alt S474                                 neu S474 
+568x320 risiko-a2-rot                      alt S497                                 neu S497 
+568x320 risiko-a3-ziel                     alt S474                                 neu S474 
+568x320 risiko-a4-ablage                   alt S483 g2                              neu S483 g2
+568x320 risiko-a4-ablage-gewaehlt          alt S403                                 neu S403 
+568x320 risiko-a1-gegnerwahl               alt S382                                 neu S382 
+568x320 beguenstigt                        alt S441 g1                              neu S441 g1
+568x320 beguenstigt-gewaehlt               alt S399                                 neu S399 
+568x320 korb-ziehen-boni                   alt S530 g2                              neu S530 g2
+568x320 korb-ziehen-gewaehlt               alt S474                                 neu S474 
+568x320 korb-tausch                        alt S520                                 neu S520 
+568x320 korb-entfernen                     alt S497                                 neu S497 
+568x320 korb-aktionen                      alt S474                                 neu S474 
+568x320 korb-allein                        alt S475                                 neu S475 
+568x320 aufgabe-lila-riese                 alt S468                                 neu S468 
+568x320 aufgabe-lila-riese-karte           alt S451                                 neu S451 
+568x320 aufgabe-lila-riese-erfuellt        alt S507                                 neu S507 
+568x320 aufgaben-einloesen                 alt S468                                 neu S468 
+desktop start-2-ohne                       alt fest                                 neu fest 
+desktop start-2-karte                      alt fest                                 neu fest 
+desktop start-erweiterung                  alt fest                                 neu fest 
+desktop comeback-start                     alt fest                                 neu fest 
+desktop comeback-eingesetzt                alt fest                                 neu fest 
+desktop risiko-aktionen                    alt fest                                 neu fest 
+desktop risiko-a1                          alt fest                                 neu fest 
+desktop risiko-a2-rot                      alt fest                                 neu fest 
+desktop risiko-a3-ziel                     alt fest                                 neu fest 
+desktop risiko-a4-ablage                   alt fest g2                              neu fest g2
+desktop risiko-a4-ablage-gewaehlt          alt fest                                 neu fest 
+desktop risiko-a1-gegnerwahl               alt fest                                 neu fest 
+desktop beguenstigt                        alt fest                                 neu fest 
+desktop beguenstigt-gewaehlt               alt fest                                 neu fest 
+desktop korb-ziehen-boni                   alt fest g2                              neu fest g2
+desktop korb-ziehen-gewaehlt               alt fest                                 neu fest 
+desktop korb-tausch                        alt fest                                 neu fest 
+desktop korb-entfernen                     alt fest                                 neu fest 
+desktop korb-aktionen                      alt fest                                 neu fest 
+desktop korb-allein                        alt fest                                 neu fest 
+desktop aufgabe-lila-riese                 alt fest                                 neu fest 
+desktop aufgabe-lila-riese-karte           alt fest                                 neu fest 
+desktop aufgabe-lila-riese-erfuellt        alt fest                                 neu fest 
+desktop aufgaben-einloesen                 alt fest                                 neu fest 
+tablet-quer start-2-ohne                   alt fest                                 neu fest 
+tablet-quer start-2-karte                  alt fest                                 neu fest 
+tablet-quer start-erweiterung              alt fest                                 neu fest 
+tablet-quer comeback-start                 alt fest                                 neu fest 
+tablet-quer comeback-eingesetzt            alt fest                                 neu fest 
+tablet-quer risiko-aktionen                alt fest                                 neu fest 
+tablet-quer risiko-a1                      alt fest                                 neu fest 
+tablet-quer risiko-a2-rot                  alt fest                                 neu fest 
+tablet-quer risiko-a3-ziel                 alt fest                                 neu fest 
+tablet-quer risiko-a4-ablage               alt fest g2                              neu fest g2
+tablet-quer risiko-a4-ablage-gewaehlt      alt fest                                 neu fest 
+tablet-quer risiko-a1-gegnerwahl           alt fest                                 neu fest 
+tablet-quer beguenstigt                    alt fest                                 neu fest 
+tablet-quer beguenstigt-gewaehlt           alt fest                                 neu fest 
+tablet-quer korb-ziehen-boni               alt fest g2                              neu fest g2
+tablet-quer korb-ziehen-gewaehlt           alt fest                                 neu fest 
+tablet-quer korb-tausch                    alt fest                                 neu fest 
+tablet-quer korb-entfernen                 alt fest                                 neu fest 
+tablet-quer korb-aktionen                  alt fest                                 neu fest 
+tablet-quer korb-allein                    alt fest                                 neu fest 
+tablet-quer aufgabe-lila-riese             alt fest                                 neu fest 
+tablet-quer aufgabe-lila-riese-karte       alt fest                                 neu fest 
+tablet-quer aufgabe-lila-riese-erfuellt    alt fest                                 neu fest 
+tablet-quer aufgaben-einloesen             alt fest                                 neu fest 
+tablet-hochkant start-2-ohne               alt fest                                 neu fest 
+tablet-hochkant start-2-karte              alt fest                                 neu fest 
+tablet-hochkant start-erweiterung          alt fest                                 neu fest 
+tablet-hochkant comeback-start             alt fest                                 neu fest 
+tablet-hochkant comeback-eingesetzt        alt fest                                 neu fest 
+tablet-hochkant risiko-aktionen            alt fest                                 neu fest 
+tablet-hochkant risiko-a1                  alt fest                                 neu fest 
+tablet-hochkant risiko-a2-rot              alt fest                                 neu fest 
+tablet-hochkant risiko-a3-ziel             alt fest                                 neu fest 
+tablet-hochkant risiko-a4-ablage           alt fest g2                              neu fest g2
+tablet-hochkant risiko-a4-ablage-gewaehlt  alt fest                                 neu fest 
+tablet-hochkant risiko-a1-gegnerwahl       alt fest                                 neu fest 
+tablet-hochkant beguenstigt                alt fest                                 neu fest 
+tablet-hochkant beguenstigt-gewaehlt       alt fest                                 neu fest 
+tablet-hochkant korb-ziehen-boni           alt fest g1                              neu fest g1
+tablet-hochkant korb-ziehen-gewaehlt       alt fest                                 neu fest 
+tablet-hochkant korb-tausch                alt fest                                 neu fest 
+tablet-hochkant korb-entfernen             alt fest                                 neu fest 
+tablet-hochkant korb-aktionen              alt fest                                 neu fest 
+tablet-hochkant korb-allein                alt fest                                 neu fest 
+tablet-hochkant aufgabe-lila-riese         alt fest                                 neu fest 
+tablet-hochkant aufgabe-lila-riese-karte   alt fest                                 neu fest 
+tablet-hochkant aufgabe-lila-riese-erfuellt alt fest                                 neu fest 
+tablet-hochkant aufgaben-einloesen         alt fest                                 neu fest 
+handy-hochkant start-2-ohne                alt fest                                 neu fest 
+handy-hochkant start-2-karte               alt fest                                 neu fest 
+handy-hochkant start-erweiterung           alt fest                                 neu fest 
+handy-hochkant comeback-start              alt fest                                 neu fest 
+handy-hochkant comeback-eingesetzt         alt fest                                 neu fest 
+handy-hochkant risiko-aktionen             alt fest g1                              neu fest g1
+handy-hochkant risiko-a1                   alt fest                                 neu fest 
+handy-hochkant risiko-a2-rot               alt fest                                 neu fest 
+handy-hochkant risiko-a3-ziel              alt fest                                 neu fest 
+handy-hochkant risiko-a4-ablage            alt fest g2                              neu fest g2
+handy-hochkant risiko-a4-ablage-gewaehlt   alt fest                                 neu fest 
+handy-hochkant risiko-a1-gegnerwahl        alt fest                                 neu fest 
+handy-hochkant beguenstigt                 alt fest                                 neu fest 
+handy-hochkant beguenstigt-gewaehlt        alt fest                                 neu fest 
+handy-hochkant korb-ziehen-boni            alt fest g2                              neu fest g2
+handy-hochkant korb-ziehen-gewaehlt        alt fest                                 neu fest 
+handy-hochkant korb-tausch                 alt fest                                 neu fest 
+handy-hochkant korb-entfernen              alt fest                                 neu fest 
+handy-hochkant korb-aktionen               alt fest                                 neu fest 
+handy-hochkant korb-allein                 alt fest                                 neu fest 
+handy-hochkant aufgabe-lila-riese          alt fest                                 neu fest 
+handy-hochkant aufgabe-lila-riese-karte    alt fest                                 neu fest 
+handy-hochkant aufgabe-lila-riese-erfuellt alt fest                                 neu fest 
+handy-hochkant aufgaben-einloesen          alt fest                                 neu fest 
+handy-quer start-2-ohne                    alt fest                                 neu fest 
+handy-quer start-2-karte                   alt fest                                 neu fest 
+handy-quer start-erweiterung               alt fest                                 neu fest 
+handy-quer comeback-start                  alt fest                                 neu fest 
+handy-quer comeback-eingesetzt             alt fest                                 neu fest 
+handy-quer risiko-aktionen                 alt fest                                 neu fest 
+handy-quer risiko-a1                       alt fest                                 neu fest 
+handy-quer risiko-a2-rot                   alt fest                                 neu fest 
+handy-quer risiko-a3-ziel                  alt fest                                 neu fest 
+handy-quer risiko-a4-ablage                alt fest g1                              neu fest g1
+handy-quer risiko-a4-ablage-gewaehlt       alt fest                                 neu fest 
+handy-quer risiko-a1-gegnerwahl            alt fest                                 neu fest 
+handy-quer beguenstigt                     alt fest                                 neu fest 
+handy-quer beguenstigt-gewaehlt            alt fest                                 neu fest 
+handy-quer korb-ziehen-boni                alt fest g1                              neu fest g1
+handy-quer korb-ziehen-gewaehlt            alt fest                                 neu fest 
+handy-quer korb-tausch                     alt fest                                 neu fest 
+handy-quer korb-entfernen                  alt fest                                 neu fest 
+handy-quer korb-aktionen                   alt fest                                 neu fest 
+handy-quer korb-allein                     alt fest                                 neu fest 
+handy-quer aufgabe-lila-riese              alt fest                                 neu fest 
+handy-quer aufgabe-lila-riese-karte        alt fest                                 neu fest 
+handy-quer aufgabe-lila-riese-erfuellt     alt fest                                 neu fest 
+handy-quer aufgaben-einloesen              alt fest                                 neu fest 
+
+Pixelvergleich der ganzseitigen Bildschirmfotos (bbox und Zahl abweichender Pixel; nicht genannt = gleich):
+390x844-vier-saat11-risiko.png bbox (240, 522, 378, 562) pixel 14
+390x844-vier-saat7-risiko.png bbox (240, 522, 378, 562) pixel 14
+desktop-aufgabe-lila-riese-erfuellt.png bbox (883, 7, 1268, 735) pixel 35
+desktop-aufgabe-lila-riese-karte.png bbox (1130, 7, 1268, 863) pixel 31
+desktop-aufgabe-lila-riese.png bbox (1126, 7, 1268, 710) pixel 26
+desktop-aufgaben-einloesen.png bbox (1126, 7, 1268, 710) pixel 26
+desktop-beguenstigt-gewaehlt.png bbox (45, 7, 1268, 634) pixel 21
+desktop-beguenstigt.png bbox (45, 7, 1268, 691) pixel 27
+desktop-comeback-eingesetzt.png bbox (45, 7, 1268, 886) pixel 35
+desktop-comeback-start.png bbox (45, 7, 1268, 710) pixel 27
+desktop-korb-aktionen.png bbox (1130, 7, 1268, 886) pixel 34
+desktop-korb-allein.png bbox (1130, 7, 1268, 870) pixel 34
+desktop-korb-entfernen.png bbox (1130, 7, 1268, 891) pixel 34
+desktop-korb-tausch.png bbox (1130, 7, 1268, 891) pixel 34
+desktop-korb-ziehen-boni.png bbox (45, 7, 1268, 891) pixel 71
+desktop-korb-ziehen-gewaehlt.png bbox (1130, 7, 1268, 886) pixel 34
+desktop-risiko-a1-gegnerwahl.png bbox (45, 7, 1268, 659) pixel 24
+desktop-risiko-a1.png bbox (45, 7, 1268, 870) pixel 35
+desktop-risiko-a2-rot.png bbox (45, 7, 1268, 870) pixel 35
+desktop-risiko-a3-ziel.png bbox (45, 7, 1268, 864) pixel 35
+desktop-risiko-a4-ablage-gewaehlt.png bbox (45, 7, 1268, 658) pixel 21
+desktop-risiko-a4-ablage.png bbox (45, 7, 1268, 699) pixel 94
+desktop-risiko-aktionen.png bbox (45, 7, 1268, 891) pixel 51
+desktop-start-2-karte.png bbox (45, 7, 1268, 891) pixel 27
+desktop-start-2-ohne.png bbox (45, 7, 1268, 737) pixel 21
+desktop-start-erweiterung.png bbox (45, 7, 1268, 789) pixel 27
+handy-hochkant-aufgabe-lila-riese-erfuellt.png bbox (240, 546, 378, 586) pixel 6
+handy-hochkant-aufgabe-lila-riese-karte.png bbox (131, 476, 378, 586) pixel 24
+handy-hochkant-aufgabe-lila-riese.png bbox (236, 457, 378, 568) pixel 29
+handy-hochkant-aufgaben-einloesen.png bbox (236, 457, 378, 568) pixel 29
+handy-hochkant-beguenstigt-gewaehlt.png bbox (131, 531, 253, 571) pixel 6
+handy-hochkant-beguenstigt.png bbox (241, 563, 251, 564) pixel 2
+handy-hochkant-comeback-eingesetzt.png bbox (131, 476, 378, 586) pixel 24
+handy-hochkant-comeback-start.png bbox (236, 457, 378, 568) pixel 29
+handy-hochkant-korb-aktionen.png bbox (131, 506, 378, 617) pixel 20
+handy-hochkant-korb-allein.png bbox (131, 460, 378, 571) pixel 20
+handy-hochkant-korb-entfernen.png bbox (131, 476, 378, 586) pixel 24
+handy-hochkant-korb-tausch.png bbox (131, 467, 378, 577) pixel 20
+handy-hochkant-korb-ziehen-boni.png bbox (150, 380, 378, 516) pixel 32
+handy-hochkant-korb-ziehen-gewaehlt.png bbox (131, 476, 378, 586) pixel 24
+handy-hochkant-risiko-a1-gegnerwahl.png bbox (241, 563, 251, 564) pixel 2
+handy-hochkant-risiko-a1.png bbox (131, 460, 378, 571) pixel 20
+handy-hochkant-risiko-a2-rot.png bbox (84, 460, 378, 828) pixel 26
+handy-hochkant-risiko-a3-ziel.png bbox (131, 451, 378, 562) pixel 20
+handy-hochkant-risiko-a4-ablage-gewaehlt.png bbox (131, 531, 253, 571) pixel 6
+handy-hochkant-risiko-a4-ablage.png bbox (141, 480, 251, 564) pixel 20
+handy-hochkant-risiko-aktionen.png bbox (240, 347, 378, 500) pixel 17
+handy-hochkant-start-2-karte.png bbox (240, 499, 378, 539) pixel 14
+handy-hochkant-start-2-ohne.png bbox (240, 574, 378, 614) pixel 14
+handy-hochkant-start-erweiterung.png bbox (236, 504, 378, 614) pixel 26
+handy-quer-risiko-a2-rot.png bbox (26, 161, 94, 213) pixel 1957
+tablet-hochkant-aufgabe-lila-riese-erfuellt.png bbox (618, 4, 756, 900) pixel 35
+tablet-hochkant-aufgabe-lila-riese-karte.png bbox (618, 4, 756, 1016) pixel 70
+tablet-hochkant-aufgabe-lila-riese.png bbox (614, 4, 756, 908) pixel 51
+tablet-hochkant-aufgaben-einloesen.png bbox (614, 4, 756, 908) pixel 51
+tablet-hochkant-beguenstigt-gewaehlt.png bbox (639, 4, 756, 798) pixel 38
+tablet-hochkant-beguenstigt.png bbox (491, 4, 756, 854) pixel 54
+tablet-hochkant-comeback-eingesetzt.png bbox (618, 4, 756, 1016) pixel 70
+tablet-hochkant-comeback-start.png bbox (557, 4, 756, 960) pixel 66
+tablet-hochkant-korb-aktionen.png bbox (618, 4, 756, 1016) pixel 70
+tablet-hochkant-korb-allein.png bbox (618, 4, 756, 1016) pixel 70
+tablet-hochkant-korb-entfernen.png bbox (618, 4, 756, 1016) pixel 70
+tablet-hochkant-korb-tausch.png bbox (618, 4, 756, 1016) pixel 70
+tablet-hochkant-korb-ziehen-boni.png bbox (12, 4, 756, 1016) pixel 55
+tablet-hochkant-korb-ziehen-gewaehlt.png bbox (15, 4, 756, 1016) pixel 73
+tablet-hochkant-risiko-a1-gegnerwahl.png bbox (491, 4, 756, 845) pixel 56
+tablet-hochkant-risiko-a1.png bbox (618, 4, 756, 1016) pixel 70
+tablet-hochkant-risiko-a2-rot.png bbox (100, 4, 756, 1016) pixel 79
+tablet-hochkant-risiko-a3-ziel.png bbox (618, 4, 756, 1016) pixel 70
+tablet-hochkant-risiko-a4-ablage-gewaehlt.png bbox (639, 4, 756, 835) pixel 34
+tablet-hochkant-risiko-a4-ablage.png bbox (494, 4, 756, 898) pixel 26
+tablet-hochkant-risiko-aktionen.png bbox (491, 4, 756, 1016) pixel 63
+tablet-hochkant-start-2-karte.png bbox (618, 4, 756, 1016) pixel 51
+tablet-hochkant-start-2-ohne.png bbox (14, 4, 756, 922) pixel 44
+tablet-hochkant-start-erweiterung.png bbox (614, 4, 756, 974) pixel 51
+tablet-quer-aufgabe-lila-riese-erfuellt.png bbox (12, 7, 1012, 643) pixel 18
+tablet-quer-aufgabe-lila-riese-karte.png bbox (874, 7, 1012, 751) pixel 34
+tablet-quer-aufgabe-lila-riese.png bbox (870, 7, 1012, 617) pixel 26
+tablet-quer-aufgaben-einloesen.png bbox (870, 7, 1012, 617) pixel 26
+tablet-quer-beguenstigt-gewaehlt.png bbox (895, 7, 1012, 541) pixel 20
+tablet-quer-beguenstigt.png bbox (746, 7, 1012, 598) pixel 24
+tablet-quer-comeback-eingesetzt.png bbox (874, 7, 1012, 759) pixel 34
+tablet-quer-comeback-start.png bbox (870, 7, 1012, 617) pixel 26
+tablet-quer-korb-aktionen.png bbox (874, 7, 1012, 759) pixel 34
+tablet-quer-korb-allein.png bbox (874, 7, 1012, 758) pixel 34
+tablet-quer-korb-entfernen.png bbox (874, 7, 1012, 759) pixel 34
+tablet-quer-korb-tausch.png bbox (874, 7, 1012, 759) pixel 34
+tablet-quer-korb-ziehen-boni.png bbox (764, 7, 1012, 759) pixel 41
+tablet-quer-korb-ziehen-gewaehlt.png bbox (874, 7, 1012, 759) pixel 34
+tablet-quer-risiko-a1-gegnerwahl.png bbox (752, 7, 1012, 566) pixel 21
+tablet-quer-risiko-a1.png bbox (874, 7, 1012, 758) pixel 34
+tablet-quer-risiko-a2-rot.png bbox (100, 7, 1012, 758) pixel 43
+tablet-quer-risiko-a3-ziel.png bbox (874, 7, 1012, 752) pixel 34
+tablet-quer-risiko-a4-ablage-gewaehlt.png bbox (895, 7, 1012, 565) pixel 20
+tablet-quer-risiko-a4-ablage.png bbox (745, 7, 1012, 606) pixel 53
+tablet-quer-risiko-aktionen.png bbox (748, 7, 1012, 759) pixel 53
+tablet-quer-start-2-karte.png bbox (874, 7, 1012, 759) pixel 26
+tablet-quer-start-2-ohne.png bbox (874, 7, 1012, 631) pixel 20
+tablet-quer-start-erweiterung.png bbox (870, 7, 1012, 683) pixel 26
+fertig

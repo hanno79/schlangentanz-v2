@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-TISCH-063 Der Layout-Vertrag O10b schlägt fehl, sobald tisch.css und quer.css wieder auf dem Stand vor der Korrektur stehen. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 27.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-TISCH-063 Der Layout-Vertrag O10b schlägt fehl, sobald tisch.css und quer.css wieder auf dem Stand vor der Korrektur stehen.</h1><p class="etiketten"><span class="etikett">Bereich Spieltisch</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art automatisch</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Geprüft wird mit einer Störprobe, ob die Messung für 320 × 568 den ursprünglichen Fehler erkennt. Bliebe sie mit der alten CSS grün, würde sie einen Rückfall nicht melden.</p><h2>Bestanden, wenn</h2><p>Mit <code>src/ui/tisch/tisch.css</code> und <code>src/ui/tisch/quer.css</code> aus <code>origin/neuaufbau</code> endet <code>npx playwright test tests/layout/erweiterung.hooks.spec.ts -g &quot;O10b&quot;</code> mit Exit 1, in allen fünf Projekten rot, mit einer Meldung, die ein überdecktes Element der Zugleiste nennt. Nach dem Zurücksetzen ist <code>git status</code> leer.</p><h2>Fehlgeschlagen, wenn</h2><p>Der Test bleibt mit der alten CSS grün, oder er scheitert aus einem anderen Grund als einem überdeckten oder unerreichbaren Element der Zugleiste.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>27.11.2026</dd><dt>Änderung</dt><dd>task/O10b-320-zugleiste (PR #129)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Stand ab Commit 705a9cef, Ports 4173 und 4174 frei</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Die beiden CSS-Dateien aus <code>origin/neuaufbau</code> (Commit 85defc23).</p></section>
+<section class="kasten-zuruecksetzen"><h2>Zurücksetzen</h2><p><code>git checkout HEAD -- src/ui/tisch/tisch.css src/ui/tisch/quer.css</code>; danach zeigt <code>git status --short</code> nichts an.</p></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p><code>git checkout origin/neuaufbau -- src/ui/tisch/tisch.css src/ui/tisch/quer.css</code>, dann <code>npx playwright test tests/layout/erweiterung.hooks.spec.ts -g &quot;O10b&quot;</code>. Erwartet: „5 failed“ und je Projekt die Meldung „Comeback-Karte, Start: 1 von 4 Knöpfen und Sätzen der Zugleiste nicht frei“, als Befund der Satz „Wähle eine Karte aus deiner Hand.“ mit „an der Mitte liegt ARTICLE.st-gegner“.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Ein Rückfall nur in einem Teil der Korrektur (etwa nur <code>min-height: 0</code> an <code>.st-unten</code> wieder da, Tisch aber absolut) ist nicht einzeln gestört worden.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-27">27.11.2026 20:34</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer O10b) &middot; agent &middot; pruef-o10b @ <span class="commit" title="705a9cef05c82cf3f3a8a7be2695d7a23cb25c99">705a9ce</span> / Playwright Chromium 1.60 (Projekte *-testhooks)</p><p>tisch.css und quer.css aus origin/neuaufbau (85defc23) eingesetzt, npx playwright test tests/layout/erweiterung.hooks.spec.ts -g O10b: Exit 1, 5 failed (desktop, tablet-quer, tablet-hochkant, handy-hochkant, handy-quer -testhooks), je &#x27;Comeback-Karte, Start: 1 von 4 Knöpfen und Sätzen der Zugleiste nicht frei&#x27;, Befund &#x27;Wähle eine Karte aus deiner Hand.&#x27; an der Mitte ARTICLE.st-gegner. Danach git checkout HEAD -- beide Dateien, git status leer, test:layout 2485 passed.</p><ul class="belege"><li><a href="belege/2026-11-27-2034-TF-TISCH-063-1.txt">2026-11-27-2034-TF-TISCH-063-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

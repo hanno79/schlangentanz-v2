@@ -4,7 +4,7 @@ import { SPIELSTAND_SCHLUESSEL } from '../../src/spielstand'
 import { verrateneIds } from '../../src/ui/tisch/__tests__/szenarien'
 import { erwarteGrundlagen, erwarteSichtbarenFokus, tabBis } from './barrierefreiheit_messung'
 import { befundListe, findeAbgeschnittenes, findeKleineTippflaechen, findeTextAusserhalbVonKnoepfen, waagrechterUeberstand } from './messung'
-import { ausserhalbDesFensters, unerreichbareZiele } from './ziele_messung'
+import { ausserhalbDesFensters, unerreichbareZiele, verdeckteElemente } from './ziele_messung'
 
 /*
 O10 im echten Browser, in jeder Geräteklasse: Comeback-Karte, Risiko-Karte,
@@ -130,6 +130,27 @@ test.describe('O10 K3: die Erweiterung mit Maus und Finger', () => {
   })
 })
 
+/** Geht jeden Weg bis vor „Ausführen“ und misst mit `pruefe` beim Start und nach jedem Schritt. */
+async function durchlaufeWege(page: Page, tippe: (element: Locator) => Promise<void>, pruefe: (lage: string) => Promise<void>): Promise<void> {
+  for (const weg of WEGE) {
+    await oeffneSzenario(page, weg.szenario)
+    await pruefe(`${weg.name}, Start`)
+    for (const [nummer, schritt] of [...(weg.vorbereitung ?? []), ...weg.schritte].entries()) {
+      const knopf = knopfFuer(page, schritt)
+      await knopf.scrollIntoViewIfNeeded()
+      await tippe(knopf)
+      await pruefe(`${weg.name}, Schritt ${nummer + 1}`)
+    }
+    await expect(zugleiste(page), `${weg.name}: Ansage am Ende des Wegs`).toContainText('Ansage:')
+  }
+}
+
+/** Kein Text ragt aus einem Knopf. */
+async function pruefeTextInKnoepfen(page: Page, lage: string): Promise<void> {
+  const ragt = await findeTextAusserhalbVonKnoepfen(page)
+  expect(ragt, `${lage}: Text ausserhalb des Knopfs:${befundListe(ragt)}`).toEqual([])
+}
+
 /*
 Prüfprotokoll O10, Mangel 2, unter den Geräteklassen: Bei 568 × 320 scrollt die
 Seite (DESIGN.md), deshalb gilt dort nicht jede Messung aus `pruefeSchritt`.
@@ -140,19 +161,34 @@ test.describe('O10 K3 (Prüfprotokoll O10, Mangel 2): Text bleibt in den Knöpfe
   test.use({ viewport: { width: 568, height: 320 } })
 
   test('O10 K3: auf jedem Weg der Erweiterung ragt kein Text aus einem Knopf (568 × 320)', async ({ page }, info) => {
-    const tippe = bediene(info)
-    for (const weg of WEGE) {
-      await oeffneSzenario(page, weg.szenario)
-      for (const [nummer, schritt] of [null, ...(weg.vorbereitung ?? []), ...weg.schritte].entries()) {
-        if (schritt !== null) {
-          const knopf = knopfFuer(page, schritt)
-          await knopf.scrollIntoViewIfNeeded()
-          await tippe(knopf)
-        }
-        const ragt = await findeTextAusserhalbVonKnoepfen(page)
-        expect(ragt, `${weg.name}, Schritt ${nummer}: Text ausserhalb des Knopfs:${befundListe(ragt)}`).toEqual([])
-      }
-    }
+    await durchlaufeWege(page, bediene(info), (lage) => pruefeTextInKnoepfen(page, lage))
+  })
+})
+
+/*
+TF-TISCH-059 (O10b), unter den Geräteklassen: 320 × 568 ist schmaler und
+niedriger als Handy hochkant. Risiko-Aktionen und Boni brauchen dort so viel
+Höhe, dass Kopfleiste, Zugleiste und dein Platz nicht übereinander ins Fenster
+passen. Dann darf nichts übereinander liegen: Die Seite scrollt, und jeder Knopf
+und Satz der Zugleiste und jedes angebotene Ziel liegt danach frei im Bild.
+`ausserhalbDesFensters` aus `pruefeSchritt` gilt hier nicht, weil die Seite scrollt.
+*/
+test.describe('O10b (TF-TISCH-059): die Erweiterung bei 320 × 568', () => {
+  test.use({ viewport: { width: 320, height: 568 }, hasTouch: true, isMobile: true })
+
+  async function pruefeSchmal(page: Page, lage: string): Promise<void> {
+    const leiste = await verdeckteElemente(page, '[aria-label="Zugleiste"] :is(button, p)')
+    expect(leiste.gezaehlt, `${lage}: Testaufbau, Knöpfe und Sätze der Zugleiste`).toBeGreaterThan(1)
+    expect(leiste.befunde, `${lage}: ${leiste.befunde.length} von ${leiste.gezaehlt} Knöpfen und Sätzen der Zugleiste nicht frei:${befundListe(leiste.befunde)}`).toEqual([])
+    const ziele = await unerreichbareZiele(page)
+    expect(ziele.befunde, `${lage}: ${ziele.befunde.length} von ${ziele.gezaehlt} Zielen nicht frei erreichbar:${befundListe(ziele.befunde)}`).toEqual([])
+    expect(await waagrechterUeberstand(page), `${lage}: Seite breiter als das Fenster`).toBe(0)
+    await pruefeTextInKnoepfen(page, lage)
+  }
+
+  test('O10b: auf jedem Weg der Erweiterung liegen Zugleiste und Ziele frei, notfalls nach Scrollen (320 × 568)', async ({ page }) => {
+    test.setTimeout(120_000)
+    await durchlaufeWege(page, (knopf) => knopf.tap(), (lage) => pruefeSchmal(page, lage))
   })
 })
 
