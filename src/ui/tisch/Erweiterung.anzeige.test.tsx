@@ -105,6 +105,51 @@ describe('O10 K3: Offen ist, was offen liegt', () => {
   })
 })
 
+describe('O10 K3 (Prüfprotokoll O10, Mangel 3): Die Statuszeile nennt die übrigen Zusatzaktionen', () => {
+  const nach = (zustand: Spielzustand, passt: (aktion: SpielAktion) => boolean) => anwendeAktion(zustand, aktionMit(zustand, passt)).zustand
+  const comeback = (a: SpielAktion) => a.typ === 'ComebackEinsetzen'
+  const zweiAbwerfen = (a: SpielAktion) => a.typ === 'ZweiAbwerfenDreiZiehen'
+  const status = (zustand: Spielzustand) => {
+    const { container } = zeige(zustand)
+    const text = container.querySelector('.st-statuszeile')?.textContent ?? ''
+    cleanup()
+    return text
+  }
+  const erstes = (zustand: Spielzustand, passt: (aktion: SpielAktion) => boolean) => anwendeAktion(zustand, ermittleAktionen(zustand).find(passt)!).zustand
+
+  it('O10/A8.1, D49: nach dem Comeback 2, nach einmal „2 abwerfen, 3 ziehen“ 1, nach zweimal keine mehr', () => {
+    const eingesetzt = nach(erzeugeSzenario('comeback-abwerfen-ziehen'), comeback)
+    expect(tischAnsicht(eingesetzt).status.zusatzaktionen).toBe(2)
+    const einmal = erstes(eingesetzt, zweiAbwerfen)
+    expect(tischAnsicht(einmal).status.zusatzaktionen, 'nach einmal Abwerfen').toBe(1)
+    expect(status(einmal)).toContain('1 Zusatzaktion')
+    const zweimal = erstes(einmal, zweiAbwerfen)
+    expect(tischAnsicht(zweimal).status.zusatzaktionen, 'nach zweimal Abwerfen').toBe(0)
+    expect(status(zweimal)).not.toMatch(/Zusatzaktion/)
+  })
+
+  it('O10/A5, A8.1: die erste Farbkarte belegt den Platz des Zuges, erst die zweite eine Zusatzaktion', () => {
+    const eingesetzt = nach(erzeugeSzenario('comeback-bedingung'), comeback)
+    const farbkarte = (a: SpielAktion) => a.typ === 'FarbkarteLegen' && a.ziel.art === 'schlange'
+    const eine = erstes(eingesetzt, farbkarte)
+    expect(tischAnsicht(eine).status.zusatzaktionen, 'nach einer Farbkarte').toBe(2)
+    expect(tischAnsicht(erstes(eine, farbkarte)).status.zusatzaktionen, 'nach zwei Farbkarten').toBe(1)
+  })
+})
+
+describe('O10 K3/A8.1: Die verbrauchte Comeback-Karte ist umgedreht', () => {
+  it('O10/A8.1: „Die Comeback-Karte wird umgedreht“: nach dem Einsatz zeigt die Auslage ihre Rückseite', () => {
+    const vorher = erzeugeSzenario('comeback-bedingung')
+    zeige(vorher)
+    expect(auslage().getByRole('img', { name: 'Comeback-Karte' })).toBeInTheDocument()
+    cleanup()
+    zeige(anwendeAktion(vorher, aktionMit(vorher, (a) => a.typ === 'ComebackEinsetzen')).zustand)
+    expect(auslage().queryByRole('img', { name: 'Comeback-Karte' })).toBeNull()
+    expect(auslage().getByRole('img', { name: 'Comeback-Karte, umgedreht' })).toBeInTheDocument()
+    expect(auslage().getByText('verbraucht')).toBeInTheDocument()
+  })
+})
+
 /** Wörter, die es nur mit der Erweiterung gibt. */
 const ERWEITERUNG = /Aufgabe|Comeback|Risiko|Schlangenkorb|Aufgedeckt|Auslage|Zusätzliche Aktion/i
 

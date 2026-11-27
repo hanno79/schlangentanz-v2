@@ -3,7 +3,7 @@ import { deserialisiere } from '../../src/engine'
 import { SPIELSTAND_SCHLUESSEL } from '../../src/spielstand'
 import { verrateneIds } from '../../src/ui/tisch/__tests__/szenarien'
 import { erwarteGrundlagen, erwarteSichtbarenFokus, tabBis } from './barrierefreiheit_messung'
-import { befundListe, findeAbgeschnittenes, findeKleineTippflaechen, waagrechterUeberstand } from './messung'
+import { befundListe, findeAbgeschnittenes, findeKleineTippflaechen, findeTextAusserhalbVonKnoepfen, waagrechterUeberstand } from './messung'
 import { ausserhalbDesFensters, unerreichbareZiele } from './ziele_messung'
 
 /*
@@ -112,6 +112,39 @@ test.describe('O10 K3: die Erweiterung mit Maus und Finger', () => {
     await tippe(hand(page).getByRole('button', { name: 'Sonderkarte Schlangenkorb des Glücks' }))
     await erwarteGrundlagen(page, 'Boni des Korbs')
   })
+})
+
+/*
+Prüfprotokoll O10, Mangel 2: Kein Text ragt aus den Knöpfen der Zugleiste, in
+jeder Geräteklasse und zusätzlich bei 568 × 320. Die Lagen sind die mit den
+längsten Namen: Boni des Korbs, Risiko-Aktionen, die Frage an den
+Begünstigten und die Karten deiner Ablage bei Risiko-Aktion 4.
+*/
+const LAGEN_MIT_MOEGLICHKEITEN: { name: string; szenario: string; schritte: Schritt[] }[] = [
+  { name: 'Boni des Korbs', szenario: 'korb-entfernen', schritte: [{ hand: 'Sonderkarte Schlangenkorb des Glücks' }] },
+  { name: 'Risiko-Aktionen', szenario: 'risiko-erfolg', schritte: [{ zugleiste: 'Risiko spielen' }] },
+  { name: 'begünstigt', szenario: 'risiko-du-beguenstigt', schritte: [] },
+  { name: 'Karten der Ablage', szenario: 'risiko-erfolg', schritte: [{ zugleiste: 'Risiko spielen' }, { zugleiste: /^Aktion 4/ }, { zugleiste: 'Ausführen' }] },
+  { name: 'Start mit Comeback und Risiko', szenario: 'comeback-bedingung', schritte: [] },
+]
+
+test.describe('O10 K3 (Prüfprotokoll O10, Mangel 2): Text bleibt in den Knöpfen der Zugleiste', () => {
+  for (const [klasse, fenster] of [['Geräteklasse', null], ['568 × 320', { width: 568, height: 320 }]] as const) {
+    test(`O10 K3: kein Text ragt aus einem Knopf der Zugleiste (${klasse})`, async ({ page }, info) => {
+      const tippe = bediene(info)
+      if (fenster !== null) await page.setViewportSize(fenster)
+      for (const lage of LAGEN_MIT_MOEGLICHKEITEN) {
+        await oeffneSzenario(page, lage.szenario)
+        for (const schritt of lage.schritte) {
+          const knopf = knopfFuer(page, schritt)
+          await knopf.scrollIntoViewIfNeeded()
+          await tippe(knopf)
+        }
+        const ragt = await findeTextAusserhalbVonKnoepfen(page, '[aria-label="Zugleiste"]')
+        expect(ragt, `${lage.name}: Text ausserhalb des Knopfs:${befundListe(ragt)}`).toEqual([])
+      }
+    })
+  }
 })
 
 test.describe('O10 K3, O11 K1: die Erweiterung allein mit der Tastatur', () => {

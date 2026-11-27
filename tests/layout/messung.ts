@@ -290,7 +290,46 @@ async function messeInhaltsverluste(
  * die Grenze, ab der das nicht mehr stimmt.
  */
 export async function findeAbgeschnittenes(page: Page): Promise<Befund[]> {
-  return (await messeInhaltsverluste(page)).abgeschnitten
+  return [...(await messeInhaltsverluste(page)).abgeschnitten, ...(await findeTextAusserhalbVonKnoepfen(page))]
+}
+
+/**
+ * Knöpfe, deren Text über ihren Rand hinausragt (Prüfprotokoll O10, Mangel 2).
+ * Ein Knopf mit `overflow: visible` schneidet nichts ab, deshalb fand
+ * `messeInhaltsverluste` den Fall nicht: Ein langes Wort, das nicht umbricht,
+ * steht dann über der Umrandung und überdeckt Nachbarn. Gemessen wird an den
+ * Zeilenboxen jedes vorgelesenen Textknotens (Range), mit 1 px Toleranz, je
+ * sichtbarem Knopf unter `wurzel`.
+ */
+export async function findeTextAusserhalbVonKnoepfen(page: Page, wurzel = 'body'): Promise<Befund[]> {
+  return page.evaluate((auswahl) => {
+    const befunde: { element: string; detail: string }[] = []
+    for (const knopf of Array.from(document.querySelectorAll(`${auswahl} button, ${auswahl} [role="button"]`))) {
+      if (!(knopf as HTMLElement).checkVisibility()) continue
+      const box = knopf.getBoundingClientRect()
+      const laeufer = document.createTreeWalker(knopf, NodeFilter.SHOW_TEXT, {
+        acceptNode: (knoten) =>
+          (knoten.nodeValue ?? '').trim() !== '' && (knoten.parentElement?.closest('[aria-hidden="true"]') ?? null) === null
+            ? NodeFilter.FILTER_ACCEPT
+            : NodeFilter.FILTER_REJECT,
+      })
+      while (laeufer.nextNode()) {
+        const bereich = document.createRange()
+        bereich.selectNodeContents(laeufer.currentNode)
+        const draussen = Array.from(bereich.getClientRects()).find(
+          (zeile) => zeile.left < box.left - 1 || zeile.right > box.right + 1 || zeile.top < box.top - 1 || zeile.bottom > box.bottom + 1,
+        )
+        if (draussen !== undefined) {
+          befunde.push({
+            element: knopf.getAttribute('aria-label') ?? (knopf.textContent ?? '').trim().slice(0, 40),
+            detail: `Text ${Math.round(draussen.left)}..${Math.round(draussen.right)} × ${Math.round(draussen.top)}..${Math.round(draussen.bottom)} ausserhalb des Knopfs ${Math.round(box.left)}..${Math.round(box.right)} × ${Math.round(box.top)}..${Math.round(box.bottom)}`,
+          })
+          break
+        }
+      }
+    }
+    return befunde
+  }, wurzel)
 }
 
 /**

@@ -88,26 +88,31 @@ describe('O6 K1: Einträge mit Karte und Ziel', () => {
   })
 })
 
-/** So viele Karten oben auf dem Nachziehstapel bleiben liegen: Eine Risiko-Karte deckt die oberste offen auf (A8.2), der Korb zieht drei (A7.10). */
-const OBEN_BLEIBEN = 3
-
 /**
  * Tauscht jede verdeckte Handkarte der Gegner, die die Aktion nicht nennt,
- * gegen eine Karte von unten aus dem Nachziehstapel. Die angesagte Karte einer
- * offenen Entscheidung (D52) und die obersten Stapelkarten bleiben, weil der
- * Schritt sie offen aufdecken darf.
+ * gegen die oberste Karte des Nachziehstapels; die Handkarte kommt unten in
+ * den Stapel. So ziehen Gegner in der Probe andere Karten als im Original, und
+ * ein Protokoll, das eine gezogene Karte verrät, fällt auf.
+ *
+ * Zwei gezielte Ausnahmen, beide offen nach den Regeln: Die angesagte Karte
+ * einer offenen Entscheidung bleibt (B2, D52, D77). Spielt der Schritt eine
+ * Risiko-Belohnungs-Karte, bleibt die oberste Stapelkarte liegen, weil der
+ * Schritt genau sie offen aufdeckt und das Protokoll sie nennen muss (A8.2,
+ * O10); getauscht wird dann mit der Karte darunter. Alle anderen Schritte
+ * prüft die Probe mit voller Stärke (Prüfprotokoll O10, Mangel 4).
  */
 function tauscheVerdeckte(zustand: Spielzustand, aktion: SpielAktion): Spielzustand {
   const genannt = new Set<string>(JSON.stringify(aktion).match(/[a-zäöü]+-\d{2}/g) ?? [])
   const angesagt = offeneHandkarteDer(zustand.entscheidung)
   if (angesagt !== null) genannt.add(angesagt.karteId)
+  const aufgedeckt = aktion.typ === 'RisikoKarteSpielen' ? 1 : 0
   const getauscht = structuredClone(zustand)
   getauscht.spieler.forEach((spieler, index) => {
     if (index === 0) return
     spieler.hand = spieler.hand.map((karte) => {
-      if (genannt.has(karte.id) || getauscht.nachziehstapel.length <= OBEN_BLEIBEN) return karte
-      const ersatz = getauscht.nachziehstapel.pop()!
-      getauscht.nachziehstapel.splice(OBEN_BLEIBEN, 0, karte)
+      if (genannt.has(karte.id) || getauscht.nachziehstapel.length <= aufgedeckt) return karte
+      const [ersatz] = getauscht.nachziehstapel.splice(aufgedeckt, 1)
+      getauscht.nachziehstapel.push(karte)
       return ersatz
     })
   })
