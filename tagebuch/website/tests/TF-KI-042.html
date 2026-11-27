@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-KI-042 Auch in einer späten Stellung mit über 9&#x27;000 Korb-Tauschen erfüllt die solide KI eine erreichbare Aufgabe, wenn kein anderer Zug höher bewertet ist. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 25.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-KI-042 Auch in einer späten Stellung mit über 9&#x27;000 Korb-Tauschen erfüllt die solide KI eine erreichbare Aufgabe, wenn kein anderer Zug höher bewertet ist.</h1><p class="etiketten"><span class="etikett">Bereich KI-Gegner</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art automatisch</span><span class="etikett">Grenzfall von TF-KI-039</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Der Schlangenkorb mit „tauschen“ bietet spät in der Partie Tausende Aktionen an. Die Zugsuche rechnet je Schritt nur eine begrenzte Zahl durch (K2.8). Geprüft wird, ob die KI dabei eine Aufgabe übersieht, die ein Tausch sofort erfüllen würde, obwohl ihr eigener Zug nicht besser bewertet ist.</p><h2>Bestanden, wenn</h2><p>In der Stellung aus Saat 77&#x27;103 (zwei Spieler, solide KI an Sitz 0, ihr 33. Zug) erfüllt die KI Farbvielfalt, oder ihr Zug ist bis vor „Zug beenden“ strikt höher bewertet als der beste erfüllende Zug samt zweiter Karte (Bewertung wie in <code>solideKi_erweiterung_partien.test.ts</code>).</p><h2>Fehlgeschlagen, wenn</h2><p>Sie erfüllt Farbvielfalt nicht, und ihr Zug ist niedriger bewertet als der beste erfüllende.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>27.11.2026</dd><dt>Änderung</dt><dd>task/K4-ki-erweiterung (PR #125)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Ausgangslage</td><td>Worktree auf dem geprüften Stand von <code>task/K4-ki-erweiterung</code>, <code>npm ci</code> gelaufen</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Saat 77&#x27;103, 2 Spieler, mit Erweiterung; Sitz 0 solide KI mit <code>erzeugeZufall(77&#x27;103 × 7)</code>, Sitz 1 Zufalls-KI mit <code>erzeugeZufall(77&#x27;103 × 11 + 1)</code>; Zug 33 von Sitz 0. Hand: Blau, Rot, Blau, Rot, Schlangenkorb des Glücks; 9&#x27;557 angebotene Aktionen; freie Aufgaben Schlangentanz, Gelber Schatz, Farbvielfalt.</p></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p>Die Probe <code>zz_pruefer_k4_detail.test.ts</code> aus dem Beleg nach <code>src/ki/strategien/</code> legen, mit <code>K4_DETAIL_SAAT=77103 K4_DETAIL_SPIELER=2 K4_DETAIL_ZUG=33</code> ausführen und danach löschen; die Werte „Bewertung“ stehen in der Ausgabedatei. Den Vergleich über alle erfüllenden Aktionen liefert die Probe <code>zz_pruefer_k4.test.ts</code> (Feld <code>k41.verfehlt</code>).</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-fehlgeschlagen"><h3><time datetime="2026-11-27">27.11.2026 19:58</time> <span class="status status-fehlgeschlagen">fehlgeschlagen</span></h3><p class="angaben">Claude Code (Prüfer K4) &middot; agent &middot; pruef-k4 @ <span class="commit" title="33d8b1437c3054b331f685bc956c6ae0346e834e">33d8b14</span></p><p>Saat 77&#x27;103, Zug 33: 9&#x27;557 Aktionen, 56 davon erfüllen Farbvielfalt (Korb tauschen Grün gegen Blau und Rot). Die KI legt Rot an schlange-3 und tauscht mit dem Korb Violett und Braun in schlange-3, Farbvielfalt bleibt offen. Bewertung vor Zugende 123.95, beste Erfüllung samt zweiter Karte 124.45; bekannte Punkte 120 gegen 118 für die beste Erfüllung allein.</p><ul class="belege"><li><a href="belege/2026-11-27-1958-TF-KI-042-1.txt">2026-11-27-1958-TF-KI-042-1.txt</a></li><li><a href="belege/2026-11-27-1958-TF-KI-042-2.ts">2026-11-27-1958-TF-KI-042-2.ts</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

@@ -1,0 +1,58 @@
+diff --git a/src/ki/sicht.ts b/src/ki/sicht.ts
+index 9316b4a7..6a4b4a16 100644
+--- a/src/ki/sicht.ts
++++ b/src/ki/sicht.ts
+@@ -283,7 +283,7 @@ function stellung(zustand: Spielzustand, ich: number): Stellung {
+       // Nur Aufgaben, die noch frei sind: die offenen und die eigene geheime, solange sie nicht erfüllt ist (A9, D35).
+       const { geheimeAufgabe, geheimeAufgabeErfuellt } = zustand.spieler[ich];
+       freie ??= !zustand.erweiterung ? [] : [...zustand.offeneAufgaben, ...(geheimeAufgabeErfuellt || geheimeAufgabe === null ? [] : [geheimeAufgabe])];
+-      if (freie.length === 0) return [];
++      if (freie.length >= 0) return [];
+       // Die Bedingungen lesen nur den Spieler selbst (A9); geprüft wird auf einer Abschrift mit seinen geänderten Schlangen.
+       const probe = { ...zustand, spieler: zustand.spieler.map((spieler, index) => (index === ich ? { ...spieler, schlangen: eigen.schlangen, ausgespielteSonderkarten: eigen.ausgespielteSonderkarten } : spieler)) };
+       return freie.filter((aufgabe) => erfuelltAufgabe(probe, ich, aufgabe));
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a7cadf0be0f8a6920
+
+ ❯ src/ki/strategien/solideKi_erweiterung.test.ts (10 tests | 1 failed) 957ms
+     × K4.1, A9 Farbenpracht, D59: ki-aufgabe-geheim: sie legt das zweite Grün statt des Gelb, nach „Zug beenden“ ist ihre geheime Aufgabe erfüllt; mit einer anderen geheimen Aufgabe legte sie das Gelb 42ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/ki/strategien/solideKi_erweiterung.test.ts > K4 Kriterium 1: Fehlt ihr eine Karte zu einer offenen oder ihrer geheimen Aufgabe und hält sie sie, spielt sie sie > K4.1, A9 Farbenpracht, D59: ki-aufgabe-geheim: sie legt das zweite Grün statt des Gelb, nach „Zug beenden“ ist ihre geheime Aufgabe erfüllt; mit einer anderen geheimen Aufgabe legte sie das Gelb
+AssertionError: K4.1: Saat 1, gespielt [{"typ":"FarbkarteLegen","spielerId":"spieler-2","karteId":"gelb-07","ziel":{"art":"schlange","schlangenId":"schlange-1","seite":"ende"}},{"typ":"SchlangengrubeSpielen","spielerId":"spieler-2","karteId":"schlangengrube-02","zielSpielerId":"spieler-1"},{"typ":"ZugBeenden","spielerId":"spieler-2"}]: expected [ { typ: 'FarbkarteLegen', …(3) } ] to deeply equal [ ObjectContaining{…} ]
+
+- Expected
++ Received
+
+  [
+    {
+-     "karteId": "gruen-09",
++     "karteId": "gelb-07",
++     "spielerId": "spieler-2",
++     "typ": "FarbkarteLegen",
++     "ziel": {
++       "art": "schlange",
++       "schlangenId": "schlange-1",
++       "seite": "ende",
++     },
+    },
+  ]
+
+ ❯ src/ki/strategien/solideKi_erweiterung.test.ts:90:90
+     88|       const zug = spieleZug(start, saat)
+     89|       const farbkarten = zug.aktionen.filter((aktion) => aktion.typ ==…
+     90|       expect(farbkarten, `K4.1: Saat ${saat}, gespielt ${JSON.stringif…
+       |                                                                                          ^
+     91|       expect(zug.zustand.spieler[KI].geheimeAufgabeErfuellt, `K4.1, D3…
+     92|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 passed (10)
+   Start at  19:15:27
+   Duration  5.37s (transform 3.76s, setup 276ms, import 3.85s, tests 957ms, environment 0ms)
+
+exit 1

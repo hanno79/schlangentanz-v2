@@ -1,0 +1,399 @@
+diff --git a/src/ki/sicht.ts b/src/ki/sicht.ts
+index 9316b4a7..24eb5ca4 100644
+--- a/src/ki/sicht.ts
++++ b/src/ki/sicht.ts
+@@ -115,13 +115,13 @@ function sichtAus(zustand: Spielzustand, spielerIndex: number): Sicht {
+     zug: zugInSicht(zustand, spielerIndex),
+     entscheider: ermittleEntscheider(zustand),
+     schlussrundeAusloeser: zustand.schlussrundeAusloeser,
+-    nachziehstapelGroesse: zustand.nachziehstapel.length,
++    nachziehstapelGroesse: Math.max(0, zustand.nachziehstapel.length - 1),
+     aufgabenstapelGroesse: zustand.aufgabenStapel.length,
+     offeneAufgaben: zustand.offeneAufgaben,
+     ausliegendeGruben: zustand.ausliegendeGruben,
+     angesagt: zustand.schwebend,
+     entscheidung: zustand.entscheidung,
+-    aufgedeckt: zustand.aufgedeckt,
++    aufgedeckt: [...zustand.aufgedeckt, ...zustand.nachziehstapel.slice(0, 1)],
+     ausDemSpiel: zustand.ausDemSpiel,
+     schlangenZaehler: zustand.schlangenZaehler,
+   };
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a7cadf0be0f8a6920
+
+ ❯ src/ki/sicht_erweiterung.test.ts (5 tests | 3 failed) 31ms
+     × K4, B2: ungesehen() sind genau die Karten in fremden Händen ohne die offen benannte (D52) und im Nachziehstapel, nach Id geordnet 11ms
+     × K4, K2.7: neu gemischtes Verdecktes und ein anderer Zufall der KI ändern ungesehen() nicht 5ms
+     × K2.7, D43: auch nicht, wenn ein Gegner Karten mit dem Korb verdeckt gezogen hat und die Zusatzaktionen nur für sie gelten 7ms
+ ❯ src/ki/sicht_risiko.test.ts (6 tests | 4 failed) 35ms
+     × K4, B2 (Prüfprotokoll X5, Hinweis 2): eine offen zurückgetauschte Karte bleibt beim Mischen auf ihrer Hand; die Sicht der Gegner ändert sich dadurch nicht 12ms
+     × B2: die Sicht keines Spielers nennt eine verdeckte fremde Karte, auch nicht in der Entscheidung 1ms
+     × K2: der erratene Zustand zeigt jedem Spieler seine Sicht; die benannte Karte liegt auf der richtigen Hand; der Entscheider hat dieselben Wahlen 5ms
+     × K2.7: neu gemischtes Verdecktes ändert den erratenen Zustand nicht, auch mit offener Risiko-Entscheidung 9ms
+ ❯ src/ki/strategien/solideKi_erweiterung_suche.test.ts (3 tests | 1 failed) 8394ms
+     × K4.4, K2.7: in jeder Stellung mit einer Wahl der Erweiterung bleibt die Entscheidung gleich, wenn fremde Hände, Stapelreihenfolge und fremde geheime Aufgaben neu gemischt werden 3266ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/ki/sicht_erweiterung.test.ts > K4, B2: die ungesehenen Karten > K4, B2: ungesehen() sind genau die Karten in fremden Händen ohne die offen benannte (D52) und im Nachziehstapel, nach Id geordnet
+AssertionError: K4: Stellung 0, Spieler 0: expected [ 'blau-01', 'blau-02', …(104) ] to deeply equal [ 'blau-01', 'blau-02', …(105) ]
+
+- Expected
++ Received
+
+@@ -6,11 +6,10 @@
+    "blau-05",
+    "blau-06",
+    "blau-07",
+    "blau-08",
+    "blau-09",
+-   "blau-10",
+    "blau-11",
+    "blau-12",
+    "blau-14",
+    "blau-15",
+    "braun-01",
+
+ ❯ src/ki/sicht_erweiterung.test.ts:39:69
+     37|         const benannt = offeneHandkarteDer(zustand.entscheidung)?.kart…
+     38|         const fremde = zustand.spieler.flatMap((spieler, index) => (in…
+     39|         expect(ungesehen, `K4: Stellung ${nummer}, Spieler ${ich}`).to…
+       |                                                                     ^
+     40|         const verborgen = new Set(verborgeneIds(zustand, ich))
+     41|         expect(ungesehen.every((id) => verborgen.has(id)), `B2: Stellu…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  src/ki/sicht_erweiterung.test.ts > K4, B2: die ungesehenen Karten > K4, K2.7: neu gemischtes Verdecktes und ein anderer Zufall der KI ändern ungesehen() nicht
+AssertionError: K2.7: Stellung 0, Spieler 0: expected '[{"typ":"Farbkarte","id":"blau-01","f…' to be '[{"typ":"Farbkarte","id":"blau-01","f…' // Object.is equality
+
+Expected: "[{"typ":"Farbkarte","id":"blau-01","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"blau-02","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"blau-03","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"blau-04","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"blau-05","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"blau-06","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"blau-07","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"blau-08","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"blau-09","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"blau-11","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"blau-12","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"blau-14","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"blau-15","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"braun-01","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"braun-02","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"braun-03","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"braun-04","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"braun-05","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"braun-06","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"braun-07","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"braun-08","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"braun-09","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"braun-10","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"braun-11","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"braun-12","farbe":"Braun","punkte":2},{"typ":"Sonderkarte","id":"farbendieb-01","name":"Farbendieb"},{"typ":"Sonderkarte","id":"farbendieb-02","name":"Farbendieb"},{"typ":"Sonderkarte","id":"farbendieb-04","name":"Farbendieb"},{"typ":"Sonderkarte","id":"farbenfusion-01","name":"Farbenfusion"},{"typ":"Sonderkarte","id":"farbenfusion-02","name":"Farbenfusion"},{"typ":"Sonderkarte","id":"farbenfusion-03","name":"Farbenfusion"},{"typ":"Sonderkarte","id":"farbenfusion-04","name":"Farbenfusion"},{"typ":"Sonderkarte","id":"farbenschutz-01","name":"Farbenschutz"},{"typ":"Sonderkarte","id":"farbenschutz-02","name":"Farbenschutz"},{"typ":"Sonderkarte","id":"farbenschutz-03","name":"Farbenschutz"},{"typ":"Sonderkarte","id":"farbenschutz-04","name":"Farbenschutz"},{"typ":"Farbkarte","id":"gelb-01","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gelb-02","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gelb-03","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gelb-04","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gelb-05","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gelb-06","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gelb-07","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gelb-08","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gelb-09","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gelb-10","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gelb-11","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gelb-12","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gelb-13","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gelb-14","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gelb-15","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gruen-01","farbe":"Grün","punkte":3},{"typ":"Farbkarte","id":"gruen-02","farbe":"Grün","punkte":3},{"typ":"Farbkarte","id":"gruen-03","farbe":"Grün","punkte":3},{"typ":"Farbkarte","id":"gruen-04","farbe":"Grün","punkte":3},{"typ":"Farbkarte","id":"gruen-05","farbe":"Grün","punkte":3},{"typ":"Farbkarte","id":"gruen-06","farbe":"Grün","punkte":3},{"typ":"Farbkarte","id":"gruen-07","farbe":"Grün","punkte":3},{"typ":"Farbkarte","id":"gruen-08","farbe":"Grün","punkte":3},{"typ":"Sonderkarte","id":"regenbogenschlange-01","name":"Regenbogenschlange"},{"typ":"Sonderkarte","id":"regenbogenschlange-02","name":"Regenbogenschlange"},{"typ":"Sonderkarte","id":"regenbogenschlange-03","name":"Regenbogenschlange"},{"typ":"Sonderkarte","id":"regenbogenschlange-04","name":"Regenbogenschlange"},{"typ":"Farbkarte","id":"rot-01","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"rot-02","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"rot-03","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"rot-04","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"rot-05","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"rot-06","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"rot-07","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"rot-08","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"rot-09","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"rot-10","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"rot-11","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"rot-12","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"rot-13","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"rot-14","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"rot-15","farbe":"Rot","punkte":1},{"typ":"Sonderkarte","id":"schlangenblockade-01","name":"Schlangenblockade"},{"typ":"Sonderkarte","id":"schlangenblockade-02","name":"Schlangenblockade"},{"typ":"Sonderkarte","id":"schlangenblockade-03","name":"Schlangenblockade"},{"typ":"Sonderkarte","id":"schlangenfrass-01","name":"Schlangenfrass"},{"typ":"Sonderkarte","id":"schlangenfrass-02","name":"Schlangenfrass"},{"typ":"Sonderkarte","id":"schlangenfrass-03","name":"Schlangenfrass"},{"typ":"Sonderkarte","id":"schlangenfrass-04","name":"Schlangenfrass"},{"typ":"Sonderkarte","id":"schlangengrube-01","name":"Schlangengrube"},{"typ":"Sonderkarte","id":"schlangengrube-02","name":"Schlangengrube"},{"typ":"Sonderkarte","id":"schlangengrube-03","name":"Schlangengrube"},{"typ":"Sonderkarte","id":"schlangenhaeutung-01","name":"Schlangenhäutung"},{"typ":"Sonderkarte","id":"schlangenhaeutung-02","name":"Schlangenhäutung"},{"typ":"Sonderkarte","id":"schlangenhaeutung-03","name":"Schlangenhäutung"},{"typ":"Sonderkarte","id":"verdoppler-01","name":"Verdoppler"},{"typ":"Sonderkarte","id":"verdoppler-02","name":"Verdoppler"},{"typ":"Sonderkarte","id":"verdoppler-03","name":"Verdoppler"},{"typ":"Farbkarte","id":"violett-01","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"violett-02","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"violett-03","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"violett-04","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"violett-05","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"violett-06","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"violett-07","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"violett-08","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"violett-09","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"violett-10","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"violett-11","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"violett-12","farbe":"Violett","punkte":2}]"
+Received: "[{"typ":"Farbkarte","id":"blau-01","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"blau-02","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"blau-03","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"blau-04","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"blau-05","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"blau-06","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"blau-07","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"blau-08","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"blau-09","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"blau-10","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"blau-11","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"blau-12","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"blau-14","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"blau-15","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"braun-01","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"braun-02","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"braun-03","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"braun-04","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"braun-05","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"braun-06","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"braun-07","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"braun-08","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"braun-09","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"braun-10","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"braun-11","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"braun-12","farbe":"Braun","punkte":2},{"typ":"Sonderkarte","id":"farbendieb-01","name":"Farbendieb"},{"typ":"Sonderkarte","id":"farbendieb-02","name":"Farbendieb"},{"typ":"Sonderkarte","id":"farbendieb-04","name":"Farbendieb"},{"typ":"Sonderkarte","id":"farbenfusion-01","name":"Farbenfusion"},{"typ":"Sonderkarte","id":"farbenfusion-02","name":"Farbenfusion"},{"typ":"Sonderkarte","id":"farbenfusion-03","name":"Farbenfusion"},{"typ":"Sonderkarte","id":"farbenfusion-04","name":"Farbenfusion"},{"typ":"Sonderkarte","id":"farbenschutz-01","name":"Farbenschutz"},{"typ":"Sonderkarte","id":"farbenschutz-02","name":"Farbenschutz"},{"typ":"Sonderkarte","id":"farbenschutz-03","name":"Farbenschutz"},{"typ":"Sonderkarte","id":"farbenschutz-04","name":"Farbenschutz"},{"typ":"Farbkarte","id":"gelb-01","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gelb-02","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gelb-03","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gelb-04","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gelb-05","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gelb-06","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gelb-07","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gelb-09","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gelb-10","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gelb-11","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gelb-12","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gelb-13","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gelb-14","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gelb-15","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gruen-01","farbe":"Grün","punkte":3},{"typ":"Farbkarte","id":"gruen-02","farbe":"Grün","punkte":3},{"typ":"Farbkarte","id":"gruen-03","farbe":"Grün","punkte":3},{"typ":"Farbkarte","id":"gruen-04","farbe":"Grün","punkte":3},{"typ":"Farbkarte","id":"gruen-05","farbe":"Grün","punkte":3},{"typ":"Farbkarte","id":"gruen-06","farbe":"Grün","punkte":3},{"typ":"Farbkarte","id":"gruen-07","farbe":"Grün","punkte":3},{"typ":"Farbkarte","id":"gruen-08","farbe":"Grün","punkte":3},{"typ":"Sonderkarte","id":"regenbogenschlange-01","name":"Regenbogenschlange"},{"typ":"Sonderkarte","id":"regenbogenschlange-02","name":"Regenbogenschlange"},{"typ":"Sonderkarte","id":"regenbogenschlange-03","name":"Regenbogenschlange"},{"typ":"Sonderkarte","id":"regenbogenschlange-04","name":"Regenbogenschlange"},{"typ":"Farbkarte","id":"rot-01","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"rot-02","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"rot-03","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"rot-04","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"rot-05","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"rot-06","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"rot-07","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"rot-08","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"rot-09","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"rot-10","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"rot-11","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"rot-12","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"rot-13","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"rot-14","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"rot-15","farbe":"Rot","punkte":1},{"typ":"Sonderkarte","id":"schlangenblockade-01","name":"Schlangenblockade"},{"typ":"Sonderkarte","id":"schlangenblockade-02","name":"Schlangenblockade"},{"typ":"Sonderkarte","id":"schlangenblockade-03","name":"Schlangenblockade"},{"typ":"Sonderkarte","id":"schlangenfrass-01","name":"Schlangenfrass"},{"typ":"Sonderkarte","id":"schlangenfrass-02","name":"Schlangenfrass"},{"typ":"Sonderkarte","id":"schlangenfrass-03","name":"Schlangenfrass"},{"typ":"Sonderkarte","id":"schlangenfrass-04","name":"Schlangenfrass"},{"typ":"Sonderkarte","id":"schlangengrube-01","name":"Schlangengrube"},{"typ":"Sonderkarte","id":"schlangengrube-02","name":"Schlangengrube"},{"typ":"Sonderkarte","id":"schlangengrube-03","name":"Schlangengrube"},{"typ":"Sonderkarte","id":"schlangenhaeutung-01","name":"Schlangenhäutung"},{"typ":"Sonderkarte","id":"schlangenhaeutung-02","name":"Schlangenhäutung"},{"typ":"Sonderkarte","id":"schlangenhaeutung-03","name":"Schlangenhäutung"},{"typ":"Sonderkarte","id":"verdoppler-01","name":"Verdoppler"},{"typ":"Sonderkarte","id":"verdoppler-02","name":"Verdoppler"},{"typ":"Sonderkarte","id":"verdoppler-03","name":"Verdoppler"},{"typ":"Farbkarte","id":"violett-01","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"violett-02","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"violett-03","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"violett-04","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"violett-05","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"violett-06","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"violett-07","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"violett-08","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"violett-09","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"violett-10","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"violett-11","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"violett-12","farbe":"Violett","punkte":2}]"
+
+ ❯ src/ki/sicht_erweiterung.test.ts:51:87
+     49|         const gemischt = mischeVerborgenes(zustand, ich, erzeugeZufall…
+     50|         const ids = (stand: Spielzustand, saat: number) => JSON.string…
+     51|         expect(ids(gemischt, nummer + 1), `K2.7: Stellung ${nummer}, S…
+       |                                                                                       ^
+     52|       }
+     53|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  src/ki/sicht_erweiterung.test.ts > K4, Codex-Befund 6, K2.7: das Mischen ändert die Sicht nicht > K2.7, D43: auch nicht, wenn ein Gegner Karten mit dem Korb verdeckt gezogen hat und die Zusatzaktionen nur für sie gelten
+AssertionError: K2.7: Spieler 1, Saat 1: expected { ich: 1, …(18) } to deeply equal { ich: 1, …(18) }
+
+- Expected
++ Received
+
+@@ -1,13 +1,13 @@
+  {
+    "angesagt": null,
+    "aufgabenstapelGroesse": 9,
+    "aufgedeckt": [
+      {
+-       "farbe": "Grün",
+-       "id": "gruen-06",
+-       "punkte": 3,
++       "farbe": "Rot",
++       "id": "rot-13",
++       "punkte": 1,
+        "typ": "Farbkarte",
+      },
+    ],
+    "ausDemSpiel": [
+      {
+
+ ❯ src/ki/sicht_erweiterung.test.ts:65:124
+     63|     for (const ich of [1, 2]) {
+     64|       for (const saat of [1, 2, 3, 4, 5]) {
+     65|         expect(sichtFuer(mischeVerborgenes(zustand, ich, erzeugeZufall…
+       |                                                                                                                            ^
+     66|       }
+     67|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  src/ki/sicht_risiko.test.ts > B2/D52: offene Risiko-Entscheidungen in der Sicht der KI (X5, Kriterium 7) > K4, B2 (Prüfprotokoll X5, Hinweis 2): eine offen zurückgetauschte Karte bleibt beim Mischen auf ihrer Hand; die Sicht der Gegner ändert sich dadurch nicht
+AssertionError: K2.7: Stellung 0, Spieler 1, Saat 1: expected { ich: 1, …(18) } to deeply equal { ich: 1, …(18) }
+
+- Expected
++ Received
+
+@@ -1,12 +1,12 @@
+  {
+    "angesagt": null,
+    "aufgabenstapelGroesse": 9,
+    "aufgedeckt": [
+      {
+-       "farbe": "Rot",
+-       "id": "rot-09",
++       "farbe": "Gelb",
++       "id": "gelb-03",
+        "punkte": 1,
+        "typ": "Farbkarte",
+      },
+    ],
+    "ausDemSpiel": [
+
+ ❯ src/ki/sicht_risiko.test.ts:115:102
+    113|         for (const saat of [1, 2, 3]) {
+    114|           const gemischt = mischeVerborgenes(zustand, ich, erzeugeZufa…
+    115|           expect(sichtFuer(gemischt, ich), `K2.7: Stellung ${nummer}, …
+       |                                                                                                      ^
+    116|         }
+    117|       }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+ FAIL  src/ki/sicht_risiko.test.ts > B2/D52: offene Risiko-Entscheidungen in der Sicht der KI (X5, Kriterium 7) > B2: die Sicht keines Spielers nennt eine verdeckte fremde Karte, auch nicht in der Entscheidung
+AssertionError: B2: Stellung 0, Sicht von Spieler 0: expected [ 'gelb-13' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "gelb-13",
++ ]
+
+ ❯ src/ki/sicht_risiko.test.ts:126:127
+    124|       for (const ich of zustand.spieler.keys()) {
+    125|         const texte = woerter(sichtFuer(zustand, ich))
+    126|         expect(verborgeneIds(zustand, ich).filter((id) => texte.has(id…
+       |                                                                                                                               ^
+    127|       }
+    128|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯
+
+ FAIL  src/ki/sicht_risiko.test.ts > B2/D52: offene Risiko-Entscheidungen in der Sicht der KI (X5, Kriterium 7) > K2: der erratene Zustand zeigt jedem Spieler seine Sicht; die benannte Karte liegt auf der richtigen Hand; der Entscheider hat dieselben Wahlen
+AssertionError: K2: Stellung 0, Spieler 0: expected { ich: +0, …(18) } to deeply equal { ich: +0, …(18) }
+
+- Expected
++ Received
+
+@@ -6,10 +6,15 @@
+        "farbe": "Gelb",
+        "id": "gelb-13",
+        "punkte": 1,
+        "typ": "Farbkarte",
+      },
++     {
++       "id": "regenbogenschlange-02",
++       "name": "Regenbogenschlange",
++       "typ": "Sonderkarte",
++     },
+    ],
+    "ausDemSpiel": [
+      {
+        "id": "risiko-belohnung-01",
+        "typ": "Risiko-Belohnung",
+@@ -69,11 +74,11 @@
+        "name": "Verdoppler",
+        "typ": "Sonderkarte",
+      },
+    ],
+    "ich": 0,
+-   "nachziehstapelGroesse": 94,
++   "nachziehstapelGroesse": 93,
+    "offeneAufgaben": [
+      {
+        "bedingung": "Habe min. 2 versch. Sonderkarten in deinen Schlangen und spiele min. 4 aus.",
+        "id": "aufgabe-09",
+        "name": "Schlangenmeister",
+
+ ❯ src/ki/sicht_risiko.test.ts:145:83
+    143|         const sicht = sichtFuer(zustand, ich)
+    144|         const geraten = bestimmeZustand(sicht, erzeugeZufall(nummer * …
+    145|         expect(sichtFuer(geraten, ich), `K2: Stellung ${nummer}, Spiel…
+       |                                                                                   ^
+    146|         const benannt = offeneHandkarteDer(zustand.entscheidung)
+    147|         if (benannt !== null) expect(geraten.spieler[benannt.spielerIn…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯
+
+ FAIL  src/ki/sicht_risiko.test.ts > B2/D52: offene Risiko-Entscheidungen in der Sicht der KI (X5, Kriterium 7) > K2.7: neu gemischtes Verdecktes ändert den erratenen Zustand nicht, auch mit offener Risiko-Entscheidung
+AssertionError: K2.7: Stellung 0, Spieler 0: expected { Object (version, erweiterung, ...) } to deeply equal { Object (version, erweiterung, ...) }
+
+- Expected
++ Received
+
+@@ -64,14 +64,13 @@
+        "typ": "Aufgabenkarte",
+      },
+    ],
+    "aufgedeckt": [
+      {
+-       "farbe": "Gelb",
+-       "id": "gelb-13",
+-       "punkte": 1,
+-       "typ": "Farbkarte",
++       "id": "schlangenfrass-03",
++       "name": "Schlangenfrass",
++       "typ": "Sonderkarte",
+      },
+    ],
+    "ausDemSpiel": [
+      {
+        "id": "risiko-belohnung-01",
+@@ -92,15 +91,10 @@
+        "stapel",
+      ],
+    },
+    "erweiterung": true,
+    "nachziehstapel": [
+-     {
+-       "id": "regenbogenschlange-02",
+-       "name": "Regenbogenschlange",
+-       "typ": "Sonderkarte",
+-     },
+      {
+        "farbe": "Gelb",
+        "id": "gelb-06",
+        "punkte": 1,
+        "typ": "Farbkarte",
+@@ -460,10 +454,16 @@
+        "id": "rot-02",
+        "punkte": 1,
+        "typ": "Farbkarte",
+      },
+      {
++       "farbe": "Gelb",
++       "id": "gelb-13",
++       "punkte": 1,
++       "typ": "Farbkarte",
++     },
++     {
+        "farbe": "Braun",
+        "id": "braun-05",
+        "punkte": 2,
+        "typ": "Farbkarte",
+      },
+@@ -766,15 +766,10 @@
+            "typ": "Farbkarte",
+          },
+          {
+            "id": "schlangengrube-03",
+            "name": "Schlangengrube",
+-           "typ": "Sonderkarte",
+-         },
+-         {
+-           "id": "schlangenfrass-03",
+-           "name": "Schlangenfrass",
+            "typ": "Sonderkarte",
+          },
+          {
+            "farbe": "Gelb",
+            "id": "gelb-15",
+@@ -785,10 +780,16 @@
+            "farbe": "Gelb",
+            "id": "gelb-03",
+            "punkte": 1,
+            "typ": "Farbkarte",
+          },
++         {
++           "farbe": "Grün",
++           "id": "gruen-03",
++           "punkte": 3,
++           "typ": "Farbkarte",
++         },
+        ],
+        "id": "spieler-2",
+        "name": "KI-Gegner 1",
+        "risikoKarten": [
+          {
+@@ -823,16 +824,10 @@
+          "typ": "Aufgabenkarte",
+        },
+        "geheimeAufgabeErfuellt": false,
+        "hand": [
+          {
+-           "farbe": "Grün",
+-           "id": "gruen-03",
+-           "punkte": 3,
+-           "typ": "Farbkarte",
+-         },
+-         {
+            "farbe": "Blau",
+            "id": "blau-15",
+            "punkte": 1,
+            "typ": "Farbkarte",
+          },
+@@ -850,10 +845,15 @@
+          {
+            "farbe": "Braun",
+            "id": "braun-01",
+            "punkte": 2,
+            "typ": "Farbkarte",
++         },
++         {
++           "id": "regenbogenschlange-02",
++           "name": "Regenbogenschlange",
++           "typ": "Sonderkarte",
+          },
+        ],
+        "id": "spieler-3",
+        "name": "KI-Gegner 2",
+        "risikoKarten": [
+
+ ❯ src/ki/sicht_risiko.test.ts:157:126
+    155|       for (const ich of zustand.spieler.keys()) {
+    156|         const gemischt = mischeVerborgenes(zustand, ich, erzeugeZufall…
+    157|         expect(bestimmeZustand(sichtFuer(gemischt, ich), erzeugeZufall…
+       |                                                                                                                              ^
+    158|           bestimmeZustand(sichtFuer(zustand, ich), erzeugeZufall(numme…
+    159|         )
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/8]⎯
+
+ FAIL  src/ki/strategien/solideKi_erweiterung_suche.test.ts > K4 Kriterium 4, K2.7 mit Erweiterung: keine verdeckte Information > K4.4, K2.7: in jeder Stellung mit einer Wahl der Erweiterung bleibt die Entscheidung gleich, wenn fremde Hände, Stapelreihenfolge und fremde geheime Aufgaben neu gemischt werden
+AssertionError: K2.7: in diesen Stellungen hängt die Wahl vom Verdeckten ab: expected [ 60, 90, 96, 100, 109 ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   60,
++   90,
++   96,
++   100,
++   109,
++ ]
+
+ ❯ src/ki/strategien/solideKi_erweiterung_suche.test.ts:56:87
+     54|     }
+     55|     expect(veraendert, 'K2.7: das Mischen verändert fast jede Stellung…
+     56|     expect(abweichend, 'K2.7: in diesen Stellungen hängt die Wahl vom …
+       |                                                                                       ^
+     57|   }, 240_000)
+     58| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/8]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 1 unhandled error during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: [vitest-pool]: Failed to start forks worker for test files E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a7cadf0be0f8a6920/src/ki/sicht.test.ts.
+ ❯ node_modules/vitest/dist/chunks/cli-api.C6CiCDM3.js:3449:94
+ ❯ Pool.schedule node_modules/vitest/dist/chunks/cli-api.C6CiCDM3.js:3449:5
+
+Caused by: Error: [vitest-pool-runner]: Timeout waiting for worker to respond
+ ❯ Timeout.<anonymous> node_modules/vitest/dist/chunks/cli-api.C6CiCDM3.js:3029:58
+ ❯ listOnTimeout node:internal/timers:605:17
+ ❯ processTimers node:internal/timers:541:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  3 failed (3)
+      Tests  8 failed | 6 passed (14)
+     Errors  1 error
+   Start at  19:13:58
+   Duration  60.04s (transform 2.44s, setup 897ms, import 14.47s, tests 8.46s, environment 0ms)
+
+exit 1

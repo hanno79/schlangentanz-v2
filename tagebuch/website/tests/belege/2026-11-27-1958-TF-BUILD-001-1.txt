@@ -1,0 +1,27 @@
+Prüfer K4, Gates auf 33d8b143, je Befehl einzeln, Exit-Code einzeln gelesen
+npm test -- --run (exit 0):
+ Test Files  200 passed (200)
+      Tests  3297 passed (3297)
+   Duration  257.76s (transform 31.22s, setup 134.33s, import 370.89s, tests 905.35s, environment 1371.35s)
+exit 0
+npm run typecheck: exit 0
+npm run build: exit 0
+[32m✓ built in 509ms[39m
+npm run check:test-lines: exit 0
+Alle Testdateien bleiben unter 500 Zeilen.
+npm run check:css-asserts: exit 0
+CSS-Quelltext-Assertions: 0 in 0 Dateien (Baseline gehalten).
+npm run check:regeln: exit 0
+check:regeln: 516 Dateien geprüft (U6).
+  U1: Regeltestdateien unter src/engine: 79, Testnamen darin: 919
+  U7: Testdateien: 232, Dateien unter src/ui und src/ki ohne Tests: 103
+  Ausnahmen für den Altbestand (dürfen nur schrumpfen): U1 0 Dateien/0, U6 0 Dateien/0, U7 0 Dateien/0
+  Ausnahmeliste verglichen mit origin/neuaufbau (Merge-Basis a901327).
+check:regeln: keine Verstösse.
+npx eslint .: exit 0, keine Ausgabe
+python scripts/regelcheck.py: exit 0
+8 Warnungen, keine Fehler.
+npm run test:layout: exit 0
+  2405 passed (5.7m)
+npm run test:vollpartien: exit 0
+  4 passed (27.3s)

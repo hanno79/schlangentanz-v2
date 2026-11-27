@@ -1,0 +1,11 @@
+npm run test:staerke (exit 0)
+     ↳ K5 Kriterium 3: 300 Partien zu 4 gegen die Zufalls-KI, Saaten ab 1328338692, KI-Saat 1885811723: 300 Siege (100.0 %), festgeschrieben mindestens 297, Plan mindestens 50 %
+     ↳ K5 Kriterium 5 mit Erweiterung: 300 Partien zu 4 gegen die Zufalls-KI, Saaten ab 1164999137, KI-Saat 2048025225: 297 Siege (99.0 %), festgeschrieben mindestens 289, Plan mindestens 50 %
+     ↳ K5 Kriterium 1: 500 Partien zu 2 gegen die Zufalls-KI, Saaten ab 1735562631, KI-Saat 2047972006: 500 Siege (100.0 %), festgeschrieben mindestens 495, Plan mindestens 80 %
+     ↳ K5 Kriterium 5 mit Erweiterung: 500 Partien zu 2 gegen die Zufalls-KI, Saaten ab 1742726465, KI-Saat 1762180639: 500 Siege (100.0 %), festgeschrieben mindestens 495, Plan mindestens 80 %
+     ↳ K5 Kriterium 2: 500 Partien zu 2 gegen „erste erlaubte Aktion“, Saaten ab 1734506067, KI-Saat 1842618865: 500 Siege (100.0 %), festgeschrieben mindestens 495, Plan mindestens 80 %
+     ↳ K5 Kriterium 5 mit Erweiterung: 500 Partien zu 2 gegen „erste erlaubte Aktion“, Saaten ab 1943143123, KI-Saat 1139605235: 500 Siege (100.0 %), festgeschrieben mindestens 495, Plan mindestens 80 %
+ Test Files  6 passed (6)
+      Tests  6 passed (6)
+   Duration  763.15s (transform 11.33s, setup 2.30s, import 4.55s, tests 3230.82s, environment 1ms)
+exit 0

@@ -1,0 +1,26 @@
+Prüfer K4, Partie unter /spiel im Entwicklungsserver (Port 4297), eingebauter Browser der Desktop-App, Lobby: 1 Gegner, „Mit Erweiterung: An“.
+Die ersten vier eigenen Züge per Mausklick (Karte, Ziel, „Ausführen“, „Zug beenden“, „Durchlassen“). Danach liefen die eigenen Züge über ein
+kleines Hilfsskript in der Seite, das dieselben Knöpfe per element.click() bedient (erste Farbkarte an „Deine Schlange 1: Ende“, sonst eine Sonderkarte,
+bei jeder Ansage „Durchlassen“). Die Züge der KI kommen unverändert aus der App.
+
+Protokoll der KI (wörtlich aus der Seite, chronologisch):
+Zug 1:  „KI-Gegner 1 spielt: Verdoppler, danach folgt ein zweiter Zug.“
+        „KI-Gegner 1 spielt eine Risiko-Belohnungs-Karte: Aktion 4 (Karten aus dem Ablagestapel oder Nachziehstapel nehmen).“
+        „KI-Gegner 1 entscheidet: Risiko: Karte vom eigenen Ablagestapel oder oberste Stapelkarte.“
+        „KI-Gegner 1 spielt: Grün beginnt eine neue Schlange.“ / zweiter Zug: „Gelb beginnt eine neue Schlange.“
+Zug 2:  Verdoppler, Risiko-Karte Aktion 4 (die zweite), Gelb an Schlange 2, zweiter Zug: Farbenfusion auf meine Schlange (Gelb, Gelb), Rot an Schlange 2
+Zug 3:  Verdoppler, Rot, Rot an Schlange 2 → „Farbgruppen Rot (3)“
+Zug 4:  „KI-Gegner 1 spielt: Schlangenkorb des Glücks: 3 Karten ziehen und bis zu 2 davon ausspielen.“
+        „KI-Gegner 1 sagt an: Farbendieb: Violett aus deiner Schlange 2 in die Schlange 1 von KI-Gegner 1, vor Karte 1.“
+        danach Blau, Blau an Schlange 2
+Zug 5:  „KI-Gegner 1 spielt: Schlangenhäutung, Karte 1–5 der Schlange 2 von KI-Gegner 1: Rot, Rot, Rot, Blau, Blau.“
+        „KI-Gegner 1 erfüllt die Aufgabe Schlangenrepertoire.“ / Braun an Schlange 2
+später: Schlangenfrass auf meine Schlangen (Farbenfusion und Violett), Farbenschutz gegen meine Schlangengrube (zweimal),
+        „KI-Gegner 1 erfüllt die Aufgabe Vielfaltskönig.“, Schlangenhäutung auf meiner Schlange 1 (Karte 11–15: Gelb, Gelb, Braun, Gelb, Blau),
+        „KI-Gegner 1 wirft 2 Karten ab.“ / „KI-Gegner 1 zieht 3 Karten.“, Schlangenblockade in die eigene Schlange 1 zwischen Karte 3 und 4,
+        Farbenfusion auf Braun und Braun der eigenen Schlange 2, danach „erfüllt die Aufgabe Farbvielfalt“, „Schlangenmeister“, „Schlangenbändiger“.
+Ende:   „KI-Gegner 1 gewinnt! Mit 148 Punkten. Du bist auf Platz 2 mit 0 Punkten.“
+        KI: Farbgruppen 64, Vielfalt 4, Längste Kette 5, Aufgaben 75 (zwölf Aufgaben, davon Fusionsexperte geheim)
+        Schlange 1: Violett × 3: 6, Violett × 8: 16, Grün × 3: 6 (die eigene Blockade trennt die Violett-Reihe; Schlangenbeschwörer erfüllt)
+Konsole: read_console_messages(onlyErrors) → „No console logs.“
+Die KI blieb nie stehen; jeder KI-Zug war nach den 4 s Wartezeit des Skripts fertig.

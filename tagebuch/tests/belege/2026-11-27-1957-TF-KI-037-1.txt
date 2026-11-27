@@ -1,0 +1,51 @@
+Prüfer K4, Entwicklertisch im Entwicklungsserver (npx vite --port 4297 --strictPort), eingebauter Browser der Desktop-App,
+je Szenario /dev?szenario=<name> geladen und „KI-Schritt (solide)“ per Mausklick ausgelöst. Abschnitt „Verlauf“ wörtlich aus der Seite (innerText):
+
+ki-aufgabe-offen
+  KI-Schritt (solide): FarbkarteLegen: Waldspross (gruen-08) → schlange-1 anfang
+  Ereignisse: AufgabeErfuellt: KI-Gegner 1 (spieler-2) nimmt Farbvielfalt (aufgabe-04); Braun braun-04 bleibt auf der Hand
+  KI-Schritt (solide): SchlangengrubeSpielen → Spieler 1
+ki-aufgabe-geheim
+  KI-Schritt (solide): FarbkarteLegen: Waldspross (gruen-09) → schlange-2 ende
+  KI-Schritt (solide): SchlangengrubeSpielen: Schlangengrube (schlangengrube-02) → Spieler 1 (spieler-1)
+  Reagieren: durchlassen
+  KI-Schritt (solide): ZugBeenden
+  danach: „Geheime Aufgabe: Farbenpracht (8) aufgabe-01 erfüllt“; Gelb gelb-07 auf der Hand
+ki-comeback-nutzen
+  KI-Schritt (solide): ComebackEinsetzen: Comeback-Karte (comeback-02)
+  KI-Schritt (solide): FarbkarteLegen: Waldspross (gruen-09) → schlange-1 anfang
+  KI-Schritt (solide): FarbkarteLegen: Wasserwirbel (blau-12) → schlange-2 anfang
+  KI-Schritt (solide): ZugBeenden
+  danach: Grün ×3, Blau ×3, „Comeback comeback-02 (verbraucht)“
+ki-comeback-ohne-nutzen
+  KI-Schritt (solide): FarbkarteLegen: Waldspross (gruen-02) → schlange-1 anfang
+  KI-Schritt (solide): ZugBeenden
+  danach: „Comeback comeback-02“ ohne „(verbraucht)“
+ki-korb-tausch
+  KI-Schritt (solide): SchlangenkorbSpielen: Schlangenkorb des Glücks (schlangenkorb-des-gluecks-01) → tauschen schlange-1 Feuerkeim (rot-14) Wasserwirbel (blau-04)
+  KI-Schritt (solide): FarbkarteLegen: Feuerkeim (rot-14) → neue Schlange
+  KI-Schritt (solide): ZugBeenden
+  danach: schlange-1 Blau ×5, Korb unter „Aus dem Spiel“
+ki-korb-ohne-nutzen
+  KI-Schritt (solide): FarbkarteLegen: Waldspross (gruen-01) → schlange-1 anfang
+  KI-Schritt (solide): ZugBeenden
+  danach: Korb auf der Hand
+ki-risiko-nutzen
+  KI-Schritt (solide): RisikoKarteSpielen: Aktion 2 (Zusätzliche Farbkarte spielen) mit risiko-belohnung-03 · benennt Sonnenblatt (gelb-11)
+  Ereignis: aufgedeckt schlangenhaeutung-02: Misserfolg
+  KI-Schritt (solide): Entscheiden: Spieler 1 (spieler-1)   (einziger Gegner wird begünstigt)
+ki-risiko-ohne-nutzen
+  Ausgangshand laut Seite: Wasserwirbel (Blau) blau-04, Farbenschutz ×4 — die Beschreibung nennt Verdoppler, Farbendieb, Regenbogenschlange, 2 × Farbenschutz
+  KI-Schritt (solide): FarbkarteLegen: Wasserwirbel (blau-04) → neue Schlange
+  KI-Schritt (solide): ZugBeenden
+  „erwartet“ sagt: „Er spielt eine seiner Sonderkarten.“ — beobachtet: er spielt Blau als neue Schlange; keine Risiko-Karte
+ki-haeutung-tanz
+  KI-Schritt (solide): SchlangenhaeutungSpielen: Schlangenhäutung (schlangenhaeutung-03) → schlange-1 · Feuerkeim (rot-12), Feuerkeim (rot-04), Feuerkeim (rot-06), Mondranke (violett-02), Mondranke (violett-06)
+  KI-Schritt (solide): FarbkarteLegen: Wurzelpfad (braun-05) → neue Schlange
+  KI-Schritt (solide): ZugBeenden
+  danach: Erfüllte Aufgaben: Schlangentanz (7); Endwertung Gruppen 9 (Rot×3 = 3, Violett×3 = 6), Aufg. 7, Summe 22
+ki-haeutung-gruppe
+  KI-Schritt (solide): SchlangenhaeutungSpielen: Schlangenhäutung (schlangenhaeutung-02) → schlange-1 · Feuerkeim (rot-09), Feuerkeim (rot-12), Wasserwirbel (blau-15), Wasserwirbel (blau-12)
+  KI-Schritt (solide): FarbkarteLegen: Wurzelpfad (braun-03) → neue Schlange
+  KI-Schritt (solide): ZugBeenden
+  danach: schlange-1 Rot, Rot, Blau, Blau, Blau; „Gruppen Blau×3 = 3“
