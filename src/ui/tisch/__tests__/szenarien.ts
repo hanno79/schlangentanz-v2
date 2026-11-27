@@ -1,5 +1,5 @@
 import type { Spielzustand } from '../../../engine'
-import { erstellePartie } from '../../../engine'
+import { erstellePartie, offeneHandkarteDer } from '../../../engine'
 import { baukasten } from '../../../engine/testing/szenario'
 import { erzeugeZufall } from '../../../engine/testing/zufall'
 
@@ -146,12 +146,20 @@ export const TISCH_SZENARIEN: readonly TischSzenario[] = [
   { name: 'zehn-handkarten', erzeuge: zehnHandkarten },
 ]
 
-/** Die Karten-Ids und Aufgaben-Ids, die der Mensch nie sehen darf: fremde Handkarten und fremde geheime Aufgaben (B2). */
+/**
+ * Die Karten-Ids und Aufgaben-Ids, die der Mensch nie sehen darf: fremde
+ * Handkarten und fremde geheime Aufgaben (B2). Ausgenommen ist die Farbkarte,
+ * die ein Spieler für Risiko-Aktion 2 angesagt hat, solange die Entscheidung
+ * sie offen nennt: Sie ist eine offene Ansage (B2, D52, D77).
+ */
 export function verborgeneIds(zustand: Spielzustand): string[] {
   const mensch = zustand.spieler.findIndex((spieler) => spieler.steuerung === 'Mensch')
-  return zustand.spieler.flatMap((spieler, index) =>
-    index === mensch ? [] : [...spieler.hand.map((karte) => karte.id), ...(spieler.geheimeAufgabe === null ? [] : [spieler.geheimeAufgabe.id])],
-  )
+  const angesagt = offeneHandkarteDer(zustand.entscheidung)?.karteId
+  return zustand.spieler
+    .flatMap((spieler, index) =>
+      index === mensch ? [] : [...spieler.hand.map((karte) => karte.id), ...(spieler.geheimeAufgabe === null ? [] : [spieler.geheimeAufgabe.id])],
+    )
+    .filter((id) => id !== angesagt)
 }
 
 /**

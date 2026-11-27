@@ -308,6 +308,25 @@ Weiss und Tinte, `--fokus-ring`) und, wo es sie gibt, Gewählt und Gesperrt.
   (D26); eine eigene Zeile mit dem Grund nähme der Tischfläche in Handy quer
   so viel Höhe, dass das Zeichen „mehr ↑“ die Karten des Gegners verdeckte.
   „Abbrechen“ zeigt die Schlange wieder, wie sie liegt.
+- **Erweiterung** (O10): Comeback- und Risiko-Karte beginnen mit Knöpfen in der
+  Zugleiste („Comeback einsetzen“, „Risiko spielen“), ebenso „2 abwerfen,
+  3 ziehen“, solange nichts gewählt ist und die Engine sie anbietet. Die vier
+  Risiko-Aktionen, die Boni des Korbs und die Möglichkeiten einer Entscheidung
+  stehen als Ziele nebeneinander (mindestens 5rem breit, Text trennt nach Silben
+  und bricht im Knopf um), damit die Leiste in Handy quer niedrig bleibt; ihre kurzen Namen ergänzt
+  danach die Ansage. Nennt eine Möglichkeit eine Karte (die angesagte Karte,
+  eine Karte deiner Ablage), trägt der Knopf ein kleines Bild und den kurzen
+  Namen. Die benannte Karte einer Risiko-Aktion tippt man in Hand oder Schlange
+  an, die zusätzliche Farbkarte wie sonst mit Karte und Ende. Beim Tausch des
+  Korbs tippt man erst die Karte der Schlange (sie bleibt gedrückt), dann die
+  Handkarte. Solange du über eine Entscheidung wählst, gibt es kein „Zug
+  beenden“; die Statuszeile sagt „Du entscheidest.“ Eine erfüllte Aufgabe
+  meldet eine Zeile in Erfolgsfarbe in der Zugleiste, bis du wieder handelst.
+  Deine Auslage zeigt „einsetzbar“ nur, wenn die Engine die Comeback-Karte
+  jetzt anbietet; eine verbrauchte liegt umgedreht da (Rückseite, A8.1) und
+  heisst „verbraucht“. Die Statuszeile nennt die noch übrigen Zusatzaktionen; erfüllte Aufgaben
+  stehen darunter, beim Gegner als Zeile im Kopf mit seiner Auslage. Eine
+  aufgedeckte Karte liegt in der Tischmitte unter „Aufgedeckt“.
 - **Dialog „Zu viele Handkarten“** (`<dialog>`): alle Handkarten als Knöpfe,
   wie viele abzulegen sind, „Gewählt: n von m“, „Zum Tisch“ und „Ablegen“
   (Hauptknopf, gesperrt mit dem Grund daneben, bis genau so viele gewählt

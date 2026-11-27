@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { anwendeAktion, ermittleAktionen, erstellePartie, pruefeAktion } from '../../engine'
+import { anwendeAktion, ermittleAktionen, erstellePartie, offeneHandkarteDer, pruefeAktion } from '../../engine'
 import type { SpielAktion, Spielzustand } from '../../engine'
 import { baukasten } from '../../engine/testing/szenario'
 import { erzeugeZufall } from '../../engine/testing/zufall'
@@ -88,15 +88,32 @@ describe('O6 K1: Einträge mit Karte und Ziel', () => {
   })
 })
 
-/** Tauscht jede verdeckte Handkarte der Gegner, die die Aktion nicht nennt, gegen eine Karte vom Nachziehstapel. */
+/**
+ * Tauscht jede verdeckte Handkarte der Gegner, die die Aktion nicht nennt,
+ * gegen die oberste Karte des Nachziehstapels; die Handkarte kommt unten in
+ * den Stapel. So ziehen Gegner in der Probe andere Karten als im Original, und
+ * ein Protokoll, das eine gezogene Karte verrät, fällt auf.
+ *
+ * Zwei gezielte Ausnahmen, beide offen nach den Regeln: Die angesagte Karte
+ * einer offenen Entscheidung bleibt (B2, D52, D77). Deckt der Schritt Karten
+ * vom Stapel offen auf (heute nur die Risiko-Belohnungs-Karte, A8.2), bleiben
+ * genau so viele oben liegen, wie die Engine dabei nach „Aufgedeckt“ legt, weil
+ * das Protokoll sie nennen muss; getauscht wird mit den Karten darunter. Alle
+ * anderen Schritte prüft die Probe mit voller Stärke (Prüfprotokoll O10, Mangel 4).
+ */
 function tauscheVerdeckte(zustand: Spielzustand, aktion: SpielAktion): Spielzustand {
   const genannt = new Set<string>(JSON.stringify(aktion).match(/[a-zäöü]+-\d{2}/g) ?? [])
+  const angesagt = offeneHandkarteDer(zustand.entscheidung)
+  if (angesagt !== null) genannt.add(angesagt.karteId)
+  const aufgedeckt = anwendeAktion(zustand, aktion)
+    .ereignisse.flatMap((ereignis) => (ereignis.typ === 'KartenVersetzt' ? ereignis.karten : []))
+    .filter((versetzung) => versetzung.nach.ort === 'Aufgedeckt').length
   const getauscht = structuredClone(zustand)
   getauscht.spieler.forEach((spieler, index) => {
     if (index === 0) return
     spieler.hand = spieler.hand.map((karte) => {
-      if (genannt.has(karte.id) || getauscht.nachziehstapel.length === 0) return karte
-      const ersatz = getauscht.nachziehstapel.shift()!
+      if (genannt.has(karte.id) || getauscht.nachziehstapel.length <= aufgedeckt) return karte
+      const [ersatz] = getauscht.nachziehstapel.splice(aufgedeckt, 1)
       getauscht.nachziehstapel.push(karte)
       return ersatz
     })

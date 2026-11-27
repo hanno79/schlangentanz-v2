@@ -1,0 +1,10 @@
+﻿055 desktop korb-entfernen: [] | risiko-erfolg: [] | risiko-du-beguenstigt: []
+055 tablet-quer korb-entfernen: [] | risiko-erfolg: [] | risiko-du-beguenstigt: []
+055 tablet-hochkant korb-entfernen: [] | risiko-erfolg: [] | risiko-du-beguenstigt: []
+055 handy-hochkant korb-entfernen: [] | risiko-erfolg: [] | risiko-du-beguenstigt: []
+055 handy-quer korb-entfernen: [] | risiko-erfolg: [] | risiko-du-beguenstigt: []
+055 568x320 korb-entfernen: [] | risiko-erfolg: [] | risiko-du-beguenstigt: []
+054 vorher: Du bist dranSpiele Karten aus deiner Hand. | Auslage: Deine Auslagegeheimeinsetzbar
+054 eingesetzt: Du bist dran2 Zusatzaktionen | Auslage: Deine Auslagegeheimverbraucht | Rückseite: 1
+054 nach 1x abwerfen: Du bist dran1 Zusatzaktion | Knopf noch da: 1
+054 nach 2x abwerfen: Du bist dranSpiele Karten aus deiner Hand. | Knopf noch da: 0

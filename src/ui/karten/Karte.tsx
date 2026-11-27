@@ -43,13 +43,17 @@ export function Karte({ karte, className, sizes }: Karteneigenschaften) {
   )
 }
 
-/** Eine verdeckte Karte: Nachziehstapel oder fremde Hand. Verrät nichts über die Karte. */
-export function Kartenrueckseite({ className }: Kartenbildeigenschaften) {
+/**
+ * Eine verdeckte Karte: Nachziehstapel oder fremde Hand. Verrät nichts über die
+ * Karte. `name` gibt einer umgedrehten Karte, deren Art offen ist (die
+ * verbrauchte Comeback-Karte, A8.1), ihren Namen.
+ */
+export function Kartenrueckseite({ className, name = RUECKSEITE_NAME }: Kartenbildeigenschaften & { name?: string }) {
   return (
     <img
       className={klassen(className)}
       src={RUECKSEITE_BILD}
-      alt={RUECKSEITE_NAME}
+      alt={name}
       width={KARTENBILD_BREITE}
       height={KARTENBILD_HOEHE}
       draggable={false}

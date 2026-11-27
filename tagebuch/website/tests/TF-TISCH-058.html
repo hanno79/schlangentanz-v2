@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-TISCH-058 Erfüllst du eine offene Aufgabe, meldet die Zugleiste sie, die nächste Aufgabe liegt offen, und die erfüllte steht in deiner Auslage. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 25.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-TISCH-058 Erfüllst du eine offene Aufgabe, meldet die Zugleiste sie, die nächste Aufgabe liegt offen, und die erfüllte steht in deiner Auslage.</h1><p class="etiketten"><span class="etikett">Bereich Spieltisch</span><span class="etikett">Regression ja</span><span class="etikett">Priorität hoch</span><span class="etikett">Art manuell</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>A9: Die erfüllte offene Aufgabe wandert zum Spieler und wird ersetzt. „Schlangenspass!“ wird nicht gerufen; das Spiel zeigt die Aufgabe sichtbar an (B2).</p><h2>Bestanden, wenn</h2><p>Nach Violett an das Ende der Schlange mit vier violetten Karten steht in der Zugleiste in Erfolgsfarbe „Du erfüllst die Aufgabe Lila Riese. Neu offen liegt die Aufgabe Farbenpracht.“, im Protokoll dieselben zwei Sätze, unter „Offene Aufgaben“ Farbenpracht, Gelber Schatz, Farbharmonie und in „Deine Auslage“ unter „Erfüllte Aufgaben“ Lila Riese. Der Zwischenstand steigt auf 15 Punkte.</p><h2>Fehlgeschlagen, wenn</h2><p>Die Meldung fehlt, Lila Riese liegt weiter offen, oder sie fehlt in der Auslage.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>27.11.2026</dd><dt>Änderung</dt><dd>task/O10-erweiterung-tisch (PR #124)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Testhook-Build, Stand ab Commit 4ad16f8</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Szenario <code>aufgabe-lila-riese</code>.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Adresse</td><td>öffnen</td><td>`/spiel?szenario=aufgabe-lila-riese&amp;tempo=sofort`</td><td>Offen: Lila Riese, Gelber Schatz, Farbharmonie</td></tr><tr><td>2</td><td>Hand, Schlange</td><td>Violett, „Deine Schlange 1: Ende“, „Ausführen“</td><td></td><td>Meldung, Aufgaben und Auslage wie oben</td></tr></tbody></table></section>
+<section class="kasten-zuruecksetzen"><h2>Zurücksetzen</h2><p>Das Szenario setzt den Stand neu.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Leerer Aufgabenstapel (<code>aufgaben-stapel-leer</code>) und eine Aufgabe, die ein Gegner erfüllt, sind nicht im Browser geprüft; die KI-Seite zeigt nur die Wertung der Handpartie (KI-Gegner 1 mit Lila Riese).</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-27">27.11.2026 18:13</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer O10, Iteration 2) &middot; agent &middot; pruef-o10 @ <span class="commit" title="77afb964a4888c2809ae2457ffcb37f3f50bb05c">77afb96</span> / Desktop-App-Browser 1024x768, Dev-Server Port 5191</p><p>aufgabe-lila-riese: Violett an das Ende, Zugleiste in Grün &#x27;Du erfüllst die Aufgabe Lila Riese. Neu offen liegt die Aufgabe Farbenpracht.&#x27;, Protokoll dieselben zwei Sätze, offen Farbenpracht, Gelber Schatz, Farbharmonie, Lila Riese unter &#x27;Erfüllte Aufgaben&#x27;, Zwischenstand 8 -&gt; 15 Punkte.</p><ul class="belege"><li><a href="belege/2026-11-27-1813-TF-TISCH-058-1.jpg"><img class="beleg-vorschau" src="belege/2026-11-27-1813-TF-TISCH-058-1.jpg" alt="Beleg 2026-11-27-1813-TF-TISCH-058-1.jpg" loading="lazy"></a></li></ul></article><article class="lauf status-bestanden"><h3><time datetime="2026-11-27">27.11.2026 14:39</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer O10) &middot; agent &middot; pruefung-O10 @ <span class="commit" title="4ad16f8bebbe815f461c999377fd7bfc7faa2edc">4ad16f8</span> / eingebauter Browser (Claude Desktop), 1280x900</p><p>aufgabe-lila-riese: Violett ans Ende: Zugleiste Du erfüllst die Aufgabe Lila Riese. Neu offen liegt die Aufgabe Farbenpracht. (Erfolgsfarbe), Protokoll dieselben Sätze, Offene Aufgaben Farbenpracht, Gelber Schatz, Farbharmonie, Auslage Erfüllte Aufgaben: Lila Riese, Deine Schlangen 15 Punkte. Vorlesetext enthält die Meldung.</p><ul class="belege"><li><a href="belege/2026-11-27-1439-TF-TISCH-058-1.png"><img class="beleg-vorschau" src="belege/2026-11-27-1439-TF-TISCH-058-1.png" alt="Beleg 2026-11-27-1439-TF-TISCH-058-1.png" loading="lazy"></a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

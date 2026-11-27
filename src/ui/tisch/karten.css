@@ -278,9 +278,10 @@ Höhe übrig (Plan O4).
   box-shadow: none;
 }
 
-/* Rand beim Scrollen per Tastatur, damit kein Zeichen „geht weiter“ darauf liegt (fokus.ts). */
+/* Rand beim Scrollen per Tastatur, damit kein Zeichen „geht weiter“ darauf liegt (fokus.ts). Seitlich so
+   breit wie das breiteste Zeichen mit Zahl, „Ziel +19 ›“ misst 83 px (Hinweis 1 der Prüfung O11, Iteration 2). */
 .st-scrollt {
-  scroll-padding: 2.5rem 5rem;
+  scroll-padding: 2.5rem 6rem;
 }
 
 .st-scrollt button:focus-visible {

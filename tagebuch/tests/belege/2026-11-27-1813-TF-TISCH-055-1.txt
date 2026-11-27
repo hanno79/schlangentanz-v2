@@ -1,0 +1,24 @@
+[desktop korb-entfernen] Knöpfe 7: Ziehe 3 Karten, spiele 2 / Tausche bis zu 2 Karten / Entferne eine Sonderkarte / Zwei zusätzliche Aktionen / Zug beenden / Ansehen / Abbrechen || Überlauf: keiner || ragt: nichts || doc 1280/1280
+[desktop risiko-du-beguenstigt] Knöpfe 2: Blau / Oberste Karte vom Nachziehstapel || Überlauf: keiner || ragt: nichts || doc 1280/1280
+[desktop risiko-misserfolg] Knöpfe 7: Aktion 1: Karten ziehen / Aktion 2: Farbkarte spielen / Aktion 3: Karten tauschen / Aktion 4: Karte nehmen / Zug beenden / Ansehen / Abbrechen || Überlauf: keiner || ragt: nichts || doc 1280/1280
+[tablet-quer korb-entfernen] Knöpfe 7: Ziehe 3 Karten, spiele 2 / Tausche bis zu 2 Karten / Entferne eine Sonderkarte / Zwei zusätzliche Aktionen / Zug beenden / Ansehen / Abbrechen || Überlauf: keiner || ragt: nichts || doc 1024/1024
+[tablet-quer risiko-du-beguenstigt] Knöpfe 2: Blau / Oberste Karte vom Nachziehstapel || Überlauf: keiner || ragt: nichts || doc 1024/1024
+[tablet-quer risiko-misserfolg] Knöpfe 7: Aktion 1: Karten ziehen / Aktion 2: Farbkarte spielen / Aktion 3: Karten tauschen / Aktion 4: Karte nehmen / Zug beenden / Ansehen / Abbrechen || Überlauf: keiner || ragt: nichts || doc 1024/1024
+[tablet-hochkant korb-entfernen] Knöpfe 7: Ziehe 3 Karten, spiele 2 / Tausche bis zu 2 Karten / Entferne eine Sonderkarte / Zwei zusätzliche Aktionen / Zug beenden / Ansehen / Abbrechen || Überlauf: keiner || ragt: nichts || doc 768/768
+[tablet-hochkant risiko-du-beguenstigt] Knöpfe 2: Blau / Oberste Karte vom Nachziehstapel || Überlauf: keiner || ragt: nichts || doc 768/768
+[tablet-hochkant risiko-misserfolg] Knöpfe 7: Aktion 1: Karten ziehen / Aktion 2: Farbkarte spielen / Aktion 3: Karten tauschen / Aktion 4: Karte nehmen / Zug beenden / Ansehen / Abbrechen || Überlauf: keiner || ragt: nichts || doc 768/768
+[handy-hochkant korb-entfernen] Knöpfe 7: Ziehe 3 Karten, spiele 2 / Tausche bis zu 2 Karten / Entferne eine Sonderkarte / Zwei zusätzliche Aktionen / Zug beenden / Ansehen / Abbrechen || Überlauf: keiner || ragt: nichts || doc 390/390
+[handy-hochkant risiko-du-beguenstigt] Knöpfe 2: Blau / Oberste Karte vom Nachziehstapel || Überlauf: keiner || ragt: nichts || doc 390/390
+[handy-hochkant risiko-misserfolg] Knöpfe 7: Aktion 1: Karten ziehen / Aktion 2: Farbkarte spielen / Aktion 3: Karten tauschen / Aktion 4: Karte nehmen / Zug beenden / Ansehen / Abbrechen || Überlauf: keiner || ragt: nichts || doc 390/390
+[handy-375x812 korb-entfernen] Knöpfe 7: Ziehe 3 Karten, spiele 2 / Tausche bis zu 2 Karten / Entferne eine Sonderkarte / Zwei zusätzliche Aktionen / Zug beenden / Ansehen / Abbrechen || Überlauf: keiner || ragt: nichts || doc 375/375
+[handy-375x812 risiko-du-beguenstigt] Knöpfe 2: Blau / Oberste Karte vom Nachziehstapel || Überlauf: keiner || ragt: nichts || doc 375/375
+[handy-375x812 risiko-misserfolg] Knöpfe 7: Aktion 1: Karten ziehen / Aktion 2: Farbkarte spielen / Aktion 3: Karten tauschen / Aktion 4: Karte nehmen / Zug beenden / Ansehen / Abbrechen || Überlauf: keiner || ragt: nichts || doc 375/375
+[handy-quer korb-entfernen] Knöpfe 6: Ziehe 3 Karten, spiele 2 / Tausche bis zu 2 Karten / Entferne eine Sonderkarte / Zwei zusätzliche Aktionen / Ansehen / Abbrechen || Überlauf: keiner || ragt: nichts || doc 844/844
+[handy-quer risiko-du-beguenstigt] Knöpfe 2: Blau / Oberste Karte vom Nachziehstapel || Überlauf: keiner || ragt: nichts || doc 844/844
+[handy-quer risiko-misserfolg] Knöpfe 6: Aktion 1: Karten ziehen / Aktion 2: Farbkarte spielen / Aktion 3: Karten tauschen / Aktion 4: Karte nehmen / Ansehen / Abbrechen || Überlauf: keiner || ragt: nichts || doc 844/844
+[568x320 korb-entfernen] Knöpfe 6: Ziehe 3 Karten, spiele 2 / Tausche bis zu 2 Karten / Entferne eine Sonderkarte / Zwei zusätzliche Aktionen / Ansehen / Abbrechen || Überlauf: keiner || ragt: nichts || doc 568/568
+[568x320 risiko-du-beguenstigt] Knöpfe 2: Blau / Oberste Karte vom Nachziehstapel || Überlauf: keiner || ragt: nichts || doc 568/568
+[568x320 risiko-misserfolg] Knöpfe 6: Aktion 1: Karten ziehen / Aktion 2: Farbkarte spielen / Aktion 3: Karten tauschen / Aktion 4: Karte nehmen / Ansehen / Abbrechen || Überlauf: keiner || ragt: nichts || doc 568/568
+[320x568 korb-entfernen] Knöpfe 7: Ziehe 3 Karten, spiele 2 / Tausche bis zu 2 Karten / Entferne eine Sonderkarte / Zwei zusätzliche Aktionen / Zug beenden / Ansehen / Abbrechen || Überlauf: keiner || ragt: nichts || doc 320/320
+[320x568 risiko-du-beguenstigt] Knöpfe 2: Blau / Oberste Karte vom Nachziehstapel || Überlauf: keiner || ragt: nichts || doc 320/320
+[320x568 risiko-misserfolg] Knöpfe 7: Aktion 1: Karten ziehen / Aktion 2: Farbkarte spielen / Aktion 3: Karten tauschen / Aktion 4: Karte nehmen / Zug beenden / Ansehen / Abbrechen || Überlauf: keiner || ragt: nichts || doc 320/320

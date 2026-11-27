@@ -6,8 +6,8 @@ import type { Szenario } from './szenarien'
 /*
 Szenarien für den Schlangenkorb des Glücks (X6, A7.10, D42 bis D47, D54).
 Spieler 1 hält den Korb; die Knöpfe „SchlangenkorbSpielen“ nennen den Bonus
-(ziehen, tauschen, entfernen, aktionen) und sein Ziel. Am Tisch unter /spiel
-ist der Korb noch nicht bedienbar (O10).
+(ziehen, tauschen, entfernen, aktionen) und sein Ziel. Unter /spiel spielt
+der Mensch den Korb mit Karte, Bonus und Ziel (O10).
 */
 
 const GEGNER: Kartenwahl[] = ['Blau', 'Rot', 'Gelb', 'Grün', 'Braun']
@@ -66,6 +66,14 @@ export const KORB_SZENARIEN: readonly Szenario[] = [
     erwartet:
       'Mit „ziehen“ zieht Spieler 1 die beiden letzten Karten; Ereignis SchlussrundeBegonnen „ausgelöst von Spieler 1“. Er darf Rot und Gelb noch im selben Zug spielen (D57) und beendet ohne Nachziehen; danach hat KI-Gegner 1 einen letzten Zug, dann ist die Partie beendet.',
     erzeuge: () => tisch(605).hand(0, ['Schlangenkorb des Glücks', 'Blau']).hand(1, GEGNER).stapelOben(['Rot', 'Gelb']).stapelBehalten(2).zustand(),
+  },
+  {
+    name: 'korb-allein',
+    beschreibung:
+      'O10 (Vorrang aus der Prüfung von X6), A7.10, D25: Spieler 1 hält nur den Schlangenkorb. Der Nachziehstapel ist leer, die Schlussrunde läuft; Spieler 1 hat eine Schlange Rot, Gelb.',
+    erwartet:
+      'Für den Korb gibt es „ziehen“, „tauschen“ fehlt (keine Farbkarte auf der Hand), „entfernen“ fehlt (keine Sonderkarte), dazu „aktionen“; kein „SonderkarteWirkungslosAblegen“, weil der Korb Ziele hat (D25), und kein „Zug beenden“, solange keine Karte gespielt ist. Unter /spiel ist der Korb in der Hand spielbar, die Boni stehen als Knöpfe in der Zugleiste; mit „Zwei zusätzliche Aktionen“ und „Ausführen“ ist der Korb aus dem Spiel, danach ist „Zug beenden“ bedienbar.',
+    erzeuge: () => tisch(607).hand(0, ['Schlangenkorb des Glücks']).hand(1, GEGNER).schlange(0, ['Rot', 'Gelb']).schlussrunde(1).amZug(0).zustand(),
   },
   {
     name: 'korb-zweiter-zug',

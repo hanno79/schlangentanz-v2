@@ -1,7 +1,16 @@
+import { anwendeAktion, ermittleAktionen } from '../engine'
+import type { SpielAktion, Spielzustand } from '../engine'
 import { baukasten } from '../engine/testing/szenario'
 import type { Baukasten, Kartenwahl } from '../engine/testing/szenario'
 import { erzeugeZufall } from '../engine/testing/zufall'
 import type { Szenario } from './szenarien'
+
+/** Spielt die eine aufgezählte Aktion, auf die `passt` zutrifft; wirft, wenn es nicht genau eine ist. */
+function spiele(zustand: Spielzustand, passt: (aktion: SpielAktion) => boolean): Spielzustand {
+  const treffer = ermittleAktionen(zustand).filter(passt)
+  if (treffer.length !== 1) throw new Error(`Szenario: erwartet genau eine passende Aktion, die Engine zählt ${treffer.length} auf.`)
+  return anwendeAktion(zustand, treffer[0]).zustand
+}
 
 /*
 Szenarien der Risiko-Belohnungs-Karten (A8.2, X5). Drei Spieler mit
@@ -46,6 +55,20 @@ export const RISIKO_SZENARIEN: readonly Szenario[] = [
     erwartet:
       'Aktion 2 mit Blau, Spieler 1 wählt KI-Gegner 1, der wählt „stapel“ und zieht Violett, die letzte Karte. Ereignisse Entschieden, KartenVersetzt, SchlussrundeBegonnen „ausgelöst von Spieler 1“, nicht vom Gegner (D55). Spieler 1 spielt seinen Zug zu Ende, danach hat jeder Gegner genau einen Zug ohne Nachziehen, dann ist die Partie beendet.',
     erzeuge: () => tisch(503, ['Farbendieb', 'Violett']).stapelBehalten(2).zustand(),
+  },
+  {
+    name: 'risiko-du-beguenstigt',
+    beschreibung:
+      'O10, D52, D77: wie „risiko-misserfolg“, aber KI-Gegner 1 ist am Zug. Er hat Aktion 2 mit Blau gespielt, Schlangenfrass aufgedeckt (Misserfolg) und Spieler 1 als begünstigten Gegner gewählt. Jetzt entscheidet Spieler 1.',
+    erwartet:
+      'Lage: Entscheidung „Risiko: geplante Farbkarte oder oberste Stapelkarte“, entscheidet Spieler 1, ausgelöst von KI-Gegner 1; Knöpfe „geplante“ und „stapel“, sonst keiner. Unter /spiel steht die Frage in der Zugleiste mit der angesagten Blau von KI-Gegner 1 als Knopf, „Zug beenden“ fehlt. Mit „geplante“ kommt Blau von der Hand von KI-Gegner 1 auf die Hand von Spieler 1; die Ereigniszeile nennt die Karte mit Id und „(angesagt)“. Danach spielt KI-Gegner 1 seinen Zug weiter.',
+    erzeuge: () => {
+      // KI-Gegner 1 spielt, so wie es die Knöpfe täten: Aktion 2 mit Blau, dann Spieler 1 als begünstigter Gegner.
+      const vorher = tisch(505, ['Schlangenfrass', 'Violett']).amZug(1).zustand()
+      const blau = vorher.spieler[1].hand.find((karte) => karte.typ === 'Farbkarte' && karte.farbe === 'Blau')!.id
+      const gespielt = spiele(vorher, (aktion) => aktion.typ === 'RisikoKarteSpielen' && aktion.risikoAktion === 2 && aktion.benannt === blau)
+      return spiele(gespielt, (aktion) => aktion.typ === 'Entscheiden' && aktion.wahl === 'spieler-1')
+    },
   },
   {
     name: 'risiko-schlussrunde',
