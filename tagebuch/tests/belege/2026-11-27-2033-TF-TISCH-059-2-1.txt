@@ -1,0 +1,26 @@
+Prüfer O10b, eigene Messung messe.mjs (Playwright Chromium 1.60, Touch). neu = Stand 705a9cef, alt = derselbe Stand mit tisch.css und quer.css aus origin/neuaufbau.
+S<n> = Seite scrollt, scrollHeight n; fest = scrollt nicht; VERDa/b = a von b Knöpfen und Sätzen der Zugleiste an Mitte oder Ecken überdeckt; FEHLER = Schritt nicht antippbar (Knopf überdeckt, Timeout).
+320x568 start-2-ohne                       alt fest                                 neu S596 
+320x568 start-2-karte                      alt fest VERD1/4                         neu S696 
+320x568 start-erweiterung                  alt fest                                 neu S648 
+320x568 comeback-start                     alt fest VERD1/4                         neu S746 
+320x568 comeback-eingesetzt                alt fest VERD4/5                         neu S769 
+320x568 risiko-aktionen                    alt fest VERD4/8                         neu S877 
+320x568 risiko-a1                          alt fest VERD4/5                         neu S803 
+320x568 risiko-a2-rot                      alt fest VERD4/5                         neu S826 
+320x568 risiko-a3-ziel                     alt fest VERD4/5                         neu S836 
+320x568 risiko-a4-ablage                   alt FEHLER TimeoutError: locator.tap: Timeout 30000ms exceeded. neu S654 g3
+320x568 risiko-a4-ablage-gewaehlt          alt FEHLER TimeoutError: locator.tap: Timeout 30000ms exceeded. neu S583 
+320x568 risiko-a1-gegnerwahl               alt FEHLER TimeoutError: locator.tap: Timeout 30000ms exceeded. neu S632 
+320x568 beguenstigt                        alt fest VERD1/3                         neu S700 
+320x568 beguenstigt-gewaehlt               alt fest                                 neu S623 
+320x568 korb-ziehen-boni                   alt fest VERD3/7,g1                      neu S830 g1
+320x568 korb-ziehen-gewaehlt               alt fest VERD4/5                         neu S831 
+320x568 korb-tausch                        alt fest VERD4/5                         neu S864 
+320x568 korb-entfernen                     alt fest VERD4/5                         neu S811 
+320x568 korb-aktionen                      alt fest VERD4/5                         neu S858 
+320x568 korb-allein                        alt fest VERD4/5                         neu S867 
+320x568 aufgabe-lila-riese                 alt fest VERD1/3                         neu S694 
+320x568 aufgabe-lila-riese-karte           alt fest VERD4/5                         neu S769 
+320x568 aufgabe-lila-riese-erfuellt        alt FEHLER TimeoutError: locator.tap: Timeout 30000ms exceeded. neu S691 
+320x568 aufgaben-einloesen                 alt fest VERD1/3                         neu S714 

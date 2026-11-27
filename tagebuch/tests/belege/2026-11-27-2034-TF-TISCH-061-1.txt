@@ -1,0 +1,18 @@
+Prüfer O10b, eigene Messung messe.mjs (Playwright Chromium 1.60, Touch). neu = Stand 705a9cef, alt = derselbe Stand mit tisch.css und quer.css aus origin/neuaufbau.
+n = Zahl der Knöpfe und Sätze der Zugleiste, bef = überdeckte, sh/vh = Seitenhöhe/Fensterhöhe.
+neu 320x568 4 Spieler Saat 7 Start {"n":3,"bef":[],"sh":648,"vh":568,"sw":320,"cw":320}
+neu 320x568 4 Spieler Saat 7 Risiko {"n":6,"bef":[],"sh":705,"vh":568,"sw":320,"cw":320}
+neu 320x568 4 Spieler Saat 11 Start {"n":3,"bef":[],"sh":648,"vh":568,"sw":320,"cw":320}
+neu 320x568 4 Spieler Saat 11 Risiko {"n":6,"bef":[],"sh":705,"vh":568,"sw":320,"cw":320}
+neu 390x844 4 Spieler Saat 7 Start {"n":3,"bef":[],"sh":844,"vh":844,"sw":390,"cw":390}
+neu 390x844 4 Spieler Saat 7 Risiko {"n":6,"bef":[],"sh":844,"vh":844,"sw":390,"cw":390}
+neu 390x844 4 Spieler Saat 11 Start {"n":3,"bef":[],"sh":844,"vh":844,"sw":390,"cw":390}
+neu 390x844 4 Spieler Saat 11 Risiko {"n":6,"bef":[],"sh":844,"vh":844,"sw":390,"cw":390}
+alt 320x568 4 Spieler Saat 7 Start {"n":3,"bef":[],"sh":568,"vh":568,"sw":320,"cw":320}
+alt 320x568 4 Spieler Saat 7 Risiko {"n":6,"bef":["Wähle die Risiko-Aktion. -> ARTICLE.st-gegner"],"sh":568,"vh":568,"sw":320,"cw":320}
+alt 320x568 4 Spieler Saat 11 Start {"n":3,"bef":[],"sh":568,"vh":568,"sw":320,"cw":320}
+alt 320x568 4 Spieler Saat 11 Risiko {"n":6,"bef":["Wähle die Risiko-Aktion. -> ARTICLE.st-gegner"],"sh":568,"vh":568,"sw":320,"cw":320}
+alt 390x844 4 Spieler Saat 7 Start {"n":3,"bef":[],"sh":844,"vh":844,"sw":390,"cw":390}
+alt 390x844 4 Spieler Saat 7 Risiko {"n":6,"bef":[],"sh":844,"vh":844,"sw":390,"cw":390}
+alt 390x844 4 Spieler Saat 11 Start {"n":3,"bef":[],"sh":844,"vh":844,"sw":390,"cw":390}
+alt 390x844 4 Spieler Saat 11 Risiko {"n":6,"bef":[],"sh":844,"vh":844,"sw":390,"cw":390}

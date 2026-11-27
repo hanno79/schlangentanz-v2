@@ -1,0 +1,5 @@
+Prüfer O10b, eigene Messung messe.mjs (Playwright Chromium 1.60, Touch). neu = Stand 705a9cef, alt = derselbe Stand mit tisch.css und quer.css aus origin/neuaufbau.
+neu 320x568 Tastatur 40 Tabs, Fokus in der Zugleiste nicht sichtbar/frei: []
+neu 390x844 Tastatur 40 Tabs, Fokus in der Zugleiste nicht sichtbar/frei: []
+alt 320x568 Tastatur 40 Tabs, Fokus in der Zugleiste nicht sichtbar/frei: [{"name":"Ansehen","imBild":true,"frei":false,"inLeiste":true},{"name":"Abbrechen","imBild":true,"frei":false,"inLeiste":true},{"name":"Ansehen","imBild":true,"frei":false,"inLeiste":true},{"name":"Abbrechen","imBild":true,"frei":false,"inLeiste":true}]
+alt 390x844 Tastatur 40 Tabs, Fokus in der Zugleiste nicht sichtbar/frei: []
