@@ -1,0 +1,18 @@
+Aufruf mit VITE_TEST_HOOKS=1 in der Umgebung
+[2m[WebServer] [22m[33m[33m[PLUGIN_TIMINGS] [0mYour build spent significant time in plugin `vite:prepare-out-dir`. See https://rolldown.rs/options/checks#plugintimings for more details.
+[2m[WebServer] [22m[39m
+
+Running 1 test using 1 worker
+
+  ok 1 [desktop] › tests\vollpartien\vollpartie.spec.ts:107:3 › Z1 K1/K2: Basis zu zweit (Saat 2026) bis zur Wertung, über echte Klicks (22.1s)
+
+  1 passed (30.4s)
+exit 0
+--- Bundles dist (npm run build) und dist-vollpartien
+ea17188deec239679132d4ba73b7898d81efa2093983d9509e11c1fd85775805 *dist/assets/index-DPliFSc8.js
+0a1e33824ffcab8cf0f55acb503c00a9ffec390dbe679998c8e7f5c45c5e671d *dist/assets/prod-GCWOFV5q.js
+ea17188deec239679132d4ba73b7898d81efa2093983d9509e11c1fd85775805 *dist-vollpartien/assets/index-DPliFSc8.js
+0a1e33824ffcab8cf0f55acb503c00a9ffec390dbe679998c8e7f5c45c5e671d *dist-vollpartien/assets/prod-GCWOFV5q.js
+--- Entwicklertisch im Bundle?
+dist-vollpartien/assets/index-DPliFSc8.js:0
+dist-vollpartien/assets/prod-GCWOFV5q.js:0

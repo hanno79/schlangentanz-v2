@@ -1,0 +1,10 @@
+vollpartien-2.json
+desktop | Z1 K1/K2: Basis zu zweit (Saat 2026) bis zur Wertung, über echte Klicks | passed | [{"type":"Z1","description":"186 Schritte, davon 96 von dir; Endwertung: Du 5, KI-Gegner 1 53 (Sieger)"}]
+desktop | Z1 K1/K2: Basis zu viert (Saat 13) bis zur Wertung, über echte Klicks | passed | [{"type":"Z1","description":"173 Schritte, davon 43 von dir; Endwertung: Du 3, KI-Gegner 1 16 (Sieger), KI-Gegner 2 6, KI-Gegner 3 16 (Sieger)"}]
+handy-hochkant | Z1 K1/K2: Basis zu zweit (Saat 2026) bis zur Wertung, über echte Klicks | passed | [{"type":"Z1","description":"186 Schritte, davon 96 von dir; Endwertung: Du 5, KI-Gegner 1 53 (Sieger)"}]
+handy-hochkant | Z1 K1/K2: Basis zu viert (Saat 13) bis zur Wertung, über echte Klicks | passed | [{"type":"Z1","description":"173 Schritte, davon 43 von dir; Endwertung: Du 3, KI-Gegner 1 16 (Sieger), KI-Gegner 2 6, KI-Gegner 3 16 (Sieger)"}]
+desktop | Z1 K1/K2: Basis zu zweit (Saat 2026) bis zur Wertung, über echte Klicks | passed | 25064 | [{"type":"Z1","description":"186 Schritte, davon 96 von dir; Endwertung: Du 5, KI-Gegner 1 53 (Sieger)"}]
+desktop | Z1 K1/K2: Basis zu viert (Saat 13) bis zur Wertung, über echte Klicks | passed | 19992 | [{"type":"Z1","description":"173 Schritte, davon 43 von dir; Endwertung: Du 3, KI-Gegner 1 16 (Sieger), KI-Gegner 2 6, KI-Gegner 3 16 (Sieger)"}]
+handy-hochkant | Z1 K1/K2: Basis zu zweit (Saat 2026) bis zur Wertung, über echte Klicks | passed | 28061 | [{"type":"Z1","description":"186 Schritte, davon 96 von dir; Endwertung: Du 5, KI-Gegner 1 53 (Sieger)"}]
+handy-hochkant | Z1 K1/K2: Basis zu viert (Saat 13) bis zur Wertung, über echte Klicks | passed | 21871 | [{"type":"Z1","description":"173 Schritte, davon 43 von dir; Endwertung: Du 3, KI-Gegner 1 16 (Sieger), KI-Gegner 2 6, KI-Gegner 3 16 (Sieger)"}]
+stats {"startTime":"2026-11-27T12:55:14.523Z","duration":32563.572999999997,"expected":4,"skipped":0,"unexpected":0,"flaky":0}
