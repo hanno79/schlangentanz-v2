@@ -158,13 +158,27 @@ describe('K4 Kriterium 2: Comeback-Karte, Risiko-Karte und Schlangenkorb, wenn d
     }
   })
 
-  it('K4.2, A8.2, D55: ki-risiko-ohne-nutzen: im ersten Zug, ohne Schlange und mit Farbenschutz auf der Hand, spielt sie keine Risiko-Karte', () => {
+  it('K4.2, A8.2, D55: ki-risiko-ohne-nutzen: im ersten Zug, ohne Schlange, spielt sie zuerst eine ihrer Sonderkarten und im ganzen Zug keine Risiko-Karte', () => {
     const start = szenario('ki-risiko-ohne-nutzen')
+    const namen = (karten: readonly Spielkarte[]) => karten.map((karte) => (karte.typ === 'Farbkarte' ? karte.farbe : karte.name))
+    expect(namen(start.spieler[KI].hand), 'Testaufbau: die Hand aus der Beschreibung').toEqual(['Verdoppler', 'Farbendieb', 'Regenbogenschlange', 'Farbenschutz', 'Farbenschutz'])
+    expect(start.spieler[0].schlangen.map((schlange) => namen(schlange.karten)), 'Testaufbau: Spieler 1 hat Rot, Rot, Gelb').toEqual([['Rot', 'Rot', 'Gelb']])
+    expect(start.spieler[KI].schlangen, 'Testaufbau: KI-Gegner 1 hat noch keine Schlange').toEqual([])
     expect(ermittleAktionen(start).some((aktion) => aktion.typ === 'RisikoKarteSpielen'), 'Testaufbau: Risiko-Karten sind spielbar').toBe(true)
     for (const saat of [1, 2, 3]) {
-      const zug = spieleZug(start, saat)
-      expect(typen(zug), `K4.2: Saat ${saat}`).not.toContain('RisikoKarteSpielen')
-      expect(zug.zustand.spieler[KI].risikoKarten, `K4.2: Saat ${saat}`).toHaveLength(2)
+      // Der ganze erste Zug, auch der zweite Teilzug nach einem Verdoppler (A7.8).
+      const ki = erstelleSolideKi(erzeugeZufall(saat))
+      const aktionen: SpielAktion[] = []
+      let zustand = start
+      while (zustand.zug.spielerIndex === KI && aktionen.length < 20) {
+        const aktion = entscheiderVon(zustand)?.index === KI ? naechsterKiSchritt(zustand, ki)! : ermittleAktionen(zustand).find((eintrag) => eintrag.typ === 'Reagieren' && eintrag.farbenschutzId === null)!
+        if (entscheiderVon(zustand)?.index === KI) aktionen.push(aktion)
+        zustand = anwendeAktion(zustand, aktion).zustand
+      }
+      const sonderkarten = new Set(['VerdopplerSpielen', 'FarbendiebSpielen', 'RegenbogenschlangeLegen'])
+      expect(sonderkarten.has(aktionen[0].typ), `K4.2: Saat ${saat}, zuerst ${aktionen[0].typ}`).toBe(true)
+      expect(aktionen.map((aktion) => aktion.typ), `K4.2: Saat ${saat}`).not.toContain('RisikoKarteSpielen')
+      expect(zustand.spieler[KI].risikoKarten, `K4.2: Saat ${saat}`).toHaveLength(2)
     }
   })
 })

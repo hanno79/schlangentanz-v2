@@ -1,9 +1,10 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest'
-import { ermittleAktionen, erzeugeZufall } from '../../engine'
+import { anwendeAktion, ermittleAktionen, erzeugeZufall } from '../../engine'
 import type { SpielAktion, Spielzustand } from '../../engine'
-import { sichtFuer } from '../sicht'
-import { aufgabenwert, entscheidungenVon, gruppenzahl, mitZweiterKarte, nachDurchlassen } from '../__tests__/stellungen'
+import { kiWahl } from '../schritt'
+import { entscheiderVon, sichtFuer } from '../sicht'
+import { aufgabenwert, entscheidungenVon, gruppenzahl, ladeStellung, mitZweiterKarte, nachDurchlassen } from '../__tests__/stellungen'
 import type { Entscheidung } from '../__tests__/stellungen'
 import { bewerte } from './bewertung'
 import { erstelleSolideKi } from './solideKi'
@@ -41,6 +42,17 @@ function zuege(entscheidungen: readonly Entscheidung[]): Entscheidung[][] {
 
 const ZUEGE = ENTSCHEIDUNGEN.flatMap(zuege)
 
+/** Die Partien des Prüfers aus der Abnahme K4 (Saat 77'100 bis 77'117): bei gerader Nummer die solide KI an allen Sitzen, sonst nur an Sitz 0. */
+const PRUEFER_ZUEGE = Array.from({ length: 18 }, (_, nummer) => ({ spielerzahl: 2 + (nummer % 3), erweiterung: true, saat: 77_100 + nummer })).flatMap((partie, nummer) =>
+  zuege(
+    entscheidungenVon(
+      partie,
+      Array.from({ length: partie.spielerzahl }, (_, sitz) => (nummer % 2 === 0 || sitz === 0 ? erstelleSolideKi(erzeugeZufall(partie.saat * 7 + sitz)) : erstelleZufallsKi(erzeugeZufall(partie.saat * 11 + sitz)))),
+      0,
+    ),
+  ),
+)
+
 /** Ob eine verdeckte Karte über die Aktion entscheidet: Risiko-Prüfung (A8.2) oder verdecktes Ziehen (D43, D49), wie die Zugsuche es sieht. */
 function verdeckt(aktion: SpielAktion): boolean {
   return aktion.typ === 'RisikoKarteSpielen' || ziehtVerdeckt(aktion)
@@ -70,37 +82,70 @@ function sichererTeil(zug: readonly Entscheidung[]): { teil: Entscheidung[]; end
 
 const OHNE_VERDECKTES = (aktion: SpielAktion) => aktion.typ !== 'ZugBeenden' && aktion.typ !== 'UeberhandAbwerfen' && !verdeckt(aktion)
 
+/**
+ * K4.1 über `zuege`: In jedem Zug, in dem eine Aktion ohne verdeckte Karte eine Aufgabe erfüllte, erfüllt sie eine, versucht es gegen
+ * eine Abwehr, oder ihr Zug ist strikt besser bewertet als jede Erfüllung samt zweiter Karte. Diese Ausnahme belegt die Meldung mit Zahlen.
+ */
+function pruefeAufgabenzuege(zuege: readonly Entscheidung[][]): { geprueft: number; erfuellt: number } {
+  let geprueft = 0
+  let erfuellt = 0
+  for (const zug of zuege) {
+    const sicher = sichererTeil(zug)
+    if (sicher === null || sicher.teil.length === 0) continue
+    const start = sicher.teil[0].vorher
+    const vorher = aufgaben(start, start)
+    const erfuellend = ermittleAktionen(start)
+      .filter(OHNE_VERDECKTES)
+      .map((aktion) => nachDurchlassen(start, aktion, 0))
+      .filter((danach) => aufgaben(start, danach) > vorher)
+    if (erfuellend.length === 0) continue
+    geprueft += 1
+    // Eine Erfüllung, die ein Gegner mit Farbenschutz abwehrte, zählt als versucht (A6, A7.2).
+    const versucht = sicher.teil.some(({ aktion, vorher: davor }) => OHNE_VERDECKTES(aktion) && aufgaben(start, nachDurchlassen(davor, aktion, 0)) > aufgaben(start, davor))
+    if (aufgaben(start, sicher.ende) > vorher || versucht) {
+      erfuellt += 1
+      continue
+    }
+    const beste = Math.max(...erfuellend.flatMap((danach) => mitZweiterKarte(danach, 0)).map((danach) => wert(start, danach)))
+    const gewaehlt = wert(start, sicher.ende)
+    expect(gewaehlt, `K4.1: Zug ab ${JSON.stringify(sicher.teil[0].aktion)}, gewählt ${gewaehlt.toFixed(2)}, beste Erfüllung samt zweiter Karte ${beste.toFixed(2)}`).toBeGreaterThan(beste + 1e-9)
+  }
+  return { geprueft, erfuellt }
+}
+
 describe('K4 Kriterium 1 in Partien: Fehlt ihr eine Karte zu einer Aufgabe und hält sie sie, spielt sie sie', () => {
   it('K4.1: in jedem Zug, in dem eine Handkarte eine offene oder ihre geheime Aufgabe erfüllte, erfüllt sie eine, versucht es gegen eine Abwehr, oder ihr Zug ist strikt besser bewertet als jede Erfüllung samt zweiter Karte', () => {
-    let geprueft = 0
-    let erfuellt = 0
-    for (const zug of ZUEGE) {
-      const sicher = sichererTeil(zug)
-      if (sicher === null || sicher.teil.length === 0) continue
-      const start = sicher.teil[0].vorher
-      const vorher = aufgaben(start, start)
-      const erfuellend = ermittleAktionen(start)
-        .filter(OHNE_VERDECKTES)
-        .map((aktion) => nachDurchlassen(start, aktion, 0))
-        .filter((danach) => aufgaben(start, danach) > vorher)
-      if (erfuellend.length === 0) continue
-      geprueft += 1
-      // Eine Erfüllung, die ein Gegner mit Farbenschutz abwehrte, zählt als versucht (A6, A7.2).
-      const versucht = sicher.teil.some(({ aktion, vorher: davor }) => OHNE_VERDECKTES(aktion) && aufgaben(start, nachDurchlassen(davor, aktion, 0)) > aufgaben(start, davor))
-      if (aufgaben(start, sicher.ende) > vorher || versucht) {
-        erfuellt += 1
-        continue
-      }
-      const beste = Math.max(...erfuellend.flatMap((danach) => mitZweiterKarte(danach, 0)).map((danach) => wert(start, danach)))
-      expect(wert(start, sicher.ende), `K4.1: Zug ab ${JSON.stringify(sicher.teil[0].aktion)}, beste Erfüllung ${beste.toFixed(2)}`).toBeGreaterThan(beste + 1e-9)
-    }
+    const { geprueft, erfuellt } = pruefeAufgabenzuege(ZUEGE)
     expect(geprueft, 'K4.1: genug Züge mit einer Aufgabe in Reichweite').toBeGreaterThan(15)
     expect(erfuellt, 'K4.1: in den meisten erfüllt sie die Aufgabe selbst').toBeGreaterThan(0.5 * geprueft)
   }, 240_000)
+
+  it("K4.1: dieselbe Eigenschaft auf den Saaten des Prüfers 77'100 bis 77'117, auch mit der soliden KI an allen Sitzen", () => {
+    const { geprueft, erfuellt } = pruefeAufgabenzuege(PRUEFER_ZUEGE)
+    expect(geprueft, 'K4.1: genug Züge mit einer Aufgabe in Reichweite').toBeGreaterThan(15)
+    expect(erfuellt, 'K4.1: in den meisten erfüllt sie die Aufgabe selbst').toBeGreaterThan(0.5 * geprueft)
+  }, 480_000)
+
+  it("K4.1, Saat 77'103, Zug 33: bei 9'557 Aktionen fällt der Korb-Tausch, der Farbvielfalt erfüllt, nicht aus der Vorauswahl", () => {
+    const start = ladeStellung('saat-77103-zug-33.json')
+    expect(ermittleAktionen(start), 'Testaufbau: die Stellung des Prüfers').toHaveLength(9_557)
+    const kis = [erstelleSolideKi(erzeugeZufall(77_103 * 7)), erstelleZufallsKi(erzeugeZufall(77_103 * 11 + 1))]
+    const zug: Entscheidung[] = []
+    let zustand = start
+    while (zustand.zug.spielerIndex === 0 && zustand.partiephase === 'Laufend') {
+      const aktion = kiWahl(zustand, kis[entscheiderVon(zustand)!.index])!
+      const { zustand: nachher, ereignisse } = anwendeAktion(zustand, aktion)
+      if (aktion.typ !== 'Reagieren') zug.push({ vorher: zustand, aktion, nachher, ereignisse })
+      zustand = nachher
+    }
+    const { geprueft } = pruefeAufgabenzuege([zug])
+    expect(geprueft, 'Testaufbau: eine Aufgabe ist in Reichweite').toBe(1)
+  }, 120_000)
 })
 
 describe('K4 Kriterium 2 in Partien: Comeback-Karte, Risiko-Karte und Schlangenkorb, wenn die Bewertung steigt', () => {
-  const eingesetzt = ZUEGE.flatMap((zug) =>
+  // Dazu die Partien des Prüfers: Mit der Regel für den ersten Zug (Kriterium 2) kommt die Comeback-Bedingung in den zwölf Partien gegen Zufalls-KIs nicht mehr vor.
+  const eingesetzt = [...ZUEGE, ...PRUEFER_ZUEGE].flatMap((zug) =>
     zug.flatMap((entscheidung, stelle) => (entscheidung.aktion.typ === 'ComebackEinsetzen' || entscheidung.aktion.typ === 'SchlangenkorbSpielen' || entscheidung.aktion.typ === 'RisikoKarteSpielen' ? [{ zug, stelle, entscheidung }] : [])),
   )
 
@@ -117,6 +162,8 @@ describe('K4 Kriterium 2 in Partien: Comeback-Karte, Risiko-Karte und Schlangenk
       if (verdeckt(entscheidung.aktion)) continue
       const rest = zug.slice(stelle)
       const schluss = rest.findIndex(({ aktion }, index) => index > 0 && (aktion.typ === 'ZugBeenden' || verdeckt(aktion)))
+      // Zieht sie danach im selben Zug verdeckt (A8.1, D49), entscheidet die gezogene Karte mit; das schätzt `ziehen.ts`, hier zählt es nicht.
+      if (schluss >= 0 && verdeckt(rest[schluss].aktion)) continue
       const ende = schluss < 0 ? rest[rest.length - 1].nachher : rest[schluss].vorher
       const start = entscheidung.vorher
       geprueft += 1
