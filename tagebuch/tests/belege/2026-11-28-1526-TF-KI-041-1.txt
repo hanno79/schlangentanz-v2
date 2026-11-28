@@ -1,0 +1,24 @@
+TF-KI-041, K4 Iteration 2, Stand 333f61eb (Messprobe zz_k4_mess.test.ts als zweiter Beleg, Prüfer-Probe TF-KI-041-3 unverändert)
+
+1. Erster Zug mit den Händen der Prüfer-Probe (Saat 4'108, KI-Saaten 1 bis 5, Risiko-Karten jeweils angeboten):
+   Beschreibung des Szenarios (Verdoppler, Farbendieb, Regenbogenschlange, 2 × Farbenschutz): VerdopplerSpielen ×5
+   Szenario im alten Code (Blau, 4 × Farbenschutz): FarbkarteLegen ×5
+   fünf Farbkarten (Blau, Rot, Gelb, Grün, Braun): FarbkarteLegen ×5 (vorher Risiko 1 ×5)
+   drei Farben, zwei Sonder (Blau, Blau, Rot, Farbendieb, Schlangenfrass): FarbkarteLegen ×5 (vorher Risiko 1 ×5)
+
+2. Erste Züge an Zufallsstarthänden (Saat 66'000 + n, 2 bis 4 Spieler, solide KI an allen Sitzen):
+   ohne Regel (Verhalten von 33d8b143): 609 von 720 ersten Zügen mit Comeback, Risiko-Karte oder Korb (84.6 %), 604 davon Risiko
+   mit Regel, ERSTZUG_HALTEN 2, Risiko-Haltewert 1.5 (220 Partien, eine Teilmessung mit Speicherüberlauf abgebrochen): 19 von 660 (2.9 %): Risiko 10, Korb 8, Comeback 1
+   Erkennung des ersten Zuges: alle 1'855 Entscheidungen in ersten Zügen erkannt; 703 von 34'145 späteren Entscheidungen als erster Zug gelesen (2.1 %)
+   Gespielte Risiko-Karten über die Partie: 1'320 von 1'320
+
+3. Spiegelpartien zu zweit (Saat 88'000 bis 88'999, beide Sitzverteilungen, KI-Saat 5'000 + 2n + Sitz), A gegen dieselbe KI, die im ersten Zug weder Comeback noch Risiko-Karte noch Korb einsetzt (Grenze 50 % minus zwei Standardfehler):
+   Schlussprüfung auf 333f61eb: 2'000 Partien, A 49.75 % (995 Punkte), Standardfehler 1.12 %, Grenze 47.76 %, z = -0.22, 14 unentschieden; mittlere Endpunkte A 63.91, B 64.22
+   Regel auf Risiko-Haltewert 1.5 (vor dem Codex-Fix): 2'000 Partien, 49.75 %
+   Regel auf Risiko-Haltewert 0.6: 2'000 Partien, 50.12 %
+   ohne Regel (wie Prüfer): 2'000 Partien, 49.18 % (Prüfer: 49.3 %)
+
+4. Haltewert der Risiko-Karte in späteren Zügen (Spiegelpartien, je 2'000):
+   0.6 gegen 1.5: A (0.6) 47.62 %, Standardfehler 1.12 %, z = -2.13
+   1.5 gegen 2.5: A (1.5) 50.92 %, z = +0.83
+   Entscheidung: 1.5

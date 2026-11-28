@@ -1,0 +1,4 @@
+SZENE Beschreibung des Szenarios: Risiko angeboten true; Wahlen VerdopplerSpielen, VerdopplerSpielen, VerdopplerSpielen, VerdopplerSpielen, VerdopplerSpielen
+SZENE Szenario im Code: Risiko angeboten true; Wahlen FarbkarteLegen, FarbkarteLegen, FarbkarteLegen, FarbkarteLegen, FarbkarteLegen
+SZENE fünf Farbkarten: Risiko angeboten true; Wahlen FarbkarteLegen, FarbkarteLegen, FarbkarteLegen, FarbkarteLegen, FarbkarteLegen
+SZENE drei Farben, zwei Sonder: Risiko angeboten true; Wahlen FarbkarteLegen, FarbkarteLegen, FarbkarteLegen, FarbkarteLegen, FarbkarteLegen
