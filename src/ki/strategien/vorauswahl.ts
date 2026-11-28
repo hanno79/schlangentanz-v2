@@ -279,10 +279,12 @@ export function vorauswahl(
     if (!karten.has(karte) || erweitertZug(eintrag.aktion)) gewaehlt.add(eintrag.stelle);
     karten.add(karte);
   }
-  // Kriterium 1: Die beste Aktion, die eine Aufgabe erfüllt, wird immer durchgerechnet.
+  // Kriterium 1: Die beste Aktion, die eine Aufgabe erfüllt, zählt zu den gewählten und steht ganz vorn; so wird sie immer durchgerechnet.
   const erfuellend = geordnet.find((eintrag) => eintrag.aufgabenwert > vorher);
   if (erfuellend !== undefined) gewaehlt.add(erfuellend.stelle);
   for (const eintrag of geordnet) if (gewaehlt.size < anzahl) gewaehlt.add(eintrag.stelle);
-  const reihenfolge = [...geordnet.filter((eintrag) => gewaehlt.has(eintrag.stelle)), ...geordnet.filter((eintrag) => !gewaehlt.has(eintrag.stelle))];
+  // Stabil sortiert: zuerst sie, dann die übrigen gewählten, dann der Rest, jeweils nach Vorwert.
+  const rang = (eintrag: Geschaetzt) => (eintrag === erfuellend ? 0 : gewaehlt.has(eintrag.stelle) ? 1 : 2);
+  const reihenfolge = [...geordnet].sort((a, b) => rang(a) - rang(b));
   return { geordnet: reihenfolge.map((eintrag) => eintrag.aktion), bewertet: geordnet.length };
 }

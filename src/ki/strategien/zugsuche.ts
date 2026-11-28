@@ -96,6 +96,13 @@ function verschiedene(folgen: readonly Folge[], anzahl: number): Folge[] {
   return auswahl;
 }
 
+/** Der Stand, an dem Kriterium 2 im ersten Zug misst, ob eine Karte sich lohnt. */
+interface Bezug {
+  sicht: Sicht;
+  wert: number;
+  gruppen: number;
+}
+
 /** Ob gerade derselbe Zug des Spielers läuft, in dem er noch Karten spielt. */
 function gleicherZug(sicht: Sicht, vorher: Sicht): boolean {
   const { zug } = sicht;
@@ -118,38 +125,43 @@ function spiele(sicht: Sicht, aktionen: readonly SpielAktion[], zufall: () => nu
   const erfuellend = offen.find((folge) => loestAufgabe(sicht, folge.stellung.sicht));
   const dazu = [erweiternd, erfuellend === erweiternd ? undefined : erfuellend].flatMap((folge) => (folge === undefined || vorn.includes(folge) ? [] : [folge]));
   const vertiefen = [...vorn.slice(0, ZWEITE_TIEFE + 1 - dazu.length), ...dazu];
+  const beenden = aktionen.find((aktion) => aktion.typ === 'ZugBeenden');
+  const erster = imErstenZug(sicht);
+  const halten = beenden !== undefined || erster ? suche.ergebnis(suche.wurzel) : undefined;
+  // Kriterium 2: Im ersten Zug lohnen Comeback-Karte, Risiko-Karte und Schlangenkorb nur mit Gruppe, Aufgabe oder einer Bewertung
+  // über ERSTZUG_HALTEN, gemessen am Stand vor der Karte (`eroeffnung.ts`). An der Wurzel ist das „Zug beenden“, in der Vertiefung die Folge davor.
+  const erstzug: Bezug | undefined = erster && halten !== undefined ? { sicht, wert: halten.wert, gruppen: halten.gruppen } : undefined;
+  const lohnt = (aktion: SpielAktion, bezug: Bezug | undefined, plan: Folge) =>
+    bezug === undefined || !setztAuslageEin(aktion) || plan.gruppen > bezug.gruppen || loestAufgabe(bezug.sicht, plan.stellung.sicht) || plan.wert > bezug.wert + ERSTZUG_HALTEN;
+  const bezugVon = (folge: Folge): Bezug | undefined => (erster ? { sicht: folge.stellung.sicht, wert: folge.wert, gruppen: folge.gruppen } : undefined);
   const vertieft = new Map<Folge, Folge>();
   for (const folge of vertiefen) {
     const zweite = naechste(folge, ZWEITE_AUSWAHL);
     // Nach Comeback oder Korb „aktionen“ ist auch „Zwei Karten abwerfen, drei ziehen“ eine Fortsetzung (A8.1, D46, D49); geschätzt wie an der Wurzel, die Aufgaben von der Folge aus.
     const gezogen = folge === erweiternd ? schaetzeZiehen(folge.stellung.sicht, folge.stellung.aktionen(), suche.schaetzrechnungAb(folge.stellung)) : null;
     const ziehen = gezogen === null ? undefined : { ...folge, wert: gezogen.wert, geschaetzt: true };
-    const karte = zweite === undefined || zweite.verworfen || !besser(zweite, folge) ? undefined : zweite;
+    const karte = zweite === undefined || zweite.verworfen || !besser(zweite, folge) || !lohnt(zweite.aktion, bezugVon(folge), zweite) ? undefined : zweite;
     const dritte = karte !== undefined && folge === erweiternd && weiter(karte) ? naechste(karte, DRITTE_AUSWAHL) : undefined;
-    const fortsetzung = dritte !== undefined && karte !== undefined && !dritte.verworfen && besser(dritte, karte) ? dritte : karte;
+    const fortsetzung = dritte !== undefined && karte !== undefined && !dritte.verworfen && besser(dritte, karte) && lohnt(dritte.aktion, bezugVon(karte), dritte) ? dritte : karte;
     const plan = ziehen !== undefined && besser(ziehen, fortsetzung ?? folge) ? ziehen : fortsetzung;
     if (plan !== undefined) vertieft.set(folge, plan);
   }
-  const beenden = aktionen.find((aktion) => aktion.typ === 'ZugBeenden');
-  const erster = imErstenZug(sicht);
-  const halten = beenden !== undefined || erster ? suche.ergebnis(suche.wurzel) : undefined;
-  // Kriterium 2: im ersten Zug Comeback-Karte und Schlangenkorb nur mit Gruppe, Aufgabe oder deutlich höherer Bewertung (`eroeffnung.ts`).
-  const erstzug = erster ? halten : undefined;
-  const lohnt = (folge: Folge, plan: Folge) =>
-    erstzug === undefined || !setztAuslageEin(folge.aktion) || plan.gruppen > erstzug.gruppen || loestAufgabe(sicht, plan.stellung.sicht) || plan.wert > erstzug.wert + ERSTZUG_HALTEN;
-  // Wert und Punkte eines Plans sind die seiner besten Fortsetzung im selben Zug.
-  const plaene = erste.map((folge) => {
-    const plan = vertieft.get(folge) ?? folge;
-    return { folge: { ...folge, wert: plan.wert, punkte: plan.punkte, gruppen: plan.gruppen }, erlaubt: lohnt(folge, plan) };
-  });
-  const gewaehlt = beste(plaene.filter((eintrag) => eintrag.erlaubt).map((eintrag) => eintrag.folge)) ?? beste(plaene.map((eintrag) => eintrag.folge));
+  // Wert und Punkte eines Plans sind die seiner besten Fortsetzung im selben Zug. Ein Plan, der sich im ersten Zug nicht
+  // lohnt, gilt wie ein verworfener: gewählt nur, wenn nichts anderes geht, und nie statt „Zug beenden“.
+  const gewaehlt = beste(
+    erste.map((folge) => {
+      const bester = vertieft.get(folge) ?? folge;
+      return { ...folge, wert: bester.wert, punkte: bester.punkte, gruppen: bester.gruppen, verworfen: folge.verworfen || !lohnt(folge.aktion, erstzug, bester) };
+    }),
+  );
   let plan: { aktion: SpielAktion; wert: number } | undefined = gewaehlt;
   if (beenden !== undefined && halten !== undefined) {
     if (gewaehlt === undefined || gewaehlt.verworfen || !besser(gewaehlt, halten)) plan = { aktion: beenden, wert: halten.wert };
   }
-  // Verdecktes Ziehen nur, wenn es nach der Schätzung mehr bringt als der beste Plan (`ziehen.ts`), im ersten Zug mehr als ERSTZUG_HALTEN über dem Halten.
+  // Verdecktes Ziehen nur, wenn es nach der Schätzung mehr bringt als der beste Plan (`ziehen.ts`); der Korb im ersten Zug mehr als ERSTZUG_HALTEN über dem Halten.
+  // „Zwei Karten abwerfen, drei ziehen“ setzt keine der drei Karten ein, die Comeback-Karte davor ist schon eingesetzt.
   const ziehen = schaetzeZiehen(sicht, aktionen, suche.schaetzrechnung);
-  if (ziehen !== null && (plan === undefined || ziehen.wert > plan.wert + GLEICH) && (erstzug === undefined || ziehen.wert > erstzug.wert + ERSTZUG_HALTEN)) {
+  if (ziehen !== null && (plan === undefined || ziehen.wert > plan.wert + GLEICH) && (erstzug === undefined || !setztAuslageEin(ziehen.aktion) || ziehen.wert > erstzug.wert + ERSTZUG_HALTEN)) {
     return { aktion: ziehen.aktion, bewertungen: suche.gezaehlt() };
   }
   if (plan === undefined) throw new Error('Zugsuche: Die Engine bietet weder eine Karte noch „Zug beenden“ an.');

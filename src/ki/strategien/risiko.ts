@@ -163,11 +163,8 @@ function schlangenkarte(sicht: Sicht, karteId: string | null): { schlangenId: st
   return null;
 }
 
-/**
- * Die Risiko-Karte, die die KI jetzt spielt, oder `null`, wenn keine im Erwartungswert
- * mehr bringt, als die Bewertung jetzt zeigt. Gewählt wird eine aus `aktionen`.
- */
-export function waehleRisiko(sicht: Sicht, aktionen: readonly SpielAktion[], rechnung: Schaetzrechnung): RisikoKarteSpielenAktion | null {
+/** Die Risiko-Karte aus `aktionen` mit dem höchsten Erwartungswert und die Bewertung von jetzt; `null`, wenn keine angeboten ist oder nichts mehr ungesehen. */
+export function schaetzeRisiko(sicht: Sicht, aktionen: readonly SpielAktion[], rechnung: Schaetzrechnung): { aktion: RisikoKarteSpielenAktion; wert: number; jetzt: number } | null {
   const angeboten = aktionen.flatMap((aktion) => (aktion.typ === 'RisikoKarteSpielen' ? [aktion] : []));
   if (angeboten.length === 0 || rechnung.stellung.ungesehen().length === 0) return null;
   const r = rechner(sicht, rechnung);
@@ -192,9 +189,17 @@ export function waehleRisiko(sicht: Sicht, aktionen: readonly SpielAktion[], rec
     ...dritte.map(({ aktion, schlangenId, karte }) => ({ aktion, wert: kartenTauschen(r, schlangenId, karte) })),
     ...angeboten.flatMap((aktion) => (aktion.risikoAktion === 4 ? [{ aktion, wert: ablageOderStapel(r) }] : [])),
   ];
-  const jetzt = r.wert(sicht);
   const beste = hoechster(werte, (eintrag) => eintrag.wert);
-  // Kriterium 2: im ersten Zug nur, wenn die Bewertung um mehr als ERSTZUG_HALTEN steigt (`eroeffnung.ts`).
+  return beste === undefined ? null : { ...beste, jetzt: r.wert(sicht) };
+}
+
+/**
+ * Die Risiko-Karte, die die KI jetzt spielt, oder `null`, wenn keine im Erwartungswert
+ * mehr bringt, als die Bewertung jetzt zeigt; im ersten Zug mehr als ERSTZUG_HALTEN darüber
+ * (Kriterium 2, `eroeffnung.ts`). Gewählt wird eine aus `aktionen`.
+ */
+export function waehleRisiko(sicht: Sicht, aktionen: readonly SpielAktion[], rechnung: Schaetzrechnung): RisikoKarteSpielenAktion | null {
+  const beste = schaetzeRisiko(sicht, aktionen, rechnung);
   const schwelle = imErstenZug(sicht) ? ERSTZUG_HALTEN : GLEICH;
-  return beste !== undefined && beste.wert > jetzt + schwelle ? beste.aktion : null;
+  return beste !== null && beste.wert > beste.jetzt + schwelle ? beste.aktion : null;
 }
