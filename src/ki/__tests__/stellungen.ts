@@ -126,3 +126,36 @@ export function aufgabenwert(start: Spielzustand, danach: Spielzustand, sitz: nu
   const offen = frei.reduce((summe, aufgabe) => summe + (erfuelltAufgabe(danach, sitz, aufgabe) ? aufgabe.punkte : 0), 0)
   return offen - erfuellteAufgaben.filter((aufgabe) => !bekannt.has(aufgabe.id)).reduce((summe, aufgabe) => summe + aufgabe.punkte, 0)
 }
+
+/** Ein Schritt eines Sitzes in seinem ersten Zug. */
+export interface Zugschritt {
+  vorher: Spielzustand
+  aktion: SpielAktion
+  nachher: Spielzustand
+}
+
+/**
+ * Die ersten Züge aller Sitze einer Partie mit Erweiterung, die solide KI an jedem Sitz mit
+ * Saat `kiSaat(sitz)`: je Sitz seine eigenen Entscheidungen in diesem Zug (Plan K4, Kriterium 2).
+ * Der Zug ist zu Ende, wenn ein anderer dran ist oder nach „Zug beenden“ ein neuer Zug beginnt,
+ * nicht der zweite nach einem Verdoppler.
+ */
+export function ersteZuege(saat: number, spielerzahl: number, kiSaat: (sitz: number) => number): Zugschritt[][] {
+  let zustand = erstellePartie({ spielerzahl, erweiterung: true, zufall: erzeugeZufall(saat) })
+  const kis = Array.from({ length: spielerzahl }, (_, sitz) => STRATEGIEN.solideKi(erzeugeZufall(kiSaat(sitz))))
+  const zuege: Zugschritt[][] = kis.map(() => [])
+  const fertig = new Set<number>()
+  while (fertig.size < spielerzahl && zustand.partiephase === 'Laufend') {
+    const am = zustand.zug.spielerIndex
+    const entscheider = entscheiderVon(zustand)!.index
+    const aktion = kiWahl(zustand, kis[entscheider])!
+    const nachher = anwendeAktion(zustand, aktion).zustand
+    if (entscheider === am && !fertig.has(am)) {
+      zuege[am].push({ vorher: zustand, aktion, nachher })
+      const neuerZug = nachher.zug.spielerIndex !== am || ((aktion.typ === 'ZugBeenden' || aktion.typ === 'UeberhandAbwerfen') && nachher.zug.teilzug === 1 && nachher.zug.abschnitt === 'Ausspielen' && nachher.zug.verwendet.length === 0)
+      if (neuerZug) fertig.add(am)
+    }
+    zustand = nachher
+  }
+  return zuege.filter((zug) => zug.length > 0)
+}
