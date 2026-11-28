@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-KI-044 In mindestens 2&#x27;000 Spiegelpartien holt die solide KI nicht weniger als 50 % minus zwei Standardfehler gegen dieselbe KI, die im ersten Zug weder Comeback-Karte noch Risiko-Karte noch Schlangenkorb einsetzt. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 27.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-KI-044 In mindestens 2&#x27;000 Spiegelpartien holt die solide KI nicht weniger als 50 % minus zwei Standardfehler gegen dieselbe KI, die im ersten Zug weder Comeback-Karte noch Risiko-Karte noch Schlangenkorb einsetzt.</h1><p class="etiketten"><span class="etikett">Bereich KI-Gegner</span><span class="etikett">Regression nein</span><span class="etikett">Priorität hoch</span><span class="etikett">Art automatisch</span><span class="etikett">Grenzfall von TF-KI-039</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Plan K4, Kriterium 2: Der Haltewert, ab dem die KI im ersten Zug eine der drei Karten einsetzt, muss sich in Partien bewähren. Gemessen wird gegen dieselbe KI, der im ersten Zug diese Karten nicht angeboten werden; jede Saat wird zweimal mit vertauschten Sitzen gespielt.</p><h2>Bestanden, wenn</h2><p>Über mindestens 2&#x27;000 Partien zu zweit mit Erweiterung erreicht die gelieferte KI (Sieg 1, geteilter Sieg 0.5) einen Anteil, der nicht unter 50 % minus zwei Standardfehler liegt; bei 2&#x27;000 Partien ist das etwa 47.8 %.</p><h2>Fehlgeschlagen, wenn</h2><p>Der Anteil liegt unter dieser Grenze, etwa 46 % bei 2&#x27;000 Partien.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>28.11.2026</dd><dt>Änderung</dt><dd>task/K4-ki-erweiterung (PR #125)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Ausgangslage</td><td>Worktree auf dem geprüften Stand von <code>task/K4-ki-erweiterung</code>, <code>npm ci</code> gelaufen</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Partiesaaten 700&#x27;000 bis 700&#x27;999, je zwei Partien (gelieferte KI an Sitz 0 und an Sitz 1), KI-Saat je Sitz (Saat × 31 + Sitz × 7 + 12&#x27;345). Der erste Zug ist der erste eigene Zug nach dem echten Zugverlauf.</p></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p>Die Probe <code>zz_pruefer2_k4_spiegel.test.ts</code> aus dem Beleg nach <code>src/ki/strategien/</code> legen, in fünf Teilen zu je 200 Saaten nacheinander mit <code>P2_ERSTE</code>, <code>P2_ANZAHL</code> und <code>P2_AUSGABE</code> über <code>npx vitest run</code> ausführen und danach löschen. Ausgewertet werden Anteil, Standardfehler über die Partien und über die Saatpaare.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Partien mit drei oder vier Spielern: Eine Spiegelpartie braucht genau zwei Teilnehmer, deshalb nur zu zweit. Der erste Zug nach einer Schlangengrube, die den Gegner aussetzen lässt, gilt in der Probe noch als erster Zug, wenn derselbe Spieler gleich wieder dran ist; das betrifft nur wenige Partien und nur die Vergleichs-KI.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-28">28.11.2026 21:38</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code &middot; agent &middot; pruef-k4c @ <span class="commit" title="5b4a57dd931761062b0538b252a390ef24bc1430">5b4a57d</span></p><p>Saaten 5&#x27;100&#x27;000..5&#x27;100&#x27;999, 2&#x27;000 Spiegelpartien in vier Teilen nacheinander: 1&#x27;002.5 Punkte (992 Siege, 21 geteilt, 987 Niederlagen) = 50.13 %, Standardfehler 1.11 %, Grenze 47.78 %; über Saatpaare SE 0.21 %, Grenze 49.58 %; Teile 49.90/50.10/49.90/50.60 %.</p><ul class="belege"><li><a href="belege/2026-11-28-2138-TF-KI-044-1.txt">2026-11-28-2138-TF-KI-044-1.txt</a></li><li><a href="belege/2026-11-28-2138-TF-KI-044-2.ts">2026-11-28-2138-TF-KI-044-2.ts</a></li><li><a href="belege/2026-11-28-2138-TF-KI-044-3.txt">2026-11-28-2138-TF-KI-044-3.txt</a></li></ul></article><article class="lauf status-bestanden"><h3><time datetime="2026-11-28">28.11.2026 17:04</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code &middot; agent &middot; pruef-k4b @ <span class="commit" title="c8be62d2279876ad1866e3b200722673997510fd">c8be62d</span></p><p>2000 Spiegelpartien (Saat 700000-700999, beide Sitzverteilungen, fünf Teile nacheinander, je Exit 0): gelieferte KI 1004 von 2000 Punkten (998 Siege, 12 geteilt, 990 Niederlagen) = 50.20 %, Standardfehler 1.11 %, Grenze 47.77 % erfüllt; über 1000 Saatpaare SE 0.35 %, Grenze 49.30 % erfüllt. Einsatz im ersten Zug in 107 Partien.</p><ul class="belege"><li><a href="belege/2026-11-28-1704-TF-KI-044-1.txt">2026-11-28-1704-TF-KI-044-1.txt</a></li><li><a href="belege/2026-11-28-1704-TF-KI-044-2.ts">2026-11-28-1704-TF-KI-044-2.ts</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

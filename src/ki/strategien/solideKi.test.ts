@@ -1,12 +1,12 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest'
-import { anwendeAktion, berechneEndwertung, berechneZwischenstand, ermittleAktionen, erzeugeZufall, werteSchlangen } from '../../engine'
+import { anwendeAktion, berechneEndwertung, berechneZwischenstand, ermittleAktionen, ermittleEntscheider, erzeugeZufall, werteSchlangen } from '../../engine'
 import { baukasten } from '../../engine/testing/szenario'
 import type { Ereignis, SpielAktion, Spielzustand } from '../../engine'
 import { findeSzenario } from '../../entwicklung/szenarien'
 import { naechsterKiSchritt } from '../schritt'
 import { entscheiderVon, sichtFuer } from '../sicht'
-import { entscheidungenVon, mitZweiterKarte, nachDurchlassen } from '../__tests__/stellungen'
+import { aufgabenwert, entscheidungenVon, mitZweiterKarte, nachDurchlassen } from '../__tests__/stellungen'
 import type { Entscheidung } from '../__tests__/stellungen'
 import type { Schlangenglied } from '../../engine/testing/szenario'
 import { bewerte } from './bewertung'
@@ -150,7 +150,9 @@ describe('K2 Kriterium 1: Kann sie mit einer Handkarte eine Dreiergruppe vollend
   /*
   K2.1 prüft die elf Partien mit ihren Saaten ohne Erweiterung (Entscheid des Orchestrators zu X6, 24.11.2026) und
   zusätzlich wieder die sechs mit Erweiterung, darunter die Partie aus dem Prüfprotokoll K2, Iteration 2, Hinweis 2
-  (Saat 7154); seit K2b und dem Merge mit X5 ist die Aussage auch dort erfüllt. Den Korb klug zu nutzen gehört zu K4.
+  (Saat 7154); seit K2b und dem Merge mit X5 ist die Aussage auch dort erfüllt. Seit K4 zählt jede Karte, auch der
+  Schlangenkorb, und bewertet wird wie in der Zugsuche, mit den Aufgaben, die sie erfüllt und noch nicht hat
+  (`aufgabenwert`, Plan K4, Kriterium 5).
   */
   const K2_1_PARTIEN: Entscheidung[][] = [
     ...PARTIEN.map((partie, nummer) =>
@@ -174,11 +176,12 @@ describe('K2 Kriterium 1: Kann sie mit einer Handkarte eine Dreiergruppe vollend
    * denen der Zug verglichen wird (A6). Wehrt er in der Partie ab, sieht sie das bei der Wahl nicht (K2.7); gemessen
    * wird ihre Wahl, nicht die Abwehr (K2b, Befunde aus X6 und X5: geplant 40.00 und 27.80, nach der Abwehr 39.50 und
    * 27.30, beste Vollendung 39.60 und 27.40; `solideKi_gleichstand.test.ts`). Karten nach einer Abwehr stammen aus
-   * dem Partieverlauf; hätte sie ohne Abwehr anders weitergespielt, ist die Messung dort nur eine Näherung.
+   * dem Partieverlauf; hätte sie ohne Abwehr anders weitergespielt, ist die Messung dort nur eine Näherung. Wählt nach
+   * einer ihrer Risiko-Karten ein Gegner (A8.2, D52), geht es ebenso mit dem Stand aus dem Partieverlauf weiter.
    */
   function geplantesEnde(zug: readonly Entscheidung[], beendet: number): Spielzustand {
     const gespielt = zug.slice(0, beendet < 0 ? zug.length - 1 : beendet)
-    return gespielt.reduce((stand, { aktion }) => nachDurchlassen(stand, aktion, 0), zug[0].vorher)
+    return gespielt.reduce((stand, { aktion, vorher }) => nachDurchlassen(ermittleEntscheider(stand) === 0 ? stand : vorher, aktion, 0), zug[0].vorher)
   }
 
   it('K2.1: in Partien vollendet sie in jedem Zug, in dem irgendeine Handkarte eine eigene Dreiergruppe vollenden kann, eine Gruppe oder spielt eine Vollendung, die abgewehrt wird, ausser ihr Zug ist strikt besser bewertet als jede Vollendung samt zweiter Karte (elf Partien ohne und sechs mit Erweiterung, Saat 7154 beide Male eingeschlossen)', () => {
@@ -206,9 +209,10 @@ describe('K2 Kriterium 1: Kann sie mit einer Handkarte eine Dreiergruppe vollend
       }
       // Eine Gruppe zu vollenden kann eine andere kosten, etwa wenn eine Fusion die Farbe wechseln müsste (A11); dann muss ihr Zug strikt besser
       // bewertet sein als die beste Vollendung samt der besten zweiten Karte desselben Zuges.
-      const besteVollendung = vollendend.flatMap((danach) => mitZweiterKarte(danach, 0)).reduce((beste, danach) => (bewerte(sichtFuer(danach, 0)) > bewerte(sichtFuer(beste, 0)) ? danach : beste))
-      const zahlen = `Endwertung ${endpunkte(ende, 0)} gegen ${endpunkte(besteVollendung, 0)}, Bewertung ${bewerte(sichtFuer(ende, 0)).toFixed(2)} gegen ${bewerte(sichtFuer(besteVollendung, 0)).toFixed(2)}`
-      expect(bewerte(sichtFuer(ende, 0)), `K2.1: Zug ab ${JSON.stringify(zug[0].aktion)}: ${zahlen}`).toBeGreaterThan(bewerte(sichtFuer(besteVollendung, 0)) + 1e-9)
+      const wert = (zustand: Spielzustand) => bewerte(sichtFuer(zustand, 0)) + aufgabenwert(start, zustand, 0)
+      const besteVollendung = vollendend.flatMap((danach) => mitZweiterKarte(danach, 0)).reduce((beste, danach) => (wert(danach) > wert(beste) ? danach : beste))
+      const zahlen = `Endwertung ${endpunkte(ende, 0)} gegen ${endpunkte(besteVollendung, 0)}, Bewertung ${wert(ende).toFixed(2)} gegen ${wert(besteVollendung).toFixed(2)}`
+      expect(wert(ende), `K2.1: Zug ab ${JSON.stringify(zug[0].aktion)}: ${zahlen}`).toBeGreaterThan(wert(besteVollendung) + 1e-9)
     }
     // Jede Ausnahme ist oben einzeln belegt; die Mehrheit ist nur eine Probe, dass die Zählung greift.
     expect(vollendet, 'K2.1: in den meisten Zügen vollendet sie die Gruppe selbst').toBeGreaterThan(0.5 * geprueft)

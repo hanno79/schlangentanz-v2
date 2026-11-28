@@ -1,11 +1,11 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest'
-import { berechneEndwertung, ermittleAktionen, erzeugeZufall } from '../../engine'
+import { anwendeAktion, berechneEndwertung, ermittleAktionen, erzeugeZufall } from '../../engine'
 import type { SpielAktion, Spielzustand } from '../../engine'
 import { baukasten } from '../../engine/testing/szenario'
 import { kiWahl, naechsterKiSchritt } from '../schritt'
 import { sichtFuer } from '../sicht'
-import { entscheidungenVon, nachDurchlassen } from '../__tests__/stellungen'
+import { aufgabenwert, entscheidungenVon, nachDurchlassen } from '../__tests__/stellungen'
 import { bewerte } from './bewertung'
 import { erstelleSolideKi } from './solideKi'
 import { erstelleZufallsKi } from './zufallsKi'
@@ -17,7 +17,11 @@ die solide KI ihren Zug, liegt keine Karte mehr auf der Hand, die ihre Punkte
 hebt, keinem Gegner nützt und nicht schlechter bewertet ist als das Halten. Bei
 Gleichstand gewinnt der sichere Punkt (Entscheidung des Orchestrators: die KI
 spielt auf Sieg). Gezählt wird jede Karte, auch Schlangenfrass, Fusion und
-Farbendieb, und ein Gegner lässt eine angesagte Karte durch.
+Farbendieb, seit K4 auch der Schlangenkorb (Plan K4, Kriterien 2 und 5), und ein
+Gegner lässt eine angesagte Karte durch. Bewertet wird wie in der Zugsuche, mit den
+Aufgaben, die die KI erfüllt und noch nicht hat (`aufgabenwert`). Ausgenommen bleiben
+Risiko-Karten: Ob sie Punkte bringen, entscheidet erst die aufgedeckte Karte, und die
+kennt die KI vorher nicht (B2); ihren Erwartungswert prüft `solideKi_erweiterung.test.ts`.
 */
 
 function endpunkte(zustand: Spielzustand): number[] {
@@ -81,18 +85,17 @@ function verschenkteKarten(): { zugenden: number; verschenkt: Verschenkt[] } {
       platz === sitz ? erstelleSolideKi(erzeugeZufall(partie.kiSaat(platz))) : erstelleZufallsKi(erzeugeZufall(partie.kiSaat(platz))),
     )
     for (const { vorher, aktion } of entscheidungenVon(partie, kis, sitz)) {
-      // X5: Risiko-Karten spielt die solide KI erst ab K4; sie zählen hier nicht als liegen gebliebene Karte.
+      // Risiko-Karten deckt erst die Prüfung auf (siehe oben); sie zählen hier nicht als liegen gebliebene Karte.
       const andere = ermittleAktionen(vorher).filter((angeboten) => angeboten.typ !== 'ZugBeenden' && angeboten.typ !== 'RisikoKarteSpielen')
       if (aktion.typ !== 'ZugBeenden' || andere.length === 0) continue
       zugenden += 1
       const jetzt = endpunkte(vorher)
-      const wertJetzt = bewerte(sichtFuer(vorher, sitz))
-      // Den Schlangenkorb muss sie erst mit K4 klug nutzen (Plan K4, Kriterium 2; Auftrag X6); für ihn gilt die Aussage hier noch nicht, für jede andere Karte schon.
-      const nuetzlich = andere.filter((karte) => karte.typ !== 'SchlangenkorbSpielen').flatMap((karte) => {
+      const wertJetzt = bewerte(sichtFuer(vorher, sitz)) + aufgabenwert(vorher, vorher, sitz)
+      const nuetzlich = andere.flatMap((karte) => {
         const danach = nachDurchlassen(vorher, karte, sitz)
         const punkte = endpunkte(danach)
         const nuetztGegner = punkte.some((wert, platz) => platz !== sitz && wert > jetzt[platz])
-        const nichtSchlechter = bewerte(sichtFuer(danach, sitz)) >= wertJetzt - 1e-9
+        const nichtSchlechter = bewerte(sichtFuer(danach, sitz)) + aufgabenwert(vorher, danach, sitz) >= wertJetzt - 1e-9
         return punkte[sitz] > jetzt[sitz] && !nuetztGegner && nichtSchlechter ? [{ saat: partie.saat, aktion: karte, gewinn: punkte[sitz] - jetzt[sitz] }] : []
       })
       const beste = nuetzlich.sort((a, b) => b.gewinn - a.gewinn)[0]
@@ -125,7 +128,7 @@ describe('K2, Kriterien 1 und 2: am Zugende liegt keine Karte mehr, die ihr nüt
     expect(endpunkte(nachDurchlassen(start, aktion!, 2))[2] - endpunkte(start)[2], 'A11: Braun×4 (8) und der Kettenbonus (5)').toBe(13)
   })
 
-  it('K2.1, Prüfprotokoll Iteration 2, Saat 7154: Halten und Spielen sind gleich bewertet; sie spielt den Schlangenfrass auf die Blockade, der einen Punkt sicher bringt', () => {
+  it('K2.1, Prüfprotokoll Iteration 2, Saat 7154: Spielen ist nicht schlechter bewertet als Halten; sie spielt den Schlangenfrass auf die Blockade, der einen Punkt sicher bringt', () => {
     const start = baukasten({ spielerzahl: 2, erweiterung: true, zufall: erzeugeZufall(7154) })
       .schlange(0, ['Blau', 'Blau', 'Blau', 'Blau', 'Rot', 'Rot', 'Rot', 'Rot', 'Schlangenblockade', 'Gelb', 'Gelb', 'Gelb', 'Schlangenblockade', 'Gelb', 'Braun', 'Braun'])
       .schlange(0, ['Violett', 'Violett', 'Violett', 'Regenbogenschlange', 'Gelb', 'Gelb', 'Grün', 'Grün'])
@@ -138,10 +141,21 @@ describe('K2, Kriterien 1 und 2: am Zugende liegt keine Karte mehr, die ihr nüt
     const frass = ermittleAktionen(start).find((aktion) => aktion.typ === 'SchlangenfrassSpielen' && aktion.option === 'eigeneKarte' && aktion.ziele[0].karteId === blockade.id)
     if (frass === undefined) throw new Error('Testaufbau: kein Schlangenfrass auf die zweite Blockade')
     const danach = nachDurchlassen(start, frass, 0)
-    expect(bewerte(sichtFuer(danach, 0)) - bewerte(sichtFuer(start, 0)), 'K2: Testaufbau, Halten und Spielen sind gleich bewertet').toBeCloseTo(0, 9)
+    const wert = (zustand: Spielzustand) => bewerte(sichtFuer(zustand, 0)) + aufgabenwert(start, zustand, 0)
+    // Bis K4 gleich bewertet; seit K4 zählt mit Erweiterung auch die Karte, die sie für den Schlangenfrass nachzieht (A5), und die erfüllten Aufgaben löst auch das Halten ein.
+    expect(wert(danach) - wert(start), 'K2: Testaufbau, Spielen ist nicht schlechter bewertet als Halten').toBeGreaterThanOrEqual(-1e-9)
     expect(punkteOhneAufgaben(danach)[0] - punkteOhneAufgaben(start)[0], 'A11: Gelb×4 statt Gelb×3, ein Punkt').toBe(1)
 
-    const aktion = kiWahl(start, erstelleSolideKi(erzeugeZufall(1)))
-    expect(aktion, 'K2: bei Gleichstand gewinnt der sichere Punkt').toMatchObject({ typ: 'SchlangenfrassSpielen', ziele: [{ karteId: blockade.id }] })
+    // Seit K4 spielt sie vorher eine Risiko-Karte, wenn sie sich lohnt; gezählt wird ihr ganzer Zug, jede Wahl trifft die solide KI.
+    const ki = erstelleSolideKi(erzeugeZufall(1))
+    const gespielt: SpielAktion[] = []
+    let zustand = start
+    for (let schritt = 0; schritt < 12 && zustand.zug.spielerIndex === 0 && zustand.partiephase !== 'Beendet'; schritt += 1) {
+      const aktion = kiWahl(zustand, ki)
+      if (aktion === null) break
+      gespielt.push(aktion)
+      zustand = anwendeAktion(zustand, aktion).zustand
+    }
+    expect(gespielt, 'K2: bei Gleichstand gewinnt der sichere Punkt').toContainEqual(expect.objectContaining({ typ: 'SchlangenfrassSpielen', ziele: [expect.objectContaining({ karteId: blockade.id })] }))
   })
 })

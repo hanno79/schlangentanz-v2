@@ -1,30 +1,44 @@
 import type { SpielAktion } from '../../engine';
-import { simuliere } from '../sicht';
-import type { Sicht, Stellung } from '../sicht';
+import type { Sicht } from '../sicht';
 import { wehrtAb } from './abwehr';
-import { GLEICH, bewerte, eigeneGruppen, eigenePunkte, gruppenwert, haltewert, neuerMerker, sichtbarePunkte } from './bewertung';
-import type { Wertungsmerker } from './bewertung';
+import { GLEICH, eigeneGruppen, gruppenwert, haltewert } from './bewertung';
+import { ERSTZUG_HALTEN, imErstenZug, loestAufgabe, setztAuslageEin } from './eroeffnung';
 import { folgeschluessel } from './folgeschluessel';
-import { punkteNach, vorauswahl } from './vorauswahl';
+import { waehleRisiko } from './risiko';
+import { besser, beste, erstelleSuche, istDurchlassen, ohneBewertung } from './suche';
+import type { Bewertungen, Folge } from './suche';
+import { erweitertZug } from './vorauswahl';
+import { schaetzeZiehen } from './ziehen';
 
 /*
 Die Zugsuche der soliden KI (Plan K2, Vorgehen). Sie rechnet die Folgen eines Zuges
-auf einem erratenen Zustand durch (`simuliere` aus dem Rahmen) und sieht dabei nur
-Sichten, nie einen Zustand (Kriterium 7). Durchgerechnet werden nur Farbkarte, nur
-Sonderkarte und beide in jeder Reihenfolge: erst jede Aktion der Vorauswahl, dann
-für die besten drei die zweite Karte desselben Zuges. Nach einem Verdoppler beginnt
-mit dem zweiten Zug eine neue Suche auf der echten neuen Hand.
+auf einem erratenen Zustand durch (`suche.ts`) und sieht dabei nur Sichten, nie einen
+Zustand (Kriterium 7). Durchgerechnet werden nur Farbkarte, nur Sonderkarte und beide
+in jeder Reihenfolge: erst jede Aktion der Vorauswahl, dann für die besten drei die
+zweite Karte desselben Zuges. Nach einem Verdoppler beginnt mit dem zweiten Zug eine
+neue Suche auf der echten neuen Hand.
 
-Ein Gegner, den eine Sonderkarte trifft, lässt sie in der Rechnung durch; ob er
-abwehrt, sieht die KI nicht. Eine Risiko-Belohnungs-Karte (A8.2) spielt die solide KI
-noch nicht; das lernt sie mit K4. Verlangt die Karte eines Gegners von ihr eine
-Wahl, rechnet sie die Wahlen durch wie Karten (X5). Wird sie selbst gefragt, entscheidet `abwehr.ts`
-(Plan K3, Kriterium 4).
+Mit Erweiterung (Plan K4): Die Bewertung kennt Aufgaben, Auslage und eine Hand über 5
+Karten (`erweiterungswert.ts`). Eine Aktion, die nur den Zug erweitert (Comeback-Karte,
+Korb „aktionen“), bringt erst mit den Karten danach etwas; die beste davon wird deshalb
+immer vertieft, auch ausserhalb der besten drei, und zwei Karten weit. Ebenso immer
+vertieft wird die beste Aktion, die eine Aufgabe erfüllt (Kriterium 1). Im ersten Zug
+setzt die KI Comeback-Karte, Risiko-Karte und Schlangenkorb nur mit Gruppe, Aufgabe oder
+deutlich höherer Bewertung ein (`eroeffnung.ts`, Kriterium 2). Was eine
+verdeckte Karte entscheidet, rechnet die Suche nicht auf dem erratenen Zustand durch,
+sondern schätzt es mit den offenen Wahrscheinlichkeiten: Risiko-Karten (`risiko.ts`)
+und verdecktes Ziehen (`ziehen.ts`). Bringt eine Risiko-Karte im Erwartungswert mehr,
+als sie in der Auslage wert ist, spielt die KI sie vor den übrigen Karten; verdeckt
+zieht sie, wenn die Schätzung über ihrem besten Plan liegt. Ein Gegner,
+den eine Sonderkarte trifft, lässt sie in der Rechnung durch; ob er abwehrt, sieht die
+KI nicht. Verlangt die Karte eines Gegners von ihr eine Wahl, rechnet sie die Wahlen
+durch wie Karten (X5). Wird sie selbst gefragt, entscheidet `abwehr.ts` (Plan K3,
+Kriterium 4).
 
-Feste Regeln neben der Bewertung, Vorgaben des Autors:
+Feste Regeln neben der Bewertung, Vorgaben des Autors (`suche.ts`):
 - Eine Regenbogenschlange kommt nie in eine gegnerische Schlange, solange die
   Engine eine eigene als Ziel anbietet (Kriterium 3, D9).
-- Keine Farbenfusion, die die eigenen Punkte senkt (Kriterium 4).
+- Keine Farbenfusion, die die eigenen Punkte samt erfüllter Aufgaben senkt (Kriterium 4).
 - Keine Schlangengrube auf einen Spieler, der keinen Zug mehr hat; die Engine
   erlaubt sie (D29), sie bringt aber nichts. Nur wenn nichts anderes geht, spielt
   die KI einen solchen Zug.
@@ -45,85 +59,27 @@ vollendet die KI eine Gruppe, wenn kein anderer Zug nachweislich besser bewertet
 beenden (Entscheidung des Orchestrators vom 21.11.2026: die KI spielt auf Sieg). Das
 gilt für die Wahl zwischen den Plänen, für die zweite Karte und gegen „Zug beenden“;
 welche Züge durchgerechnet und vertieft werden, ordnen weiter Vorwert und Bewertung,
-damit die Regel nur zwischen gleich guten Plänen entscheidet. Die Bewertung selbst
-kennt keine Aufgaben; dass die KI sie gezielt verfolgt, ist Plan K4.
+damit die Regel nur zwischen gleich guten Plänen entscheidet.
 
 Kriterium 8: Die Suche rechnet je Schritt höchstens GRENZE_SUCHE Stellungen durch
-und bewertet sie (ERSTE_AUSWAHL + NACHLESE + ZWEITE_TIEFE × ZWEITE_AUSWAHL + 1).
-Die Vorauswahl bewertet dazu jede angebotene Aktion höchstens einmal, ohne
-Simulation; beides meldet der Zugplan getrennt.
+und bewertet sie (ERSTE_AUSWAHL + NACHLESE + (ZWEITE_TIEFE + 1) × ZWEITE_AUSWAHL +
+DRITTE_AUSWAHL + 1). Die Vorauswahl bewertet dazu jede angebotene Aktion höchstens
+einmal, ohne Simulation, ebenso die Schätzung der Risiko-Karten; alles meldet der
+Zugplan getrennt.
 */
 
 const ERSTE_AUSWAHL = 16;
 const ZWEITE_TIEFE = 3;
 const ZWEITE_AUSWAHL = 8;
+/** Die dritte Karte, nur nach der besten Aktion, die den Zug erweitert. */
+const DRITTE_AUSWAHL = 4;
 const NACHLESE = 8;
 /** Kriterium 8: mehr Stellungen rechnet die Zugsuche in einem Schritt nie durch. */
-export const GRENZE_SUCHE = ERSTE_AUSWAHL + NACHLESE + ZWEITE_TIEFE * ZWEITE_AUSWAHL + 1;
-/** Abzug für eine Karte, die nichts bewirkt (Kriterium 5). */
-const OHNE_WIRKUNG = 0.05;
-
-/** Wie oft ein Schritt `bewerte` aufgerufen hat (Kriterium 8). */
-export interface Bewertungen {
-  /** Für Stellungen, die die Suche durchgerechnet hat, und den Stand vor „Zug beenden“. */
-  suche: number;
-  /** In der Vorauswahl, ohne Simulation. */
-  vorauswahl: number;
-  /** Wie viele Aktionen der Vorauswahl angeboten waren, über alle Stände des Schritts. */
-  angeboten: number;
-}
+export const GRENZE_SUCHE = ERSTE_AUSWAHL + NACHLESE + (ZWEITE_TIEFE + 1) * ZWEITE_AUSWAHL + DRITTE_AUSWAHL + 1;
 
 export interface Zugplan {
   aktion: SpielAktion;
   bewertungen: Bewertungen;
-}
-
-/** Ein Schritt ohne jede Bewertung; je Aufruf ein neues Objekt, weil eine Strategie auf der Modulebene nichts Veränderliches hält (U5). */
-function ohneBewertung(): Bewertungen {
-  return { suche: 0, vorauswahl: 0, angeboten: 0 };
-}
-
-/** Was beim Vergleich zweier Züge zählt: erst die Bewertung, bei Gleichstand die Zahl der eigenen Gruppen, dann die sicheren Punkte. */
-interface Ergebnis {
-  wert: number;
-  gruppen: number;
-  punkte: number;
-}
-
-/** Eine durchgerechnete Aktion; `punkte` (`sichtbarePunkte`) und `gruppen` sind die eigenen nach ihr (A9, A11). */
-interface Folge extends Ergebnis {
-  aktion: SpielAktion;
-  stellung: Stellung;
-  /** Verletzt die Aktion eine der festen Regeln oben? Dann nur, wenn nichts anderes geht. */
-  verworfen: boolean;
-}
-
-/**
- * Ob eine Karte nichts bewirkt hat: wirkungslos abgelegt (D13, D25), oder eine
- * Schlangengrube, die gleich auf dem Ablagestapel liegt statt vor dem Getroffenen,
- * weil er keinen Zug mehr hat (D29).
- */
-function ohneWirkung(aktion: SpielAktion, nachher: Sicht): boolean {
-  if (aktion.typ === 'SonderkarteWirkungslosAblegen') return true;
-  return aktion.typ === 'SchlangengrubeSpielen' && !nachher.ausliegendeGruben.some((grube) => grube.karte.id === aktion.karteId);
-}
-
-/**
- * Die festen Regeln zum Ziel, einmal je Stand ausgewertet; die Antwort sagt, ob eine
- * Aktion gesperrt ist. Gesperrt ist eine Regenbogenschlange in eine gegnerische
- * Schlange, wenn die Engine eine eigene als Ziel anbietet (K2, Kriterium 3, D9), und
- * eine Farbkarte in eine gegnerische Schlange, solange eine angebotene Farbkarte in
- * eine eigene Schlange die eigenen Punkte hebt (K3, Kriterium 3).
- */
-function zumGegnerGesperrt(sicht: Sicht, aktionen: readonly SpielAktion[], merker: Wertungsmerker): (aktion: SpielAktion) => boolean {
-  const eigene = new Set(sicht.spieler[sicht.ich].schlangen.map((schlange) => schlange.id));
-  const zumGegner = (aktion: SpielAktion) =>
-    aktion.typ === 'RegenbogenschlangeLegen' ? !eigene.has(aktion.schlangenId) : aktion.typ === 'FarbkarteLegen' && aktion.ziel.art === 'schlange' && !eigene.has(aktion.ziel.schlangenId);
-  const regenbogenEigen = aktionen.some((aktion) => aktion.typ === 'RegenbogenschlangeLegen' && !zumGegner(aktion));
-  const farbeStoert = aktionen.some((aktion) => aktion.typ === 'FarbkarteLegen' && zumGegner(aktion));
-  const vorher = farbeStoert ? eigenePunkte(sicht, merker) : 0;
-  const farbeHebt = farbeStoert && aktionen.some((aktion) => aktion.typ === 'FarbkarteLegen' && !zumGegner(aktion) && punkteNach(sicht, aktion, merker) > vorher);
-  return (aktion) => zumGegner(aktion) && (aktion.typ === 'RegenbogenschlangeLegen' ? regenbogenEigen : farbeHebt);
 }
 
 /** Die ersten `anzahl` Folgen mit verschiedenem Folgeschlüssel, in der gegebenen Reihenfolge. */
@@ -146,107 +102,61 @@ function gleicherZug(sicht: Sicht, vorher: Sicht): boolean {
   return sicht.angesagt === null && zug.spielerIndex === sicht.ich && zug.teilzug === vorher.zug.teilzug && zug.abschnitt === 'Ausspielen';
 }
 
-function istDurchlassen(aktion: SpielAktion): boolean {
-  return aktion.typ === 'Reagieren' && aktion.farbenschutzId === null;
-}
-
-/** Die Stellung nach `aktion`: Fragt die Engine danach Gegner, ob sie eine angesagte Karte abwehren, lassen sie in der Rechnung durch. */
-function folgeVon(stellung: Stellung, aktion: SpielAktion, ich: number): Stellung {
-  let jetzt = stellung.nach(aktion);
-  while (jetzt.entscheider !== null && jetzt.entscheider !== ich) {
-    const angeboten = jetzt.aktionen();
-    const durchlassen = angeboten.find(istDurchlassen);
-    if (durchlassen === undefined || !angeboten.every((eintrag) => eintrag.typ === 'Reagieren')) break;
-    jetzt = jetzt.nach(durchlassen);
-  }
-  return jetzt;
-}
-
-/** Die Suche eines Schritts; sie zählt ihre Bewertungen und merkt sich die Wertung gleicher Schlangen. */
-function erstelleSuche(sicht: Sicht, zufall: () => number) {
-  const bewertungen: Bewertungen = { suche: 0, vorauswahl: 0, angeboten: 0 };
-  const ich = sicht.ich;
-  const wurzel = simuliere(sicht, zufall);
-  const merker: Wertungsmerker = neuerMerker();
-
-  const werte = (stand: Sicht) => {
-    bewertungen.suche += 1;
-    return bewerte(stand, merker);
-  };
-
-  /** Spielt `aktion` von `stellung` aus durch und bewertet die Sicht danach. */
-  const folge = (stellung: Stellung, vorher: Sicht, aktion: SpielAktion): Folge => {
-    const nach = folgeVon(stellung, aktion, ich);
-    const sichtNach = nach.sicht;
-    const wirkungslos = ohneWirkung(aktion, sichtNach);
-    const fusionSenkt = aktion.typ === 'FusionLegen' && eigenePunkte(sichtNach, merker) < eigenePunkte(vorher, merker);
-    const grubeOhneZug = aktion.typ === 'SchlangengrubeSpielen' && wirkungslos;
-    const wert = werte(sichtNach) - (wirkungslos ? OHNE_WIRKUNG : 0);
-    return { aktion, stellung: nach, wert, punkte: sichtbarePunkte(sichtNach, merker), gruppen: eigeneGruppen(sichtNach, merker), verworfen: fusionSenkt || grubeOhneZug };
-  };
-
-  /** Die Karten, die von `stand` aus in Frage kommen, durchgerechnet; mit `nachlese` weitere, solange keine erlaubt ist. */
-  const kandidaten = (stellung: Stellung, stand: Sicht, aktionen: readonly SpielAktion[], anzahl: number, nachlese = 0): Folge[] => {
-    const gesperrt = zumGegnerGesperrt(stand, aktionen, merker);
-    const karten = aktionen.filter((aktion) => aktion.typ !== 'ZugBeenden' && aktion.typ !== 'RisikoKarteSpielen' && !gesperrt(aktion));
-    const { geordnet, bewertet } = vorauswahl(stand, karten, anzahl, merker);
-    bewertungen.angeboten += karten.length;
-    bewertungen.vorauswahl += bewertet;
-    const folgen = geordnet.slice(0, anzahl).map((aktion) => folge(stellung, stand, aktion));
-    for (const aktion of geordnet.slice(anzahl, anzahl + nachlese)) {
-      if (folgen.some((eintrag) => !eintrag.verworfen)) break;
-      folgen.push(folge(stellung, stand, aktion));
-    }
-    return folgen;
-  };
-
-  const ergebnis = (stand: Sicht): Ergebnis => ({ wert: werte(stand), punkte: sichtbarePunkte(stand, merker), gruppen: eigeneGruppen(stand, merker) });
-  return { wurzel, werte, folge, kandidaten, gezaehlt: () => ({ ...bewertungen }), ergebnis };
-}
-
-/**
- * Ob `folge` besser ist als `bisher`: höher bewertet; bei gleicher Bewertung (Abstand
- * höchstens GLEICH) mehr eigene Gruppen, dann mehr sichere Punkte (Kriterium 1, K2b).
- */
-function besser(folge: Ergebnis, bisher: Ergebnis): boolean {
-  if (Math.abs(folge.wert - bisher.wert) > GLEICH) return folge.wert > bisher.wert;
-  if (folge.gruppen !== bisher.gruppen) return folge.gruppen > bisher.gruppen;
-  return folge.punkte > bisher.punkte;
-}
-
-/** Die beste Folge, bei Gleichstand die frühere; verworfene nur, wenn es keine andere gibt. */
-function beste(folgen: readonly Folge[]): Folge | undefined {
-  const erlaubt = folgen.filter((folge) => !folge.verworfen);
-  return (erlaubt.length > 0 ? erlaubt : folgen).reduce<Folge | undefined>((bisher, folge) => (bisher === undefined || besser(folge, bisher) ? folge : bisher), undefined);
-}
-
-/** Karten ausspielen: jede Aktion der Vorauswahl, für die besten drei die zweite Karte, oder den Zug beenden. */
+/** Karten ausspielen: Risiko-Karte, wenn sie sich lohnt; sonst jede Aktion der Vorauswahl, für die besten die nächste Karte, oder den Zug beenden. */
 function spiele(sicht: Sicht, aktionen: readonly SpielAktion[], zufall: () => number): Zugplan {
   const suche = erstelleSuche(sicht, zufall);
+  const risiko = waehleRisiko(sicht, aktionen, suche.schaetzrechnung);
+  if (risiko !== null) return { aktion: risiko, bewertungen: suche.gezaehlt() };
+  const weiter = (folge: Folge) => !folge.verworfen && !folge.geschaetzt && folge.stellung.entscheider === sicht.ich && gleicherZug(folge.stellung.sicht, sicht);
+  const naechste = (folge: Folge, anzahl: number) => beste(suche.kandidaten(folge.stellung, folge.stellung.sicht, folge.stellung.aktionen(), anzahl));
   const erste = suche.kandidaten(suche.wurzel, sicht, aktionen, ERSTE_AUSWAHL, NACHLESE);
-  const vertieft = new Map<Folge, Folge>();
+  const offen = erste.filter(weiter).sort((a, b) => b.wert - a.wert);
   // Vertieft werden die besten drei verschiedenen Züge; gleichwertige Varianten derselben Folge belegen nur einen Platz.
-  const vertiefen = verschiedene(
-    erste.filter((folge) => !folge.verworfen && folge.stellung.entscheider === sicht.ich && gleicherZug(folge.stellung.sicht, sicht)).sort((a, b) => b.wert - a.wert),
-    ZWEITE_TIEFE,
-  );
+  // Dazu immer die beste Aktion, die den Zug erweitert, und die beste, die eine Aufgabe erfüllt (Kriterium 1); zusammen höchstens ZWEITE_TIEFE + 1.
+  const vorn = verschiedene(offen, ZWEITE_TIEFE);
+  const erweiternd = offen.find((folge) => erweitertZug(folge.aktion));
+  const erfuellend = offen.find((folge) => loestAufgabe(sicht, folge.stellung.sicht));
+  const dazu = [erweiternd, erfuellend === erweiternd ? undefined : erfuellend].flatMap((folge) => (folge === undefined || vorn.includes(folge) ? [] : [folge]));
+  const vertiefen = [...vorn.slice(0, ZWEITE_TIEFE + 1 - dazu.length), ...dazu];
+  const beenden = aktionen.find((aktion) => aktion.typ === 'ZugBeenden');
+  const erster = imErstenZug(sicht);
+  const halten = beenden !== undefined || erster ? suche.ergebnis(suche.wurzel) : undefined;
+  // Kriterium 2: Im ersten Zug lohnen Comeback-Karte, Risiko-Karte und Schlangenkorb nur mit Gruppe, Aufgabe oder einer Bewertung
+  // über ERSTZUG_HALTEN gegenüber „Zug beenden“ (`eroeffnung.ts`). Geprüft wird jede Karte im Schritt, in dem sie gespielt würde.
+  const erstzug = erster ? halten : undefined;
+  const lohnt = (aktion: SpielAktion, plan: Folge) =>
+    erstzug === undefined || !setztAuslageEin(aktion) || plan.gruppen > erstzug.gruppen || loestAufgabe(sicht, plan.stellung.sicht) || plan.wert > erstzug.wert + ERSTZUG_HALTEN;
+  const vertieft = new Map<Folge, Folge>();
   for (const folge of vertiefen) {
-    const zweite = beste(suche.kandidaten(folge.stellung, folge.stellung.sicht, folge.stellung.aktionen(), ZWEITE_AUSWAHL));
-    if (zweite !== undefined && !zweite.verworfen && besser(zweite, folge)) vertieft.set(folge, zweite);
+    const zweite = naechste(folge, ZWEITE_AUSWAHL);
+    // Nach Comeback oder Korb „aktionen“ ist auch „Zwei Karten abwerfen, drei ziehen“ eine Fortsetzung (A8.1, D46, D49); geschätzt wie an der Wurzel, die Aufgaben von der Folge aus.
+    const gezogen = folge === erweiternd ? schaetzeZiehen(folge.stellung.sicht, folge.stellung.aktionen(), suche.schaetzrechnungAb(folge.stellung)) : null;
+    const ziehen = gezogen === null ? undefined : { ...folge, wert: gezogen.wert, geschaetzt: true };
+    const karte = zweite === undefined || zweite.verworfen || !besser(zweite, folge) ? undefined : zweite;
+    const dritte = karte !== undefined && folge === erweiternd && weiter(karte) ? naechste(karte, DRITTE_AUSWAHL) : undefined;
+    const fortsetzung = dritte !== undefined && karte !== undefined && !dritte.verworfen && besser(dritte, karte) ? dritte : karte;
+    const plan = ziehen !== undefined && besser(ziehen, fortsetzung ?? folge) ? ziehen : fortsetzung;
+    if (plan !== undefined) vertieft.set(folge, plan);
   }
-  // Wert und Punkte eines Plans sind die seiner besten Fortsetzung im selben Zug.
+  // Wert und Punkte eines Plans sind die seiner besten Fortsetzung im selben Zug. Ein Plan, der sich im ersten Zug nicht
+  // lohnt, gilt wie ein verworfener: gewählt nur, wenn nichts anderes geht, und nie statt „Zug beenden“.
   const gewaehlt = beste(
     erste.map((folge) => {
-      const plan = vertieft.get(folge) ?? folge;
-      return { ...folge, wert: plan.wert, punkte: plan.punkte, gruppen: plan.gruppen };
+      const bester = vertieft.get(folge) ?? folge;
+      return { ...folge, wert: bester.wert, punkte: bester.punkte, gruppen: bester.gruppen, verworfen: folge.verworfen || !lohnt(folge.aktion, bester) };
     }),
   );
-  const beenden = aktionen.find((aktion) => aktion.typ === 'ZugBeenden');
-  if (beenden !== undefined && (gewaehlt === undefined || gewaehlt.verworfen || !besser(gewaehlt, suche.ergebnis(sicht)))) {
-    return { aktion: beenden, bewertungen: suche.gezaehlt() };
+  let plan: { aktion: SpielAktion; wert: number } | undefined = gewaehlt;
+  if (beenden !== undefined && halten !== undefined) {
+    if (gewaehlt === undefined || gewaehlt.verworfen || !besser(gewaehlt, halten)) plan = { aktion: beenden, wert: halten.wert };
   }
-  if (gewaehlt === undefined) throw new Error('Zugsuche: Die Engine bietet weder eine Karte noch „Zug beenden“ an.');
-  return { aktion: gewaehlt.aktion, bewertungen: suche.gezaehlt() };
+  // Verdecktes Ziehen nur, wenn es nach der Schätzung mehr bringt als der beste Plan (`ziehen.ts`), im ersten Zug mehr als ERSTZUG_HALTEN über dem Halten.
+  const ziehen = schaetzeZiehen(sicht, aktionen, suche.schaetzrechnung);
+  if (ziehen !== null && (plan === undefined || ziehen.wert > plan.wert + GLEICH) && (erstzug === undefined || ziehen.wert > erstzug.wert + ERSTZUG_HALTEN)) {
+    return { aktion: ziehen.aktion, bewertungen: suche.gezaehlt() };
+  }
+  if (plan === undefined) throw new Error('Zugsuche: Die Engine bietet weder eine Karte noch „Zug beenden“ an.');
+  return { aktion: plan.aktion, bewertungen: suche.gezaehlt() };
 }
 
 /**

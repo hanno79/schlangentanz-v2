@@ -15,6 +15,13 @@ Farbkarte, die ein Spieler für Risiko-Aktion 2 benennt (D52): Sie liegt
 weiter auf seiner Hand, jeder kennt sie, und der begünstigte Gegner wählt
 zwischen ihr und der obersten Stapelkarte. Der Rahmen der KI muss sie deshalb
 beim Erraten des Verdeckten auf diese Hand legen (Plan K2).
+
+Seit K4 (Lücken aus den Prüfprotokollen X5 und X6): Die Stellungen enthalten auch
+die Wahl der Handkarte zum Tauschen (Risiko-Aktion 3, Erfolg) und Stellungen, in
+denen ein Spieler eine eben gelegte Farbkarte offen zurück auf die Hand getauscht
+hat, mit Risiko-Aktion 3 oder dem Schlangenkorb (D44, D51). Wohin sie ging, hat
+jeder gesehen; die Sicht nennt sie trotzdem „verdeckte Karte“ (`zugInSicht`), und
+das Mischen lässt sie auf ihrer Hand (`mischeVerborgenes`).
 */
 
 /** Spielt die erste aufgezählte Aktion, die passt. */
@@ -37,6 +44,43 @@ function gegnerWaehlt(): Spielzustand {
   return spiele(misserfolg, (aktion) => aktion.typ === 'Entscheiden' && aktion.wahl === 'spieler-3')
 }
 
+/** Spieler 1 hat Rot an seine Schlange gelegt; Risiko-Aktion 3 auf das Rot gelingt (oben Gelb, 1 Punkt). Er wählt die Farbkarte der Hand zum Tauschen (A8.2, D53). */
+function tauschWahl(): Spielzustand {
+  const start = baukasten({ spielerzahl: 3, erweiterung: true, zufall: erzeugeZufall(43) })
+    .hand(0, ['Rot', 'Blau', 'Grün'])
+    .schlange(0, ['Braun', 'Braun'])
+    .haendeAuffuellen()
+    .stapelOben(['Gelb'])
+    .zustand()
+  const rot = start.spieler[0].hand.find((karte) => karte.typ === 'Farbkarte' && karte.farbe === 'Rot')!.id
+  const gelegt = spiele(start, (aktion) => aktion.typ === 'FarbkarteLegen' && aktion.karteId === rot && aktion.ziel.art === 'schlange')
+  return spiele(gelegt, (aktion) => aktion.typ === 'RisikoKarteSpielen' && aktion.risikoAktion === 3 && aktion.benannt === rot)
+}
+
+/** Nach der Tausch-Wahl: Blau ersetzt das eben gelegte Rot, das Rot liegt wieder auf der Hand (D51, D53). */
+function zurueckMitRisiko(): Spielzustand {
+  const wahl = tauschWahl()
+  const blau = wahl.spieler[0].hand.find((karte) => karte.typ === 'Farbkarte' && karte.farbe === 'Blau')!.id
+  return spiele(wahl, (aktion) => aktion.typ === 'Entscheiden' && aktion.wahl === blau)
+}
+
+/** Spieler 1 hat Rot an seine Schlange gelegt und tauscht es mit dem Schlangenkorb gegen Blau zurück (D44). */
+function zurueckMitKorb(): Spielzustand {
+  const start = baukasten({ spielerzahl: 2, erweiterung: true, zufall: erzeugeZufall(44) })
+    .hand(0, ['Rot', 'Blau', 'Schlangenkorb des Glücks'])
+    .schlange(0, ['Gelb', 'Gelb'])
+    .haendeAuffuellen()
+    .zustand()
+  const [rot, blau] = (['Rot', 'Blau'] as const).map((farbe) => start.spieler[0].hand.find((karte) => karte.typ === 'Farbkarte' && karte.farbe === farbe)!.id)
+  const gelegt = spiele(start, (aktion) => aktion.typ === 'FarbkarteLegen' && aktion.karteId === rot && aktion.ziel.art === 'schlange')
+  return spiele(
+    gelegt,
+    (aktion) => aktion.typ === 'SchlangenkorbSpielen' && aktion.bonus.art === 'tauschen' && aktion.bonus.tausch.length === 1 && aktion.bonus.tausch[0].karteId === rot && aktion.bonus.tausch[0].handkarteId === blau,
+  )
+}
+
+const ZURUECKGETAUSCHT = [zurueckMitRisiko(), zurueckMitKorb()]
+
 /** Die Zustände mit offener Risiko-Entscheidung aus Partien der Zufalls-KI mit Erweiterung. */
 function risikoStellungen(): Spielzustand[] {
   return [31, 32, 33, 34].flatMap((saat) => {
@@ -45,7 +89,7 @@ function risikoStellungen(): Spielzustand[] {
   })
 }
 
-const STELLUNGEN = [gegnerWaehlt(), ...risikoStellungen()]
+const STELLUNGEN = [gegnerWaehlt(), tauschWahl(), ...ZURUECKGETAUSCHT, ...risikoStellungen()]
 
 /** Jedes Wort jedes Textes der Sicht; eine Wahl wie „blau-01 schlange-2 ende“ zählt Wort für Wort. */
 function woerter(wert: unknown): Set<string> {
@@ -53,6 +97,27 @@ function woerter(wert: unknown): Set<string> {
 }
 
 describe('B2/D52: offene Risiko-Entscheidungen in der Sicht der KI (X5, Kriterium 7)', () => {
+  it('K4, Testaufbau (Prüfprotokoll X5): die Stellungen enthalten die Tausch-Wahl und offen zurückgetauschte Karten', () => {
+    expect(STELLUNGEN.map((zustand) => zustand.entscheidung?.art)).toContain('Risiko: Farbkarte der Hand zum Tauschen wählen')
+    for (const [nummer, zustand] of ZURUECKGETAUSCHT.entries()) {
+      const hand = new Set(zustand.spieler[0].hand.map((karte) => karte.id))
+      const zurueck = zustand.zug.verwendet.flatMap((eintrag) => (eintrag.karteId !== null && hand.has(eintrag.karteId) ? [eintrag.karteId] : []))
+      expect(zurueck, `Testaufbau: Stellung ${nummer}, die in diesem Zug gelegte Karte ist zurück auf der Hand`).toHaveLength(1)
+    }
+  })
+
+  it('K4, B2 (Prüfprotokoll X5, Hinweis 2): eine offen zurückgetauschte Karte bleibt beim Mischen auf ihrer Hand; die Sicht der Gegner ändert sich dadurch nicht', () => {
+    for (const [nummer, zustand] of ZURUECKGETAUSCHT.entries()) {
+      for (const ich of zustand.spieler.keys()) {
+        if (ich === 0) continue
+        for (const saat of [1, 2, 3]) {
+          const gemischt = mischeVerborgenes(zustand, ich, erzeugeZufall(saat))
+          expect(sichtFuer(gemischt, ich), `K2.7: Stellung ${nummer}, Spieler ${ich}, Saat ${saat}`).toEqual(sichtFuer(zustand, ich))
+        }
+      }
+    }
+  })
+
   it('B2: die Sicht keines Spielers nennt eine verdeckte fremde Karte, auch nicht in der Entscheidung', () => {
     expect(STELLUNGEN.length, 'Testaufbau: Risiko-Entscheidungen in den Partien').toBeGreaterThan(10)
     for (const [nummer, zustand] of STELLUNGEN.entries()) {

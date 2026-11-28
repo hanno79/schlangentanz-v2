@@ -1,0 +1,15 @@
+G1 zugsuche lohnt immer wahr: Exit 1; Tests  3 failed | 31 passed (34)
+   rot: × K4.2, saat-810100-erster-zug-korb.json (Zugsuche: Korb „aktionen“, ohne Gruppe und Aufgabe 1.57 gegen Halten 1.28): im ersten Zug setzt sie keine der drei Karten ein, sondern beendet den Zug 42ms
+   rot: × K4.2, saat-810110-erster-zug-korb.json (Zugsuche: Korb „aktionen“, ohne Gruppe und Aufgabe -1.88 gegen Halten -1.92): im ersten Zug setzt sie keine der drei Karten ein, sondern beendet den Zug 20ms
+   rot: × K4.2: in den ersten Zügen der Saaten 810'000 bis 810'099 vollendet jeder Einsatz von Comeback-Karte, Risiko-Karte oder Korb eine Gruppe, erfüllt eine Aufgabe oder hebt die Bewertung um mehr als ERSTZUG_HALTEN 6039ms
+G2 zugsuche verdecktes Ziehen ohne Erstzug-Schwelle: Exit 1; Tests  3 failed | 31 passed (34)
+   rot: × K4.2, saat-810100-erster-zug-korb.json (Zugsuche: Korb „aktionen“, ohne Gruppe und Aufgabe 1.57 gegen Halten 1.28): im ersten Zug setzt sie keine der drei Karten ein, sondern beendet den Zug 43ms
+   rot: × K4.2, saat-810067-erster-zug-korb-ziehen.json (verdecktes Ziehen: Korb „ziehen“): im ersten Zug setzt sie keine der drei Karten ein, sondern beendet den Zug 14ms
+   rot: × K4.2: in den ersten Zügen der Saaten 810'000 bis 810'099 vollendet jeder Einsatz von Comeback-Karte, Risiko-Karte oder Korb eine Gruppe, erfüllt eine Aufgabe oder hebt die Bewertung um mehr als ERSTZUG_HALTEN 6429ms
+G3 risiko im ersten Zug GLEICH: Exit 1; Tests  2 failed | 32 passed (34)
+   rot: × K4.2, saat-810015-erster-zug-risiko.json (Risiko-Karte mit Aktion 2): im ersten Zug setzt sie keine der drei Karten ein, sondern beendet den Zug 10ms
+   rot: × K4.2: in den ersten Zügen der Saaten 810'000 bis 810'099 vollendet jeder Einsatz von Comeback-Karte, Risiko-Karte oder Korb eine Gruppe, erfüllt eine Aufgabe oder hebt die Bewertung um mehr als ERSTZUG_HALTEN 5821ms
+G4 vorauswahl ohne Haeutungszaehler: Exit 1; Tests  1 failed | 33 passed (34)
+   rot: × A9 Schlangentanz, D37: ki-haeutung-tanz: nach der besten Häutung zählt die geschätzte Sicht zwei neue Dreiergruppen durch Häutung 16ms
+G5 vorauswahl ohne erfuellende Aktion vorn: Exit 1; Tests  1 failed | 33 passed (34)
+   rot: × K4.1: die beste Aktion, die eine Aufgabe erfüllt, steht vorn, auch mit dem niedrigsten Vorwert 11ms

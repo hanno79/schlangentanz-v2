@@ -1,0 +1,285 @@
+diff --git a/src/ki/sicht.ts b/src/ki/sicht.ts
+index 9316b4a7..db5c4c32 100644
+--- a/src/ki/sicht.ts
++++ b/src/ki/sicht.ts
+@@ -276,7 +276,7 @@ function stellung(zustand: Spielzustand, ich: number): Stellung {
+     },
+     ungesehen() {
+       const genannt = offeneHandkarteDer(zustand.entscheidung)?.karteId;
+-      ungesehen ??= [...zustand.spieler.flatMap((spieler, index) => (index === ich ? [] : spieler.hand)), ...zustand.nachziehstapel].filter((karte) => karte.id !== genannt).sort((a, b) => (a.id < b.id ? -1 : 1));
++      ungesehen ??= [...zustand.spieler.flatMap((spieler, index) => (index === ich ? [] : spieler.hand)), ...zustand.nachziehstapel].filter((karte) => karte.id !== genannt);
+       return ungesehen;
+     },
+     erfuellbar(eigen) {
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a7cadf0be0f8a6920
+
+ ❯ src/ki/strategien/solideKi_erweiterung_wahl.test.ts (3 tests | 1 failed) 181ms
+     × K4.2, D52, geplante Farbkarte oder Stapel, als begünstigter Gegner: mit 20 verschiedenen Saaten der KI dieselbe Wahl 56ms
+ ❯ src/ki/sicht_erweiterung.test.ts (5 tests | 2 failed) 120ms
+     × K4, B2: ungesehen() sind genau die Karten in fremden Händen ohne die offen benannte (D52) und im Nachziehstapel, nach Id geordnet 14ms
+     × K4, K2.7: neu gemischtes Verdecktes und ein anderer Zufall der KI ändern ungesehen() nicht 90ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/ki/sicht_erweiterung.test.ts > K4, B2: die ungesehenen Karten > K4, B2: ungesehen() sind genau die Karten in fremden Händen ohne die offen benannte (D52) und im Nachziehstapel, nach Id geordnet
+AssertionError: K4: Stellung 0, Spieler 0: expected [ 'rot-09', 'braun-01', …(105) ] to deeply equal [ 'blau-01', 'blau-02', …(105) ]
+
+- Expected
++ Received
+
+  [
+-   "blau-01",
+-   "blau-02",
++   "rot-09",
++   "braun-01",
++   "blau-15",
++   "schlangenfrass-03",
++   "gelb-06",
++   "gruen-03",
++   "schlangengrube-03",
++   "regenbogenschlange-02",
++   "rot-14",
++   "gelb-15",
++   "verdoppler-01",
++   "blau-07",
++   "gelb-03",
++   "farbenschutz-03",
+    "blau-03",
+-   "blau-04",
+-   "blau-05",
+-   "blau-06",
+-   "blau-07",
+-   "blau-08",
+-   "blau-09",
+-   "blau-10",
+-   "blau-11",
+-   "blau-12",
+-   "blau-14",
+-   "blau-15",
+-   "braun-01",
+-   "braun-02",
+-   "braun-03",
+-   "braun-04",
+-   "braun-05",
+-   "braun-06",
++   "farbenfusion-01",
+    "braun-07",
+-   "braun-08",
+-   "braun-09",
+-   "braun-10",
++   "rot-04",
++   "violett-01",
++   "violett-02",
++   "violett-10",
+    "braun-11",
+-   "braun-12",
+-   "farbendieb-01",
++   "violett-04",
++   "schlangenhaeutung-01",
++   "gelb-08",
++   "blau-06",
++   "rot-06",
++   "gelb-07",
++   "braun-10",
++   "schlangengrube-02",
++   "rot-03",
++   "braun-06",
++   "violett-11",
+    "farbendieb-02",
+-   "farbendieb-04",
+-   "farbenfusion-01",
+-   "farbenfusion-02",
+-   "farbenfusion-03",
+-   "farbenfusion-04",
+-   "farbenschutz-01",
+-   "farbenschutz-02",
+-   "farbenschutz-03",
+    "farbenschutz-04",
+-   "gelb-01",
++   "violett-05",
++   "violett-08",
++   "gelb-14",
+    "gelb-02",
+-   "gelb-03",
+-   "gelb-04",
+-   "gelb-05",
+-   "gelb-06",
+-   "gelb-07",
+-   "gelb-08",
+-   "gelb-09",
+-   "gelb-10",
+-   "gelb-11",
++   "schlangenfrass-02",
++   "schlangengrube-01",
++   "schlangenfrass-01",
++   "blau-04",
++   "braun-04",
++   "rot-07",
+    "gelb-12",
+-   "gelb-13",
+-   "gelb-14",
+-   "gelb-15",
+-   "gruen-01",
+-   "gruen-02",
+-   "gruen-03",
+-   "gruen-04",
+-   "gruen-05",
+-   "gruen-06",
+-   "gruen-07",
+-   "gruen-08",
+-   "regenbogenschlange-01",
+-   "regenbogenschlange-02",
+-   "regenbogenschlange-03",
+    "regenbogenschlange-04",
+-   "rot-01",
+-   "rot-02",
+-   "rot-03",
+-   "rot-04",
+-   "rot-05",
+-   "rot-06",
+-   "rot-07",
+-   "rot-08",
+-   "rot-09",
+-   "rot-10",
+-   "rot-11",
+-   "rot-12",
++   "schlangenblockade-03",
++   "farbenschutz-02",
++   "gelb-09",
++   "farbendieb-01",
++   "regenbogenschlange-01",
++   "schlangenhaeutung-03",
++   "blau-05",
+    "rot-13",
+-   "rot-14",
+-   "rot-15",
+-   "schlangenblockade-01",
++   "gruen-07",
++   "violett-12",
+    "schlangenblockade-02",
+-   "schlangenblockade-03",
+-   "schlangenfrass-01",
+-   "schlangenfrass-02",
+-   "schlangenfrass-03",
+-   "schlangenfrass-04",
+-   "schlangengrube-01",
+-   "schlangengrube-02",
+-   "schlangengrube-03",
+-   "schlangenhaeutung-01",
+-   "schlangenhaeutung-02",
+-   "schlangenhaeutung-03",
+-   "verdoppler-01",
++   "blau-02",
++   "regenbogenschlange-03",
++   "gruen-05",
++   "gruen-04",
+    "verdoppler-02",
++   "gelb-05",
++   "farbendieb-04",
++   "violett-07",
++   "gelb-04",
++   "gelb-01",
+    "verdoppler-03",
+-   "violett-01",
+-   "violett-02",
++   "schlangenhaeutung-02",
++   "blau-14",
++   "gruen-08",
++   "rot-12",
++   "rot-05",
++   "farbenfusion-02",
++   "blau-11",
++   "rot-02",
++   "gelb-13",
++   "braun-05",
++   "blau-09",
++   "schlangenfrass-04",
++   "gelb-10",
++   "farbenfusion-04",
++   "farbenschutz-01",
++   "gruen-01",
++   "blau-08",
++   "gruen-06",
++   "rot-08",
++   "blau-12",
++   "violett-09",
++   "farbenfusion-03",
++   "braun-08",
++   "gruen-02",
++   "gelb-11",
++   "schlangenblockade-01",
++   "blau-10",
++   "rot-11",
++   "braun-03",
+    "violett-03",
+-   "violett-04",
+-   "violett-05",
++   "braun-12",
++   "braun-09",
++   "braun-02",
+    "violett-06",
+-   "violett-07",
+-   "violett-08",
+-   "violett-09",
+-   "violett-10",
+-   "violett-11",
+-   "violett-12",
++   "rot-01",
++   "rot-10",
++   "blau-01",
++   "rot-15",
+  ]
+
+ ❯ src/ki/sicht_erweiterung.test.ts:39:69
+     37|         const benannt = offeneHandkarteDer(zustand.entscheidung)?.kart…
+     38|         const fremde = zustand.spieler.flatMap((spieler, index) => (in…
+     39|         expect(ungesehen, `K4: Stellung ${nummer}, Spieler ${ich}`).to…
+       |                                                                     ^
+     40|         const verborgen = new Set(verborgeneIds(zustand, ich))
+     41|         expect(ungesehen.every((id) => verborgen.has(id)), `B2: Stellu…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/ki/sicht_erweiterung.test.ts > K4, B2: die ungesehenen Karten > K4, K2.7: neu gemischtes Verdecktes und ein anderer Zufall der KI ändern ungesehen() nicht
+AssertionError: K2.7: Stellung 0, Spieler 0: expected '[{"typ":"Farbkarte","id":"gelb-02","f…' to be '[{"typ":"Farbkarte","id":"rot-09","fa…' // Object.is equality
+
+Expected: "[{"typ":"Farbkarte","id":"rot-09","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"braun-01","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"blau-15","farbe":"Blau","punkte":1},{"typ":"Sonderkarte","id":"schlangenfrass-03","name":"Schlangenfrass"},{"typ":"Farbkarte","id":"gelb-06","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gruen-03","farbe":"Grün","punkte":3},{"typ":"Sonderkarte","id":"schlangengrube-03","name":"Schlangengrube"},{"typ":"Sonderkarte","id":"regenbogenschlange-02","name":"Regenbogenschlange"},{"typ":"Farbkarte","id":"rot-14","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"gelb-15","farbe":"Gelb","punkte":1},{"typ":"Sonderkarte","id":"verdoppler-01","name":"Verdoppler"},{"typ":"Farbkarte","id":"blau-07","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"gelb-03","farbe":"Gelb","punkte":1},{"typ":"Sonderkarte","id":"farbenschutz-03","name":"Farbenschutz"},{"typ":"Farbkarte","id":"blau-03","farbe":"Blau","punkte":1},{"typ":"Sonderkarte","id":"farbenfusion-01","name":"Farbenfusion"},{"typ":"Farbkarte","id":"braun-07","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"rot-04","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"violett-01","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"violett-02","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"violett-10","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"braun-11","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"violett-04","farbe":"Violett","punkte":2},{"typ":"Sonderkarte","id":"schlangenhaeutung-01","name":"Schlangenhäutung"},{"typ":"Farbkarte","id":"gelb-08","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"blau-06","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"rot-06","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"gelb-07","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"braun-10","farbe":"Braun","punkte":2},{"typ":"Sonderkarte","id":"schlangengrube-02","name":"Schlangengrube"},{"typ":"Farbkarte","id":"rot-03","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"braun-06","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"violett-11","farbe":"Violett","punkte":2},{"typ":"Sonderkarte","id":"farbendieb-02","name":"Farbendieb"},{"typ":"Sonderkarte","id":"farbenschutz-04","name":"Farbenschutz"},{"typ":"Farbkarte","id":"violett-05","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"violett-08","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"gelb-14","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gelb-02","farbe":"Gelb","punkte":1},{"typ":"Sonderkarte","id":"schlangenfrass-02","name":"Schlangenfrass"},{"typ":"Sonderkarte","id":"schlangengrube-01","name":"Schlangengrube"},{"typ":"Sonderkarte","id":"schlangenfrass-01","name":"Schlangenfrass"},{"typ":"Farbkarte","id":"blau-04","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"braun-04","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"rot-07","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"gelb-12","farbe":"Gelb","punkte":1},{"typ":"Sonderkarte","id":"regenbogenschlange-04","name":"Regenbogenschlange"},{"typ":"Sonderkarte","id":"schlangenblockade-03","name":"Schlangenblockade"},{"typ":"Sonderkarte","id":"farbenschutz-02","name":"Farbenschutz"},{"typ":"Farbkarte","id":"gelb-09","farbe":"Gelb","punkte":1},{"typ":"Sonderkarte","id":"farbendieb-01","name":"Farbendieb"},{"typ":"Sonderkarte","id":"regenbogenschlange-01","name":"Regenbogenschlange"},{"typ":"Sonderkarte","id":"schlangenhaeutung-03","name":"Schlangenhäutung"},{"typ":"Farbkarte","id":"blau-05","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"rot-13","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"gruen-07","farbe":"Grün","punkte":3},{"typ":"Farbkarte","id":"violett-12","farbe":"Violett","punkte":2},{"typ":"Sonderkarte","id":"schlangenblockade-02","name":"Schlangenblockade"},{"typ":"Farbkarte","id":"blau-02","farbe":"Blau","punkte":1},{"typ":"Sonderkarte","id":"regenbogenschlange-03","name":"Regenbogenschlange"},{"typ":"Farbkarte","id":"gruen-05","farbe":"Grün","punkte":3},{"typ":"Farbkarte","id":"gruen-04","farbe":"Grün","punkte":3},{"typ":"Sonderkarte","id":"verdoppler-02","name":"Verdoppler"},{"typ":"Farbkarte","id":"gelb-05","farbe":"Gelb","punkte":1},{"typ":"Sonderkarte","id":"farbendieb-04","name":"Farbendieb"},{"typ":"Farbkarte","id":"violett-07","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"gelb-04","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gelb-01","farbe":"Gelb","punkte":1},{"typ":"Sonderkarte","id":"verdoppler-03","name":"Verdoppler"},{"typ":"Sonderkarte","id":"schlangenhaeutung-02","name":"Schlangenhäutung"},{"typ":"Farbkarte","id":"blau-14","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"gruen-08","farbe":"Grün","punkte":3},{"typ":"Farbkarte","id":"rot-12","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"rot-05","farbe":"Rot","punkte":1},{"typ":"Sonderkarte","id":"farbenfusion-02","name":"Farbenfusion"},{"typ":"Farbkarte","id":"blau-11","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"rot-02","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"gelb-13","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"braun-05","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"blau-09","farbe":"Blau","punkte":1},{"typ":"Sonderkarte","id":"schlangenfrass-04","name":"Schlangenfrass"},{"typ":"Farbkarte","id":"gelb-10","farbe":"Gelb","punkte":1},{"typ":"Sonderkarte","id":"farbenfusion-04","name":"Farbenfusion"},{"typ":"Sonderkarte","id":"farbenschutz-01","name":"Farbenschutz"},{"typ":"Farbkarte","id":"gruen-01","farbe":"Grün","punkte":3},{"typ":"Farbkarte","id":"blau-08","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"gruen-06","farbe":"Grün","punkte":3},{"typ":"Farbkarte","id":"rot-08","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"blau-12","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"violett-09","farbe":"Violett","punkte":2},{"typ":"Sonderkarte","id":"farbenfusion-03","name":"Farbenfusion"},{"typ":"Farbkarte","id":"braun-08","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"gruen-02","farbe":"Grün","punkte":3},{"typ":"Farbkarte","id":"gelb-11","farbe":"Gelb","punkte":1},{"typ":"Sonderkarte","id":"schlangenblockade-01","name":"Schlangenblockade"},{"typ":"Farbkarte","id":"blau-10","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"rot-11","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"braun-03","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"violett-03","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"braun-12","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"braun-09","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"braun-02","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"violett-06","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"rot-01","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"rot-10","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"blau-01","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"rot-15","farbe":"Rot","punkte":1}]"
+Received: "[{"typ":"Farbkarte","id":"gelb-02","farbe":"Gelb","punkte":1},{"typ":"Sonderkarte","id":"schlangenblockade-03","name":"Schlangenblockade"},{"typ":"Farbkarte","id":"blau-10","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"rot-05","farbe":"Rot","punkte":1},{"typ":"Sonderkarte","id":"schlangenhaeutung-03","name":"Schlangenhäutung"},{"typ":"Sonderkarte","id":"regenbogenschlange-01","name":"Regenbogenschlange"},{"typ":"Farbkarte","id":"gruen-05","farbe":"Grün","punkte":3},{"typ":"Sonderkarte","id":"farbenschutz-02","name":"Farbenschutz"},{"typ":"Farbkarte","id":"braun-05","farbe":"Braun","punkte":2},{"typ":"Sonderkarte","id":"schlangenblockade-02","name":"Schlangenblockade"},{"typ":"Farbkarte","id":"braun-10","farbe":"Braun","punkte":2},{"typ":"Sonderkarte","id":"schlangengrube-01","name":"Schlangengrube"},{"typ":"Farbkarte","id":"violett-08","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"rot-02","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"rot-14","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"gruen-06","farbe":"Grün","punkte":3},{"typ":"Farbkarte","id":"gelb-03","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gelb-04","farbe":"Gelb","punkte":1},{"typ":"Sonderkarte","id":"verdoppler-02","name":"Verdoppler"},{"typ":"Farbkarte","id":"gelb-07","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"rot-06","farbe":"Rot","punkte":1},{"typ":"Sonderkarte","id":"regenbogenschlange-04","name":"Regenbogenschlange"},{"typ":"Farbkarte","id":"gelb-05","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"blau-08","farbe":"Blau","punkte":1},{"typ":"Sonderkarte","id":"schlangenhaeutung-02","name":"Schlangenhäutung"},{"typ":"Sonderkarte","id":"farbenfusion-04","name":"Farbenfusion"},{"typ":"Farbkarte","id":"blau-03","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"gelb-13","farbe":"Gelb","punkte":1},{"typ":"Sonderkarte","id":"farbenschutz-03","name":"Farbenschutz"},{"typ":"Farbkarte","id":"rot-07","farbe":"Rot","punkte":1},{"typ":"Sonderkarte","id":"schlangenfrass-01","name":"Schlangenfrass"},{"typ":"Sonderkarte","id":"farbenschutz-01","name":"Farbenschutz"},{"typ":"Farbkarte","id":"blau-05","farbe":"Blau","punkte":1},{"typ":"Sonderkarte","id":"schlangenfrass-02","name":"Schlangenfrass"},{"typ":"Farbkarte","id":"braun-07","farbe":"Braun","punkte":2},{"typ":"Sonderkarte","id":"farbenfusion-01","name":"Farbenfusion"},{"typ":"Sonderkarte","id":"regenbogenschlange-02","name":"Regenbogenschlange"},{"typ":"Farbkarte","id":"rot-13","farbe":"Rot","punkte":1},{"typ":"Sonderkarte","id":"farbendieb-02","name":"Farbendieb"},{"typ":"Sonderkarte","id":"schlangenhaeutung-01","name":"Schlangenhäutung"},{"typ":"Sonderkarte","id":"farbenschutz-04","name":"Farbenschutz"},{"typ":"Farbkarte","id":"rot-08","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"gelb-11","farbe":"Gelb","punkte":1},{"typ":"Sonderkarte","id":"schlangengrube-03","name":"Schlangengrube"},{"typ":"Farbkarte","id":"gelb-12","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"blau-02","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"blau-06","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"violett-03","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"braun-03","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"violett-04","farbe":"Violett","punkte":2},{"typ":"Sonderkarte","id":"farbendieb-01","name":"Farbendieb"},{"typ":"Farbkarte","id":"braun-12","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"violett-09","farbe":"Violett","punkte":2},{"typ":"Sonderkarte","id":"schlangenfrass-03","name":"Schlangenfrass"},{"typ":"Farbkarte","id":"braun-09","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"gruen-04","farbe":"Grün","punkte":3},{"typ":"Farbkarte","id":"gelb-14","farbe":"Gelb","punkte":1},{"typ":"Sonderkarte","id":"farbendieb-04","name":"Farbendieb"},{"typ":"Farbkarte","id":"violett-10","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"braun-11","farbe":"Braun","punkte":2},{"typ":"Sonderkarte","id":"schlangenfrass-04","name":"Schlangenfrass"},{"typ":"Farbkarte","id":"blau-09","farbe":"Blau","punkte":1},{"typ":"Sonderkarte","id":"schlangengrube-02","name":"Schlangengrube"},{"typ":"Farbkarte","id":"violett-06","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"blau-11","farbe":"Blau","punkte":1},{"typ":"Sonderkarte","id":"regenbogenschlange-03","name":"Regenbogenschlange"},{"typ":"Farbkarte","id":"rot-15","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"rot-09","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"blau-12","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"violett-12","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"rot-04","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"gruen-08","farbe":"Grün","punkte":3},{"typ":"Farbkarte","id":"braun-04","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"gelb-06","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"braun-01","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"rot-01","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"braun-06","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"violett-01","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"violett-11","farbe":"Violett","punkte":2},{"typ":"Sonderkarte","id":"schlangenblockade-01","name":"Schlangenblockade"},{"typ":"Farbkarte","id":"rot-11","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"gruen-01","farbe":"Grün","punkte":3},{"typ":"Farbkarte","id":"violett-07","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"gelb-09","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"blau-04","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"rot-03","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"rot-12","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"gruen-03","farbe":"Grün","punkte":3},{"typ":"Farbkarte","id":"gelb-08","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"blau-07","farbe":"Blau","punkte":1},{"typ":"Sonderkarte","id":"farbenfusion-02","name":"Farbenfusion"},{"typ":"Farbkarte","id":"blau-15","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"rot-10","farbe":"Rot","punkte":1},{"typ":"Farbkarte","id":"gelb-10","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"blau-14","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"violett-05","farbe":"Violett","punkte":2},{"typ":"Farbkarte","id":"violett-02","farbe":"Violett","punkte":2},{"typ":"Sonderkarte","id":"farbenfusion-03","name":"Farbenfusion"},{"typ":"Farbkarte","id":"gelb-15","farbe":"Gelb","punkte":1},{"typ":"Farbkarte","id":"gruen-07","farbe":"Grün","punkte":3},{"typ":"Farbkarte","id":"braun-08","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"gelb-01","farbe":"Gelb","punkte":1},{"typ":"Sonderkarte","id":"verdoppler-01","name":"Verdoppler"},{"typ":"Sonderkarte","id":"verdoppler-03","name":"Verdoppler"},{"typ":"Farbkarte","id":"braun-02","farbe":"Braun","punkte":2},{"typ":"Farbkarte","id":"blau-01","farbe":"Blau","punkte":1},{"typ":"Farbkarte","id":"gruen-02","farbe":"Grün","punkte":3}]"
+
+ ❯ src/ki/sicht_erweiterung.test.ts:51:87
+     49|         const gemischt = mischeVerborgenes(zustand, ich, erzeugeZufall…
+     50|         const ids = (stand: Spielzustand, saat: number) => JSON.string…
+     51|         expect(ids(gemischt, nummer + 1), `K2.7: Stellung ${nummer}, S…
+       |                                                                                       ^
+     52|       }
+     53|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/ki/strategien/solideKi_erweiterung_wahl.test.ts > K4, K2.7: eine Wahl zwischen bekannter Karte und oberster Stapelkarte hängt nicht am Zufall der KI > K4.2, D52, geplante Farbkarte oder Stapel, als begünstigter Gegner: mit 20 verschiedenen Saaten der KI dieselbe Wahl
+AssertionError: K2.7: Entscheider 2: expected [ …(2) ] to have a length of 1 but got 2
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ src/ki/strategien/solideKi_erweiterung_wahl.test.ts:55:78
+     53|     expect(ermittleAktionen(zustand).map((aktion) => (aktion.typ === '…
+     54|     const wahlen = new Set(Array.from({ length: 20 }, (_, saat) => JSO…
+     55|     expect([...wahlen], `K2.7: Entscheider ${ermittleEntscheider(zusta…
+       |                                                                              ^
+     56|   })
+     57| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  2 failed | 2 passed (4)
+      Tests  3 failed | 14 passed (17)
+   Start at  19:13:08
+   Duration  22.10s (transform 2.98s, setup 1.29s, import 15.29s, tests 9.76s, environment 0ms)
+
+exit 1

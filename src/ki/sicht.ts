@@ -1,4 +1,4 @@
-import { anwendeAktion, erstellePartie, ermittleAktionen, ermittleEntscheider, offeneHandkarteDer, zugInSicht } from '../engine';
+import { anwendeAktion, erfuelltAufgabe, erstellePartie, ermittleAktionen, ermittleEntscheider, offeneHandkarteDer, zugInSicht } from '../engine';
 import type {
   AufgabenkarteInfo,
   Auslagekarte,
@@ -17,21 +17,20 @@ import type {
 } from '../engine';
 
 /*
-Die Sicht eines Spielers (U5): was er am Tisch sehen darf, und nichts darüber
-hinaus. Nur diese Datei liest den vollen Spielzustand. Jede andere Datei unter
-`src/ki/` bekommt die Sicht oder reicht den Zustand unverändert an die Engine
-weiter; der Architekturtest prüft das.
+Die Sicht eines Spielers (U5): was er am Tisch sehen darf, und nichts darüber hinaus.
+Nur diese Datei liest den vollen Spielzustand. Jede andere Datei unter `src/ki/`
+bekommt die Sicht oder reicht den Zustand unverändert an die Engine weiter; der
+Architekturtest prüft das.
 
-Offen liegt: die eigene Hand und die eigene geheime Aufgabe, alle Schlangen
-samt der Karten unter einer Farbenfusion, alle Ablagestapel vollständig (D28),
-die Auslage vor jedem Spieler (A4), erfüllte offene Aufgaben (A9), ausliegende
-Gruben (A7.6), was aus dem Spiel ist, die angesagte Sonderkarte (A6, B2), eine
-offene Entscheidung samt aufgedeckter und offen benannter Karte (X3, A8.2,
-D52) und die Zahl der bisher angelegten Schlangen, die jeder am Tisch sah.
-Verdeckt bleibt (B2): fremde Handkarten, von denen nur die Zahl zu sehen ist;
-die Reihenfolge von Nachzieh- und Aufgabenstapel, von denen nur die Grösse zu
-sehen ist; fremde geheime Aufgaben und ob sie erfüllt sind, weil sie erst bei
-der Wertung aufgedeckt werden (A9).
+Offen liegt: die eigene Hand und die eigene geheime Aufgabe, alle Schlangen samt der
+Karten unter einer Farbenfusion, alle Ablagestapel vollständig (D28), die Auslage vor
+jedem Spieler (A4), erfüllte offene Aufgaben (A9), ausliegende Gruben (A7.6), was aus
+dem Spiel ist, die angesagte Sonderkarte (A6, B2), eine offene Entscheidung samt
+aufgedeckter und offen benannter Karte (X3, A8.2, D52) und die Zahl der bisher
+angelegten Schlangen, die jeder am Tisch sah. Verdeckt bleibt (B2): fremde
+Handkarten, von denen nur die Zahl zu sehen ist; die Reihenfolge von Nachzieh- und
+Aufgabenstapel, von denen nur die Grösse zu sehen ist; fremde geheime Aufgaben und ob
+sie erfüllt sind, weil sie erst bei der Wertung aufgedeckt werden (A9).
 
 Die Sicht ist eine Abschrift: Wer sie verändert, verändert den Zustand nicht.
 */
@@ -153,18 +152,15 @@ export function spielerzahl(zustand: Spielzustand): number {
 }
 
 /*
-Simulation ohne verdeckte Information (Plan K2, Vorgabe aus P0.3d): Eine
-Strategie bekommt nie einen Zustand, auch nicht für die Zugsuche. Der Rahmen
-errät deshalb aus der Sicht einen Zustand (Determinisierung): Was der Spieler
-nicht sieht, die fremden Handkarten, der Nachziehstapel, die fremden geheimen
-Aufgaben und der Aufgabenstapel, füllt er zufällig aus den Karten auf, die nirgends
-offen liegen. Der erratene Zustand hängt nur von der Sicht und vom Zufall der KI ab,
-nie vom echten Zustand. Darauf spielt die Strategie Aktionen durch und sieht nach
-jeder wieder nur die Sicht danach (`Stellung`).
-
-Was der erratene Zustand darüber hinaus festlegt, ist geraten: Ob eine fremde
-geheime Aufgabe erfüllt ist, sieht niemand (A9); geraten wird „nicht erfüllt“. An
-den Aktionen des Spielers und an den Schlangen ändert das nichts.
+Simulation ohne verdeckte Information (Plan K2, Vorgabe aus P0.3d): Eine Strategie
+bekommt nie einen Zustand, auch nicht für die Zugsuche. Der Rahmen errät deshalb aus
+der Sicht einen Zustand (Determinisierung): Was der Spieler nicht sieht, die fremden
+Handkarten, der Nachziehstapel, die fremden geheimen Aufgaben und der Aufgabenstapel,
+füllt er zufällig aus den Karten auf, die nirgends offen liegen. Der erratene Zustand
+hängt nur von der Sicht und vom Zufall der KI ab, nie vom echten Zustand. Darauf
+spielt die Strategie Aktionen durch und sieht nach jeder wieder nur die Sicht danach
+(`Stellung`). Ob eine fremde geheime Aufgabe erfüllt ist, sieht niemand (A9); geraten
+wird „nicht erfüllt“. An den Aktionen des Spielers und an den Schlangen ändert das nichts.
 */
 
 /** Alle Spielkarten und Aufgabenkarten einer Partie dieser Grösse, gemischt mit `zufall` (A1, A4). */
@@ -197,12 +193,9 @@ function offeneKarten(sicht: Sicht): Set<string> {
 }
 
 /** Die Ids aller Aufgabenkarten, die der Spieler sieht: offene, erfüllte und die eigene geheime (A9). */
-function offeneAufgabenIds(sicht: Sicht): Set<string> {
-  return new Set([
-    ...sicht.offeneAufgaben.map((aufgabe) => aufgabe.id),
-    ...sicht.spieler.flatMap((spieler) => spieler.erfuellteAufgaben.map((aufgabe) => aufgabe.id)),
-    ...(sicht.geheimeAufgabe === null ? [] : [sicht.geheimeAufgabe.id]),
-  ]);
+export function offeneAufgabenIds(sicht: Sicht): Set<string> {
+  const geheim = sicht.geheimeAufgabe === null ? [] : [sicht.geheimeAufgabe];
+  return new Set([...sicht.offeneAufgaben, ...sicht.spieler.flatMap((spieler) => spieler.erfuellteAufgaben), ...geheim].map((aufgabe) => aufgabe.id));
 }
 
 /**
@@ -221,17 +214,13 @@ export function bestimmeZustand(sicht: Sicht, zufall: () => number): Spielzustan
   const fremde = kopie.spieler.filter((_, index) => index !== kopie.ich);
   const fremdeHandkarten = fremde.reduce((summe, spieler) => summe + spieler.handgroesse, 0) - (benannt === null ? 0 : 1);
   if (verdeckt.length !== fremdeHandkarten + kopie.nachziehstapelGroesse) {
-    throw new Error(
-      `Simulation: Verdeckt sind ${verdeckt.length} Karten, die Sicht verlangt ${fremdeHandkarten} in fremden Händen und ${kopie.nachziehstapelGroesse} im Nachziehstapel.`,
-    );
+    throw new Error(`Simulation: Verdeckt sind ${verdeckt.length} Karten, die Sicht verlangt ${fremdeHandkarten} in fremden Händen und ${kopie.nachziehstapelGroesse} im Nachziehstapel.`);
   }
   const bekannteAufgaben = offeneAufgabenIds(kopie);
   const verdeckteAufgaben = aufgaben.filter((aufgabe) => !bekannteAufgaben.has(aufgabe.id));
   const fremdeGeheime = verdeckteAufgaben.length - kopie.aufgabenstapelGroesse;
   if (fremdeGeheime !== 0 && fremdeGeheime !== fremde.length) {
-    throw new Error(
-      `Simulation: Verdeckt sind ${verdeckteAufgaben.length} Aufgaben; zu ${kopie.aufgabenstapelGroesse} im Aufgabenstapel passen weder keine noch ${fremde.length} fremde geheime.`,
-    );
+    throw new Error(`Simulation: Verdeckt sind ${verdeckteAufgaben.length} Aufgaben; zu ${kopie.aufgabenstapelGroesse} im Aufgabenstapel passen weder keine noch ${fremde.length} fremde geheime.`);
   }
   const spieler = kopie.spieler.map(({ handgroesse, ...offen }, index): Spieler => {
     if (index === kopie.ich) return { ...offen, hand: kopie.hand, geheimeAufgabe: kopie.geheimeAufgabe, geheimeAufgabeErfuellt: kopie.geheimeAufgabeErfuellt };
@@ -239,22 +228,10 @@ export function bestimmeZustand(sicht: Sicht, zufall: () => number): Spielzustan
     const bekannt = benannt?.spielerIndex === index && benannt.karte !== undefined ? [benannt.karte] : [];
     return { ...offen, hand: [...bekannt, ...verdeckt.splice(0, handgroesse - bekannt.length)], geheimeAufgabe, geheimeAufgabeErfuellt: false };
   });
+  const { erweiterung, partiephase, zug, schlussrundeAusloeser, ausliegendeGruben, angesagt, entscheidung, aufgedeckt, ausDemSpiel, offeneAufgaben, schlangenZaehler } = kopie;
   return {
-    version: 2,
-    erweiterung: kopie.erweiterung,
-    spieler,
-    partiephase: kopie.partiephase,
-    zug: kopie.zug,
-    schlussrundeAusloeser: kopie.schlussrundeAusloeser,
-    nachziehstapel: verdeckt,
-    ausliegendeGruben: kopie.ausliegendeGruben,
-    schwebend: kopie.angesagt,
-    entscheidung: kopie.entscheidung,
-    aufgedeckt: kopie.aufgedeckt,
-    ausDemSpiel: kopie.ausDemSpiel,
-    offeneAufgaben: kopie.offeneAufgaben,
-    aufgabenStapel: verdeckteAufgaben,
-    schlangenZaehler: kopie.schlangenZaehler,
+    version: 2, erweiterung, spieler, partiephase, zug, schlussrundeAusloeser, nachziehstapel: verdeckt, ausliegendeGruben, schwebend: angesagt,
+    entscheidung, aufgedeckt, ausDemSpiel, offeneAufgaben, aufgabenStapel: verdeckteAufgaben, schlangenZaehler,
   };
 }
 
@@ -273,11 +250,17 @@ export interface Stellung {
   aktionen(): SpielAktion[];
   /** Die Stellung nach `aktion`; eine unerlaubte Aktion lehnt die Engine mit ihrem Grund ab. */
   nach(aktion: SpielAktion): Stellung;
+  /** Was der Spieler nicht sieht (fremde Hände, Nachziehstapel), nach Id geordnet: Daraus folgen offene Wahrscheinlichkeiten (K4, B2). */
+  ungesehen(): readonly Spielkarte[];
+  /** A9: die offenen und die eigene geheime Aufgabe, die er mit diesen Schlangen und Sonderkarten erfüllte und noch nicht hat (K4). */
+  erfuellbar(eigen: Pick<SpielerSicht, 'schlangen' | 'ausgespielteSonderkarten' | 'schlangenhaeutungDreiergruppen'>): AufgabenkarteInfo[];
 }
 
 function stellung(zustand: Spielzustand, ich: number): Stellung {
   let sicht: Sicht | null = null;
   let aktionen: SpielAktion[] | null = null;
+  let ungesehen: Spielkarte[] | null = null;
+  let freie: AufgabenkarteInfo[] | null = null;
   return {
     get sicht() {
       sicht ??= sichtAus(zustand, ich);
@@ -290,6 +273,20 @@ function stellung(zustand: Spielzustand, ich: number): Stellung {
     },
     nach(aktion) {
       return stellung(anwendeAktion(zustand, aktion).zustand, ich);
+    },
+    ungesehen() {
+      const genannt = offeneHandkarteDer(zustand.entscheidung)?.karteId;
+      ungesehen ??= [...zustand.spieler.flatMap((spieler, index) => (index === ich ? [] : spieler.hand)), ...zustand.nachziehstapel].filter((karte) => karte.id !== genannt).sort((a, b) => (a.id < b.id ? -1 : 1));
+      return ungesehen;
+    },
+    erfuellbar(eigen) {
+      // Nur Aufgaben, die noch frei sind: die offenen und die eigene geheime, solange sie nicht erfüllt ist (A9, D35).
+      const { geheimeAufgabe, geheimeAufgabeErfuellt } = zustand.spieler[ich];
+      freie ??= !zustand.erweiterung ? [] : [...zustand.offeneAufgaben, ...(geheimeAufgabeErfuellt || geheimeAufgabe === null ? [] : [geheimeAufgabe])];
+      if (freie.length === 0) return [];
+      // Die Bedingungen lesen nur den Spieler selbst (A9); geprüft wird auf einer Abschrift mit seinen geänderten Schlangen.
+      const probe = { ...zustand, spieler: zustand.spieler.map((spieler, index) => (index === ich ? { ...spieler, schlangen: eigen.schlangen, ausgespielteSonderkarten: eigen.ausgespielteSonderkarten, schlangenhaeutungDreiergruppen: eigen.schlangenhaeutungDreiergruppen } : spieler)) };
+      return freie.filter((aufgabe) => erfuelltAufgabe(probe, ich, aufgabe));
     },
   };
 }

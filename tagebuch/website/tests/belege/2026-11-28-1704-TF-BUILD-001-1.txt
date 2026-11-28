@@ -1,0 +1,13 @@
+Gates auf c8be62d2, nacheinander, je Exit-Code (Prüfer K4 Iteration 2)
+npm test -- --run: exit 0, 206 Dateien, 3351 Tests bestanden, 285.7 s
+npm run typecheck: exit 0
+npm run build: exit 0, built in 502 ms
+npm run check:test-lines: exit 0
+npm run check:css-asserts: exit 0, 0 in 0 Dateien
+npm run check:regeln: exit 0, keine Verstösse
+npx eslint .: exit 0
+python scripts/regelcheck.py: exit 0, 418 Warnungen, keine Fehler (407 CRLF aus dem Auschecken mit core.autocrlf=true)
+npm run test:layout: exit 0, 2485 bestanden, 339 s
+npm run test:vollpartien: exit 0, 4 bestanden, 32 s
+npm run test:dauerlauf: exit 0, 4 Dateien, 4 Tests, 186 s
+npm run test:staerke: exit 0, 6 von 6, 923 s

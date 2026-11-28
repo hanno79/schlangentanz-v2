@@ -1,0 +1,20 @@
+TF-KI-043, K4 Iteration 3, Stand a8fff73b (Code fe00ed24)
+
+1. Probe des Prüfers (TF-KI-043-5, unverändert), Saat 810'000 bis 810'199, KI-Saat (Saat × 13 + Sitz × 101 + 5), vier Teile je Exit 0:
+   200 Partien, 599 erste Züge, imErstenZug: 0 falsch negativ, 638 von 30'887 späteren Entscheidungen falsch positiv (2.07 %)
+   Störprobe K2.7: 2'485 Stellungen, 0 abweichende Wahlen
+   Einsätze im ersten Zug: 17 (vorher 19): 15 Risiko-Karten (alle Aktion 2), 1 Korb „aktionen“, 1 Comeback
+   Korb „aktionen“ ohne Nutzen (vorher Saat 810'100 +0.29 und 810'110 +0.04): keiner mehr; 810'001 Korb mit Gruppe (+2.46)
+   Risiko-Karten: 13 mit Gruppe; 810'023 (-1.9) und 810'081 (-1.6) ohne Gruppe, Ausgang der aufgedeckten Karte, im Erwartungswert über ERSTZUG_HALTEN (wie vom Prüfer gewertet)
+   Comeback 810'119: die Gruppe entsteht im selben Zug nach einer Risiko-Karte (wie vom Prüfer gewertet)
+
+2. Stellungen der Prüferfälle als Testdateien: saat-810100-erster-zug-korb.json und saat-810110-erster-zug-korb.json; die KI beendet in beiden den Zug (KI-Saaten 1 bis 3).
+
+3. Gegenproben (je eine Stelle ausgeschaltet, 34 Tests in sechs Testdateien):
+   G1 zugsuche `lohnt` immer wahr: 3 rot (beide Prüferstellungen, Eigenschaft 810'000 bis 810'099)
+   G2 Schwelle beim verdeckten Ziehen weg: 3 rot (810'100, 810'067 Korb „ziehen“, Eigenschaft)
+   G3 risiko.ts im ersten Zug GLEICH: 2 rot (810'015 Risiko-Karte, Eigenschaft)
+   G4 Häutungszähler in der Vorauswahl weg: 1 rot
+   G5 erfüllende Aktion nicht vorn in der Vorauswahl: 1 rot
+
+4. Spiegelpartien (Saat 88'000 bis 88'999, beide Sitzverteilungen, fünf Teile nacheinander, je Exit 0): 2'000 Partien, A 49.70 % (994 Punkte), Standardfehler 1.12 %, Grenze 47.76 %, z = -0.27, 12 unentschieden.

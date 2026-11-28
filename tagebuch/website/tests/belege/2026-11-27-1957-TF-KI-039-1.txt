@@ -1,0 +1,67 @@
+Probe zz_pruefer_k4.test.ts, 18 Partien mit Erweiterung, Saat 77'100 bis 77'117, Stand 33d8b143
+K4.1: Gelegenheiten 74, in der Runde erfüllt 67, nicht erfüllt 7
+  Saat 77100 Sitz 1 Zug 26: bekannte Punkte Start 53, beste Erfüllung 60, Zugende 53; Bewertung beste Erfüllung samt zweiter Karte 42.80, ihr Zug vor Zugende 36.20; abgewehrt True; gespielt SchlangenfrassSpielen,FarbkarteLegen,ZugBeenden; erfüllend wäre SchlangenfrassSpielen
+  Saat 77103 Sitz 0 Zug 6: bekannte Punkte Start 0, beste Erfüllung 4, Zugende 8; Bewertung beste Erfüllung samt zweiter Karte 10.30, ihr Zug vor Zugende 14.21; abgewehrt False; gespielt FarbendiebSpielen,ZugBeenden; erfüllend wäre FusionLegen
+  Saat 77103 Sitz 0 Zug 33: bekannte Punkte Start 113, beste Erfüllung 118, Zugende 120; Bewertung beste Erfüllung samt zweiter Karte 124.45, ihr Zug vor Zugende 123.95; abgewehrt False; gespielt FarbkarteLegen,SchlangenkorbSpielen,ZugBeenden; erfüllend wäre SchlangenkorbSpielen
+  Saat 77104 Sitz 1 Zug 6: bekannte Punkte Start 14, beste Erfüllung 13, Zugende 17; Bewertung beste Erfüllung samt zweiter Karte 1.96, ihr Zug vor Zugende 5.96; abgewehrt False; gespielt FusionLegen,FarbkarteLegen,ZugBeenden; erfüllend wäre FusionLegen
+  Saat 77105 Sitz 0 Zug 10: bekannte Punkte Start 20, beste Erfüllung 30, Zugende 36; Bewertung beste Erfüllung samt zweiter Karte 32.09, ihr Zug vor Zugende 38.34; abgewehrt False; gespielt SchlangenhaeutungSpielen,FarbkarteLegen,ZugBeenden; erfüllend wäre SchlangenhaeutungSpielen
+  Saat 77106 Sitz 1 Zug 26: bekannte Punkte Start 89, beste Erfüllung 95, Zugende 92; Bewertung beste Erfüllung samt zweiter Karte 75.00, ihr Zug vor Zugende 79.50; abgewehrt False; gespielt FarbendiebSpielen,FarbkarteLegen,ZugBeenden; erfüllend wäre FarbendiebSpielen
+  Saat 77106 Sitz 1 Zug 27: bekannte Punkte Start 92, beste Erfüllung 94, Zugende 100; Bewertung beste Erfüllung samt zweiter Karte 81.50, ihr Zug vor Zugende 88.00; abgewehrt False; gespielt SchlangenfrassSpielen,FarbkarteLegen,ZugBeenden; erfüllend wäre SchlangenfrassSpielen
+K4.2: Comeback 10, Risiko 72 {'1': 43, '2': 19, '3': 1, '4': 9}, Korb 11 {'tauschen': 5, 'aktionen': 3, 'entfernen': 2, 'ziehen': 1}; im ersten eigenen Zug eingesetzt: 34
+  Saat 77100 Sitz 0: RisikoKarteSpielen 1 ; Zug RisikoKarteSpielen,FarbkarteLegen,ZugBeenden; Hand vorher Rot, Farbenschutz, Farbenfusion, Braun, Grün
+  Saat 77101 Sitz 0: RisikoKarteSpielen 1 ; Zug RisikoKarteSpielen,VerdopplerSpielen,FarbkarteLegen,ZugBeenden; Hand vorher Violett, Schlangenhäutung, Blau, Gelb, Verdoppler
+  Saat 77102 Sitz 0: RisikoKarteSpielen 1 ; Zug RisikoKarteSpielen,Entscheiden,FarbkarteLegen,ZugBeenden; Hand vorher Schlangenhäutung, Blau, Gelb, Rot, Violett
+  Saat 77102 Sitz 1: RisikoKarteSpielen 1 ; Zug RisikoKarteSpielen,FarbkarteLegen,ZugBeenden; Hand vorher Grün, Farbendieb, Schlangenfrass, Blau, Rot, Farbenfusion
+  Saat 77102 Sitz 2: RisikoKarteSpielen 1 ; Zug RisikoKarteSpielen,FarbkarteLegen,RegenbogenschlangeLegen,ZugBeenden; Hand vorher Violett, Gelb, Regenbogenschlange, Braun, Violett
+  Saat 77102 Sitz 3: RisikoKarteSpielen 1 ; Zug RisikoKarteSpielen,FarbkarteLegen,ZugBeenden; Hand vorher Blau, Farbenschutz, Rot, Braun, Gelb
+  Saat 77104 Sitz 0: RisikoKarteSpielen 1 ; Zug RisikoKarteSpielen,FarbkarteLegen,ZugBeenden; Hand vorher Farbendieb, Schlangengrube, Violett, Gelb, Braun
+  Saat 77104 Sitz 1: RisikoKarteSpielen 1 ; Zug RisikoKarteSpielen,FarbkarteLegen,ZugBeenden; Hand vorher Rot, Farbenfusion, Gelb, Blau, Gelb
+  Saat 77104 Sitz 2: RisikoKarteSpielen 1 ; Zug RisikoKarteSpielen,VerdopplerSpielen,FarbkarteLegen,ZugBeenden; Hand vorher Gelb, Regenbogenschlange, Grün, Blau, Rot
+  Saat 77105 Sitz 0: RisikoKarteSpielen 4 ; Zug VerdopplerSpielen,RisikoKarteSpielen,Entscheiden,FarbkarteLegen,ZugBeenden; Hand vorher Gelb, Gelb, Regenbogenschlange, Grün
+  Saat 77106 Sitz 0: RisikoKarteSpielen 1 ; Zug RisikoKarteSpielen,FarbkarteLegen,SchlangengrubeSpielen,ZugBeenden; Hand vorher Braun, Braun, Blau, Verdoppler, Rot
+  Saat 77106 Sitz 1: RisikoKarteSpielen 1 ; Zug RisikoKarteSpielen,BlockadeLegen,FarbkarteLegen,ZugBeenden; Hand vorher Braun, Schlangenblockade, Gelb, Gelb, Rot
+  Saat 77107 Sitz 0: SchlangenkorbSpielen  {'art': 'aktionen'}; Zug FarbkarteLegen,SchlangenkorbSpielen,FarbkarteLegen,FarbkarteLegen,ZugBeenden; Hand vorher Grün, Schlangenkorb des Glücks, Violett, Rot
+  Saat 77108 Sitz 0: RisikoKarteSpielen 1 ; Zug RisikoKarteSpielen,Entscheiden,FarbkarteLegen,ZugBeenden; Hand vorher Rot, Violett, Braun, Rot, Rot
+  Saat 77108 Sitz 1: RisikoKarteSpielen 1 ; Zug RisikoKarteSpielen,FarbkarteLegen,RegenbogenschlangeLegen,ZugBeenden; Hand vorher Braun, Gelb, Regenbogenschlange, Braun, Grün, Farbenschutz
+  Saat 77108 Sitz 2: RisikoKarteSpielen 1 ; Zug RisikoKarteSpielen,FarbkarteLegen,SchlangenfrassSpielen,ZugBeenden; Hand vorher Grün, Gelb, Rot, Violett, Schlangenfrass
+  Saat 77108 Sitz 3: RisikoKarteSpielen 1 ; Zug RisikoKarteSpielen,Entscheiden,FarbkarteLegen,FarbendiebSpielen,ZugBeenden; Hand vorher Farbendieb, Violett, Rot, Farbendieb, Braun
+  Saat 77109 Sitz 0: RisikoKarteSpielen 1 ; Zug RisikoKarteSpielen,FarbkarteLegen,ZugBeenden; Hand vorher Braun, Blau, Grün, Blau, Schlangenblockade
+  Saat 77110 Sitz 0: RisikoKarteSpielen 1 ; Zug RisikoKarteSpielen,Entscheiden,FarbkarteLegen,ZugBeenden; Hand vorher Grün, Gelb, Rot, Blau, Blau
+  Saat 77110 Sitz 1: RisikoKarteSpielen 1 ; Zug RisikoKarteSpielen,Entscheiden,FarbkarteLegen,RegenbogenschlangeLegen,ZugBeenden; Hand vorher Rot, Blau, Regenbogenschlange, Schlangengrube, Violett, Schlangenfrass
+  Saat 77110 Sitz 2: RisikoKarteSpielen 4 ; Zug VerdopplerSpielen,RisikoKarteSpielen,Entscheiden,FarbkarteLegen,ZugBeenden; Hand vorher Braun, Rot, Grün, Gelb, Farbendieb
+  Saat 77111 Sitz 0: RisikoKarteSpielen 1 ; Zug RisikoKarteSpielen,Entscheiden,FarbkarteLegen,ZugBeenden; Hand vorher Blau, Schlangenblockade, Rot, Rot, Gelb
+  Saat 77112 Sitz 0: RisikoKarteSpielen 1 ; Zug RisikoKarteSpielen,FarbkarteLegen,ZugBeenden; Hand vorher Blau, Schlangenblockade, Blau, Braun, Gelb
+  Saat 77112 Sitz 1: RisikoKarteSpielen 1 ; Zug RisikoKarteSpielen,FarbkarteLegen,SchlangenfrassSpielen,ZugBeenden; Hand vorher Violett, Gelb, Schlangenfrass, Grün, Rot
+  Saat 77113 Sitz 0: RisikoKarteSpielen 2 ; Zug FarbkarteLegen,RisikoKarteSpielen,Entscheiden,RegenbogenschlangeLegen,ZugBeenden; Hand vorher Regenbogenschlange, Farbenfusion, Rot, Violett
+  Saat 77114 Sitz 0: RisikoKarteSpielen 1 ; Zug RisikoKarteSpielen,Entscheiden,FarbkarteLegen,ZugBeenden; Hand vorher Rot, Blau, Rot, Braun, Rot
+  Saat 77114 Sitz 1: RisikoKarteSpielen 2 ; Zug FarbkarteLegen,RegenbogenschlangeLegen,RisikoKarteSpielen,Entscheiden,ZugBeenden; Hand vorher Schlangengrube, Braun, Regenbogenschlange, Farbenschutz
+  Saat 77114 Sitz 2: RisikoKarteSpielen 1 ; Zug RisikoKarteSpielen,Entscheiden,FarbendiebSpielen,FarbkarteLegen,ZugBeenden; Hand vorher Schlangenkorb des Glücks, Gelb, Rot, Farbendieb, Blau
+  Saat 77114 Sitz 3: RisikoKarteSpielen 4 ; Zug FarbendiebSpielen,RisikoKarteSpielen,Entscheiden,FarbkarteLegen,ZugBeenden; Hand vorher Grün, Regenbogenschlange, Gelb, Verdoppler, Schlangenblockade
+  Saat 77115 Sitz 0: RisikoKarteSpielen 2 ; Zug FarbkarteLegen,RegenbogenschlangeLegen,RisikoKarteSpielen,Entscheiden,ZugBeenden; Hand vorher Rot, Rot, Gelb
+  Saat 77116 Sitz 0: RisikoKarteSpielen 1 ; Zug RisikoKarteSpielen,FarbkarteLegen,ZugBeenden; Hand vorher Schlangenfrass, Blau, Rot, Braun, Rot
+  Saat 77116 Sitz 1: RisikoKarteSpielen 1 ; Zug RisikoKarteSpielen,FarbkarteLegen,ZugBeenden; Hand vorher Violett, Braun, Rot, Blau, Violett
+  Saat 77116 Sitz 2: RisikoKarteSpielen 1 ; Zug RisikoKarteSpielen,Entscheiden,FarbkarteLegen,ZugBeenden; Hand vorher Schlangenhäutung, Blau, Blau, Grün, Grün
+  Saat 77117 Sitz 0: RisikoKarteSpielen 1 ; Zug RisikoKarteSpielen,Entscheiden,VerdopplerSpielen,FarbkarteLegen,ZugBeenden; Hand vorher Gelb, Verdoppler, Gelb, Regenbogenschlange, Braun
+K4.3: Häutungen in eigenen Schlangen 20, mit neuer Gruppe 9, gleich 9, weniger 2; in fremden 15; Gelegenheiten mit gruppenbildender Häutung 9, im Zug genutzt 6
+  {'saat': 77100, 'sitz': 0, 'gruppenDelta': 0, 'aufgabenDelta': 0, 'wertDelta': 3.05, 'punkteDelta': 0, 'hand': 5, 'zugTeile': 'SchlangenhaeutungSpielen,FarbkarteLegen,ZugBeenden'}
+  {'saat': 77100, 'sitz': 1, 'gruppenDelta': 0, 'aufgabenDelta': 0, 'wertDelta': 1.35, 'punkteDelta': 0, 'hand': 5, 'zugTeile': 'SchlangenhaeutungSpielen,FarbkarteLegen,ZugBeenden'}
+  {'saat': 77101, 'sitz': 0, 'gruppenDelta': 0, 'aufgabenDelta': 0, 'wertDelta': 0.2, 'punkteDelta': 0, 'hand': 4, 'zugTeile': 'FarbkarteLegen,SchlangenhaeutungSpielen,ZugBeenden'}
+  {'saat': 77103, 'sitz': 0, 'gruppenDelta': 1, 'aufgabenDelta': 0, 'wertDelta': 2.85, 'punkteDelta': 3, 'hand': 4, 'zugTeile': 'FarbkarteLegen,SchlangenhaeutungSpielen,ZugBeenden'}
+  {'saat': 77104, 'sitz': 0, 'gruppenDelta': 0, 'aufgabenDelta': 0, 'wertDelta': 1.05, 'punkteDelta': -1, 'hand': 5, 'zugTeile': 'SchlangenhaeutungSpielen,FarbkarteLegen,ZugBeenden'}
+  {'saat': 77104, 'sitz': 0, 'gruppenDelta': 0, 'aufgabenDelta': 0, 'wertDelta': 5.1, 'punkteDelta': 4, 'hand': 5, 'zugTeile': 'SchlangenhaeutungSpielen,FarbkarteLegen,ZugBeenden'}
+  {'saat': 77105, 'sitz': 0, 'gruppenDelta': 1, 'aufgabenDelta': 0, 'wertDelta': 14.25, 'punkteDelta': 13, 'hand': 5, 'zugTeile': 'SchlangenhaeutungSpielen,FarbkarteLegen,ZugBeenden'}
+  {'saat': 77106, 'sitz': 0, 'gruppenDelta': 0, 'aufgabenDelta': 0, 'wertDelta': 1.05, 'punkteDelta': 0, 'hand': 4, 'zugTeile': 'FarbkarteLegen,SchlangenhaeutungSpielen,ZugBeenden'}
+  {'saat': 77106, 'sitz': 1, 'gruppenDelta': 0, 'aufgabenDelta': 0, 'wertDelta': 1.6, 'punkteDelta': 2, 'hand': 4, 'zugTeile': 'FarbkarteLegen,SchlangenhaeutungSpielen,ZugBeenden'}
+  {'saat': 77108, 'sitz': 3, 'gruppenDelta': 1, 'aufgabenDelta': 0, 'wertDelta': 9.1, 'punkteDelta': 9, 'hand': 5, 'zugTeile': 'SchlangenhaeutungSpielen,FarbkarteLegen,ZugBeenden'}
+  {'saat': 77109, 'sitz': 0, 'gruppenDelta': 1, 'aufgabenDelta': 0, 'wertDelta': 11.5, 'punkteDelta': 11, 'hand': 5, 'zugTeile': 'SchlangenhaeutungSpielen,FarbkarteLegen,ZugBeenden'}
+  {'saat': 77109, 'sitz': 0, 'gruppenDelta': 1, 'aufgabenDelta': 0, 'wertDelta': 8.4, 'punkteDelta': 8, 'hand': 5, 'zugTeile': 'SchlangenhaeutungSpielen,FarbkarteLegen,ZugBeenden'}
+  {'saat': 77110, 'sitz': 1, 'gruppenDelta': 1, 'aufgabenDelta': 0, 'wertDelta': 5.4, 'punkteDelta': 5, 'hand': 4, 'zugTeile': 'FarbkarteLegen,SchlangenhaeutungSpielen,ZugBeenden'}
+  {'saat': 77111, 'sitz': 0, 'gruppenDelta': 0, 'aufgabenDelta': 1, 'wertDelta': 7.5, 'punkteDelta': 7, 'hand': 5, 'zugTeile': 'SchlangenhaeutungSpielen,FarbkarteLegen,ZugBeenden'}
+  {'saat': 77112, 'sitz': 0, 'gruppenDelta': -1, 'aufgabenDelta': 1, 'wertDelta': 3.3, 'punkteDelta': 4, 'hand': 5, 'zugTeile': 'SchlangenhaeutungSpielen,FarbkarteLegen,ZugBeenden'}
+  {'saat': 77112, 'sitz': 0, 'gruppenDelta': 0, 'aufgabenDelta': 1, 'wertDelta': 12.1, 'punkteDelta': 7, 'hand': 5, 'zugTeile': 'SchlangenhaeutungSpielen,FarbkarteLegen,ZugBeenden'}
+  {'saat': 77112, 'sitz': 0, 'gruppenDelta': 1, 'aufgabenDelta': 1, 'wertDelta': 12.4, 'punkteDelta': 12, 'hand': 5, 'zugTeile': 'SchlangenhaeutungSpielen,FarbkarteLegen,ZugBeenden'}
+  {'saat': 77115, 'sitz': 0, 'gruppenDelta': 1, 'aufgabenDelta': 0, 'wertDelta': 0.4, 'punkteDelta': 0, 'hand': 4, 'zugTeile': 'FarbkarteLegen,SchlangenhaeutungSpielen,ZugBeenden'}
+  {'saat': 77115, 'sitz': 0, 'gruppenDelta': -1, 'aufgabenDelta': 2, 'wertDelta': 4.9, 'punkteDelta': 10, 'hand': 4, 'zugTeile': 'FarbkarteLegen,SchlangenhaeutungSpielen,ZugBeenden'}
+  {'saat': 77116, 'sitz': 2, 'gruppenDelta': 1, 'aufgabenDelta': 0, 'wertDelta': 15, 'punkteDelta': 14, 'hand': 5, 'zugTeile': 'SchlangenhaeutungSpielen,FarbkarteLegen,ZugBeenden'}
+Zeit je KI-Schritt: 2271 Schritte, Mittel 8.9 ms, Maximum 169 ms (parallel lief eine zweite Probe)
+K2.7-Störprobe: 278 Stellungen, verändert 278, abweichende Wahl 0

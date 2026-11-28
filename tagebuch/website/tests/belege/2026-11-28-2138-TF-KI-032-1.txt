@@ -1,0 +1,43 @@
+
+> schlangentanz-v2@0.0.0 test:staerke
+> vitest run --mode staerke --reporter=verbose
+
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a4799dc1bedcbdc17
+
+ ✓ tests/staerke_k5_vier.staerke.test.ts > K5: Stärkenachweis der soliden KI ohne Erweiterung, Kriterium 3 > K5 Kriterium 3 und 4: 300 Partien gegen 3 Gegner der Art die Zufalls-KI, mindestens 297 Siege; alle enden ohne Invariantenverletzung 227897ms
+
+   ❯ tests/staerke_k5_vier.staerke.test.ts:7:5 notice
+     ↳ K5 Kriterium 3: 300 Partien zu 4 gegen die Zufalls-KI, Saaten ab 1328338692, KI-Saat 1885811723: 300 Siege (100.0 %), festgeschrieben mindestens 297, Plan mindestens 50 %
+
+ ✓ tests/staerke_k5_erweiterung_vier.staerke.test.ts > K5: Stärkenachweis der soliden KI mit Erweiterung, Kriterium 5 zu Kriterium 3 > K5 Kriterium 5 und 4: mit Erweiterung 300 Partien gegen 3 Gegner der Art die Zufalls-KI, mindestens 289 Siege; alle enden ohne Invariantenverletzung 300971ms
+
+   ❯ tests/staerke_k5_erweiterung_vier.staerke.test.ts:7:5 notice
+     ↳ K5 Kriterium 5 mit Erweiterung: 300 Partien zu 4 gegen die Zufalls-KI, Saaten ab 1164999137, KI-Saat 2048025225: 299 Siege (99.7 %), festgeschrieben mindestens 289, Plan mindestens 50 %
+
+ ✓ tests/staerke_k5_zufall.staerke.test.ts > K5: Stärkenachweis der soliden KI ohne Erweiterung, Kriterium 1 > K5 Kriterium 1 und 4: 500 Partien gegen die Zufalls-KI, mindestens 495 Siege; alle enden ohne Invariantenverletzung 729088ms
+
+   ❯ tests/staerke_k5_zufall.staerke.test.ts:7:5 notice
+     ↳ K5 Kriterium 1: 500 Partien zu 2 gegen die Zufalls-KI, Saaten ab 1735562631, KI-Saat 2047972006: 500 Siege (100.0 %), festgeschrieben mindestens 495, Plan mindestens 80 %
+
+ ✓ tests/staerke_k5_erweiterung_zufall.staerke.test.ts > K5: Stärkenachweis der soliden KI mit Erweiterung, Kriterium 5 zu Kriterium 1 > K5 Kriterium 5 und 4: mit Erweiterung 500 Partien gegen die Zufalls-KI, mindestens 495 Siege; alle enden ohne Invariantenverletzung 838843ms
+
+   ❯ tests/staerke_k5_erweiterung_zufall.staerke.test.ts:7:5 notice
+     ↳ K5 Kriterium 5 mit Erweiterung: 500 Partien zu 2 gegen die Zufalls-KI, Saaten ab 1742726465, KI-Saat 1762180639: 500 Siege (100.0 %), festgeschrieben mindestens 495, Plan mindestens 80 %
+
+ ✓ tests/staerke_k5_erste.staerke.test.ts > K5: Stärkenachweis der soliden KI ohne Erweiterung, Kriterium 2 > K5 Kriterium 2 und 4: 500 Partien gegen „erste erlaubte Aktion“, mindestens 495 Siege; alle enden ohne Invariantenverletzung 919508ms
+
+   ❯ tests/staerke_k5_erste.staerke.test.ts:7:5 notice
+     ↳ K5 Kriterium 2: 500 Partien zu 2 gegen „erste erlaubte Aktion“, Saaten ab 1734506067, KI-Saat 1842618865: 500 Siege (100.0 %), festgeschrieben mindestens 495, Plan mindestens 80 %
+
+ ✓ tests/staerke_k5_erweiterung_erste.staerke.test.ts > K5: Stärkenachweis der soliden KI mit Erweiterung, Kriterium 5 zu Kriterium 2 > K5 Kriterium 5 und 4: mit Erweiterung 500 Partien gegen „erste erlaubte Aktion“, mindestens 495 Siege; alle enden ohne Invariantenverletzung 950138ms
+
+   ❯ tests/staerke_k5_erweiterung_erste.staerke.test.ts:7:5 notice
+     ↳ K5 Kriterium 5 mit Erweiterung: 500 Partien zu 2 gegen „erste erlaubte Aktion“, Saaten ab 1943143123, KI-Saat 1139605235: 499 Siege (99.8 %), festgeschrieben mindestens 495, Plan mindestens 80 %
+
+
+ Test Files  6 passed (6)
+      Tests  6 passed (6)
+   Start at  21:20:43
+   Duration  951.83s (transform 12.64s, setup 2.67s, import 5.16s, tests 3966.45s, environment 1ms)
+

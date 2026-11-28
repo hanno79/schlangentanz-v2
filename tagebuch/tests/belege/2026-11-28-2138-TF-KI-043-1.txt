@@ -1,0 +1,16 @@
+Prüfer K4 Iteration 3, Stand 5b4a57dd, 28.11.2026
+Probe erstzug.test.ts, Saaten 4'300'000..4'300'999, Spielerzahl 2 + (Nummer mod 3), solide KI an allen Sitzen, KI-Saat Saat*17+Sitz*29+11
+Erster Zug nach ersteZuege (echter Zugverlauf)
+
+erste Züge 2999, Karte angeboten in 2999, eingesetzt in 79 Zügen (2.6 %), Einsätze 85, ohne Grund 0
+
+Einsatz                     Zahl  Grund
+Risiko-Aktion 2              71   45 Gruppe, 4 Aufgabe, 22 erwarteter Anstieg > 2
+Korb "aktionen"              10   10 Gruppe
+Comeback-Karte                3   2 Gruppe, 1 Anstieg 3.80
+Korb "entfernen"              1   Anstieg 2.55
+
+Erwarteter Anstieg aller Risiko-Karten (Schätzung der KI gegen Halten): kleinster 2.04, Median 3.85, alle > ERSTZUG_HALTEN = 2
+Korb-Einsätze mit Anstieg bis vor die nächste Risiko-Karte -0.45 (Saat 4'300'115, 4'300'278, 4'300'332): Gruppe entsteht mit der zusätzlichen Farbkarte im selben Zug
+
+Iteration-2-Stellungen 810'100 und 810'110: Test K4.2 grün, die KI beendet den Zug.

@@ -1,0 +1,66 @@
+diff --git a/src/ki/strategien/erweiterungswert.ts b/src/ki/strategien/erweiterungswert.ts
+index aa0251c1..75d7a2dc 100644
+--- a/src/ki/strategien/erweiterungswert.ts
++++ b/src/ki/strategien/erweiterungswert.ts
+@@ -29,9 +29,9 @@ Erweiterung ist jeder Beitrag 0, und die Bewertung bleibt, wie sie war.
+ */
+ 
+ /** Eine Comeback-Karte, die noch nicht eingesetzt ist (A8.1). */
+-const COMEBACK_HALTEN = 1;
++const COMEBACK_HALTEN = -1;
+ /** Eine Risiko-Karte, die noch in der Auslage liegt (A8.2). */
+-const RISIKOKARTE_HALTEN = 0.6;
++const RISIKOKARTE_HALTEN = -1;
+ 
+ /** Die Punkte der erfüllten Aufgaben, die die Sicht von diesem Spieler zeigt (A9, D35). */
+ export function aufgabenpunkteVon(sicht: Sicht, index: number): number {
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a7cadf0be0f8a6920
+
+ ❯ src/ki/strategien/solideKi_erweiterung.test.ts (10 tests | 2 failed) 535ms
+     × K4.2, A8.1, D68: ki-comeback-ohne-nutzen: mit nur Grün und Farbenschutz setzt sie die Comeback-Karte nicht ein 21ms
+     × K4.2, A8.2, D55: ki-risiko-ohne-nutzen: im ersten Zug, ohne Schlange und mit Farbenschutz auf der Hand, spielt sie keine Risiko-Karte 11ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/ki/strategien/solideKi_erweiterung.test.ts > K4 Kriterium 2: Comeback-Karte, Risiko-Karte und Schlangenkorb, wenn die Bewertung steigt, nicht im ersten Zug ohne Nutzen > K4.2, A8.1, D68: ki-comeback-ohne-nutzen: mit nur Grün und Farbenschutz setzt sie die Comeback-Karte nicht ein
+AssertionError: K4.2: Saat 1: expected [ 'FarbkarteLegen', …(2) ] to deeply equal [ 'FarbkarteLegen', 'ZugBeenden' ]
+
+- Expected
++ Received
+
+  [
+    "FarbkarteLegen",
++   "ComebackEinsetzen",
+    "ZugBeenden",
+  ]
+
+ ❯ src/ki/strategien/solideKi_erweiterung.test.ts:119:48
+    117|     for (const saat of [1, 2, 3]) {
+    118|       const zug = spieleZug(start, saat)
+    119|       expect(typen(zug), `K4.2: Saat ${saat}`).toEqual(['FarbkarteLege…
+       |                                                ^
+    120|       expect(farben(zug.zustand)[0], `K4.2: Saat ${saat}`).toEqual(['G…
+    121|       expect(zug.zustand.spieler[KI].comeback?.verbraucht, `K4.2: Saat…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/ki/strategien/solideKi_erweiterung.test.ts > K4 Kriterium 2: Comeback-Karte, Risiko-Karte und Schlangenkorb, wenn die Bewertung steigt, nicht im ersten Zug ohne Nutzen > K4.2, A8.2, D55: ki-risiko-ohne-nutzen: im ersten Zug, ohne Schlange und mit Farbenschutz auf der Hand, spielt sie keine Risiko-Karte
+AssertionError: K4.2: Saat 1: expected [ 'RisikoKarteSpielen', …(3) ] to not include 'RisikoKarteSpielen'
+ ❯ src/ki/strategien/solideKi_erweiterung.test.ts:166:52
+    164|     for (const saat of [1, 2, 3]) {
+    165|       const zug = spieleZug(start, saat)
+    166|       expect(typen(zug), `K4.2: Saat ${saat}`).not.toContain('RisikoKa…
+       |                                                    ^
+    167|       expect(zug.zustand.spieler[KI].risikoKarten, `K4.2: Saat ${saat}…
+    168|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 8 passed (10)
+   Start at  19:15:50
+   Duration  2.21s (transform 1.04s, setup 276ms, import 1.12s, tests 535ms, environment 0ms)
+
+exit 1

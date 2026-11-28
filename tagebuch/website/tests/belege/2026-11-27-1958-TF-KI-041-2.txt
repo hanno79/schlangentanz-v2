@@ -1,0 +1,4 @@
+Spiegelpartien zu zweit mit Erweiterung: solide KI gegen dieselbe solide KI ohne Risiko-Karten im ersten eigenen Zug, je Saat beide Sitzverteilungen
+Saat 88'000 bis 88'199: {"original": 208, "ohne": 192, "partien": 400, "unentschieden": 2, "risikoErsterZugOriginal": 0}
+Saat 88'200 bis 88'999: {"original": 778, "ohne": 822, "partien": 1600, "unentschieden": 16, "risikoErsterZugOriginal": 0}
+Zusammen: Original 986 von 2'000 Punkten (49.3 %), Standardfehler 1.1 %, z = -0.63

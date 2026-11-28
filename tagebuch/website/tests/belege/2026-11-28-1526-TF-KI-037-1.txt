@@ -1,0 +1,16 @@
+Entwicklertisch, Stand 53f9e4bd, npx vite --port 4298 --strictPort, eingebauter Browser der Desktop-App.
+Je Szenario „KI-Schritt (solide)“ per Mausklick, bei der Ansage einer Grube der Knopf Reagieren von Spieler 1 (durchlassen).
+Abgelesen: Liste „KI-Schritt (solide): …“, „Ereignisse des letzten Schritts“ und der Bereich KI-Gegner 1.
+
+ki-aufgabe-offen: FarbkarteLegen gruen-08 → schlange-1, Stelle 0; AufgabeErfuellt: KI-Gegner 1 nimmt Farbvielfalt (aufgabe-04). Danach Schlangengrube auf Spieler 1.
+ki-aufgabe-geheim: FarbkarteLegen gruen-09 → schlange-2, Stelle 5; Schlangengrube, Spieler 1 lässt durch; nach dem Zug „Geheime Aufgabe: Farbenpracht (8) aufgabe-01 erfüllt“.
+ki-comeback-nutzen: ComebackEinsetzen, Grün an schlange-1, Blau an schlange-2, ZugBeenden; Schlangen Grün ×3 und Blau ×3, „Comeback comeback-02 (verbraucht)“.
+ki-comeback-ohne-nutzen: Grün an schlange-1, ZugBeenden; Grün ×3, Comeback nicht verbraucht.
+ki-korb-tausch: SchlangenkorbSpielen tauschen schlange-1 rot-14 gegen blau-04, dann rot-14 als neue Schlange; schlange-1 ist Blau ×5.
+ki-korb-ohne-nutzen: Grün an schlange-1, ZugBeenden; Grün ×3, der Korb bleibt auf der Hand.
+ki-risiko-nutzen: erste Aktion RisikoKarteSpielen Aktion 2, benennt gelb-11 (aufgedeckt schlangenhaeutung-02, Misserfolg, Wahl des Begünstigten).
+ki-risiko-ohne-nutzen: Hand Verdoppler, Farbendieb, Regenbogenschlange, 2 × Farbenschutz; Spieler 1 hat Rot, Rot, Gelb (wie beschrieben). Fünf Schritte: Verdoppler, ZugBeenden, Braun als neue Schlange, Regenbogenschlange an Stelle 0, ZugBeenden. Danach „Offen vor sich: Comeback comeback-02 Risiko-Belohnung risiko-belohnung-03 Risiko-Belohnung risiko-belohnung-04“, kein RisikoKarteGespielt.
+ki-haeutung-tanz: Häutung schlangenhaeutung-03 der letzten fünf Karten zu rot-12, rot-04, rot-06, violett-02, violett-06; Schlange endet Rot ×3, Violett ×3; AufgabeErfuellt: KI-Gegner 1 nimmt Schlangentanz (aufgabe-12).
+ki-haeutung-gruppe: Häutung schlangenhaeutung-02 zu rot-09, rot-12, blau-15, blau-12; Schlange Rot, Rot, Blau, Blau, Blau.
+
+Jeder KI-Schritt war innerhalb der zwei bis drei Sekunden Wartezeit fertig; die Konsole zeigte nur zwei Warnungen zum Permissions-Policy-Header.

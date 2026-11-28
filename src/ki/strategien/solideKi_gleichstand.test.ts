@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { anwendeAktion, berechneEndwertung, ermittleAktionen, pruefeInvarianten } from '../../engine'
 import type { SpielAktion, Spielzustand } from '../../engine'
 import { sichtFuer } from '../sicht'
-import { ersterTeilzug, gruppenzahl, ladeStellung, mitZweiterKarte, nachDurchlassen } from '../__tests__/stellungen'
+import { ersterTeilzug, aufgabenwert, gruppenzahl, ladeStellung, mitZweiterKarte, nachDurchlassen } from '../__tests__/stellungen'
 import { bewerte } from './bewertung'
 
 /*
@@ -47,20 +47,27 @@ function stellung(datei: string): Spielzustand {
 }
 
 const endwertung = (zustand: Spielzustand, sitz: number) => berechneEndwertung(zustand).spieler[sitz].summe
-const wert = (zustand: Spielzustand, sitz: number) => bewerte(sichtFuer(zustand, sitz))
+/** Die Bewertung der Zugsuche ab `start`: mit den Aufgaben, die der Sitz erfüllt und noch nicht hat (K4, `aufgabenwert`). */
+const wertAb = (start: Spielzustand) => (zustand: Spielzustand, sitz: number) => bewerte(sichtFuer(zustand, sitz)) + aufgabenwert(start, zustand, sitz)
 
 describe('K2b: bei Gleichstand gewinnt der Zug, der eine Gruppe vollendet oder sicher Punkte bringt', () => {
-  it('K2b, K2.1 (X5, Saat 7154, Schlussrunde mit Erweiterung): keine Karte ist besser bewertet als Halten, viele Schlangenfrass gleich, und jeder davon löst eine erfüllte offene Aufgabe ein; sie beendet den Zug nicht', () => {
+  it('K4.1, K2b (X5, Saat 7154, Schlussrunde mit Erweiterung): die am besten bewerteten Schlangenfrass lösen ihre geheime Aufgabe „Schlangenbändiger“ (7) ein, um 7 besser als Halten, viele andere gleich; sie erfüllt die geheime Aufgabe', () => {
     const start = stellung('saat-7154-x5-schlussrunde.json')
+    const wert = wertAb(start)
     const [halten, punkte] = [wert(start, 0), endwertung(start, 0)]
-    // Ohne den Schlangenkorb: Ihn klug zu nutzen gehört zu K4, Kriterium 2 (X6).
+    expect(start.spieler[0].geheimeAufgabe?.name, 'Testaufbau: ihre geheime Aufgabe').toBe('Schlangenbändiger')
+    // Seit K4 mit dem Schlangenkorb (Plan K4, Kriterium 5).
     const unterschiede = ermittleAktionen(start)
-      .filter((aktion) => aktion.typ !== 'ZugBeenden' && aktion.typ !== 'SchlangenkorbSpielen')
+      .filter((aktion) => aktion.typ !== 'ZugBeenden')
       .map((aktion) => {
         const danach = nachDurchlassen(start, aktion, 0)
         return { aktion, danach, unterschied: wert(danach, 0) - halten }
       })
-    expect(Math.max(...unterschiede.map(({ unterschied }) => unterschied)), 'Testaufbau: keine Karte ist besser bewertet als Halten').toBeLessThan(1e-9)
+    const beste = Math.max(...unterschiede.map(({ unterschied }) => unterschied))
+    expect(beste, 'Testaufbau: besser als Halten um die geheime Aufgabe').toBeCloseTo(7, 9)
+    for (const { aktion, danach } of unterschiede.filter(({ unterschied }) => unterschied > beste - 1e-9)) {
+      expect(danach.spieler[0].geheimeAufgabeErfuellt, `A9, D35: ${JSON.stringify(aktion)} erfüllt „Schlangenbändiger“`).toBe(true)
+    }
     const gleich = unterschiede.filter(({ aktion, unterschied }) => aktion.typ === 'SchlangenfrassSpielen' && Math.abs(unterschied) < 1e-9)
     expect(gleich.length, 'Testaufbau: mehr gleich bewertete Schlangenfrass, als die Vorauswahl durchrechnet (16)').toBeGreaterThan(16)
     for (const { aktion, danach } of gleich) {
@@ -69,13 +76,15 @@ describe('K2b: bei Gleichstand gewinnt der Zug, der eine Gruppe vollendet oder s
     for (const saat of [1, 2, 3, 4, 5]) {
       const { aktionen, ende } = ersterTeilzug(start, 0, saat)
       expect(aktionen[0].typ, `K2b: Saat ${saat}, gespielt ${JSON.stringify(aktionen)}`).not.toBe('ZugBeenden')
-      expect(endwertung(ende, 0), `K2b: Saat ${saat}, sichere Punkte nach dem Zug`).toBeGreaterThanOrEqual(punkte + 10)
-      expect(wert(ende, 0), `K2b: Saat ${saat}, nicht schlechter bewertet als Halten`).toBeGreaterThanOrEqual(halten - 1e-9)
+      expect(ende.spieler[0].geheimeAufgabeErfuellt, `K4.1: Saat ${saat}, die geheime Aufgabe ist erfüllt`).toBe(true)
+      expect(endwertung(ende, 0), `K4.1: Saat ${saat}, sichere Punkte nach dem Zug: Farbharmonie und Schlangenbändiger`).toBeGreaterThanOrEqual(punkte + 17)
+      expect(wert(ende, 0), `K4.1: Saat ${saat}, so gut bewertet wie die beste Karte`).toBeGreaterThanOrEqual(halten + 7 - 1e-9)
     }
   })
 
   it('K2b, K2.1 (Saat 651, ohne Erweiterung): ihre beste Folge und eine Vollendung sind gleich bewertet (42.70); sie vollendet', () => {
     const start = stellung('saat-651-zug-17.json')
+    const wert = wertAb(start)
     const gruen = ermittleAktionen(start).find((aktion) => aktion.typ === 'FarbkarteLegen' && aktion.karteId === 'gruen-04' && aktion.ziel.art === 'schlange' && aktion.ziel.seite === 'anfang')
     if (gruen === undefined) throw new Error('Testaufbau: gruen-04 an den Anfang fehlt')
     const nachGruen = nachDurchlassen(start, gruen, 0)
@@ -117,6 +126,7 @@ describe('K2b: bei Gleichstand gewinnt der Zug, der eine Gruppe vollendet oder s
     ['saat-7154-basis-zug-23.json', 'Saat 7154 ohne Erweiterung, Befund aus X6', 40, 39.6, 39.5],
   ])('K2b, K2.1 (%s, %s): sie plant %s, strikt besser als jede Vollendung samt zweiter Karte (%s); der Rückstand von 0.1 im Partietest kam aus der Abwehr des Gegners (%s)', (datei, _quelle, geplant, vollendung, abgewehrt) => {
     const start = stellung(datei)
+    const wert = wertAb(start)
     const { aktionen, ende } = ersterTeilzug(start, 0, 1)
     expect(aktionen.map((aktion) => aktion.typ), 'K2b: Farbkarte, Blockade beim Gegner, Zug beenden').toEqual(['FarbkarteLegen', 'BlockadeLegen', 'ZugBeenden'])
     expect(wert(mitAbwehr(start, aktionen), 0), 'A6: derselbe Zug, der Gegner wehrt die Blockade mit Farbenschutz ab').toBeCloseTo(abgewehrt, 9)
@@ -134,6 +144,7 @@ describe('K2b: bei Gleichstand gewinnt der Zug, der eine Gruppe vollendet oder s
 
   it('K2.1 (x5-merge-k21-erweiterung.json, mit Erweiterung): mit dem Schlangenkorb, der seit X6 wirkt, ist ihr Zug strikt besser bewertet als jede Vollendung samt zweiter Karte', () => {
     const start = stellung('x5-merge-k21-erweiterung.json')
+    const wert = wertAb(start)
     const { aktionen, ende } = ersterTeilzug(start, 0, 1)
     expect(aktionen.map((aktion) => aktion.typ), 'Testaufbau: sie spielt jetzt den Korb, nicht mehr die Blockade').toContain('SchlangenkorbSpielen')
     const vollendungen = ermittleAktionen(start)

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-KI-046 Hält die solide KI die Farbkarte, die eine Aufgabe erfüllt, setzt sie diese Karte nicht mit Risiko-Aktion 2 aufs Spiel, wenn das nach ihrer eigenen Rechnung schlechter ist als die Erfüllung. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 27.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-KI-046 Hält die solide KI die Farbkarte, die eine Aufgabe erfüllt, setzt sie diese Karte nicht mit Risiko-Aktion 2 aufs Spiel, wenn das nach ihrer eigenen Rechnung schlechter ist als die Erfüllung.</h1><p class="etiketten"><span class="etikett">Bereich KI-Gegner</span><span class="etikett">Regression nein</span><span class="etikett">Priorität hoch</span><span class="etikett">Art automatisch</span><span class="etikett">Grenzfall von TF-KI-039</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Plan K4, Kriterium 1: Fehlt der KI eine Karte zu einer Aufgabe und hält sie sie, spielt sie sie, ausser ein anderer Zug ist nachweislich besser bewertet. Ein Sonderfall ist die Risiko-Karte mit Aktion 2: Die KI benennt eine Farbkarte ihrer Hand, und bei Misserfolg darf der begünstigte Gegner genau diese Karte nehmen (D52). Benennt sie die Karte, die die Aufgabe erfüllt, verliert sie die Aufgabe bei Misserfolg.</p><h2>Bestanden, wenn</h2><p>In jeder Stellung, in der eine Farbkarte der Hand eine offene oder die eigene geheime Aufgabe sofort erfüllt und die KI stattdessen Risiko-Aktion 2 spielt, liegt der Erwartungswert ihres ganzen Zuges über jede ungesehene Karte als oberste Stapelkarte über dem Wert der Erfüllung samt bester zweiter Karte, und zwar auch dann, wenn der Begünstigte die benannte Karte nimmt.</p><h2>Fehlgeschlagen, wenn</h2><p>Der Erwartungswert des Zuges mit der Risiko-Karte liegt unter dem Wert der Erfüllung, etwa 15.31 gegen 18.64 in Saat 6&#x27;500&#x27;012.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>28.11.2026</dd><dt>Änderung</dt><dd>task/K4-ki-erweiterung (PR #125)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Ausgangslage</td><td>Worktree auf dem geprüften Stand von <code>task/K4-ki-erweiterung</code>, <code>npm ci</code> gelaufen</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Partiesaaten 6&#x27;200&#x27;000 bis 6&#x27;200&#x27;039 und 6&#x27;500&#x27;000 bis 6&#x27;500&#x27;039, Spielerzahl 2 + (Nummer mod 3), bei gerader Nummer die solide KI an allen Sitzen, sonst an Sitz 0 gegen Zufalls-KIs; KI-Saat je Sitz (Saat × 31 + Sitz × 97 + 7). Einzelstellungen Saat 6&#x27;500&#x27;012 (Sitz 1) und 6&#x27;200&#x27;031 (Sitz 0) im Beleg.</p></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p>Die Proben <code>aufgaben2.test.ts</code> und <code>fall.test.ts</code> aus dem Beleg nach <code>src/ki/__pruefer__/</code> legen, mit <code>PRUEF_ZIEL</code>, <code>PRUEF_BASIS</code>, <code>PRUEF_ANZAHL</code>, <code>PRUEF_AUS</code> beziehungsweise <code>PRUEF_SAAT</code>, <code>PRUEF_SITZ</code>, <code>PRUEF_GEWAEHLT</code> über <code>npx vitest run</code> ausführen und danach löschen. Für jede ungesehene Karte legt die Probe sie oben auf den Stapel, spielt die Risiko-Karte, lässt den Gegner die benannte Karte oder die Stapelkarte wählen und den Rest des Zuges die solide KI spielen; bewertet wird mit <code>bewerte</code> plus <code>aufgabenwert</code> auf dem echten Zustand.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Risiko-Aktion 3 mit einer Schlangenkarte, deren Tausch eine Aufgabe zerstören könnte, kam in den Partien nicht vor und ist nicht eigens geprüft. Wie ein menschlicher Gegner bei Misserfolg wählt, hängt von ihm ab; geprüft sind beide Wahlen.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-fehlgeschlagen"><h3><time datetime="2026-11-28">28.11.2026 21:38</time> <span class="status status-fehlgeschlagen">fehlgeschlagen</span></h3><p class="angaben">Claude Code &middot; agent &middot; pruef-k4c @ <span class="commit" title="5b4a57dd931761062b0538b252a390ef24bc1430">5b4a57d</span></p><p>Saat 6&#x27;500&#x27;012, Sitz 1: KI benennt mit Risiko-Aktion 2 das Gelb, das eine Aufgabe erfüllt (fünf KI-Saaten gleich). Erfüllung samt zweiter Karte 18.64; ganzer Zug mit Risiko-Karte 15.31 (Begünstigter nimmt Gelb, Aufgabe in 61 von 90) bzw. 17.80 (Stapelkarte). Saat 6&#x27;200&#x27;031: 9.94 gegen 8.57 bzw. 10.11.</p><ul class="belege"><li><a href="belege/2026-11-28-2138-TF-KI-046-1.txt">2026-11-28-2138-TF-KI-046-1.txt</a></li><li><a href="belege/2026-11-28-2138-TF-KI-046-2.txt">2026-11-28-2138-TF-KI-046-2.txt</a></li><li><a href="belege/2026-11-28-2138-TF-KI-046-3.txt">2026-11-28-2138-TF-KI-046-3.txt</a></li><li><a href="belege/2026-11-28-2138-TF-KI-046-4.ts">2026-11-28-2138-TF-KI-046-4.ts</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

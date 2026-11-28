@@ -1,0 +1,41 @@
+Saat 920026 zufall, Entscheidung 35, offene Aufgaben Schlangentanz, Lila Riese, Farbharmonie, geheim Vielfaltskönig erfüllt=true
+Hand: Gelb, Rot, Grün, Farbendieb, Blau
+Schlangen: Gelb-Grün-Blau-Blau-Blau-Blau-Grün-Grün-Schlangenblockade-Braun-Blau | Violett-Violett-Violett-Violett-Braun-Gelb-Grün-Farbenfusion-Regenbogenschlange-Farbenfusion-Gelb-Regenbogenschlange-Gelb-Gelb-Gelb-Gelb-Violett-Braun-Braun
+Erfüllte: Farbenpracht, Fusionsexperte, Symmetriemeister, Farbwechsler, Schlangenbändiger, Farbvielfalt, Schlangenmeister, Gelber Schatz; Ausgespielte Sonderkarten: Farbendieb, Farbenfusion, Schlangenhäutung, Schlangengrube
+Wert Start 90.493; KI-Zug {"typ":"FarbendiebSpielen","spielerId":"spieler-1","karteId":"farbendieb-01","quelle":{"schlangenId":"schlange-6","karteId":"gruen-03"},"ziel":{"art":"schlange","schlangenId":"schlange-1","position":6}} / {"typ":"FarbkarteLegen","spielerId":"spieler-1","karteId":"rot-06","ziel":{"art":"schlange","schlangenId":"schlange-4","seite":"anfang"}}; Wert Ende 92.133
+ERFÜLLUNG {"typ":"FarbendiebSpielen","spielerId":"spieler-1","karteId":"farbendieb-01","quelle":{"schlangenId":"schlange-3","karteId":"violett-05"},"ziel":{"art":"schlange","schlangenId":"schlange-2","position":0}}: allein 96.793, mit zweiter max 99.193, Aufgaben 69 gegen 64
+ERFÜLLUNG {"typ":"FarbendiebSpielen","spielerId":"spieler-1","karteId":"farbendieb-01","quelle":{"schlangenId":"schlange-3","karteId":"violett-05"},"ziel":{"art":"schlange","schlangenId":"schlange-2","position":1}}: allein 96.793, mit zweiter max 99.193, Aufgaben 69 gegen 64
+ERFÜLLUNG {"typ":"FarbendiebSpielen","spielerId":"spieler-1","karteId":"farbendieb-01","quelle":{"schlangenId":"schlange-3","karteId":"violett-05"},"ziel":{"art":"schlange","schlangenId":"schlange-2","position":2}}: allein 96.793, mit zweiter max 99.193, Aufgaben 69 gegen 64
+ERFÜLLUNG {"typ":"FarbendiebSpielen","spielerId":"spieler-1","karteId":"farbendieb-01","quelle":{"schlangenId":"schlange-3","karteId":"violett-05"},"ziel":{"art":"schlange","schlangenId":"schlange-2","position":3}}: allein 96.793, mit zweiter max 99.193, Aufgaben 69 gegen 64
+ERFÜLLUNG {"typ":"FarbendiebSpielen","spielerId":"spieler-1","karteId":"farbendieb-01","quelle":{"schlangenId":"schlange-3","karteId":"violett-05"},"ziel":{"art":"schlange","schlangenId":"schlange-2","position":4}}: allein 96.793, mit zweiter max 99.193, Aufgaben 69 gegen 64
+ERFÜLLUNG {"typ":"FarbendiebSpielen","spielerId":"spieler-1","karteId":"farbendieb-01","quelle":{"schlangenId":"schlange-3","karteId":"violett-03"},"ziel":{"art":"schlange","schlangenId":"schlange-2","position":0}}: allein 96.793, mit zweiter max 99.193, Aufgaben 69 gegen 64
+ERFÜLLUNG {"typ":"FarbendiebSpielen","spielerId":"spieler-1","karteId":"farbendieb-01","quelle":{"schlangenId":"schlange-3","karteId":"violett-03"},"ziel":{"art":"schlange","schlangenId":"schlange-2","position":1}}: allein 96.793, mit zweiter max 99.193, Aufgaben 69 gegen 64
+ERFÜLLUNG {"typ":"FarbendiebSpielen","spielerId":"spieler-1","karteId":"farbendieb-01","quelle":{"schlangenId":"schlange-3","karteId":"violett-03"},"ziel":{"art":"schlange","schlangenId":"schlange-2","position":2}}: allein 96.793, mit zweiter max 99.193, Aufgaben 69 gegen 64
+Geplant (Gegner lassen durch): Wert 101.710, Aufgaben 64; abgewehrt im Spiel: true
+Anzahl erfüllender Aktionen: 10, Aktionen gesamt 528
+
+Saat 930012 solide, Entscheidung 78, offene Aufgaben Symmetriemeister, Farbharmonie, Lila Riese, geheim Gelber Schatz erfüllt=true
+Hand: Blau, Grün, Schlangenblockade, Schlangenfrass, Verdoppler
+Schlangen: Blau-Regenbogenschlange-Braun-Braun-Gelb-Blau-Blau-Blau-Blau-Blau-Grün-Blau-Blau-Schlangenblockade-Grün-Rot-Rot-Grün-Regenbogenschlange-Gelb-Gelb-Gelb-Gelb-Gelb | Blau-Farbenfusion-Farbenfusion-Braun-Blau-Violett-Violett-Blau
+Erfüllte: Farbkombination, Schlangenbeschwörer, Schlangenmeister, Farbwechsler, Vielfaltskönig, Farbenpracht, Fusionsexperte; Ausgespielte Sonderkarten: Farbendieb, Schlangenfrass, Schlangenhäutung, Verdoppler, Schlangengrube, Schlangengrube, Farbendieb, Farbenschutz, Schlangengrube, Regenbogenschlange, Farbenfusion, Regenbogenschlange, Schlangenfrass
+Wert Start 38.200; KI-Zug {"typ":"SchlangenfrassSpielen","spielerId":"spieler-1","karteId":"schlangenfrass-02","option":"gegnerischeKarten","ziele":[{"schlangenId":"schlange-5","karteId":"braun-10"},{"schlangenId":"schlange-5","karteId":"rot-05"}]} / {"typ":"FarbkarteLegen","spielerId":"spieler-1","karteId":"gruen-09","ziel":{"art":"schlange","schlangenId":"schlange-3","seite":"ende"}}; Wert Ende 38.700
+ERFÜLLUNG {"typ":"SchlangenfrassSpielen","spielerId":"spieler-1","karteId":"schlangenfrass-02","option":"eigeneKarte","ziele":[{"schlangenId":"schlange-3","karteId":"farbenfusion-02"}]}: allein 45.500, mit zweiter max 46.200, Aufgaben 60 gegen 50
+Geplant (Gegner lassen durch): Wert 46.300, Aufgaben 50; abgewehrt im Spiel: true
+Anzahl erfüllender Aktionen: 1, Aktionen gesamt 551
+
+Saat 930051 solide, Entscheidung 50, offene Aufgaben Schlangenbeschwörer, Gelber Schatz, Symmetriemeister, geheim Lila Riese erfüllt=false
+Hand: Blau, Braun, Violett, Grün, Schlangenblockade
+Schlangen: Rot-Rot-Rot-Grün-Rot-Regenbogenschlange-Blau-Farbenfusion-Violett-Regenbogenschlange-Gelb-Gelb | Braun-Rot-Grün-Grün-Grün-Blau-Blau-Grün
+Erfüllte: Farbvielfalt, Schlangenbändiger, Farbkombination, Vielfaltskönig; Ausgespielte Sonderkarten: Verdoppler, Schlangengrube, Regenbogenschlange, Schlangengrube, Schlangengrube, Farbenfusion, Farbenfusion, Farbenfusion, Schlangenblockade, Regenbogenschlange, Farbendieb
+Wert Start 27.880; KI-Zug {"typ":"BlockadeLegen","spielerId":"spieler-1","karteId":"schlangenblockade-02","schlangenId":"schlange-3","position":2} / {"typ":"FarbkarteLegen","spielerId":"spieler-1","karteId":"gruen-04","ziel":{"art":"schlange","schlangenId":"schlange-5","seite":"ende"}}; Wert Ende 29.030
+ERFÜLLUNG {"typ":"BlockadeLegen","spielerId":"spieler-1","karteId":"schlangenblockade-02","schlangenId":"schlange-2","position":0}: allein 34.080, mit zweiter max 35.230, Aufgaben 37 gegen 30
+ERFÜLLUNG {"typ":"BlockadeLegen","spielerId":"spieler-1","karteId":"schlangenblockade-02","schlangenId":"schlange-2","position":1}: allein 29.880, mit zweiter max 31.030, Aufgaben 37 gegen 30
+ERFÜLLUNG {"typ":"BlockadeLegen","spielerId":"spieler-1","karteId":"schlangenblockade-02","schlangenId":"schlange-2","position":2}: allein 30.380, mit zweiter max 31.530, Aufgaben 37 gegen 30
+ERFÜLLUNG {"typ":"BlockadeLegen","spielerId":"spieler-1","karteId":"schlangenblockade-02","schlangenId":"schlange-2","position":3}: allein 34.480, mit zweiter max 35.630, Aufgaben 37 gegen 30
+ERFÜLLUNG {"typ":"BlockadeLegen","spielerId":"spieler-1","karteId":"schlangenblockade-02","schlangenId":"schlange-2","position":4}: allein 34.480, mit zweiter max 35.630, Aufgaben 37 gegen 30
+ERFÜLLUNG {"typ":"BlockadeLegen","spielerId":"spieler-1","karteId":"schlangenblockade-02","schlangenId":"schlange-2","position":5}: allein 34.480, mit zweiter max 35.630, Aufgaben 37 gegen 30
+ERFÜLLUNG {"typ":"BlockadeLegen","spielerId":"spieler-1","karteId":"schlangenblockade-02","schlangenId":"schlange-2","position":6}: allein 31.980, mit zweiter max 33.130, Aufgaben 37 gegen 30
+ERFÜLLUNG {"typ":"BlockadeLegen","spielerId":"spieler-1","karteId":"schlangenblockade-02","schlangenId":"schlange-2","position":7}: allein 31.980, mit zweiter max 33.130, Aufgaben 37 gegen 30
+Geplant (Gegner lassen durch): Wert 41.830, Aufgaben 30; abgewehrt im Spiel: true
+Anzahl erfüllender Aktionen: 22, Aktionen gesamt 71
+

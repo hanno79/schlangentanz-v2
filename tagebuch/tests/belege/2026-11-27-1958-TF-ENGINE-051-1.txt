@@ -1,0 +1,5 @@
+npm run test:dauerlauf (exit 0)
+ Test Files  4 passed (4)
+      Tests  4 passed (4)
+   Duration  146.88s (transform 2.87s, setup 1.41s, import 3.15s, tests 578.99s, environment 0ms)
+exit 0

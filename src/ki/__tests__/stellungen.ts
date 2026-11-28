@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { anwendeAktion, deserialisiere, ermittleAktionen, ermittleEntscheider, erstellePartie, erzeugeZufall, werteSchlangen } from '../../engine'
+import { anwendeAktion, deserialisiere, erfuelltAufgabe, ermittleAktionen, ermittleEntscheider, erstellePartie, erzeugeZufall, werteSchlangen } from '../../engine'
 import type { Ereignis, SpielAktion, Spielzustand } from '../../engine'
 import { zufallszustand } from '../../engine/testing/zufallszustand'
 import { STRATEGIEN } from '../strategien'
@@ -87,7 +87,7 @@ export function gruppenzahl(zustand: Spielzustand, sitz: number): number {
 
 /**
  * Der Stand nach einer Karte, dazu jeder Stand nach einer zweiten Karte desselben Spielers im selben Zug (A5, D12); gefragte Gegner lassen durch.
- * Ohne Risiko-Karten: Die spielt die solide KI erst ab K4 (X5), und ihre Prüfung deckt verdeckt auf.
+ * Ohne Risiko-Karten: Ihre Prüfung deckt eine Karte auf, die bei der Wahl verdeckt ist (B2).
  */
 export function mitZweiterKarte(danach: Spielzustand, sitz: number): Spielzustand[] {
   if (danach.schwebend !== null || danach.zug.spielerIndex !== sitz || danach.zug.abschnitt !== 'Ausspielen') return [danach]
@@ -109,4 +109,53 @@ export function ersterTeilzug(start: Spielzustand, sitz: number, saat: number): 
     zustand = nachDurchlassen(zustand, aktion, sitz)
   }
   throw new Error('Testaufbau: Der Teilzug endet nicht nach zehn Schritten.')
+}
+
+/**
+ * Was die Zugsuche der soliden KI zu `bewerte` für den Sitz hinzuzählt (Plan K4), auf dem
+ * echten Zustand nachgerechnet: die Aufgaben, die er in `danach` erfüllt und noch nicht
+ * hat (offene und die eigene geheime, A9, D35), abzüglich der eingelösten, die erst nach
+ * `start` vom Aufgabenstapel aufgedeckt wurden. Die kennt die KI bei ihrer Wahl nicht.
+ */
+export function aufgabenwert(start: Spielzustand, danach: Spielzustand, sitz: number): number {
+  if (!danach.erweiterung) return 0
+  const geheimStart = start.spieler[sitz].geheimeAufgabe
+  const bekannt = new Set([...start.offeneAufgaben, ...start.spieler.flatMap((spieler) => spieler.erfuellteAufgaben), ...(geheimStart === null ? [] : [geheimStart])].map((aufgabe) => aufgabe.id))
+  const { geheimeAufgabe, geheimeAufgabeErfuellt, erfuellteAufgaben } = danach.spieler[sitz]
+  const frei = [...danach.offeneAufgaben, ...(geheimeAufgabeErfuellt || geheimeAufgabe === null ? [] : [geheimeAufgabe])].filter((aufgabe) => bekannt.has(aufgabe.id))
+  const offen = frei.reduce((summe, aufgabe) => summe + (erfuelltAufgabe(danach, sitz, aufgabe) ? aufgabe.punkte : 0), 0)
+  return offen - erfuellteAufgaben.filter((aufgabe) => !bekannt.has(aufgabe.id)).reduce((summe, aufgabe) => summe + aufgabe.punkte, 0)
+}
+
+/** Ein Schritt eines Sitzes in seinem ersten Zug. */
+export interface Zugschritt {
+  vorher: Spielzustand
+  aktion: SpielAktion
+  nachher: Spielzustand
+}
+
+/**
+ * Die ersten Züge aller Sitze einer Partie mit Erweiterung, die solide KI an jedem Sitz mit
+ * Saat `kiSaat(sitz)`: je Sitz seine eigenen Entscheidungen in diesem Zug (Plan K4, Kriterium 2).
+ * Der Zug ist zu Ende, wenn ein anderer dran ist oder nach „Zug beenden“ ein neuer Zug beginnt,
+ * nicht der zweite nach einem Verdoppler.
+ */
+export function ersteZuege(saat: number, spielerzahl: number, kiSaat: (sitz: number) => number): Zugschritt[][] {
+  let zustand = erstellePartie({ spielerzahl, erweiterung: true, zufall: erzeugeZufall(saat) })
+  const kis = Array.from({ length: spielerzahl }, (_, sitz) => STRATEGIEN.solideKi(erzeugeZufall(kiSaat(sitz))))
+  const zuege: Zugschritt[][] = kis.map(() => [])
+  const fertig = new Set<number>()
+  while (fertig.size < spielerzahl && zustand.partiephase === 'Laufend') {
+    const am = zustand.zug.spielerIndex
+    const entscheider = entscheiderVon(zustand)!.index
+    const aktion = kiWahl(zustand, kis[entscheider])!
+    const nachher = anwendeAktion(zustand, aktion).zustand
+    if (entscheider === am && !fertig.has(am)) {
+      zuege[am].push({ vorher: zustand, aktion, nachher })
+      const neuerZug = nachher.zug.spielerIndex !== am || ((aktion.typ === 'ZugBeenden' || aktion.typ === 'UeberhandAbwerfen') && nachher.zug.teilzug === 1 && nachher.zug.abschnitt === 'Ausspielen' && nachher.zug.verwendet.length === 0)
+      if (neuerZug) fertig.add(am)
+    }
+    zustand = nachher
+  }
+  return zuege.filter((zug) => zug.length > 0)
 }

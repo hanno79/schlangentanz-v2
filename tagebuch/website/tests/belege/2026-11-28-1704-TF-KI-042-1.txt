@@ -1,0 +1,7 @@
+Prüfer K4 Iteration 2: Commits mit Tests zuerst
+461904dc (nur Tests): 3 Testdateien rot, 3 Tests rot
+  Cannot find module './eroeffnung' (solideKi_erweiterung_erstzug.test.ts)
+  K4.2 ki-risiko-ohne-nutzen: Testaufbau: die Hand aus der Beschreibung
+  K4.1 Saaten 77'100-77'117 und K4.1 Saat 77'103 Zug 33: gewählt 123.95, beste Erfüllung samt zweiter Karte 124.45
+acf06cc2 (nur Tests): 2 Tests rot (Fusion zu Farbenpracht; erster Zug nach Risiko-Aktion 3)
+c8be62d2: npm test -- --run grün, 206 Dateien, 3351 Tests

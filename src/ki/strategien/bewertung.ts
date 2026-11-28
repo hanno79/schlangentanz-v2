@@ -1,6 +1,7 @@
 import { KETTENBONUS, hatNochLetztenZug, istJoker, laengsteFarbkette, werteSchlangen } from '../../engine';
 import type { Farbe, Schlange, Spielkarte } from '../../engine';
 import type { Sicht, SpielerSicht } from '../sicht';
+import { aufgabenpunkteVon, auffuellwert, auslagewert, handsumme } from './erweiterungswert';
 
 /*
 Die Bewertung einer Stellung für die solide KI (Plan K2, Vorgehen): der eigene
@@ -19,6 +20,8 @@ die Sicht des Spielers, also nur, was er am Tisch sieht.
   Aussichten mehr.
 - Schlangengruben: Wer noch aussetzen muss, verliert einen Zug (A7.6), in der
   Schlussrunde seinen letzten (D21).
+- Mit Erweiterung zusätzlich erfüllte Aufgaben, die Auslage und eine Hand über
+  5 Karten (`erweiterungswert.ts`, Plan K4).
 
 Die Gewichte sind Schätzungen in Punkten; sie entscheiden nur zwischen Zügen,
 die die Engine erlaubt.
@@ -32,7 +35,7 @@ die die Engine erlaubt.
  * in Summen dieser Grösse bleibt unter 1e-11. Dazwischen liegt die Grenze.
  */
 export const GLEICH = 1e-9;
-/** Was eine Handkarte eines Gegners im Mittel wert ist; seine Karten sieht die KI nicht. */
+/** Was eine Handkarte eines Gegners im Mittel wert ist; seine Karten sieht die KI nicht. Ebenso viel ist eine Karte wert, die sie selbst noch verdeckt nachzieht. */
 const HANDKARTE_GEGNER = 0.4;
 /** Ein Zug, den ein Spieler wegen einer Schlangengrube aussetzt (A7.6). */
 const AUSGESETZTER_ZUG = 2;
@@ -42,6 +45,8 @@ const ZWEITER_ZUG = 2.5;
 const UEBRIGE_GEGNER = 0.1;
 /** Ein Farbenschutz schützt auch nach dem letzten eigenen Zug noch (A6, A10). */
 const FARBENSCHUTZ_NACH_LETZTEM_ZUG = 0.8;
+/** Was der Schlangenkorb auf der Hand wert ist, solange noch Züge kommen (A7.10, Plan K4). */
+const KORB_HALTEN = 2;
 /** Jede fertige Gruppe zählt etwas über ihre Punkte hinaus: Sie steht, ein Paar muss erst noch vollendet werden. */
 const FERTIGE_GRUPPE = 0.5;
 
@@ -119,9 +124,7 @@ export function eigenePunkte(sicht: Sicht, merker: Wertungsmerker = neuerMerker(
  * (A9). Ohne Erweiterung gibt es keine Aufgaben, dann ist es `eigenePunkte`.
  */
 export function sichtbarePunkte(sicht: Sicht, merker: Wertungsmerker = neuerMerker()): number {
-  const offene = sicht.spieler[sicht.ich].erfuellteAufgaben.reduce((summe, aufgabe) => summe + aufgabe.punkte, 0);
-  const geheime = sicht.geheimeAufgabeErfuellt && sicht.geheimeAufgabe !== null ? sicht.geheimeAufgabe.punkte : 0;
-  return eigenePunkte(sicht, merker) + offene + geheime;
+  return eigenePunkte(sicht, merker) + aufgabenpunkteVon(sicht, sicht.ich);
 }
 
 /** Wie viele Farbgruppen der Betrachter der Sicht hat (A11). */
@@ -201,8 +204,10 @@ function sonderkartenwert(karte: Spielkarte & { typ: 'Sonderkarte' }): number {
       return 1.2;
     case 'Regenbogenschlange':
     case 'Schlangenfrass':
-    case 'Schlangenkorb des Glücks':
       return 1.0;
+    case 'Schlangenkorb des Glücks':
+      // Plan K4: Von vier Boni passt später oft einer besser; der Korb lohnt sich erst, wenn einer davon jetzt mehr bringt.
+      return KORB_HALTEN;
     case 'Schlangenblockade':
     case 'Schlangengrube':
       return 0.8;
@@ -248,13 +253,13 @@ function spielerwert(sicht: Sicht, index: number, merker: Wertungsmerker): numbe
   const ausblick = zukunft(sicht, index);
   // In der Schlussrunde kostet eine Grube den letzten Zug; das steckt schon in `zukunft`.
   const gruben = sicht.partiephase === 'Laufend' ? grubenVor(sicht, index) : 0;
-  const hand =
-    index === sicht.ich
-      ? sicht.hand.reduce((summe, karte) => summe + haltewert(karte, sicht), 0)
-      : HANDKARTE_GEGNER * spieler.handgroesse * ausblick;
+  const hand = index === sicht.ich ? handsumme(sicht.hand, (karte) => haltewert(karte, sicht)) : HANDKARTE_GEGNER * spieler.handgroesse * ausblick;
   const zug = sicht.zug;
   const zweiterZug = zug.spielerIndex === index && zug.teilzug === 1 && zug.verdopplerGespielt ? ZWEITER_ZUG : 0;
-  return wertDerSchlangen(schlangenwert(spieler.schlangen, sicht.erweiterung, merker), ausblick) + hand - AUSGESETZTER_ZUG * gruben + zweiterZug;
+  const basis = wertDerSchlangen(schlangenwert(spieler.schlangen, sicht.erweiterung, merker), ausblick) + hand - AUSGESETZTER_ZUG * gruben + zweiterZug;
+  if (!sicht.erweiterung) return basis;
+  const auffuellen = index === sicht.ich ? auffuellwert(sicht, ausblick, HANDKARTE_GEGNER) : 0;
+  return basis + aufgabenpunkteVon(sicht, index) + auslagewert(sicht, index, ausblick) + auffuellen;
 }
 
 /** Der Wert von Schlangen in der Bewertung: Punkte, fertige Gruppen und, soweit noch Züge kommen, die Aussichten. */
