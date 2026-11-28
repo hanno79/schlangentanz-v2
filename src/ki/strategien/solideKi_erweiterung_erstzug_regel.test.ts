@@ -82,8 +82,10 @@ function begruendung(zug: readonly Zugschritt[], stelle: number): string | null 
     return anstieg > ERSTZUG_HALTEN ? null : `${aktion.typ}, danach ${ziehen.aktion.typ}: erwarteter Anstieg ${anstieg.toFixed(2)}`
   }
   const ende = schluss < 0 ? rest[rest.length - 1].nachher : rest[schluss].vorher
-  const gruppe = gruppenzahl(ende, sitz) > gruppenzahl(vorher, sitz)
-  const aufgabe = ende.spieler[sitz].erfuellteAufgaben.length > vorher.spieler[sitz].erfuellteAufgaben.length || (ende.spieler[sitz].geheimeAufgabeErfuellt && !vorher.spieler[sitz].geheimeAufgabeErfuellt)
+  // Gruppe und Aufgabe zählen bis zum Ende des Zuges, auch nach einer späteren Risiko-Karte (Prüfprotokoll Iteration 2, Saat 810'119).
+  const zugende = rest[rest.length - 1].nachher
+  const gruppe = gruppenzahl(zugende, sitz) > gruppenzahl(vorher, sitz)
+  const aufgabe = zugende.spieler[sitz].erfuellteAufgaben.length > vorher.spieler[sitz].erfuellteAufgaben.length || (zugende.spieler[sitz].geheimeAufgabeErfuellt && !vorher.spieler[sitz].geheimeAufgabeErfuellt)
   const anstieg = wert(vorher, ende) - wert(vorher, vorher)
   return gruppe || aufgabe || anstieg > ERSTZUG_HALTEN ? null : `${JSON.stringify(aktion)}: ohne Gruppe und Aufgabe, Anstieg ${anstieg.toFixed(2)}`
 }
