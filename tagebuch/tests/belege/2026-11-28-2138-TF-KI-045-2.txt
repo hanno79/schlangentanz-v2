@@ -1,0 +1,81 @@
+=== M1:  src/ki/strategien/zugsuche.ts | 2 +-
+diff --git a/src/ki/strategien/zugsuche.ts b/src/ki/strategien/zugsuche.ts
+index 9809da60..eadc3461 100644
+--- a/src/ki/strategien/zugsuche.ts
++++ b/src/ki/strategien/zugsuche.ts
+@@ -125,7 +125,7 @@ function spiele(sicht: Sicht, aktionen: readonly SpielAktion[], zufall: () => nu
+   // über ERSTZUG_HALTEN gegenüber „Zug beenden“ (`eroeffnung.ts`). Geprüft wird jede Karte im Schritt, in dem sie gespielt würde.
+   const erstzug = erster ? halten : undefined;
+   const lohnt = (aktion: SpielAktion, plan: Folge) =>
+-    erstzug === undefined || !setztAuslageEin(aktion) || plan.gruppen > erstzug.gruppen || loestAufgabe(sicht, plan.stellung.sicht) || plan.wert > erstzug.wert + ERSTZUG_HALTEN;
++    true || erstzug === undefined || !setztAuslageEin(aktion) || plan.gruppen > erstzug.gruppen || loestAufgabe(sicht, plan.stellung.sicht) || plan.wert > erstzug.wert + ERSTZUG_HALTEN;
+   const vertieft = new Map<Folge, Folge>();
+   for (const folge of vertiefen) {
+     const zweite = naechste(folge, ZWEITE_AUSWAHL);
+Exit 1
+      Tests  3 failed | 31 passed (34)
+ FAIL  src/ki/strategien/solideKi_erweiterung_erstzug_regel.test.ts > K4 Kriterium 2 im ersten Zug an Zufallsstarthänden: jeder Einsatz hat einen Grund > K4.2: in den ersten Zügen der Saaten 810'000 bis 810'099 vollendet jeder Einsatz von Comeback-Karte, Risiko-Karte oder Korb eine Gruppe, erfüllt eine Aufgabe oder hebt die Bewertung um mehr als ERSTZUG_HALTEN
+ FAIL  src/ki/strategien/solideKi_erweiterung_erstzug_regel.test.ts > K4 Kriterium 2 im ersten Zug: je Stelle der Regel eine Stellung > K4.2, saat-810100-erster-zug-korb.json (Zugsuche: Korb „aktionen“, ohne Gruppe und Aufgabe 1.57 gegen Halten 1.28): im ersten Zug setzt sie keine der drei Karten ein, sondern beendet den Zug
+ FAIL  src/ki/strategien/solideKi_erweiterung_erstzug_regel.test.ts > K4 Kriterium 2 im ersten Zug: je Stelle der Regel eine Stellung > K4.2, saat-810110-erster-zug-korb.json (Zugsuche: Korb „aktionen“, ohne Gruppe und Aufgabe -1.88 gegen Halten -1.92): im ersten Zug setzt sie keine der drei Karten ein, sondern beendet den Zug
+ Test Files  1 failed | 6 passed (7)
+zurückgesetzt: 0 Änderungen
+=== M2:  src/ki/strategien/zugsuche.ts | 2 +-
+diff --git a/src/ki/strategien/zugsuche.ts b/src/ki/strategien/zugsuche.ts
+index 9809da60..fb515fbd 100644
+--- a/src/ki/strategien/zugsuche.ts
++++ b/src/ki/strategien/zugsuche.ts
+@@ -152,7 +152,7 @@ function spiele(sicht: Sicht, aktionen: readonly SpielAktion[], zufall: () => nu
+   }
+   // Verdecktes Ziehen nur, wenn es nach der Schätzung mehr bringt als der beste Plan (`ziehen.ts`), im ersten Zug mehr als ERSTZUG_HALTEN über dem Halten.
+   const ziehen = schaetzeZiehen(sicht, aktionen, suche.schaetzrechnung);
+-  if (ziehen !== null && (plan === undefined || ziehen.wert > plan.wert + GLEICH) && (erstzug === undefined || ziehen.wert > erstzug.wert + ERSTZUG_HALTEN)) {
++  if (ziehen !== null && (plan === undefined || ziehen.wert > plan.wert + GLEICH) ) {
+     return { aktion: ziehen.aktion, bewertungen: suche.gezaehlt() };
+   }
+   if (plan === undefined) throw new Error('Zugsuche: Die Engine bietet weder eine Karte noch „Zug beenden“ an.');
+Exit 1
+      Tests  3 failed | 31 passed (34)
+ FAIL  src/ki/strategien/solideKi_erweiterung_erstzug_regel.test.ts > K4 Kriterium 2 im ersten Zug an Zufallsstarthänden: jeder Einsatz hat einen Grund > K4.2: in den ersten Zügen der Saaten 810'000 bis 810'099 vollendet jeder Einsatz von Comeback-Karte, Risiko-Karte oder Korb eine Gruppe, erfüllt eine Aufgabe oder hebt die Bewertung um mehr als ERSTZUG_HALTEN
+ FAIL  src/ki/strategien/solideKi_erweiterung_erstzug_regel.test.ts > K4 Kriterium 2 im ersten Zug: je Stelle der Regel eine Stellung > K4.2, saat-810067-erster-zug-korb-ziehen.json (verdecktes Ziehen: Korb „ziehen“): im ersten Zug setzt sie keine der drei Karten ein, sondern beendet den Zug
+ FAIL  src/ki/strategien/solideKi_erweiterung_erstzug_regel.test.ts > K4 Kriterium 2 im ersten Zug: je Stelle der Regel eine Stellung > K4.2, saat-810100-erster-zug-korb.json (Zugsuche: Korb „aktionen“, ohne Gruppe und Aufgabe 1.57 gegen Halten 1.28): im ersten Zug setzt sie keine der drei Karten ein, sondern beendet den Zug
+ Test Files  1 failed | 6 passed (7)
+zurückgesetzt: 0 Änderungen
+=== M3:  src/ki/strategien/risiko.ts | 2 +-
+diff --git a/src/ki/strategien/risiko.ts b/src/ki/strategien/risiko.ts
+index d7030c9e..781e328e 100644
+--- a/src/ki/strategien/risiko.ts
++++ b/src/ki/strategien/risiko.ts
+@@ -200,6 +200,6 @@ export function schaetzeRisiko(sicht: Sicht, aktionen: readonly SpielAktion[], r
+  */
+ export function waehleRisiko(sicht: Sicht, aktionen: readonly SpielAktion[], rechnung: Schaetzrechnung): RisikoKarteSpielenAktion | null {
+   const beste = schaetzeRisiko(sicht, aktionen, rechnung);
+-  const schwelle = imErstenZug(sicht) ? ERSTZUG_HALTEN : GLEICH;
++  const schwelle = imErstenZug(sicht) ? GLEICH : GLEICH;
+   return beste !== null && beste.wert > beste.jetzt + schwelle ? beste.aktion : null;
+ }
+Exit 1
+      Tests  2 failed | 32 passed (34)
+ FAIL  src/ki/strategien/solideKi_erweiterung_erstzug_regel.test.ts > K4 Kriterium 2 im ersten Zug an Zufallsstarthänden: jeder Einsatz hat einen Grund > K4.2: in den ersten Zügen der Saaten 810'000 bis 810'099 vollendet jeder Einsatz von Comeback-Karte, Risiko-Karte oder Korb eine Gruppe, erfüllt eine Aufgabe oder hebt die Bewertung um mehr als ERSTZUG_HALTEN
+ FAIL  src/ki/strategien/solideKi_erweiterung_erstzug_regel.test.ts > K4 Kriterium 2 im ersten Zug: je Stelle der Regel eine Stellung > K4.2, saat-810015-erster-zug-risiko.json (Risiko-Karte mit Aktion 2): im ersten Zug setzt sie keine der drei Karten ein, sondern beendet den Zug
+ Test Files  1 failed | 6 passed (7)
+zurückgesetzt: 0 Änderungen
+=== M4:  src/ki/strategien/vorauswahl.ts | 2 +-
+diff --git a/src/ki/strategien/vorauswahl.ts b/src/ki/strategien/vorauswahl.ts
+index 17815753..44a94460 100644
+--- a/src/ki/strategien/vorauswahl.ts
++++ b/src/ki/strategien/vorauswahl.ts
+@@ -280,7 +280,7 @@ export function vorauswahl(
+     karten.add(karte);
+   }
+   // Kriterium 1: Die beste Aktion, die eine Aufgabe erfüllt, zählt zu den gewählten und steht ganz vorn; so wird sie immer durchgerechnet.
+-  const erfuellend = geordnet.find((eintrag) => eintrag.aufgabenwert > vorher);
++  const erfuellend = undefined as Geschaetzt | undefined;
+   if (erfuellend !== undefined) gewaehlt.add(erfuellend.stelle);
+   for (const eintrag of geordnet) if (gewaehlt.size < anzahl) gewaehlt.add(eintrag.stelle);
+   // Stabil sortiert: zuerst sie, dann die übrigen gewählten, dann der Rest, jeweils nach Vorwert.
+Exit 1
+      Tests  1 failed | 39 passed (40)
+ FAIL  src/ki/strategien/vorauswahl_aufgaben.test.ts > K4 Kriterium 1: die Vorauswahl und die Aufgaben > K4.1: die beste Aktion, die eine Aufgabe erfüllt, steht vorn, auch mit dem niedrigsten Vorwert
+ Test Files  1 failed | 7 passed (8)
+zurückgesetzt: 0 Änderungen
+fertig

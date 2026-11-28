@@ -1,0 +1,23 @@
+{
+ "teile": 4,
+ "partien": 2000,
+ "punkte": 1002.5,
+ "siege": 992,
+ "geteilt": 21,
+ "niederlagen": 987,
+ "anteil": "50.13",
+ "sePartie": "1.11",
+ "grenzePartie": "47.78",
+ "paare": 1000,
+ "ungleichePaare": 20,
+ "sePaar": "0.21",
+ "grenzePaar": "49.58",
+ "eingesetztRegel": 31,
+ "eingesetztKontrolle": 0,
+ "jeTeil": [
+  "spiegel-teil0.json: 49.90 %",
+  "spiegel-teil1.json: 50.10 %",
+  "spiegel-teil2.json: 49.90 %",
+  "spiegel-teil3.json: 50.60 %"
+ ]
+}

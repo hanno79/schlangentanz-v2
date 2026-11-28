@@ -1,0 +1,13 @@
+
+> schlangentanz-v2@0.0.0 test:vollpartien
+> playwright test --config playwright.vollpartien.config.ts
+
+
+Running 4 tests using 4 workers
+
+  ok 1 [desktop] › tests\vollpartien\vollpartie.spec.ts:107:3 › Z1 K1/K2: Basis zu viert (Saat 13) bis zur Wertung, über echte Klicks (19.5s)
+  ok 4 [handy-hochkant] › tests\vollpartien\vollpartie.spec.ts:107:3 › Z1 K1/K2: Basis zu viert (Saat 13) bis zur Wertung, über echte Klicks (21.3s)
+  ok 2 [desktop] › tests\vollpartien\vollpartie.spec.ts:107:3 › Z1 K1/K2: Basis zu zweit (Saat 2026) bis zur Wertung, über echte Klicks (24.5s)
+  ok 3 [handy-hochkant] › tests\vollpartien\vollpartie.spec.ts:107:3 › Z1 K1/K2: Basis zu zweit (Saat 2026) bis zur Wertung, über echte Klicks (28.3s)
+
+  4 passed (33.9s)

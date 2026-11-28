@@ -1,0 +1,41 @@
+Prüfer K4 Iteration 3, Stand 5b4a57dd, 28.11.2026
+Probe aufgaben2.test.ts (symmetrisch: gewählte erste Aktion und jede Erfüllung je mit bester zweiter Karte oder Fortsetzung durch die solide KI; Gegner lassen durch; erfüllt zählt bis Zugende; verdeckter Zugbeginn über jede ungesehene Karte als oberste Stapelkarte)
+
+K4.1 (Aufgabe), mit Erweiterung
+Saaten 6'500'000..6'500'039: Entscheidungen 2676, Prüfpunkte 227, erfüllt/versucht 192, gedeckt 34, ungedeckt (verdeckt) 1
+Saaten 6'200'000..6'200'039: Entscheidungen 2743, Prüfpunkte 246, erfüllt/versucht 224, gedeckt 20, gedeckt durch K2.4 1, nur bei günstiger Gegnerwahl 1
+
+Fall Saat 6'500'012, 2 Spieler, solide KI an beiden Sitzen, Sitz 1, KI-Saat Saat*31+Sitz*97+7
+  Hand: Gelb1(gelb-02), Rot1(rot-13), Blau1(blau-15), Blau1(blau-08), Rot1(rot-14); Schlange schlange-1 [G1 Farbenfusion B2 B2]
+  Offene Aufgaben: Schlangenbeschwörer, Farbvielfalt, Farbharmonie; geheim Gelber Schatz
+  planeZug mit KI-Saaten 1..5: jedes Mal RisikoKarteSpielen Aktion 2, benannt gelb-02
+  schaetzeRisiko: Wert 14.11, jetzt 9.64
+  beste Erfüllung samt zweiter Karte / Fortsetzung: 18.64
+  ganzer Zug mit Risiko-Karte über 90 ungesehene Karten: Begünstigter nimmt Gelb 15.31 (Aufgabe in 61 von 90 erfüllt), nimmt Stapelkarte 17.80 (90 von 90)
+  => ungedeckt
+
+Fall Saat 6'200'031, 3 Spieler, Sitz 0 solide, Sitze 1-2 Zufalls-KI
+  Hand: Schlangenhäutung, Farbenschutz, Gelb1(gelb-04), Blau1(blau-10), Farbendieb; Schlangen schlange-1 [B2 B2], schlange-3 [G1 R1 V2]
+  erfüllend: FarbkarteLegen blau-10 an den Anfang von schlange-3, intern 9.89, mit zweiter Karte 9.94
+  planeZug mit KI-Saaten 1..5: jedes Mal RisikoKarteSpielen Aktion 2, benannt blau-10; schaetzeRisiko 6.49, jetzt 3.74
+  ganzer Zug über 99 ungesehene Karten: Begünstigter nimmt Blau 8.57 (Aufgabe 57/99), nimmt Stapelkarte 10.11 (86/99)
+  => nur gedeckt, wenn der Gegner die Stapelkarte wählt; nach dem eigenen Modell der KI (risiko.ts: Begünstigter nimmt die benannte Karte) ungedeckt
+
+Fall Saat 6'200'016 (gedeckt durch K2.4): Erfüllung nur über FusionLegen schlange-1 (blau-01, blau-04), intern 3.20 (senkt die eigenen Punkte), mit Violett danach 13.70; gewählt Fusion beim Gegner 9.45, mit zweiter 10.16
+
+K2.1 (eine Gruppe mehr), Saaten 6'600'000..6'600'029
+  mit Erweiterung:  Prüfpunkte 473, vollendet 423, gedeckt 46, gleich 1, ungedeckt 3
+  ohne Erweiterung: Prüfpunkte 445, vollendet 384, gedeckt 60, gleich 1, ungedeckt 0
+
+Fall Saat 6'600'018, 2 Spieler, beide solide, Sitz 1
+  Hand: Gelb1 x3, Schlangenfrass, Regenbogenschlange; Schlangen schlange-3 [G1 G1 G1 G1 B2 B2 R1 G3 Farbenfusion G3 R1 B2 B1 B1 B1 B1], schlange-5 [R1 V2 V2 Schlangenblockade V2 V2 V2]
+  gewählt: SchlangenfrassSpielen gegnerische Karten 15.70, mit Gelb an schlange-1 17.30 (intern gleich)
+  Vollendung: RegenbogenschlangeLegen schlange-5 Stelle 1: 10.90, mit Gelb an den Anfang von schlange-5: 20.00 (bewerte 20.00, aufgabenwert 0)
+  => ungedeckt (17.30 < 20.00)
+
+Fall Saat 6'600'008, 4 Spieler, alle solide, Sitz 2
+  gewählt: Schlangenfrass gegnerisch -2.37, mit Gelb -1.04
+  Vollendung: Schlangenfrass eigene Karte rot-04 -2.78, mit Gelb an schlange-2 -0.38
+  => ungedeckt (-1.04 < -0.38)
+
+Fall Saat 6'600'015: gewählt Farbkarte, danach Risiko-Karte; 8.28 gegen 8.50 ohne den Erwartungswert der Risiko-Karte, nicht eindeutig

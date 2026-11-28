@@ -1,0 +1,21 @@
+diff --git a/src/ki/sicht.ts b/src/ki/sicht.ts
+index a57fc928..4586baa1 100644
+--- a/src/ki/sicht.ts
++++ b/src/ki/sicht.ts
+@@ -115,14 +115,14 @@ function sichtAus(zustand: Spielzustand, spielerIndex: number): Sicht {
+     zug: zugInSicht(zustand, spielerIndex),
+     entscheider: ermittleEntscheider(zustand),
+     schlussrundeAusloeser: zustand.schlussrundeAusloeser,
+-    nachziehstapelGroesse: zustand.nachziehstapel.length,
++    nachziehstapelGroesse: Math.max(0, zustand.nachziehstapel.length - 1),
+     aufgabenstapelGroesse: zustand.aufgabenStapel.length,
+     offeneAufgaben: zustand.offeneAufgaben,
+     ausliegendeGruben: zustand.ausliegendeGruben,
+     angesagt: zustand.schwebend,
+     entscheidung: zustand.entscheidung,
+     aufgedeckt: zustand.aufgedeckt,
+-    ausDemSpiel: zustand.ausDemSpiel,
++    ausDemSpiel: [...zustand.ausDemSpiel, ...zustand.nachziehstapel.slice(0, 1)],
+     schlangenZaehler: zustand.schlangenZaehler,
+   };
+ }

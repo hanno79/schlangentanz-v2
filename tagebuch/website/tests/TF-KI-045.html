@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-KI-045 Schaltet man eine Stelle der Erstzug-Regel oder die Vorauswahl-Regel für Aufgaben aus, wird mindestens ein Test der Suite rot. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 27.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-KI-045 Schaltet man eine Stelle der Erstzug-Regel oder die Vorauswahl-Regel für Aufgaben aus, wird mindestens ein Test der Suite rot.</h1><p class="etiketten"><span class="etikett">Bereich KI-Gegner</span><span class="etikett">Regression nein</span><span class="etikett">Priorität hoch</span><span class="etikett">Art automatisch</span><span class="etikett">Grenzfall von TF-KI-039</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Plan K4, Kriterien 1 und 2: Eine Regel, die man ausschalten kann, ohne dass ein Test es bemerkt, ist nicht abgesichert. Die Regel für den ersten Zug greift an drei Stellen (Plan der Zugsuche, Schätzung des verdeckten Ziehens mit dem Korb, Schwelle der Risiko-Karte), die Regel für Aufgaben in der Vorauswahl. Jede Stelle wird einzeln ausgeschaltet, die Suite läuft, danach wird zurückgesetzt.</p><h2>Bestanden, wenn</h2><p>Für jede der Änderungen M1 bis M4 (siehe Technische Prüfung) wird mindestens ein Test rot, und nach dem Zurücksetzen zeigt <code>git status</code> ausserhalb von <code>tagebuch/</code> keine Änderung.</p><h2>Fehlgeschlagen, wenn</h2><p>Nach einer der Änderungen bleiben alle Tests der Suite grün, etwa wenn <code>lohnt</code> in der Zugsuche immer wahr ist und trotzdem kein Test anschlägt.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>28.11.2026</dd><dt>Änderung</dt><dd>task/K4-ki-erweiterung (PR #125)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Ausgangslage</td><td>Worktree auf dem geprüften Stand von <code>task/K4-ki-erweiterung</code>, <code>npm ci</code> gelaufen, keine eigene Änderung im Code</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Keine eigenen Daten; die Tests der Suite unter <code>src/ki/strategien/</code> mit ihren festen Saaten.</p></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p>Je eine Änderung, danach die Tests der Erweiterung unter <code>src/ki/strategien/</code> (<code>solideKi_erweiterung*.test.ts</code>, <code>vorauswahl_aufgaben.test.ts</code>) mit <code>npx vitest run</code>, danach <code>git checkout -- &lt;datei&gt;</code>:</p>
+<ul><li>M1: <code>zugsuche.ts</code>, <code>lohnt</code> liefert immer <code>true</code>.</li><li>M2: <code>zugsuche.ts</code>, die Bedingung mit <code>ERSTZUG_HALTEN</code> beim verdeckten Ziehen entfällt.</li><li>M3: <code>risiko.ts</code>, <code>waehleRisiko</code> nimmt im ersten Zug <code>GLEICH</code> statt <code>ERSTZUG_HALTEN</code>.</li><li>M4: <code>vorauswahl.ts</code>, die beste erfüllende Aktion wird nicht mehr zwingend aufgenommen und nicht nach vorn gestellt.</li></ul></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Mehrere Stellen zugleich auszuschalten prüft der Testfall nicht; fällt schon jede einzeln auf, fällt auch die Kombination auf. Die Regel <code>erfuellend</code> beim Vertiefen in <code>zugsuche.ts</code> und die Paarprüfung <code>tauschpruefung</code> in der Vorauswahl werden nur protokolliert, wenn sie mitgeprüft wurden.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-28">28.11.2026 21:38</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code &middot; agent &middot; pruef-k4c @ <span class="commit" title="5b4a57dd931761062b0538b252a390ef24bc1430">5b4a57d</span></p><p>M1 lohnt immer wahr: 3 Tests rot; M2 ohne Erstzug-Schwelle beim verdeckten Ziehen: 3 rot; M3 Risiko im ersten Zug GLEICH: 2 rot; M4 Vorauswahl ohne erfüllende Aktion vorn: 1 rot (Partientests grün). Jeweils zurückgesetzt, git status sauber.</p><ul class="belege"><li><a href="belege/2026-11-28-2138-TF-KI-045-1.txt">2026-11-28-2138-TF-KI-045-1.txt</a></li><li><a href="belege/2026-11-28-2138-TF-KI-045-2.txt">2026-11-28-2138-TF-KI-045-2.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

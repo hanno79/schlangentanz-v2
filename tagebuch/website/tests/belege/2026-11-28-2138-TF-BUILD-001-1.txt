@@ -1,0 +1,14 @@
+test Exit 0 Dauer 318s 21:08:53
+typecheck Exit 0 Dauer 14s 21:09:07
+build Exit 0 Dauer 14s 21:09:21
+testlines Exit 0 Dauer 1s 21:09:22
+cssasserts Exit 0 Dauer 1s 21:09:23
+regeln Exit 0 Dauer 3s 21:09:26
+eslint Exit 0 Dauer 21s 21:09:47
+regelcheck Exit 0 Dauer 8s 21:09:55
+Ports vor Playwright: 0
+layout Exit 0 Dauer 400s 21:16:35
+vollpartien Exit 0 Dauer 36s 21:17:11
+dauerlauf Exit 0 Dauer 210s 21:20:41
+staerke Exit 0 Dauer 954s 21:36:35
+fertig

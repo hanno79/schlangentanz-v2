@@ -1,0 +1,18 @@
+Warnung: src/ki/strategien/solideKi.test.ts — eine Datei, eine Verantwortung — 401 Zeilen, Richtwert 400 — Aufteilung prüfen, oder die Ausnahme mit 'regelcheck: laenge-bewusst <Grund>' in den ersten 20 Zeilen festhalten
+Warnung: tagebuch/tests — Testregister — Testregister nicht auswertbar — Exit 2: Testregister nicht auswertbar: TF-KI-045.md: 'grenzfall_von' nennt 'TF-KI-043', und das ist selbst ein Grenzfall (von 'TF-KI-039'). Er muss auf den normalen Testfall zeigen.
+Warnung: tagebuch/tests/belege/2026-11-13-1834-TF-SPEC-006-1.txt — UTF-8 ohne BOM — Datei beginnt mit einem BOM — ohne BOM neu speichern
+Warnung: tagebuch/tests/belege/2026-11-13-1834-TF-SPEC-008-1.txt — UTF-8 ohne BOM — Datei beginnt mit einem BOM — ohne BOM neu speichern
+Warnung: tagebuch/tests/belege/2026-11-13-1834-TF-SPEC-009-1.txt — UTF-8 ohne BOM — Datei beginnt mit einem BOM — ohne BOM neu speichern
+Warnung: tagebuch/tests/belege/2026-11-27-1735-TF-TISCH-054-3.txt — UTF-8 ohne BOM — Datei beginnt mit einem BOM — ohne BOM neu speichern
+Warnung: tagebuch/website — Tagebuch gebaut — die Seite passt nicht zu ihren Quellen — 'python scripts/tagebuch_bauen.py' ausführen
+Warnung: tagebuch/website/tests/belege/2026-11-13-1834-TF-SPEC-006-1.txt — UTF-8 ohne BOM — Datei beginnt mit einem BOM — ohne BOM neu speichern
+Warnung: tagebuch/website/tests/belege/2026-11-13-1834-TF-SPEC-008-1.txt — UTF-8 ohne BOM — Datei beginnt mit einem BOM — ohne BOM neu speichern
+Warnung: tagebuch/website/tests/belege/2026-11-13-1834-TF-SPEC-009-1.txt — UTF-8 ohne BOM — Datei beginnt mit einem BOM — ohne BOM neu speichern
+Warnung: tagebuch/website/tests/belege/2026-11-27-1735-TF-TISCH-054-3.txt — UTF-8 ohne BOM — Datei beginnt mit einem BOM — ohne BOM neu speichern
+Warnung: tests/layout/messung.ts — eine Datei, eine Verantwortung — 977 Zeilen, Richtwert 400 — Aufteilung prüfen, oder die Ausnahme mit 'regelcheck: laenge-bewusst <Grund>' in den ersten 20 Zeilen festhalten
+
+1869 Datei(en) nicht als Text lesbar, übersprungen.
+
+In 267 Datei(en) stehen 1209 Zeilen mit Eszett. Die Regel verbietet nur das Einführen, deshalb keine Warnung — beim nächsten Anfassen greift der Hook.
+
+12 Warnungen, keine Fehler.

@@ -1,0 +1,25 @@
+Prüfer K4 Iteration 3, Stand 5b4a57dd, 28.11.2026
+Gegenproben, je eine Änderung, danach npx vitest run über die Testdateien der Erweiterung, danach git checkout -- <datei> (git status ohne Änderung)
+
+M1 zugsuche.ts:127-128, lohnt immer wahr -> Exit 1, 3 failed | 31 passed (34)
+   x K4.2, saat-810100-erster-zug-korb.json ... beendet den Zug
+   x K4.2, saat-810110-erster-zug-korb.json ... beendet den Zug
+   x K4.2: in den ersten Zügen der Saaten 810'000 bis 810'099 ...
+M2 zugsuche.ts:155, ohne Erstzug-Schwelle beim verdeckten Ziehen -> Exit 1, 3 failed | 31 passed (34)
+   x K4.2, saat-810067-erster-zug-korb-ziehen.json
+   x K4.2, saat-810100-erster-zug-korb.json
+   x K4.2: in den ersten Zügen der Saaten 810'000 bis 810'099 ...
+M3 risiko.ts:203, im ersten Zug GLEICH statt ERSTZUG_HALTEN -> Exit 1, 2 failed | 32 passed (34)
+   x K4.2, saat-810015-erster-zug-risiko.json
+   x K4.2: in den ersten Zügen der Saaten 810'000 bis 810'099 ...
+M4 vorauswahl.ts:283, erfüllende Aktion nicht zwingend aufgenommen und vorn -> Exit 1, 1 failed | 39 passed (40), mit solideKi_erweiterung_partien
+   x K4.1: die beste Aktion, die eine Aufgabe erfüllt, steht vorn, auch mit dem niedrigsten Vorwert
+
+Leck L in sicht.ts (oberste Stapelkarte nach ausDemSpiel, nachziehstapelGroesse - 1):
+   9 Dateien mit K2.7: 5 failed | 4 passed, Tests 16 failed | 38 passed (54)
+   darunter: K4.4, K2.7 ... bleibt die Entscheidung gleich ...; K4, K2.7: ... ändern ungesehen() nicht; B2: die Sicht keines Spielers nennt eine verdeckte fremde Karte
+   eigene Störprobe ohne Sichtvergleich: 500 Stellungen, 3 Abweichungen
+Ohne Leck, eigene Störprobe (Saaten 7'300'000..7'300'011): 968 gemischte Stellungen, Sicht jeweils gleich, 0 Abweichungen
+
+Erster Commit der Iteration 3, 1fcdbc1e (nur Tests): 2 Dateien rot, 4 Tests
+   K4.1 Vorauswahl-Reihenfolge, Stellungen 810'100 und 810'110 (SchlangenkorbSpielen statt ZugBeenden), Eigenschaft (schaetzeRisiko is not a function)

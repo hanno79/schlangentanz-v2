@@ -1,0 +1,60 @@
+Teil 0 ab 5100000 19:50:41
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a4799dc1bedcbdc17
+
+stdout | src/ki/__pruefer__/spiegel.test.ts > Spiegelpartien
+Saaten 5100000..5100249: 500 Partien, Regel-KI 249.5 Punkte, 49.90 %
+
+ ✓ src/ki/__pruefer__/spiegel.test.ts > Spiegelpartien 931585ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  19:50:43
+   Duration  933.09s (transform 820ms, setup 285ms, import 873ms, tests 931.59s, environment 0ms)
+
+Teil 0 Exit 0 20:06:17
+Teil 1 ab 5100250 20:06:17
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a4799dc1bedcbdc17
+
+stdout | src/ki/__pruefer__/spiegel.test.ts > Spiegelpartien
+Saaten 5100250..5100499: 500 Partien, Regel-KI 250.5 Punkte, 50.10 %
+
+ ✓ src/ki/__pruefer__/spiegel.test.ts > Spiegelpartien 914243ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  20:06:20
+   Duration  915.88s (transform 897ms, setup 341ms, import 963ms, tests 914.24s, environment 0ms)
+
+Teil 1 Exit 0 20:21:36
+Teil 2 ab 5100500 20:21:36
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a4799dc1bedcbdc17
+
+stdout | src/ki/__pruefer__/spiegel.test.ts > Spiegelpartien
+Saaten 5100500..5100749: 500 Partien, Regel-KI 249.5 Punkte, 49.90 %
+
+ ✓ src/ki/__pruefer__/spiegel.test.ts > Spiegelpartien 982351ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  20:21:38
+   Duration  983.82s (transform 820ms, setup 292ms, import 872ms, tests 982.35s, environment 0ms)
+
+Teil 2 Exit 0 20:38:02
+Teil 3 ab 5100750 20:38:02
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a4799dc1bedcbdc17
+
+stdout | src/ki/__pruefer__/spiegel.test.ts > Spiegelpartien
+Saaten 5100750..5100999: 500 Partien, Regel-KI 253 Punkte, 50.60 %
+
+ ✓ src/ki/__pruefer__/spiegel.test.ts > Spiegelpartien 979612ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  20:38:05
+   Duration  981.02s (transform 766ms, setup 284ms, import 811ms, tests 979.61s, environment 0ms)
+
+Teil 3 Exit 0 20:54:26
