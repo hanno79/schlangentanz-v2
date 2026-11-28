@@ -1,0 +1,13 @@
+Prüfer K4 Iteration 2, erster Zug an Zufallsstarthänden (Probe zz_pruefer2_k4_erstzug.test.ts, Stand c8be62d2), Saat 810000 bis 810199, vier Teile je Exit 0
+partien 200 Counter({2: 67, 3: 67, 4: 66}) erste Zuege 599 entscheidungen im ersten Zug 1769
+falschNegativ 0 falschPositiv 639 von spaeteren 30868
+einsaetze 19 Counter({'RisikoKarteSpielen': 15, 'SchlangenkorbSpielen': 3, 'ComebackEinsetzen': 1})
+810001 {'sitz': 0, 'typ': 'SchlangenkorbSpielen', 'bonus': 'aktionen', 'verdeckt': False, 'gruppe': True, 'aufgabe': False, 'steigt': 2.46, 'ok': True}
+810023 {'sitz': 3, 'typ': 'RisikoKarteSpielen', 'bonus': 2, 'verdeckt': True, 'gruppe': False, 'aufgabe': False, 'steigt': -1.9, 'ok': False}
+810081 {'sitz': 0, 'typ': 'RisikoKarteSpielen', 'bonus': 2, 'verdeckt': True, 'gruppe': False, 'aufgabe': False, 'steigt': -1.6, 'ok': False}
+810100 {'sitz': 0, 'typ': 'SchlangenkorbSpielen', 'bonus': 'aktionen', 'verdeckt': False, 'gruppe': False, 'aufgabe': False, 'steigt': 0.29, 'ok': False}
+810110 {'sitz': 2, 'typ': 'SchlangenkorbSpielen', 'bonus': 'aktionen', 'verdeckt': False, 'gruppe': False, 'aufgabe': False, 'steigt': 0.04, 'ok': False}
+810119 {'sitz': 3, 'typ': 'ComebackEinsetzen', 'bonus': None, 'verdeckt': False, 'gruppe': False, 'aufgabe': False, 'steigt': 0.15, 'ok': False}
+risiko ohne Gruppe/Aufgabe/Anstieg>2 (Ausgang zufaellig): [(810023, -1.9), (810081, -1.6)]
+proben 2493 veraendert 2493 abweichend []
+haeutungen 554

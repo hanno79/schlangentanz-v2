@@ -1,0 +1,11 @@
+Prüfer K4 Iteration 2, Spiegelpartien (Probe zz_pruefer2_k4_spiegel.test.ts, Stand c8be62d2), fünf Teile zu 200 Saaten nacheinander, je Exit 0
+Partien 2000, Saaten 700000..700999, Punkte A 1004.0, Anteil 0.5020, SE Partien 0.0111, Grenze 0.4777
+Paare 1000, Anteil 0.5020, SE Paare 0.0035, Grenze 0.4930
+A siege 998 unentschieden 12 niederlagen 990
+Partien, in denen A im ersten Zug eine Karte einsetzt 107 B 0
+Saatpaare mit ungleichem Ausgang 50
+Teil 1 400 0.4988
+Teil 2 400 0.4975
+Teil 3 400 0.4888
+Teil 4 400 0.515
+Teil 5 400 0.51

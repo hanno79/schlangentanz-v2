@@ -1,0 +1,9 @@
+Prüfer K4 Iteration 2, Gegenproben zu K2.7 auf c8be62d2 (jeweils danach zurückgesetzt, Arbeitsstand sauber)
+A: sicht.ts sichtAus, zug.runde bekommt 'Risiko-Belohnung', wenn die echte oberste Stapelkarte eine Sonderkarte ist (echtes Leck).
+   rot: K4.4, K2.7 ... bleibt die Entscheidung gleich ... (expected [ 18 ] to deeply equal [])
+   rot: K2.7, D43: auch nicht, wenn ein Gegner Karten mit dem Korb verdeckt gezogen hat ...
+   Tests 2 failed | 24 passed (26) in sicht_erweiterung, solideKi_erweiterung_suche, zugsuche, solideKi_erweiterung_erstzug, abwehr
+   eigene Störprobe erster Züge (Saat 810000-810029): 369 Stellungen, 0 Abweichungen (Leck dort zu selten wirksam)
+E: sicht.ts ungesehen() ohne Ordnung nach Id
+   rot: K4, B2: ungesehen() ... nach Id geordnet; K4, K2.7: ... ändern ungesehen() nicht; K4.2, D52 ... mit 20 verschiedenen Saaten der KI dieselbe Wahl
+Störprobe ohne Leck: 2493 Stellungen (erste Züge und Häutungen, Saat 810000-810199), alle verändert, 0 abweichende Wahlen.

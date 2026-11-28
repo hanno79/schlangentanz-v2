@@ -1,0 +1,5 @@
+  ok 3 [desktop] › tests\vollpartien\vollpartie.spec.ts:107:3 › Z1 K1/K2: Basis zu viert (Saat 13) bis zur Wertung, über echte Klicks (17.5s)
+  ok 2 [handy-hochkant] › tests\vollpartien\vollpartie.spec.ts:107:3 › Z1 K1/K2: Basis zu viert (Saat 13) bis zur Wertung, über echte Klicks (19.4s)
+  ok 1 [desktop] › tests\vollpartien\vollpartie.spec.ts:107:3 › Z1 K1/K2: Basis zu zweit (Saat 2026) bis zur Wertung, über echte Klicks (21.9s)
+  ok 4 [handy-hochkant] › tests\vollpartien\vollpartie.spec.ts:107:3 › Z1 K1/K2: Basis zu zweit (Saat 2026) bis zur Wertung, über echte Klicks (25.4s)
+  4 passed (30.4s)

@@ -1,0 +1,9 @@
+     ↳ K5 Kriterium 3: 300 Partien zu 4 gegen die Zufalls-KI, Saaten ab 1328338692, KI-Saat 1885811723: 300 Siege (100.0 %), festgeschrieben mindestens 297, Plan mindestens 50 %
+     ↳ K5 Kriterium 5 mit Erweiterung: 300 Partien zu 4 gegen die Zufalls-KI, Saaten ab 1164999137, KI-Saat 2048025225: 300 Siege (100.0 %), festgeschrieben mindestens 289, Plan mindestens 50 %
+     ↳ K5 Kriterium 1: 500 Partien zu 2 gegen die Zufalls-KI, Saaten ab 1735562631, KI-Saat 2047972006: 500 Siege (100.0 %), festgeschrieben mindestens 495, Plan mindestens 80 %
+     ↳ K5 Kriterium 5 mit Erweiterung: 500 Partien zu 2 gegen die Zufalls-KI, Saaten ab 1742726465, KI-Saat 1762180639: 500 Siege (100.0 %), festgeschrieben mindestens 495, Plan mindestens 80 %
+     ↳ K5 Kriterium 2: 500 Partien zu 2 gegen „erste erlaubte Aktion“, Saaten ab 1734506067, KI-Saat 1842618865: 500 Siege (100.0 %), festgeschrieben mindestens 495, Plan mindestens 80 %
+     ↳ K5 Kriterium 5 mit Erweiterung: 500 Partien zu 2 gegen „erste erlaubte Aktion“, Saaten ab 1943143123, KI-Saat 1139605235: 499 Siege (99.8 %), festgeschrieben mindestens 495, Plan mindestens 80 %
+ Test Files  6 passed (6)
+      Tests  6 passed (6)
+   Duration  921.46s (transform 11.05s, setup 2.25s, import 4.31s, tests 3808.45s, environment 1ms)

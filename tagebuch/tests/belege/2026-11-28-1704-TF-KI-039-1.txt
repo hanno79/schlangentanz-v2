@@ -1,0 +1,7 @@
+Prüfer K4 Iteration 2, Kriterium 1 (Probe zz_pruefer2_k4_aufgaben.test.ts, Stand c8be62d2): Saat 920000-920059 solide an Sitz 0 gegen Zufalls-KIs, 930000-930059 solide an allen Sitzen; 2 bis 4 Spieler
+zufall Partien 60 geprueft 197 erfuellt/versucht 184 Ausnahme strikt besser 12 am Partieende schlechter 1
+   {'saat': 920026, 'stelle': 0, 'gewaehlt': 92.133, 'beste': 99.193, 'kiZug': ['FarbendiebSpielen', 'FarbkarteLegen'], 'erfuellend': ['FarbendiebSpielen']}
+solide Partien 60 geprueft 104 erfuellt/versucht 86 Ausnahme strikt besser 16 am Partieende schlechter 2
+   {'saat': 930012, 'stelle': 0, 'gewaehlt': 38.7, 'beste': 46.2, 'kiZug': ['SchlangenfrassSpielen', 'FarbkarteLegen'], 'erfuellend': ['SchlangenfrassSpielen']}
+   {'saat': 930051, 'stelle': 0, 'gewaehlt': 29.03, 'beste': 35.63, 'kiZug': ['BlockadeLegen', 'FarbkarteLegen'], 'erfuellend': ['BlockadeLegen']}
+Die drei Fälle "am Partieende schlechter" sind Züge, deren Angriff ein Gegner abwehrte; geplant (Gegner lassen durch, wie die KI rechnet) liegen sie über der besten Erfüllung: 101.71 > 99.19, 46.30 > 46.20, 41.83 > 35.63 (k41_drei_faelle.txt).
